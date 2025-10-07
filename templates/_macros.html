@@ -1,0 +1,44 @@
+{% macro method_chip(m) -%}
+  <span class="chip {{ m }}">{{ m }}</span>
+{%- endmacro %}
+
+{% macro op_row(op, spec_id, safe_id, index, pid) -%}
+  <tr class="op-row" data-method="{{ op.method }}">
+    <td><input type="checkbox" name="sel" value="{{ index }}"></td>
+    <td>{{ method_chip(op.method) }}</td>
+    <td>{{ op.path }}</td>
+    <td>{{ op.operationId or '' }}</td>
+    <td>{{ 'Yes' if op.hasBody else 'No' }}</td>
+    <td>
+      <button class="btn ghost" type="button"
+              hx-post="{{ url_for('web.op_details', pid=pid) }}"
+              hx-target="#panel-body" hx-swap="innerHTML"
+              hx-indicator="#global-indicator"
+              hx-vals='{"spec_id":"{{ spec_id|e }}","index":"{{ index }}"}'
+              onclick="openPanelWith('Details', '{{ op.method }}', '{{ op.path }}', '{{ op.base or '' }}{{ op.path }}')">Details</button>
+      <button class="btn primary" type="button"
+              hx-post="{{ url_for('web.op_edit', pid=pid) }}"
+              hx-target="#panel-body" hx-swap="innerHTML"
+              hx-indicator="#global-indicator"
+              hx-vals='{"spec_id":"{{ spec_id|e }}","index":"{{ index }}"}'
+              onclick="openPanelWith('Edit', '{{ op.method }}', '{{ op.path }}', '{{ op.base or '' }}{{ op.path }}')">Edit</button>
+    </td>
+  </tr>
+  <tr class="op-details-row" data-method="{{ op.method }}"><td colspan="6"><div id="det-{{ safe_id }}-{{ index }}"></div></td></tr>
+{%- endmacro %}
+
+{% macro drawer_start() -%}
+  <div class="drawer">
+{%- endmacro %}
+
+{% macro drawer_end() -%}
+  </div>
+{%- endmacro %}
+
+{% macro action_bar() -%}
+  <div class="row" style="margin-top:8px;">
+{%- endmacro %}
+
+{% macro action_bar_end() -%}
+  </div>
+{%- endmacro %}

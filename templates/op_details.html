@@ -1,0 +1,26 @@
+<div class="drawer">
+  {% set curl %}
+    curl -X {{ pre.method }} '{{ display_url }}'
+    {%- if headers %}{% for k, v in headers.items() %} \
+      -H '{{ k }}: {{ v }}'{% endfor %}{% endif %}
+    {%- if pre.json is not none %} \
+      -d '{{ pre.json|tojson }}'
+    {%- elif pre.data is not none %} \
+      -d '{{ pre.data }}'
+    {%- endif %}
+  {% endset %}
+  <script id="panel-curl" type="application/json">{{ curl|trim }}</script>
+  <div class="row" style="justify-content:space-between;">
+    <div><strong>{{ pre.method }}</strong> <span id="panel-url">{{ display_url }}</span></div>
+    <button class="btn ghost" type="button" onclick='(function(btn){var s=document.getElementById("panel-curl"); if(s){ copyWithFeedback(s.textContent.trim(), btn); }})(this)'>Copy curl</button>
+  </div>
+  {% if pre.query %}<div style="margin-top:6px;"><strong>Query</strong></div><pre>{{ pre.query|tojson(indent=2) }}</pre>{% endif %}
+  {% if headers %}<div><strong>Headers</strong></div><pre>{{ headers|tojson(indent=2) }}</pre>{% endif %}
+  {% if pre.cookies %}<div><strong>Cookies</strong></div><pre>{{ pre.cookies|tojson(indent=2) }}</pre>{% endif %}
+  {% if files_map %}<div><strong>Files</strong></div><pre>{{ files_map|tojson(indent=2) }}</pre>
+  {% elif pre.json is not none %}<div><strong>JSON Body</strong></div><pre>{{ pre.json|tojson(indent=2) }}</pre>
+  {% elif pre.data is not none %}<div><strong>Data</strong></div><pre>{{ pre.data|tojson(indent=2) }}</pre>
+  {% else %}<div class="muted">No body</div>{% endif %}
+</div>
+
+

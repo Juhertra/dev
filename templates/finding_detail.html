@@ -1,0 +1,129 @@
+<div class="drawer">
+  {% set curl %}
+    curl -X {{ f.method or 'GET' }} '{{ f.url or f.path or '' }}'
+    {%- if f.req and f.req.headers %}{% for k, v in f.req.headers.items() %} \
+      -H '{{ k }}: {{ v }}'{% endfor %}{% endif %}
+    {%- if f.req and f.req.json is not none %} \
+      -d '{{ f.req.json|tojson }}'
+    {%- elif f.req and f.req.data is not none %} \
+      -d '{{ f.req.data }}'
+    {%- endif %}
+  {% endset %}
+  <script id="panel-curl" type="application/json">{{ curl|trim }}</script>
+  
+  <div class="row" style="justify-content:flex-start;">
+    <div>
+      <strong>{{ f.method or 'GET' }}</strong>
+      <span id="panel-url">{{ f.url or f.path or '' }}</span>
+      {% if f.res and f.res.status %}<span class="muted">[{{ f.res.status }}]</span>{% endif %}
+    </div>
+  </div>
+  
+  <div style="margin-top:8px;align-items:center;gap:12px;flex-wrap:wrap;display:flex;">
+    <span class="pill">{{ f.severity or '' }}</span>
+    <span class="muted">{{ f.status or '' }}</span>
+    {% if f.owasp %}<span class="pill">{{ f.owasp }}</span>{% elif f.owasp_api %}<span class="pill">{{ f.owasp_api }}</span>{% endif %}
+    {% if f.cwe %}<span class="pill">{{ f.cwe }}</span>{% endif %}
+    {% set _cve = f.cve_id or f.cve %}
+    {% if _cve and _cve is string and _cve|regex_search('^CVE-\\d{4}-\\d+$') %}
+    <span class="pill cve-chip" onclick="openCveLink('{{ _cve }}')" style="cursor:pointer;background:#ff6b6b;color:white;">{{ _cve }}</span>
+    {% endif %}
+    {% if f.nuclei and f.nuclei.matcher_name %}<span class="pill">{{ f.nuclei.matcher_name }}</span>{% endif %}
+    {% if f.source == 'nuclei' %}<span class="pill">source:nuclei</span>{% endif %}
+  </div>
+
+  <!-- Actions -->
+  {% if f.run_id or f.run %}
+  <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+    <button class="btn ghost" type="button"
+            onclick="viewRunDetail('{{ f.run_id or f.run }}', '{{ f.method or 'GET' }}', '{{ f.url or f.path }}')">View Run</button>
+    <button class="btn ghost" type="button"
+            onclick="copyUrlWithFeedback('{{ f.url or f.path }}', this)">Copy URL</button>
+    <button class="btn ghost" type="button"
+            onclick="copyCurlWithFeedback('{{ curl|trim }}', this)">Copy cURL</button>
+  </div>
+  <script>
+  function viewRunDetail(runId, method, path) {
+    // Navigate to runs page with run pre-filtered
+    const runsUrl = `/p/${window.APP_CTX?.pid || ''}/runs?highlight=${runId}`;
+    window.open(runsUrl, '_blank');
+  }
+  
+  function openCveLink(cveId) {
+    // Open CVE link in external browser
+    const cveUrl = `https://cve.mitre.org/cgi-bin/cvename.cgi?name=${cveId}`;
+    window.open(cveUrl, '_blank');
+  }
+  </script>
+  {% else %}
+  <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+    <button class="btn ghost" type="button"
+            onclick="copyUrlWithFeedback('{{ f.url or f.path }}', this)">Copy URL</button>
+    <button class="btn ghost" type="button"
+            onclick="copyCurlWithFeedback('{{ curl|trim }}', this)">Copy cURL</button>
+  </div>
+  {% endif %}
+
+  <div style="margin-top:12px">
+    <strong>Finding Details</strong>
+    <div style="margin-top:6px">{{ explain_html|safe }}</div>
+  </div>
+
+  <!-- Enrichment Information (Phase 4A) -->
+  {% if f.affected_component or f.suggested_remediation or f.evidence_anchors %}
+  <div style="margin-top:12px">
+    <strong>Enrichment Information</strong>
+    <div style="margin-top:6px">
+      {% if f.affected_component %}
+        <div style="margin-bottom:4px;"><strong>Affected Component:</strong> {{ f.affected_component }}</div>
+      {% endif %}
+      {% if f.suggested_remediation %}
+        <div style="margin-bottom:4px;"><strong>Suggested Remediation:</strong> {{ f.suggested_remediation }}</div>
+      {% endif %}
+      {% if f.evidence_anchors %}
+        <div style="margin-bottom:4px;"><strong>Evidence Anchors:</strong> 
+          {% for anchor in f.evidence_anchors %}
+            <span class="pill" style="font-size:0.8em;margin-right:4px;">{{ anchor }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if f.evidence %}
+    <div style="margin-top:12px">
+      <strong>Evidence</strong>
+      <pre>{{ f.evidence }}</pre>
+    </div>
+  {% endif %}
+
+  {% if f.req and f.req.headers %}
+    <div style="margin-top:12px">
+      <strong>Request Headers</strong>
+      <pre>{{ req_headers_json_hl }}</pre>
+    </div>
+  {% endif %}
+
+  {% if f.req and (f.req.json is not none or f.req.data is not none) %}
+    <div style="margin-top:12px">
+      <strong>Request Body</strong>
+      <pre>{{ req_body_json_hl }}</pre>
+    </div>
+  {% endif %}
+
+  {% if f.res and f.res.headers %}
+    <div style="margin-top:12px">
+      <strong>Response Headers</strong>
+      <pre>{{ res_headers_json_hl }}</pre>
+    </div>
+  {% endif %}
+
+  {% if f.res and f.res.body %}
+    <div style="margin-top:12px">
+      <strong>Response Body</strong>
+      <pre>{{ res_body_hl }}</pre>
+    </div>
+  {% endif %}
+</div>
+

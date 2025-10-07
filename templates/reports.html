@@ -1,0 +1,516 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'reports' %}
+
+{% block page_title %}Security Reports{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Security Reports</span>
+{% endblock %}
+
+{% block content %}
+  <style>
+    .findings-count {
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+  </style>
+    
+
+<div class="container">
+  <div class="header">
+    <h1>Security Reports</h1>
+    <div class="muted">Comprehensive security assessment reports for {{ project_name }}</div>
+  </div>
+
+  <!-- Risk Overview -->
+  <div class="risk-overview">
+    <div class="risk-card">
+      <div class="risk-score">
+        <div class="score-circle {{ summary.risk_score.level.lower().replace(' ', '-') }}">
+          {{ summary.risk_score.percentage }}%
+        </div>
+        <div class="score-label">Risk Score</div>
+      </div>
+      <div class="risk-details">
+        <h3>Risk Level: {{ summary.risk_score.level }}</h3>
+        <p>Based on {{ summary.total_findings }} findings across {{ summary.owasp_breakdown.web + summary.owasp_breakdown.api }} OWASP categories</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">{{ summary.total_findings }}</div>
+      <div class="stat-label">Total Findings</div>
+    </div>
+    <div class="stat-card critical">
+      <div class="stat-number">{{ summary.severity_breakdown.critical }}</div>
+      <div class="stat-label">Critical</div>
+    </div>
+    <div class="stat-card high">
+      <div class="stat-number">{{ summary.severity_breakdown.high }}</div>
+      <div class="stat-label">High</div>
+    </div>
+    <div class="stat-card medium">
+      <div class="stat-number">{{ summary.severity_breakdown.medium }}</div>
+      <div class="stat-label">Medium</div>
+    </div>
+    <div class="stat-card low">
+      <div class="stat-number">{{ summary.severity_breakdown.low }}</div>
+      <div class="stat-label">Low</div>
+    </div>
+  </div>
+
+  <!-- OWASP Breakdown -->
+  <div class="owasp-breakdown">
+    <h2>OWASP Categories</h2>
+    <div class="owasp-stats">
+      <div class="owasp-card">
+        <div class="owasp-title">Web Security</div>
+        <div class="owasp-count">{{ summary.owasp_breakdown.web }}</div>
+        <div class="owasp-desc">OWASP Top 10 Web</div>
+      </div>
+      <div class="owasp-card">
+        <div class="owasp-title">API Security</div>
+        <div class="owasp-count">{{ summary.owasp_breakdown.api }}</div>
+        <div class="owasp-desc">OWASP Top 10 API</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Vulnerabilities -->
+  <div class="vulnerabilities-section">
+    <h2>Top Vulnerabilities</h2>
+    <div class="vulnerabilities-list">
+      {% for vuln in summary.top_vulnerabilities %}
+      <div class="vulnerability-item severity-{{ vuln.severity }}">
+        <div class="vuln-header">
+          <div class="vuln-title">{{ vuln.title }}</div>
+          <div class="vuln-severity">{{ vuln.severity.title() }}</div>
+        </div>
+        <div class="vuln-details">
+          <span class="vuln-count">{{ vuln.count }} occurrence{{ 's' if vuln.count != 1 else '' }}</span>
+          {% if vuln.cwe %}
+          <span class="vuln-cwe">CWE: {{ vuln.cwe }}</span>
+          {% endif %}
+          <span class="vuln-confidence">Confidence: {{ vuln.confidence }}%</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Priority Recommendations -->
+  <div class="recommendations-section">
+    <h2>Priority Recommendations</h2>
+    <div class="recommendations-list">
+      {% for rec in summary.recommendations %}
+      <div class="recommendation-item priority-{{ rec.priority.lower() }}">
+        <div class="rec-header">
+          <div class="rec-category">{{ rec.owasp_category }}</div>
+          <div class="rec-priority">{{ rec.priority }} Priority</div>
+        </div>
+        <div class="rec-content">
+          <p>{{ rec.recommendation }}</p>
+          <div class="rec-stats">
+            <span class="rec-count">{{ rec.finding_count }} finding{{ 's' if rec.finding_count != 1 else '' }}</span>
+            <span class="rec-endpoints">{{ rec.affected_endpoints }} endpoint{{ 's' if rec.affected_endpoints != 1 else '' }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Export Actions -->
+  <div class="export-section">
+    <h2>Export Reports</h2>
+    <div class="export-actions">
+      <button class="btn btn-primary" onclick="exportReport('html')">
+        <span class="icon">📄</span> HTML Report
+      </button>
+      <button class="btn btn-secondary" onclick="exportReport('json')">
+        <span class="icon">📊</span> JSON Data
+      </button>
+      <button class="btn btn-secondary" onclick="exportReport('csv')">
+        <span class="icon">📈</span> CSV Export
+      </button>
+      <button class="btn btn-secondary" onclick="exportReport('sarif')">
+        <span class="icon">🔍</span> SARIF Format
+      </button>
+    </div>
+    <div class="export-info">
+      <p>Export comprehensive security reports in various formats for sharing with stakeholders or integration with other tools.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.risk-overview {
+  margin-bottom: 3rem;
+}
+
+.risk-card {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: var(--card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-b);
+}
+
+.risk-score {
+  text-align: center;
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.score-circle.critical { background: #dc3545; }
+.score-circle.high { background: #fd7e14; }
+.score-circle.medium { background: #ffc107; color: black; }
+.score-circle.low { background: #20c997; }
+.score-circle.very-low { background: #6c757d; }
+
+.score-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.risk-details h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--fg);
+}
+
+.risk-details p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid var(--card-b);
+}
+
+.stat-card.critical { border-left: 4px solid #dc3545; }
+.stat-card.high { border-left: 4px solid #fd7e14; }
+.stat-card.medium { border-left: 4px solid #ffc107; }
+.stat-card.low { border-left: 4px solid #20c997; }
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.owasp-breakdown {
+  margin-bottom: 3rem;
+}
+
+.owasp-breakdown h2 {
+  margin-bottom: 1.5rem;
+  color: var(--fg);
+}
+
+.owasp-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.owasp-card {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid var(--card-b);
+}
+
+.owasp-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+}
+
+.owasp-count {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.owasp-desc {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.vulnerabilities-section,
+.recommendations-section {
+  margin-bottom: 3rem;
+}
+
+.vulnerabilities-section h2,
+.recommendations-section h2 {
+  margin-bottom: 1.5rem;
+  color: var(--fg);
+}
+
+.vulnerabilities-list,
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vulnerability-item {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-b);
+  border-left: 4px solid #dc3545;
+}
+
+.vulnerability-item.severity-critical { border-left-color: #dc3545; }
+.vulnerability-item.severity-high { border-left-color: #fd7e14; }
+.vulnerability-item.severity-medium { border-left-color: #ffc107; }
+.vulnerability-item.severity-low { border-left-color: #20c997; }
+.vulnerability-item.severity-info { border-left-color: #6c757d; }
+
+.vuln-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.vuln-title {
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 1.1rem;
+}
+
+.vuln-severity {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  background: rgba(34,211,238,.20);
+  color: var(--accent);
+}
+
+.vuln-details {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.vuln-count,
+.vuln-cwe,
+.vuln-confidence {
+  background: var(--card);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.recommendation-item {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-b);
+  border-left: 4px solid #007bff;
+}
+
+.recommendation-item.priority-high { border-left-color: #dc3545; }
+.recommendation-item.priority-medium { border-left-color: #ffc107; }
+.recommendation-item.priority-low { border-left-color: #20c997; }
+
+.rec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.rec-category {
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 1.1rem;
+}
+
+.rec-priority {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  background: rgba(34,211,238,.20);
+  color: var(--accent);
+}
+
+.rec-content p {
+  margin: 0 0 1rem 0;
+  color: var(--fg);
+  line-height: 1.6;
+}
+
+.rec-stats {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.rec-count,
+.rec-endpoints {
+  background: var(--card);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.export-section {
+  background: var(--card);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-b);
+}
+
+.export-section h2 {
+  margin-bottom: 1.5rem;
+  color: var(--fg);
+}
+
+.export-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.export-info {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--card-b);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,.14);
+  transform: translateY(-1px);
+}
+
+.icon {
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .risk-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .export-actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    justify-content: center;
+  }
+}
+</style>
+
+<script>
+function exportReport(format) {
+  window.open(`/p/{{ pid }}/reports/export?format=${format}`, '_blank');
+}
+</script>
+  </div>
+{% endblock %}

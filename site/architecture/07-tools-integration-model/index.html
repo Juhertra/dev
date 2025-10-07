@@ -1,0 +1,1674 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
+      
+      
+        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
+      
+      
+      
+        <link rel="prev" href="../06-plugin-system/">
+      
+      
+        <link rel="next" href="../08-tool-manager-and-ux-design/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>SecFlow — Tools Integration Model - SecFlow Architecture & Validation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#07-tools-integration-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SecFlow Architecture & Validation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SecFlow — Tools Integration Model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SecFlow Architecture & Validation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-title-and-executive-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Executive Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-architecture-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Philosophy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-repository-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repository Layout
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-core-packages-and-responsibilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Packages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Orchestration Engine
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-plugin-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plugin System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧭 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Architectural Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-output-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Tool Output Normalization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Error Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔮 Future Extensions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Manager & UX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-resource-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resource Registry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wordlists & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-project-isolation-and-data-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Isolation & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-findings-model-and-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Enrichment Layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PoC Sources & Legal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-garbage-collection-and-retention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Garbage Collection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-security-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-risk-assessment-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Risk Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Migration Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD & Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev Experience & Docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-future-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-final-consensus-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Review & Validation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Review & Validation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Checklist
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/glossary.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="07-tools-integration-model">07 — Tools Integration Model<a class="headerlink" href="#07-tools-integration-model" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Tools Integration Model</strong> defines how external security tools (Nuclei, Feroxbuster, Katana, ZAP, Caido, etc.) are integrated and orchestrated inside <strong>SecFlow</strong>.</p>
+<p>The system is <strong>manifest-driven</strong>, allowing tools to be defined declaratively, executed in isolation, and chained dynamically via the Workflow Engine.</p>
+<p>Each integrated tool is represented as:
+- A <strong>manifest</strong> (describes binary, configuration, security policies, I/O schema)
+- A <strong>wrapper</strong> (implements the standardized execution interface)
+- An optional <strong>adapter plugin</strong> (translates output to normalized Findings)</p>
+<hr />
+<h2 id="architectural-overview">🧱 Architectural Overview<a class="headerlink" href="#architectural-overview" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+--------------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">|     Tool Manager          |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Tool Registry           |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Manifest Validator      |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Sandbox Executor        |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Output Parser           |</span>
+<span class="l l-Scalar l-Scalar-Plain">+-----------┬---------------+</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">|</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">▼</span>
+<span class="l l-Scalar l-Scalar-Plain">+---------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">| Tool Wrapper        |</span>
+<span class="l l-Scalar l-Scalar-Plain">| (e.g., Nuclei)      |</span>
+<span class="l l-Scalar l-Scalar-Plain">+---------------------+</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">|</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">▼</span>
+<span class="l l-Scalar l-Scalar-Plain">+---------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">| Tool Output Parser  |</span>
+<span class="l l-Scalar l-Scalar-Plain">+---------------------+</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">|</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">▼</span>
+<span class="l l-Scalar l-Scalar-Plain">+---------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">| Findings Engine     |</span>
+<span class="l l-Scalar l-Scalar-Plain">+---------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">```python</span>
+
+<span class="nn">---</span>
+
+<span class="c1">## ⚙️ Tool Manifest Structure</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Every tool integrated into SecFlow must define a **manifest** under `/wrappers/manifests/&lt;tool&gt;.json`.</span>
+
+<span class="l l-Scalar l-Scalar-Plain">### Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="err">`</span><span class="l l-Scalar l-Scalar-Plain">nuclei.json`</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="p p-Indicator">{</span>
+<span class="w">  </span><span class="s">&quot;name&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;nuclei&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;version&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;3.2.1&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;binary&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;nuclei&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;capabilities&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;scan&quot;</span><span class="p p-Indicator">],</span>
+<span class="w">  </span><span class="s">&quot;outputs&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;dataset&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">},</span>
+<span class="w">  </span><span class="s">&quot;defaults&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">    </span><span class="s">&quot;threads&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">25</span><span class="p p-Indicator">,</span>
+<span class="w">    </span><span class="s">&quot;rate_limit&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">150</span><span class="p p-Indicator">,</span>
+<span class="w">    </span><span class="s">&quot;templates&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;res://templates/nuclei:latest&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">},</span>
+<span class="w">  </span><span class="s">&quot;configSchema&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;schemas/nuclei-config.json&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;resource_requirements&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">    </span><span class="s">&quot;cpu_cores&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span>
+<span class="w">    </span><span class="s">&quot;memory_mb&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">512</span><span class="p p-Indicator">,</span>
+<span class="w">    </span><span class="s">&quot;timeout_seconds&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">300</span>
+<span class="w">  </span><span class="p p-Indicator">},</span>
+<span class="w">  </span><span class="s">&quot;security&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">    </span><span class="s">&quot;sandbox&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span>
+<span class="w">    </span><span class="s">&quot;network_access&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span>
+<span class="w">    </span><span class="s">&quot;file_system_access&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;read_only&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">},</span>
+<span class="w">  </span><span class="s">&quot;selftest&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">    </span><span class="s">&quot;args&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-version&quot;</span><span class="p p-Indicator">],</span>
+<span class="w">    </span><span class="s">&quot;expect&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Nuclei&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">}</span>
+<span class="p p-Indicator">}</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🧩 Wrapper Interface</span>
+
+<span class="l l-Scalar l-Scalar-Plain">All tool wrappers implement the same contract to ensure consistent orchestration.</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="c1"># core-lib/ports/tool_port.py</span>
+<span class="l l-Scalar l-Scalar-Plain">from typing import Any, Dict, Protocol, List</span>
+<span class="l l-Scalar l-Scalar-Plain">from core_lib.models.finding import Finding</span>
+
+<span class="nt">class ToolPort(Protocol)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def prepare(self, config</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dict[str, Any]) -&gt; None</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="s">&quot;&quot;&quot;Prepare</span><span class="nv"> </span><span class="s">tool</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">configuration.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">pass</span>
+
+<span class="w">    </span><span class="nt">def run(self) -&gt; str</span><span class="p">:</span>
+<span class="w">        </span><span class="s">&quot;&quot;&quot;Execute</span><span class="nv"> </span><span class="s">tool</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">return</span><span class="nv"> </span><span class="s">raw</span><span class="nv"> </span><span class="s">output.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">pass</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def parse_output(self, raw_output</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str) -&gt; List[Finding]</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="s">&quot;&quot;&quot;Parse</span><span class="nv"> </span><span class="s">raw</span><span class="nv"> </span><span class="s">output</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">structured</span><span class="nv"> </span><span class="s">findings.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">pass</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🧠 Example Implementation: Nuclei Wrapper</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="c1"># wrappers/nuclei_wrapper.py</span>
+<span class="l l-Scalar l-Scalar-Plain">import subprocess, json</span>
+<span class="l l-Scalar l-Scalar-Plain">from core_lib.models.finding import Finding</span>
+<span class="l l-Scalar l-Scalar-Plain">from core_lib.ports.tool_port import ToolPort</span>
+
+<span class="nt">class NucleiWrapper(ToolPort)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def __init__(self, config)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.config = config</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def prepare(self, config)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.args = [</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&quot;nuclei&quot;, &quot;-json&quot;,</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&quot;-t&quot;, config.get(&quot;templates&quot;, &quot;res://templates/nuclei:latest&quot;),</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&quot;-rl&quot;, str(config.get(&quot;rate_limit&quot;, 150)),</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&quot;-c&quot;, str(config.get(&quot;threads&quot;, 25))</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">]</span>
+
+<span class="w">    </span><span class="nt">def run(self)</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">result = subprocess.run(self.args, capture_output=True, text=True, timeout=300)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return result.stdout</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def parse_output(self, raw_output)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">findings = []</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">for line in raw_output.splitlines()</span><span class="p p-Indicator">:</span>
+<span class="w">            </span><span class="nt">try</span><span class="p">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">data = json.loads(line)</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">findings.append(</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">Finding(</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">title=data[&quot;info&quot;][&quot;name&quot;],</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">severity=data[&quot;info&quot;][&quot;severity&quot;],</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">path=data[&quot;matched-at&quot;],</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">detector_id=&quot;nuclei&quot;,</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">evidence=data</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+<span class="w">            </span><span class="nt">except Exception</span><span class="p">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">continue</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return findings</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🔐 Sandbox Execution</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Tools run through a Sandbox Executor, enforcing CPU, memory, and network constraints.</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="c1"># wrappers/executor.py</span>
+<span class="l l-Scalar l-Scalar-Plain">import resource, subprocess, signal</span>
+
+<span class="nt">class SandboxExecutor</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def __init__(self, cpu_limit=2, mem_limit_mb=512)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.cpu_limit = cpu_limit</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.mem_limit_mb = mem_limit_mb</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def execute(self, args)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">def set_limits()</span><span class="p">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">resource.setrlimit(resource.RLIMIT_CPU, (self.cpu_limit, self.cpu_limit))</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">resource.setrlimit(resource.RLIMIT_AS, (self.mem_limit_mb * 1024**2,) * 2)</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">proc = subprocess.Popen(args, preexec_fn=set_limits, stdout=subprocess.PIPE, stderr=subprocess.PIPE)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">stdout, stderr = proc.communicate(timeout=300)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return stdout.decode(), stderr.decode(), proc.returncode</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🧩 Tool Registry</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="c1"># wrappers/registry.py</span>
+<span class="l l-Scalar l-Scalar-Plain">from typing import Dict, Type</span>
+<span class="l l-Scalar l-Scalar-Plain">from core_lib.ports.tool_port import ToolPort</span>
+
+<span class="nt">class ToolRegistry</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">_registry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dict[str, Type[ToolPort]] = {}</span>
+
+<span class="w">    </span><span class="err">@</span><span class="l l-Scalar l-Scalar-Plain">classmethod</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def register(cls, name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str, impl</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type[ToolPort])</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cls._registry[name] = impl</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">print(f&quot;[+] Registered tool</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">name</span><span class="p p-Indicator">}</span><span class="s">&quot;)</span>
+
+<span class="w">    </span><span class="s">@classmethod</span>
+<span class="w">    </span><span class="s">def</span><span class="nv"> </span><span class="s">get(cls,</span><span class="nv"> </span><span class="s">name:</span><span class="nv"> </span><span class="s">str)</span><span class="nv"> </span><span class="s">-&gt;</span><span class="nv"> </span><span class="s">ToolPort:</span>
+<span class="w">        </span><span class="s">return</span><span class="nv"> </span><span class="s">cls._registry[name]</span>
+<span class="s">```python</span>
+
+<span class="s">Tools</span><span class="nv"> </span><span class="s">register</span><span class="nv"> </span><span class="s">via</span><span class="nv"> </span><span class="s">decorators</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">discovery:</span>
+
+<span class="s">```python</span>
+<span class="s">from</span><span class="nv"> </span><span class="s">wrappers.registry</span><span class="nv"> </span><span class="s">import</span><span class="nv"> </span><span class="s">ToolRegistry</span>
+
+<span class="s">@ToolRegistry.register(&quot;</span><span class="l l-Scalar l-Scalar-Plain">feroxbuster&quot;)</span>
+<span class="nt">class FeroxWrapper(ToolPort)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def prepare(self, config</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dict[str, Any]) -&gt; None</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.wordlist = config.get(&quot;wordlist&quot;, &quot;res://wordlists/dirb:latest&quot;)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.threads = config.get(&quot;threads&quot;, 50)</span>
+
+<span class="w">    </span><span class="nt">def run(self) -&gt; str</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cmd = [&quot;feroxbuster&quot;, &quot;-u&quot;, self.target, &quot;-w&quot;, self.wordlist, &quot;-t&quot;, str(self.threads)]</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">result = subprocess.run(cmd, capture_output=True, text=True)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return result.stdout</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def parse_output(self, raw_output</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str) -&gt; List[Finding]</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">findings = []</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">for line in raw_output.split(&#39;\n&#39;)</span><span class="p p-Indicator">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">if line.strip() and not line.startswith(&#39;#&#39;)</span><span class="p p-Indicator">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">findings.append(Finding(</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">id=f&quot;ferox_{hash(line)}&quot;,</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">url=line.strip(),</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">tool=&quot;feroxbuster&quot;,</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">severity=&quot;info&quot;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">))</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return findings</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🧠 Example Integration — Feroxbuster</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="c1"># wrappers/ferox_wrapper.py</span>
+<span class="l l-Scalar l-Scalar-Plain">import subprocess</span>
+<span class="l l-Scalar l-Scalar-Plain">from core_lib.models.finding import Finding</span>
+
+<span class="nt">class FeroxWrapper(ToolPort)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def prepare(self, config)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.target = config[&quot;target&quot;]</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.wordlist = config.get(&quot;wordlist&quot;, &quot;/usr/share/wordlists/dirb/common.txt&quot;)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.args = [&quot;feroxbuster&quot;, &quot;-u&quot;, self.target, &quot;-w&quot;, self.wordlist, &quot;-o&quot;, &quot;-&quot;]</span>
+
+<span class="w">    </span><span class="nt">def run(self)</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">result = subprocess.run(self.args, capture_output=True, text=True)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return result.stdout</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def parse_output(self, raw)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">findings = []</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">for line in raw.splitlines()</span><span class="p p-Indicator">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">if &quot;200&quot; in line or &quot;301&quot; in line</span><span class="p p-Indicator">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">findings.append(</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">Finding(</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">title=&quot;Discovered Path&quot;,</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">severity=&quot;info&quot;,</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">path=line.split()[0],</span>
+<span class="w">                        </span><span class="l l-Scalar l-Scalar-Plain">detector_id=&quot;feroxbuster&quot;</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return findings</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="c1">## 🧩 Tool Orchestration</span>
+
+<span class="nt">The Workflow Engine dynamically chains tool executions</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Each node defines a tool (by name), configuration, and expected outputs.</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Outputs become inputs for subsequent nodes.</span>
+
+<span class="c1">### Example:</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="nt">nodes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery.ferox</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wordlist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">res://wordlists/dirb:latest</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scan</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scan.nuclei</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h2 id="tool-output-normalization">🧠 Tool Output Normalization<a class="headerlink" href="#tool-output-normalization" title="Permanent link">&para;</a></h2>
+<p>All tool outputs are normalized into the Finding schema before storage.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>detector_id</td>
+<td>Tool name (e.g., nuclei, zap)</td>
+</tr>
+<tr>
+<td>title</td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td>path</td>
+<td>Target or endpoint</td>
+</tr>
+<tr>
+<td>severity</td>
+<td>Normalized (critical/high/medium/low/info)</td>
+</tr>
+<tr>
+<td>evidence</td>
+<td>Raw tool output</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>UTC timestamp</td>
+</tr>
+<tr>
+<td>provenance</td>
+<td>Manifest + execution context</td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-handling">🧩 Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tool binary missing</td>
+<td>Raise <code>ToolNotFoundError</code></td>
+</tr>
+<tr>
+<td>Sandbox violation</td>
+<td>Terminate subprocess</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>Abort execution, mark partial-success</td>
+</tr>
+<tr>
+<td>Parse failure</td>
+<td>Skip line, log warning</td>
+</tr>
+<tr>
+<td>Non-zero exit code</td>
+<td>Log and attach stderr to run context</td>
+</tr>
+</tbody>
+</table>
+<h2 id="future-extensions">🔮 Future Extensions<a class="headerlink" href="#future-extensions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Interactive tool chaining (UI-based pipeline builder)</li>
+<li>Tool profiles for project-specific setups</li>
+<li>Remote execution agents (distributed scanning)</li>
+<li>Version-aware compatibility checks</li>
+<li>Auto-updating manifests (self-test validation)</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../08-tool-manager-and-ux-design/">Tool Manager &amp; User Experience Design</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

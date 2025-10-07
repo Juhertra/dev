@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://security-toolkit.dev/schemas/endpoint_dossier",
+  "title": "Endpoint Dossier Schema",
+  "description": "Complete test history and metadata for a single API endpoint",
+  "type": "object",
+  "required": [
+    "endpoint_key",
+    "total_runs",
+    "latest_run",
+    "history",
+    "version"
+  ],
+  "properties": {
+    "endpoint_key": {
+      "type": "string",
+      "pattern": "^(GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD) https://[^\\s]+$",
+      "description": "Canonical endpoint identifier: METHOD + complete URI"
+    },
+    "total_runs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of test runs against this endpoint"
+    },
+    "latest_run": {
+      "type": "object",
+      "required": ["run_id", "finished_at", "findings", "worst"],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^run-[0-9]{13}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "findings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "worst": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "info", "none"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/historical_run"
+      },
+      "description": "Chronological test history (newest first)"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Schema version for migration compatibility"
+    },
+    "retired": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether endpoint is deprecated"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "last_modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "first_seen": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5
+        },
+        "risk_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Calculated risk score based on findings history"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "historical_run": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "started_at",
+        "finished_at",
+        "findings",
+        "worst"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^run-[0-9]{13}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "findings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "worst": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "info", "none"]
+        },
+        "artifact": {
+          "type": ["string", "null"],
+          "pattern": "^/[^\0]*\\.(ndjson|json)$"
+        },
+        "templates_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "endpoint_key": "GET https://api.petstore.com/v2/pets",
+      "total_runs": 3,
+      "latest_run": {
+        "run_id": "run-20240115-1045",
+        "finished_at": "2024-01-15T10:45:00Z",
+        "findings": 2,
+        "worst": "medium"
+      },
+      "history": [
+        {
+          "run_id": "run-20240115-1045",
+          "started_at": "2024-01-15T10:30:00Z",
+          "finished_at": "2024-01-15T10:45:00Z",
+          "findings": 2,
+          "worst": "medium",
+          "artifact": "/tmp/nuclei-output.ndjson",
+          "templates_count": 8,
+          "duration_ms": 900000
+        },
+        {
+          "run_id": "run-20240114-1430",
+          "started_at": "2024-01-14T14:30:00Z",
+          "finished_at": "2024-01-14T14:45:00Z",
+          "findings": 0,
+          "worst": "none",
+          "templates_count": 5,
+          "duration_ms": 900000
+        }
+      ],
+      "version": 1,
+      "retired": false,
+      "metadata": {
+        "last_modified": "2024-01-15T10:45:00Z",
+        "first_seen": "2024-01-14T14:30:00Z",
+        "tags": ["pets", "public"],
+        "risk_score": 6.5
+      }
+    }
+  ]
+}

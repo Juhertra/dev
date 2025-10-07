@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Hexagonal architecture, workflows, plugins, and validation portal" name="description"/>
+<meta content="Hernan Trajtemberg, Lead Security Engineer" name="author"/>
+<link href="../13-cve-cwe-poc-enrichment-layer/" rel="prev"/>
+<link href="../15-garbage-collection-and-retention/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.21" name="generator"/>
+<title>SecFlow — PoC Governance, Safety, and Legal Framework - SecFlow Architecture &amp; Validation</title>
+<link href="../../assets/stylesheets/main.2a3383ac.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#14-poc-governance-safety-and-legal-framework">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="SecFlow Architecture &amp; Validation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            SecFlow Architecture &amp; Validation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              SecFlow — PoC Governance, Safety, and Legal Framework
+            
+          </span>
+</div>
+</div>
+</div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="SecFlow Architecture &amp; Validation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    SecFlow Architecture &amp; Validation
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../00-index/">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../01-title-and-executive-summary/">
+<span class="md-ellipsis">
+    Executive Summary
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../02-architecture-philosophy/">
+<span class="md-ellipsis">
+    Philosophy
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../03-repository-layout/">
+<span class="md-ellipsis">
+    Repository Layout
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../04-core-packages-and-responsibilities/">
+<span class="md-ellipsis">
+    Core Packages
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../05-orchestration-and-workflow-engine/">
+<span class="md-ellipsis">
+    Orchestration Engine
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../06-plugin-system/">
+<span class="md-ellipsis">
+    Plugin System
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../07-tools-integration-model/">
+<span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../08-tool-manager-and-ux-design/">
+<span class="md-ellipsis">
+    Tool Manager &amp; UX
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../09-resource-registry/">
+<span class="md-ellipsis">
+    Resource Registry
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../10-wordlist-and-output-sharing/">
+<span class="md-ellipsis">
+    Wordlists &amp; Sharing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../11-project-isolation-and-data-sharing/">
+<span class="md-ellipsis">
+    Project Isolation &amp; Sharing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../12-findings-model-and-schema/">
+<span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../13-cve-cwe-poc-enrichment-layer/">
+<span class="md-ellipsis">
+    Enrichment Layer
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    PoC Sources &amp; Legal
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    PoC Sources &amp; Legal
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🧭 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#legal-ethical-framework">
+<span class="md-ellipsis">
+      ⚖️ Legal &amp; Ethical Framework
+    </span>
+</a>
+<nav aria-label="⚖️ Legal &amp; Ethical Framework" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-authorized-testing-only">
+<span class="md-ellipsis">
+      1. Authorized Testing Only
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-compliance-with-international-norms">
+<span class="md-ellipsis">
+      2. Compliance with International Norms
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-researcher-agreement">
+<span class="md-ellipsis">
+      3. Researcher Agreement
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#poc-lifecycle-management">
+<span class="md-ellipsis">
+      🧱 PoC Lifecycle Management
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#storage-metadata">
+<span class="md-ellipsis">
+      🧩 Storage &amp; Metadata
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#future-enhancements">
+<span class="md-ellipsis">
+      🔮 Future Enhancements
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../15-garbage-collection-and-retention/">
+<span class="md-ellipsis">
+    Garbage Collection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../16-security-model/">
+<span class="md-ellipsis">
+    Security Model
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../17-observability-logging-and-metrics/">
+<span class="md-ellipsis">
+    Observability
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../18-error-handling-and-recovery/">
+<span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../19-risk-assessment-framework/">
+<span class="md-ellipsis">
+    Risk Assessment
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../20-migration-and-implementation-phases/">
+<span class="md-ellipsis">
+    Migration Plan
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../21-ci-cd-and-testing-strategy/">
+<span class="md-ellipsis">
+    CI/CD &amp; Testing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../22-developer-experience-and-docs/">
+<span class="md-ellipsis">
+    Dev Experience &amp; Docs
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../23-future-roadmap/">
+<span class="md-ellipsis">
+    Future Roadmap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../24-final-consensus-summary/">
+<span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Review &amp; Validation
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Review &amp; Validation
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/REVIEW_GUIDELINES/">
+<span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/review_workflow/">
+<span class="md-ellipsis">
+    Workflow
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/review_assignments/">
+<span class="md-ellipsis">
+    Assignments
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/validation_checklist/">
+<span class="md-ellipsis">
+    Checklist
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/REVIEW_STATUS/">
+<span class="md-ellipsis">
+    Status
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/validation_report/">
+<span class="md-ellipsis">
+    Report
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/VALIDATION_SUMMARY/">
+<span class="md-ellipsis">
+    AI Summary
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../review/glossary.yml">
+<span class="md-ellipsis">
+    Glossary
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="14-poc-governance-safety-and-legal-framework">14 — PoC Governance, Safety, and Legal Framework<a class="headerlink" href="#14-poc-governance-safety-and-legal-framework" title="Permanent link">¶</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>Proof-of-Concept (PoC) execution is the most sensitive aspect of the SecFlow platform.<br/>
+While enrichment and discovery involve data collection, PoC modules may <strong>trigger actual exploits</strong> — often on controlled test targets or lab environments.</p>
+<p>This section defines:
+- The <strong>security model</strong> for PoC management and execution.
+- <strong>Legal and ethical boundaries</strong> for researchers.
+- <strong>Technical enforcement</strong> of sandbox isolation.
+- <strong>Policy hierarchy</strong> for PoC lifecycle, provenance, and deletion.</p>
+<hr/>
+<h2 id="legal-ethical-framework">⚖️ Legal &amp; Ethical Framework<a class="headerlink" href="#legal-ethical-framework" title="Permanent link">¶</a></h2>
+<h3 id="1-authorized-testing-only">1. Authorized Testing Only<a class="headerlink" href="#1-authorized-testing-only" title="Permanent link">¶</a></h3>
+<p>PoC execution is <strong>strictly limited</strong> to:
+- Assets owned or explicitly authorized by the user.
+- Lab or offline sandbox targets.
+- Non-production systems unless a signed authorization exists.</p>
+<h3 id="2-compliance-with-international-norms">2. Compliance with International Norms<a class="headerlink" href="#2-compliance-with-international-norms" title="Permanent link">¶</a></h3>
+<p>SecFlow aligns with:
+- <strong>ISO/IEC 29147</strong> — Vulnerability Disclosure.
+- <strong>ISO/IEC 30111</strong> — Vulnerability Handling.
+- <strong>NIST SP 800-115</strong> — Technical Guide to Information Security Testing.
+- <strong>CISA KEV</strong> and <strong>CVE® Program</strong> standards.</p>
+<h3 id="3-researcher-agreement">3. Researcher Agreement<a class="headerlink" href="#3-researcher-agreement" title="Permanent link">¶</a></h3>
+<p>Before using any exploit-related features:
+- Users must accept the <strong>Responsible Use Agreement (RUA)</strong>.
+- Every PoC download or execution is logged.
+- No redistribution of PoC code outside permitted licensing (e.g., GPL, BSD).</p>
+<hr/>
+<h2 id="poc-lifecycle-management">🧱 PoC Lifecycle Management<a class="headerlink" href="#poc-lifecycle-management" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Acquisition</strong></td>
+<td>PoC fetched from trusted sources (Exploit-DB, Vulners, GitHub PoC, OSV).</td>
+</tr>
+<tr>
+<td><strong>Verification</strong></td>
+<td>Signature/hash validated; metadata normalized.</td>
+</tr>
+<tr>
+<td><strong>Classification</strong></td>
+<td>Marked as local, remote, DoS, or privilege escalation.</td>
+</tr>
+<tr>
+<td><strong>Sandbox Execution</strong></td>
+<td>Run only in isolated containers or VMs.</td>
+</tr>
+<tr>
+<td><strong>Audit Logging</strong></td>
+<td>Execution parameters, user, and timestamp recorded.</td>
+</tr>
+<tr>
+<td><strong>Retention &amp; Purge</strong></td>
+<td>Expired PoCs automatically archived or deleted.</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="storage-metadata">🧩 Storage &amp; Metadata<a class="headerlink" href="#storage-metadata" title="Permanent link">¶</a></h2>
+<p>PoCs are stored as <strong>immutable artifacts</strong> under the internal resource store:</p>
+<div class="highlight"><pre><span></span><code>~/.SecFlow/resources/poc/
+├── CVE-2024-12345/
+│   ├── exploit.py
+│   ├── metadata.json
+│   └── README.md
+└── CVE-2023-98765/
+```text
+
+### Example `metadata.json`
+```json
+{
+  "cve": "CVE-2024-12345",
+  "source": "exploit-db",
+  "url": "https://www.exploit-db.com/exploits/52341",
+  "verified": true,
+  "language": "python",
+  "type": "rce",
+  "hash": "b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0",
+  "sandbox_only": true,
+  "license": "GPLv2",
+  "date_fetched": "2025-10-06T10:20:00Z"
+}
+```json
+
+## 🔒 Sandbox Execution Architecture
+
+### 1. Isolation Model
+
+All PoC executions occur within the SecFlow Sandbox Runtime, implemented as:
+
+- Docker container with restricted capabilities (`--cap-drop=ALL`).
+- Read-only mount of PoC files.
+- No network egress unless explicitly allowed.
+- Time &amp; memory quotas enforced by cgroups.
+
+### 2. Runtime Diagram
+```yaml
++-------------------------------------------------------+
+|                SecFlow Sandbox Runtime                |
+|-------------------------------------------------------|
+|  - Namespace Isolation (PID, NET, MNT)                |
+|  - Read-only FS for /poc                              |
+|  - IPC + SYS_ADMIN disabled                           |
+|  - AppArmor / SELinux profiles                        |
+|  - Seccomp filters (deny dangerous syscalls)          |
++-------------------------------------------------------+
+         ↑
+         | PoC artifact + parameters
+         |
+[SecFlow Worker] → [Sandbox Orchestrator] → [Container Runtime]
+```text
+
+### 3. Sample Sandbox Invocation
+```bash
+SecFlow sandbox run poc CVE-2024-12345 --target https://staging.example.com
+```yaml
+
+Under the hood:
+```bash
+subprocess.run([
+  "docker", "run", "--rm", "--network", "none",
+  "--memory", "512m", "--cpus", "1",
+  "-v", "/pocstore/CVE-2024-12345:/poc:ro",
+  "SecFlow-sandbox:latest",
+  "python3", "/poc/exploit.py", "--target", "https://staging.example.com"
+])
+```yaml
+
+## ⚙️ PoC Execution Policy
+
+| Policy | Enforcement |
+|--------|-------------|
+| **Sandbox Only** | No PoC runs on host system. |
+| **Read-only Filesystem** | Prevents code modification or persistence. |
+| **No Network by Default** | All outbound connections blocked. |
+| **User Authorization** | Each run signed with user identity &amp; timestamp. |
+| **Logging &amp; Replay** | Stdout/stderr captured in audit logs. |
+| **Time-Bound Execution** | Hard kill if runtime exceeds `timeout_seconds`. |
+
+## 🧠 Policy Configuration Example
+
+```yaml
+# ~/.SecFlow/policies/poc.yaml
+sandbox:
+  image: SecFlow-sandbox:latest
+  max_cpu: 1
+  max_memory_mb: 512
+  timeout_seconds: 300
+  allow_network: false
+  allow_filesystem_write: false
+
+compliance:
+  require_disclaimer: true
+  require_project_authorization: true
+  auto_verify_hashes: true
+```python
+
+## 🧩 Governance Logging
+
+Every PoC-related event is appended to a tamper-resistant audit log:
+
+| Field | Description |
+|-------|-------------|
+| event_id | UUID of the audit entry |
+| user_id | Executing user |
+| timestamp | UTC ISO-8601 time |
+| action | e.g., "sandbox_run", "download", "verify" |
+| cve_id | Related CVE |
+| tool | Source or wrapper (e.g., "exploitdb") |
+| sandbox_id | Container identifier |
+| hash | SHA256 of PoC code |
+
+### Example Log Entry
+```json
+{
+  "event_id": "a1f3b7c2-9f11-45d0-bc97-6c9472cbdcb2",
+  "user_id": "hernan",
+  "action": "sandbox_run",
+  "cve_id": "CVE-2024-12345",
+  "timestamp": "2025-10-06T10:43:00Z",
+  "sandbox_id": "sandbox-83214",
+  "hash": "b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0",
+  "tool": "exploitdb"
+}
+```text
+
+## 🧠 Legal Notice Enforcement
+
+Before any PoC interaction, users must sign a legal disclaimer:
+
+```python
+Responsible Use Notice:
+You acknowledge that PoC exploitation is to be performed exclusively on systems you own or are explicitly authorized to test. SecFlow is not liable for any misuse or damages resulting from unauthorized use.
+```text
+
+The system stores an acceptance hash:
+```yaml
+~/.SecFlow/.disclaimer_accepted
+```yaml
+
+## 🧩 Cross-Project PoC Access
+
+To prevent accidental disclosure:
+- PoC artifacts are scoped per project by default.
+- Shared PoCs require explicit admin approval.
+- Access controlled via role-based permissions (RBAC).
+
+| Role | Access |
+|------|--------|
+| **Admin** | Global &amp; project PoCs |
+| **Analyst** | Project PoCs only |
+| **Viewer** | Read-only (metadata only) |
+
+## 🧱 PoC Verification Workflow
+
+```mermaid
+graph TD
+A[Download PoC] --&gt; B[Verify Hash &amp; Signature]
+B --&gt; C{Trusted Source?}
+C --&gt;|Yes| D[Mark Verified]
+C --&gt;|No| E[Quarantine]
+E --&gt; F[Manual Review Required]
+D --&gt; G[Available for Sandbox Run]
+```text
+
+## 🔒 Quarantine Mechanism
+
+Unknown or tampered PoCs are moved to:
+```text
+~/.SecFlow/resources/poc/quarantine/
+```python
+
+Each is tagged with a quarantine reason.
+Admins can review and promote back to verified status.
+
+```python
+def quarantine_poc(poc_id: str, reason: str):
+    shutil.move(f"/pocstore/{poc_id}", "/pocstore/quarantine/")
+    write_log(f"PoC {poc_id} quarantined: {reason}")
+```text
+
+## 🧠 Example Execution Trace
+
+```text
+[PoC: CVE-2024-12345] Verified source: ExploitDB
+[Sandbox] Starting container SecFlow-sandbox:latest
+[Sandbox] CPU quota: 1 core, Memory: 512MB
+[Sandbox] Network: disabled
+[Output]
+    [+] Exploit successful: remote command executed
+[Cleanup]
+    PoC container destroyed after 120s
+</code></pre></div>
+<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">¶</a></h2>
+<ul>
+<li>AppArmor enforcement policies with dynamic runtime profiling.</li>
+<li>PoC provenance blockchain for cryptographic integrity.</li>
+<li>AI-assisted PoC safety classification (RCE, DoS, PrivEsc).</li>
+<li>Multi-tenant isolation for collaborative workspaces.</li>
+<li>Live replay of PoC runs for training and documentation.</li>
+</ul>
+<hr/>
+<p><strong>Next:</strong> <a href="../15-garbage-collection-and-retention/">Garbage Collection &amp; Data Retention Policy</a></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

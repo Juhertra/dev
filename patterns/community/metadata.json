@@ -1,0 +1,14 @@
+{
+  "owasp-crs": {
+    "last_updated": null,
+    "enabled": true
+  },
+  "nuclei-templates": {
+    "last_updated": "2025-09-24T17:16:11.458647",
+    "enabled": true
+  },
+  "security-patterns": {
+    "last_updated": null,
+    "enabled": false
+  }
+}

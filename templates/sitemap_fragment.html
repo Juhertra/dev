@@ -1,0 +1,377 @@
+{# Site Map Fragment - Complete Redesign with Clear Columns and Working Filters #}
+{% from "_macros.html" import method_chip %}
+
+<style>
+.sitemap-tree {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.sitemap-base-url {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: var(--card);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+.folder-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.meta-dot {
+  opacity: 0.6;
+}
+
+.meta-group strong {
+  color: var(--fg);
+}
+
+.endpoint-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.endpoint-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--card-b);
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 0.8rem;
+}
+
+.endpoint-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--card-b);
+}
+
+.endpoint-table tr:hover {
+  background: var(--bg-hover);
+}
+
+.endpoint-table .path {
+  font-family: monospace;
+  color: var(--fg);
+}
+
+.endpoint-table .actions {
+  white-space: nowrap;
+}
+
+.sitemap-stats { display:flex; gap:8px; align-items:center; margin-left:auto; }
+.sitemap-stats .count {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 6px; border-radius:999px; border:1px solid var(--card-b);
+  font-size:12px; background:var(--bg2);
+}
+.sitemap-stats .count.ok { background:#0f766e22; border-color:#0f766e55; }
+.sitemap-stats .count.warn { background:#f59e0b22; border-color:#f59e0b55; }
+.sitemap-stats .count.danger { background:#ef444422; border-color:#ef444455; }
+
+.endpoint-table { width:100%; border-collapse: collapse; }
+.endpoint-table th, .endpoint-table td { padding:6px 8px; border-bottom:1px solid var(--card-b); }
+.endpoint-row[data-hasvulns="true"] { background: #ef44440f; }
+.sitemap-stats .count.muted  { color: var(--muted); }
+
+.endpoint-table .actions .btn {
+  margin-right: 4px;
+}
+
+.spec-actions { margin-left:auto; display:flex; align-items:center; }
+
+/* Toast animations */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+</style>
+
+{% macro render_endpoint(ep, pid, base_safe_id) -%}
+<tr class="endpoint-row" 
+    data-m="{{ ep.method }}"
+    data-status="{{ 'tested' if ep.status is not none else 'untested' }}"
+    data-hasvulns="{{ 1 if ep.vulns and ep.vulns.total > 0 else 0 }}">
+  <td><span class="chip {{ ep.method }}">{{ ep.method }}</span></td>
+  <td class="path monospace">{{ ep.path }}</td>
+  <td title="{{ 'Tested' if ep.status is not none else 'Untested' }}">
+    {% if ep.retired %}
+      <span class="tag muted" title="Retired: {{ ep.retired.reason }}">Retired</span>
+    {% elif ep.status is not none %}
+      <span class="tag ok">Tested</span>
+    {% else %}
+      <span class="tag">Untested</span>
+    {% endif %}
+  </td>
+  <td title="Total vulnerabilities on this endpoint">
+    {% if ep.vulns and ep.vulns.total %}{{ ep.vulns.total }}{% else %}0{% endif %}
+  </td>
+  <td class="actions">
+    <button class="btn ghost btn-sm" type="button"
+            hx-post="/p/{{ pid }}/sitemap/endpoint-preview"
+            hx-vals='{"url":"{{ ep.base }}{{ ep.path }}","method":"{{ ep.method }}"}'
+            hx-target="#panel-body" hx-indicator="#global-indicator"
+            onclick="openPanelWith('Preview', '{{ ep.method }}', '{{ ep.path }}', '{{ ep.base }}{{ ep.path }}')">Preview</button>
+    <button class="btn primary btn-sm" type="button"
+            hx-post="{{ url_for('web.queue_add', pid=pid) }}"
+            hx-target="#queue-toast-sitemap" hx-swap="innerHTML"
+            hx-indicator="#global-indicator"
+            hx-vals='{"spec_id":"{{ ep.spec_id }}","sel":"{{ ep.index }}"}'
+            hx-on::after-request="if(typeof showNotification === 'function') showNotification('Added to Test Queue', 'success'); else alert('Added to Test Queue');"
+            hx-on::response-error="if(typeof showNotification === 'function') showNotification('Error adding to Test Queue', 'error'); else alert('Error adding to Test Queue');">Add to Test Queue</button>
+    <button class="btn ghost btn-sm" type="button"
+            hx-post="/p/{{ pid }}/sitemap/endpoint-runs"
+            hx-vals='{"url":"{{ ep.base }}{{ ep.path }}","method":"{{ ep.method }}"}'
+            hx-target="#panel-body" hx-swap="innerHTML" hx-indicator="#global-indicator"
+            onclick="openPanelWith('Runs', '{{ ep.method }}', '{{ ep.path }}', '{{ ep.base }}{{ ep.path }}')">Runs</button>
+  </td>
+</tr>
+{%- endmacro %}
+
+{% macro render_folder(node, pid, base_safe_id, depth=0) -%}
+{% set folder_id = base_safe_id ~ "::" ~ (node.segment | replace('/', '_') | replace('.', '_') | lower) %}
+<div class="sitemap-folder" style="margin-left: {{ depth * 20 }}px;">
+  <details class="spec" open>
+    <summary>
+      <span class="chev">▶</span>
+      <div class="spec-head">
+        <div class="row" style="align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div class="row" style="align-items:center;gap:10px;min-width:0;flex:1;">
+            <strong style="font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ node.segment or '/' }}</strong>
+
+            <!-- Inline labeled stats with improved alignment and accessibility -->
+            <div class="stats" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;" 
+                 hx-get="/p/{{ pid }}/vulns/summary.json" 
+                 hx-trigger="sse:message[event='finding'] from:#liveResults" 
+                 hx-target="this" 
+                 hx-swap="outerHTML">
+              <span class="stat" title="Total endpoints in this group: {{ node.stats.endpoints }}" 
+                    aria-label="Endpoints: {{ node.stats.endpoints }}">
+                <span class="label">Endpoints:</span>
+                <span class="pill">{{ node.stats.endpoints }}</span>
+              </span>
+              <span class="stat" title="Untested endpoints: {{ node.stats.untested }}"
+                    aria-label="Untested: {{ node.stats.untested }}">
+                <span class="label">Untested:</span>
+                <span class="pill">{{ node.stats.untested }}</span>
+              </span>
+              <span class="stat{% if node.stats.vulns > 0 %} danger{% endif %}" title="Security vulnerabilities found: {{ node.stats.vulns }}"
+                    aria-label="Vulnerabilities: {{ node.stats.vulns }}">
+                <span class="label">Vulnerabilities:</span>
+                <span class="pill">{{ node.stats.vulns }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <style>
+        /* Responsive sitemap stats */
+        @media (max-width: 768px) {
+          .stats { gap: 4px !important; }
+          .stat { font-size: 0.8rem; }
+          .stat .label { font-size: 0.7rem; }
+          .stat .pill { font-size: 0.7rem; padding: 1px 4px; }
+        }
+        
+        @media (max-width: 480px) {
+          .stats { 
+            flex-direction: column !important; 
+            align-items: flex-start !important; 
+            gap: 2px !important; 
+          }
+          .stat { 
+            font-size: 0.7rem; 
+            padding: 1px 4px;
+          }
+          .stat .label { font-size: 0.6rem; }
+          .stat .pill { font-size: 0.6rem; padding: 0px 3px; }
+        }
+        </style>
+      </div>
+      <div class="spec-actions">
+        <form hx-post="{{ url_for('web.sitemap_test_folder', pid=pid) }}"
+              hx-target="#queue-toast-sitemap" hx-swap="innerHTML"
+              hx-indicator="#global-indicator">
+          <input type="hidden" name="folder_id" value="{{ folder_id }}">
+          <button class="btn ghost" type="submit"
+                  hx-on::after-request="showNotification('Added folder to Test Queue', 'success')"
+                  hx-on::response-error="showNotification('Error adding folder to Test Queue', 'error')">
+            Add Folder to Test Queue
+          </button>
+        </form>
+      </div>
+    </summary>
+    <div class="spec-body">
+      {% if node.endpoints %}
+        <div class="sitemap-caption">
+          <span class="col" title="Total endpoints in this folder">Endpoints</span>
+          <span class="col" title="Endpoints not yet tested">Untested</span>
+          <span class="col" title="Total vulnerabilities found">Vulns</span>
+        </div>
+        <table class="endpoint-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Path</th>
+              <th>Status</th>
+              <th>Vulns</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ep in node.endpoints %}
+              {{ render_endpoint(ep, pid, base_safe_id) }}
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+      
+      {% if node.children %}
+        <div class="row toolbar" style="margin-top: 8px;">
+          <button class="btn ghost" type="button" onclick="expandWithin('{{ folder_id }}')">Expand</button>
+          <button class="btn ghost" type="button" onclick="collapseWithin('{{ folder_id }}')">Collapse</button>
+        </div>
+        {% for child in node.children %}
+          {{ render_folder(child, pid, base_safe_id, depth + 1) }}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </details>
+</div>
+{%- endmacro %}
+
+<div id="queue-toast-sitemap"></div>
+
+<!-- Debug: sitemap = {{ sitemap }} -->
+{% if not sitemap or not sitemap.roots %}
+  <div class="card" style="text-align: center; padding: 48px 24px;">
+    <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;">🗺️</div>
+    <h3 style="margin: 0 0 8px; color: var(--fg);">No Endpoints Available</h3>
+    <div class="muted" style="margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+      Load API specifications in the API Explorer to build the hierarchical Site Map and visualize your API structure.
+    </div>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+        <div style="font-weight: 600; margin-bottom: 4px;">🔍 API Explorer</div>
+        <div class="muted" style="font-size: 0.9rem;">Select endpoints to test</div>
+      </div>
+      <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+        <div style="font-weight: 600; margin-bottom: 4px;">🗺️ Site Map</div>
+        <div class="muted" style="font-size: 0.9rem;">View hierarchy here</div>
+      </div>
+      <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+        <div style="font-weight: 600; margin-bottom: 4px;">⚡ Test Queue</div>
+        <div class="muted" style="font-size: 0.9rem;">Bulk test endpoints</div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="sitemap-tree">
+    {% for root in sitemap.roots %}
+      {% set base_safe_id = "root-" ~ loop.index %}
+      
+      {% if root.segment %}
+        <div class="sitemap-base-url">
+          🌐 {{ root.segment }} • {{ root.stats.total_endpoints }} endpoints
+        </div>
+      {% endif %}
+      
+      {% if root.endpoints %}
+        <table class="endpoint-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Path</th>
+              <th>Status</th>
+              <th>Vulns</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ep in root.endpoints %}
+              {{ render_endpoint(ep, pid, base_safe_id) }}
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+      
+      {% if root.children %}
+        {% for child in root.children %}
+          {{ render_folder(child, pid, base_safe_id) }}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<script>
+const smap = { methods: new Set(['GET','POST','PUT','DELETE']), status: 'all', q: '' };
+
+function smapToggleMethod(m){
+  if (smap.methods.has(m)) smap.methods.delete(m); else smap.methods.add(m);
+  document.querySelector(`.filters .tag[data-m="${m}"]`).classList.toggle('active');
+  smapApply();
+}
+
+function smapSetStatus(s){
+  smap.status = s;
+  document.querySelectorAll('.filters .tag[data-s]').forEach(b=>b.classList.toggle('active', b.dataset.s===s));
+  smapApply();
+}
+
+function smapClear(){
+  smap.methods = new Set(['GET','POST','PUT','DELETE']);
+  smap.status = 'all';
+  smap.q = '';
+  document.getElementById('smap-search').value = '';
+  document.querySelectorAll('.filters .tag[data-m]').forEach(b=>b.classList.add('active'));
+  document.querySelectorAll('.filters .tag[data-s]').forEach(b=>b.classList.toggle('active', b.dataset.s==='all'));
+  smapApply();
+}
+
+function smapApply(){
+  smap.q = (document.getElementById('smap-search').value || '').toLowerCase();
+  document.querySelectorAll('.endpoint-item').forEach(row=>{
+    const m = row.dataset.method;
+    const st = row.dataset.status; // 'tested' | 'untested'
+    const vulns = parseInt(row.dataset.vulns || '0', 10);
+    const path = row.querySelector('.path')?.textContent.toLowerCase() || '';
+
+    let show = smap.methods.has(m);
+    if (smap.status==='tested') show = show && (st==='tested');
+    else if (smap.status==='untested') show = show && (st==='untested');
+    else if (smap.status==='hasvulns') show = show && (vulns>0);
+    if (smap.q) show = show && path.includes(smap.q);
+
+    row.style.display = show ? '' : 'none';
+  });
+
+  // update folder visibility (hide folder if all children hidden)
+  document.querySelectorAll('.sitemap-folder').forEach(folder=>{
+    const visible = folder.querySelectorAll('.endpoint-item:not([style*="display: none"])').length > 0;
+    folder.style.display = visible ? '' : 'none';
+  });
+}
+
+function expandWithin(id) {
+  document.querySelectorAll('#' + id + ' details.spec').forEach(d => d.open = true);
+}
+
+function collapseWithin(id) {
+  document.querySelectorAll('#' + id + ' details.spec').forEach(d => d.open = false);
+}
+</script>

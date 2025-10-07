@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IDK — API Explorer</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <link rel="stylesheet" href="/static/tokens.css">
+  <link rel="stylesheet" href="/static/main.css">
+  <script src="/static/main.js"></script>
+  <script>
+    // Provide project context for pages that rely on it
+    window.APP_CTX = Object.assign({}, window.APP_CTX || {}, { pid: "aa05ff93-104f-463f-aaca-adab848ce6c5" });
+    window.currentProjectId = "aa05ff93-104f-463f-aaca-adab848ce6c5";
+  </script>
+  <style>
+    .app-shell { display:flex; min-height:100vh; }
+    .sidebar {
+      width: 256px; background: var(--bg2); border-right:1px solid var(--card-b);
+      padding: 14px; position: sticky; top:0; height:100vh;
+    }
+    .sb-title { font-weight:700; color:var(--fg); margin-bottom:6px; }
+    .sb-project { color:var(--muted); font-size:.9rem; margin-bottom:12px; }
+    .nav { display:flex; flex-direction:column; gap:4px; }
+    .nav a {
+      display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px;
+      color:var(--fg); text-decoration:none;
+    }
+    .nav a.active { background: rgba(34,211,238,.20); color: var(--accent); }
+    .nav .badge {
+      margin-left:auto; background: var(--accent); color:#0b1020;
+      border-radius:999px; padding:1px 8px; font-size:.75rem;
+    }
+    .content { flex:1; display:flex; flex-direction:column; }
+    .toprow {
+      display:flex; align-items:center; gap:8px; padding:10px 16px;
+      border-bottom:1px solid var(--card-b); background: var(--bg2);
+    }
+    .breadcrumbs { color: var(--muted); font-size:.9rem; }
+    .breadcrumbs a { color: var(--muted); text-decoration:none; }
+    .breadcrumbs .sep { margin:0 6px; }
+    .wrap { padding:16px; }
+    #panel { z-index: 1000; } /* keep drawer above content */
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Primary">
+    <div class="sb-title">Security Toolkit</div>
+    <div class="sb-project">IDK</div>
+    <nav class="nav" role="navigation">
+      <a class="" href="/">📂 Projects</a>
+      <a class="active" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5">🔍 API Explorer</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/sitemap">🗺️ Site Map</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/queue">⏳ Test Queue</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/active-testing">🔬 Active Testing</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/templates/manager">📋 Template Manager</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/sends">🕑 History</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/findings">🚨 Vulnerabilities</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/patterns">⚖️ Detection Rules</a>
+      <a class="" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/reports">📊 Security Reports</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <div class="toprow">
+      <div class="breadcrumbs" aria-label="Breadcrumb">
+        
+  
+          <a href="/">Projects</a>
+          <span class="sep">›</span>
+          <a href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5">IDK</a>
+          <!-- page appends more segments -->
+        
+  <span class="sep">›</span>
+  <span>API Explorer</span>
+
+      </div>
+      <span style="flex:1"></span>
+      <button id="theme" class="btn" onclick="setTheme(getTheme()==='light'?'dark':'light')">🌙</button>
+    </div>
+
+    <div class="wrap">
+      
+  <style>
+    .findings-count {
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    
+    /* Fix table row vertical alignment */
+    table tr {
+      vertical-align: middle;
+    }
+    
+    table td {
+      vertical-align: middle;
+    }
+    
+    /* Ensure chips and buttons are vertically centered */
+    .chip {
+      vertical-align: middle;
+    }
+    
+    .btn {
+      vertical-align: middle;
+    }
+    /* Full-width content area overrides */
+    .wrap{ max-width:none; width:100%; }
+    .grid{ grid-template-columns: minmax(420px, 1fr) 420px; }
+    /* Keep spec headers stable */
+    /* Group header layout */
+    details.spec summary{ display:grid; grid-template-columns: 20px 1fr auto; align-items:center; gap:12px; padding:14px 16px }
+    .spec-head{ display:flex; flex-direction:column; gap:4px; min-width:0; line-height:1.2 }
+    .spec-title{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:800 }
+    .spec .muted{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    /* Full-size spec body with stable sizing */
+    details.spec{ width:100% }
+    .spec-body{ overflow:auto; width:100% }
+    .spec-body table{ table-layout:fixed; width:100%; border-collapse:separate; border-spacing:0 }
+    .spec-body thead th, .spec-body tbody td{ padding:8px 12px; vertical-align:middle }
+    .spec-body tbody tr{ height:40px }
+    /* Column sizing */
+    .spec-body table th:nth-child(1), .spec-body table td:nth-child(1){ width:36px }
+    .spec-body table th:nth-child(2), .spec-body table td:nth-child(2){ width:88px }
+    .spec-body table th:nth-child(4), .spec-body table td:nth-child(4){ width:22% }
+    .spec-body table th:nth-child(5), .spec-body table td:nth-child(5){ width:80px }
+    .spec-body table th:nth-child(6), .spec-body table td:nth-child(6){ width:160px }
+    /* Path column behaves elastically */
+    .spec-body table td:nth-child(3), .spec-body table th:nth-child(3){ overflow:hidden; white-space:nowrap; text-overflow:ellipsis }
+    /* Keep group details collapsed by default unless user opened */
+    details.spec{ contain: layout }
+  </style>
+    
+    <div class="toolbar">
+      <button class="btn ghost" type="button" onclick="expandAll()">Expand all</button>
+      <button class="btn ghost" type="button" onclick="collapseAll()">Collapse all</button>
+    </div>
+
+    <div class="card">
+      <form hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/add" hx-target="#specs" hx-swap="innerHTML" hx-indicator="#global-indicator">
+        <div class="grid">
+          <div>
+            <div class="muted">Spec URLs (one per line)</div>
+            <textarea name="spec_urls" placeholder="https://…/openapi.yaml&#10;https://…/swagger.json"></textarea>
+            <div class="muted" style="margin-top:8px">Or paste raw text (auto-detects OpenAPI/Postman/HAR)</div>
+            <textarea name="raw_text" placeholder="Paste raw OpenAPI JSON/YAML, Postman v2.1, or HAR …" style="height:120px"></textarea>
+          </div>
+          <div>
+            <div class="muted">Proxy</div>
+            <input type="text" name="proxy" placeholder="http://127.0.0.1:8080" value="">
+            <div class="muted" style="margin-top:8px">TLS verify</div>
+            <select name="verify"><option value="1" >Verify TLS</option><option value="0" selected>Skip TLS verification</option></select>
+            <div class="muted" style="margin-top:8px">Spec Authorization</div>
+            <input type="text" name="bearer" placeholder="Bearer token (just token)" value="">
+            <div class="muted" style="margin-top:8px">Custom Headers (JSON)</div>
+            <input type="text" name="headers_json" placeholder='{"x-api-key":"…"}'>
+            <div class="muted" style="margin-top:8px">Type</div>
+            <select name="input_type">
+              <option value="auto" selected>Auto-detect</option>
+              <option value="openapi">OpenAPI/Swagger</option>
+              <option value="postman">Postman Collection</option>
+              <option value="har">HAR (HTTP Archive)</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn primary" type="submit">Load</button>
+          <button class="btn ghost" type="button" hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/clear" hx-target="#specs" hx-swap="innerHTML" hx-on::after-request="if(typeof showNotification === 'function') showNotification('Specifications cleared successfully', 'success'); else alert('Specifications cleared successfully');" hx-on::response-error="if(typeof showNotification === 'function') showNotification('Error clearing specifications', 'error'); else alert('Error clearing specifications');">Clear</button>
+          
+        </div>
+      </form>
+
+      <div class="filters">
+        <span class="muted">Filter methods:</span>
+        <button type="button" class="tag GET active" data-m="GET"    onclick="toggleFilter('GET')">GET</button>
+        <button type="button" class="tag POST active" data-m="POST"  onclick="toggleFilter('POST')">POST</button>
+        <button type="button" class="tag PUT active" data-m="PUT"    onclick="toggleFilter('PUT')">PUT</button>
+        <button type="button" class="tag DELETE active" data-m="DELETE" onclick="toggleFilter('DELETE')">DELETE</button>
+        <button type="button" class="tag active" data-m="PATCH" onclick="toggleFilter('PATCH')">PATCH</button>
+        <span class="sep">•</span>
+        <button type="button" class="btn ghost" onclick="resetFilters()">Reset</button>
+      </div>
+    </div>
+
+    <div id="specs">
+
+  
+  <details class="spec" id="section-pasted___Demo_API_1_0_0" open>
+    <summary>
+      <span class="chev">▶</span>
+      <div class="spec-head">
+        <div class="spec-title">Demo API <span class="badge">v1.0.0</span></div>
+        <div class="muted">(pasted) • Base: https://example.org</div>
+      </div>
+      <div class="spec-actions">
+        <form hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/remove" hx-target="#specs" hx-swap="innerHTML" hx-indicator="#global-indicator">
+          <input type="hidden" name="spec_id" value="pasted://Demo API|1.0.0">
+          <button class="btn ghost" type="submit">Remove</button>
+        </form>
+      </div>
+    </summary>
+    <div class="spec-body">
+      <form hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/queue_add" hx-target="#queue-toast-pasted___Demo_API_1_0_0" hx-swap="innerHTML" hx-indicator="#global-indicator">
+        <input type="hidden" name="spec_id" value="pasted://Demo API|1.0.0">
+        <table id="tbl-pasted___Demo_API_1_0_0" style="margin-top:8px; width:100%;">
+          <thead><tr><th></th><th>Method</th><th>Path</th><th>operationId</th><th>Body?</th><th></th></tr></thead>
+          <tbody>
+            
+              
+              <tr class="op-row" data-method="GET">
+    <td><input type="checkbox" name="sel" value="0"></td>
+    <td><span class="chip GET">GET</span></td>
+    <td>/ping</td>
+    <td>ping</td>
+    <td>No</td>
+    <td>
+      <button class="btn ghost" type="button"
+              hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/op_details"
+              hx-target="#panel-body" hx-swap="innerHTML"
+              hx-indicator="#global-indicator"
+              hx-vals='{"spec_id":"pasted://Demo API|1.0.0","index":"0"}'
+              onclick="openPanelWith('Details', 'GET', '/ping', 'https://example.org/ping')">Details</button>
+      <button class="btn primary" type="button"
+              hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/op_edit"
+              hx-target="#panel-body" hx-swap="innerHTML"
+              hx-indicator="#global-indicator"
+              hx-vals='{"spec_id":"pasted://Demo API|1.0.0","index":"0"}'
+              onclick="openPanelWith('Edit', 'GET', '/ping', 'https://example.org/ping')">Edit</button>
+    </td>
+  </tr>
+  <tr class="op-details-row" data-method="GET"><td colspan="6"><div id="det-pasted___Demo_API_1_0_0-0"></div></td></tr>
+            
+              
+              <tr class="op-row" data-method="POST">
+    <td><input type="checkbox" name="sel" value="1"></td>
+    <td><span class="chip POST">POST</span></td>
+    <td>/echo</td>
+    <td>echo</td>
+    <td>Yes</td>
+    <td>
+      <button class="btn ghost" type="button"
+              hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/op_details"
+              hx-target="#panel-body" hx-swap="innerHTML"
+              hx-indicator="#global-indicator"
+              hx-vals='{"spec_id":"pasted://Demo API|1.0.0","index":"1"}'
+              onclick="openPanelWith('Details', 'POST', '/echo', 'https://example.org/echo')">Details</button>
+      <button class="btn primary" type="button"
+              hx-post="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/op_edit"
+              hx-target="#panel-body" hx-swap="innerHTML"
+              hx-indicator="#global-indicator"
+              hx-vals='{"spec_id":"pasted://Demo API|1.0.0","index":"1"}'
+              onclick="openPanelWith('Edit', 'POST', '/echo', 'https://example.org/echo')">Edit</button>
+    </td>
+  </tr>
+  <tr class="op-details-row" data-method="POST"><td colspan="6"><div id="det-pasted___Demo_API_1_0_0-1"></div></td></tr>
+            
+          </tbody>
+        </table>
+        <div class="row toolbar" style="margin-top:8px;">
+          <button class="btn ghost" type="button" onclick="checkAllInTable('pasted___Demo_API_1_0_0', true)">Select All</button>
+          <button class="btn ghost" type="button" onclick="checkAllInTable('pasted___Demo_API_1_0_0', false)">Deselect</button>
+          <button class="btn primary" type="submit" hx-indicator="#global-indicator" hx-on::after-request="if(typeof showNotification === 'function') showNotification('Added to Test Queue', 'success'); else alert('Added to Test Queue');" hx-on::response-error="if(typeof showNotification === 'function') showNotification('Error adding to Test Queue', 'error'); else alert('Error adding to Test Queue');">Add to Test Queue</button>
+          <a class="link" href="/p/aa05ff93-104f-463f-aaca-adab848ce6c5/queue">Open Queue</a>
+        </div>
+        <div id="queue-toast-pasted___Demo_API_1_0_0"></div>
+      </form>
+    </div>
+  </details>
+  
+
+
+</div>
+    <script>
+      // Collapse all groups on first load; respect persisted open state via localStorage
+      (function(){
+        try{
+          const opened = JSON.parse(localStorage.getItem('open_specs')||'[]');
+          document.querySelectorAll('details.spec').forEach(d=>{
+            const id = d.id||'';
+            d.open = opened.includes(id);
+            d.addEventListener('toggle', ()=>{
+              const cur = new Set(JSON.parse(localStorage.getItem('open_specs')||'[]'));
+              if (d.open) cur.add(id); else cur.delete(id);
+              localStorage.setItem('open_specs', JSON.stringify([...cur]));
+            });
+          });
+        }catch(_){}
+      })();
+      // Re-apply after HTMX swaps of #specs
+      document.addEventListener('htmx:afterSwap', (e)=>{
+        if (e.target && (e.target.id === 'specs' || (e.target.closest && e.target.closest('#specs')))){
+          try{
+            const opened = JSON.parse(localStorage.getItem('open_specs')||'[]');
+            document.querySelectorAll('#specs details.spec').forEach(d=>{
+              const id = d.id||'';
+              d.open = opened.includes(id);
+              d.addEventListener('toggle', ()=>{
+                const cur = new Set(JSON.parse(localStorage.getItem('open_specs')||'[]'));
+                if (d.open) cur.add(id); else cur.delete(id);
+                localStorage.setItem('open_specs', JSON.stringify([...cur]));
+              });
+            });
+          }catch(_){}
+        }
+      });
+    </script>
+
+    
+
+    <script>
+      // Test if showNotification is available
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('showNotification available:', typeof showNotification);
+        if (typeof showNotification === 'function') {
+          console.log('showNotification function is available');
+        } else {
+          console.error('showNotification function is NOT available');
+        }
+      });
+
+      // Test notification function
+      function testNotification() {
+        console.log('Testing notification...');
+        showNotification('Test notification from API Explorer', 'info');
+      }
+    </script>
+
+    </div>
+  </main>
+
+  <div id="global-indicator" class="htmx-indicator" style="display:none; position:fixed; top:10px; right:10px; z-index:10000;">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Drawer Overlay -->
+  <div id="panel-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:9998;"
+       onclick="closePanel()"></div>
+
+  <!-- Drawer Panel -->
+  <aside id="panel" aria-hidden="true"
+         style="position:fixed; top:0; right:0; width:520px; max-width:90vw; height:100%;
+                background:var(--bg); border-left:1px solid var(--card-b); box-shadow:-12px 0 24px rgba(0,0,0,.25);
+                transform:translateX(100%); transition:transform .18s ease; z-index:9999; display:flex; flex-direction:column;">
+    <header style="display:flex; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--card-b);">
+      <span id="panel-chip" class="chip GET">GET</span>
+      <strong id="panel-title" style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">Details</strong>
+      <button class="btn ghost" type="button" onclick="closePanel()">Close</button>
+    </header>
+    <div id="panel-url-display" class="muted" style="padding:8px 14px; display:none;"></div>
+    <div id="panel-body" class="panel-body" style="flex:1; overflow:auto; padding:10px 14px;"></div>
+  </aside>
+
+  
+</div>
+</body>
+</html>{"ts": 1759154245591, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/queue", "data": {"type": "drawer", "target": "panel-body", "length": 555}}
+{"ts": 1759154342771, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/queue/send_selected", "data": {"type": "drawer", "target": "panel-body", "length": 717}}
+{"ts": 1759217730747, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5", "data": {"type": "drawer", "target": "panel-body", "length": 773}}
+{"ts": 1759217783184, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5", "data": {"type": "drawer", "target": "panel-body", "length": 964}}
+{"ts": 1759217787797, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5", "data": {"type": "drawer", "target": "panel-body", "length": 963}}
+{"ts": 1759217796570, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5", "data": {"type": "drawer", "target": "panel-body", "length": 813}}
+{"ts": 1759217804346, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5", "data": {"type": "drawer", "target": "panel-body", "length": 910}}
+{"ts": 1759218934295, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/findings", "data": {"type": "drawer", "target": "panel-body", "length": 5845}}
+{"ts": 1759219005713, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/findings", "data": {"type": "drawer", "target": "panel-body", "length": 5442}}
+{"ts": 1759219044571, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/findings", "data": {"type": "drawer", "target": "panel-body", "length": 5938}}
+{"ts": 1759219078846, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/findings", "data": {"type": "drawer", "target": "panel-body", "length": 5927}}
+{"ts": 1759219157922, "path": "http://127.0.0.1:5000/p/aa05ff93-104f-463f-aaca-adab848ce6c5/findings?group=endpoint", "data": {"type": "drawer", "target": "panel-body", "length": 3852}}

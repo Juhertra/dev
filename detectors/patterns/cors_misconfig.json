@@ -1,0 +1,36 @@
+{
+  "name": "cors_misconfig",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "cors.wildcard",
+      "title": "CORS wildcard origin with credentials",
+      "where": ["response.headers"],
+      "regex": "(?s)\"Access-Control-Allow-Origin\"\\s*:\\s*\"\\*\"\\s*,\\s*\"Access-Control-Allow-Credentials\"\\s*:\\s*\"true\"",
+      "cwe": "346",
+      "cvss": 4.3,
+      "confidence": 80,
+      "tags": ["cors", "owasp"]
+    },
+    {
+      "id": "cors.any_origin",
+      "title": "CORS allows any origin",
+      "where": ["response.headers"],
+      "regex": "\"Access-Control-Allow-Origin\"\\s*:\\s*\"\\*\"",
+      "cwe": "346",
+      "cvss": 3.1,
+      "confidence": 70,
+      "tags": ["cors", "owasp"]
+    },
+    {
+      "id": "cors.null_origin",
+      "title": "CORS allows null origin",
+      "where": ["response.headers"],
+      "regex": "\"Access-Control-Allow-Origin\"\\s*:\\s*\"null\"",
+      "cwe": "346",
+      "cvss": 3.1,
+      "confidence": 60,
+      "tags": ["cors", "owasp"]
+    }
+  ]
+}

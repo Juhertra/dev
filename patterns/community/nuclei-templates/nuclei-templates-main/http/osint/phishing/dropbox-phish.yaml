@@ -1,0 +1,35 @@
+id: dropbox-phish
+
+info:
+  name: dropbox phishing Detection
+  author: rxerium
+  severity: info
+  description: |
+    A dropbox phishing website was detected
+  reference:
+    - https://dropbox.com
+  metadata:
+    max-request: 1
+  tags: phishing,dropbox,osint
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - 'Dropbox is a home for all of your work. You can store and share files, collaborate on projects and bring your best ideas to life, whether you’re working alone or as part of a team.'
+
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - '!contains(host,"dropbox.com")'
+# digest: 4b0a004830460221009fa0513c2431887fe5106791eaa9c76c02d0eb5bedfc48cf00c0ac8cd338d0c8022100b5c366f9038db0a459fb8bd09a348127876f7f21be7499eb6498f5fefa55c864:922c64590222798bb761d5b6d8e72950

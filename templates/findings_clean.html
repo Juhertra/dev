@@ -1,0 +1,962 @@
+{% from "_macros.html" import method_chip %}
+{% extends "_layout.html" %}
+{% set active_nav = 'findings' %}
+
+{% block page_title %}Vulnerabilities{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Vulnerabilities</span>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Main Vulnerabilities Interface -->
+    <div class="card">
+      <!-- Summary Statistics -->
+      <div class="findings-summary">
+        <div class="summary-stats">
+          <div class="stat-item">
+            <div class="stat-number" id="total-findings">{{ counts.total }}</div>
+            <div class="stat-label">Total Vulnerabilities</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="medium-findings">{{ counts.medium or 0 }}</div>
+            <div class="stat-label">Medium</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="low-findings">{{ counts.low or 0 }}</div>
+            <div class="stat-label">Low</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="critical-findings">{{ counts.critical or 0 }}</div>
+            <div class="stat-label">Critical</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="high-findings">{{ counts.high or 0 }}</div>
+            <div class="stat-label">High</div>
+          </div>
+        </div>
+        
+        <div class="summary-actions">
+          <button class="btn ghost" type="button" onclick="expandAllFindings()">Expand All</button>
+          <button class="btn ghost" type="button" onclick="collapseAllFindings()">Collapse All</button>
+          <button class="btn ghost" type="button" onclick="showTriageStats()">📊 Triage Stats</button>
+          <button class="btn ghost" onclick="confirmClearFindings()">Clear All</button>
+        </div>
+      </div>
+
+      <!-- Enhanced Filter Controls -->
+      <div class="filter-section">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label class="filter-label">Group by:</label>
+            <div class="filter-buttons">
+              <button class="filter-btn {{ 'active' if group_by == 'rule' else '' }}" data-group="rule" onclick="switchGroup('rule')">Rule</button>
+              <button class="filter-btn {{ 'active' if group_by == 'endpoint' else '' }}" data-group="endpoint" onclick="switchGroup('endpoint')">Endpoint</button>
+              <button class="filter-btn {{ 'active' if group_by == 'owasp' else '' }}" data-group="owasp" onclick="switchGroup('owasp')">OWASP</button>
+              <button class="filter-btn {{ 'active' if group_by == 'cwe' else '' }}" data-group="cwe" onclick="switchGroup('cwe')">CWE</button>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Source:</label>
+            <div class="filter-buttons">
+              <button class="filter-btn active" data-source="all" onclick="filterSource('all')">All</button>
+              <button class="filter-btn" data-source="detector" onclick="filterSource('detector')">Our Rules</button>
+              <button class="filter-btn" data-source="nuclei" onclick="filterSource('nuclei')">Nuclei</button>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Severity:</label>
+            <div class="filter-buttons">
+              <button class="filter-btn active" data-filter="severity" data-value="all" onclick="applyFilter('severity', 'all')">All</button>
+              <button class="filter-btn" data-filter="severity" data-value="critical" onclick="applyFilter('severity', 'critical')">Critical</button>
+              <button class="filter-btn" data-filter="severity" data-value="high" onclick="applyFilter('severity', 'high')">High</button>
+              <button class="filter-btn" data-filter="severity" data-value="medium" onclick="applyFilter('severity', 'medium')">Medium</button>
+              <button class="filter-btn" data-filter="severity" data-value="low" onclick="applyFilter('severity', 'low')">Low</button>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Confidence:</label>
+            <input type="range" id="confidence-filter" min="0" max="100" value="0" 
+                   onchange="applyFilter('confidence', this.value)" class="filter-range">
+            <span id="confidence-value">0%</span>
+          </div>
+          
+          <div class="filter-actions">
+            <button class="btn ghost" onclick="clearAllFilters()">Clear Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Vulnerabilities Display with Flexible Grouping -->
+    <div class="findings-container">
+      <h2>Vulnerabilities</h2>
+        
+      {% for g in groups_sorted %}
+      <details class="finding-group" open>
+          <summary>
+            <span class="chev">▶</span>
+            <div class="group-header">
+              <div class="group-main">
+                <div class="group-title">
+                  <span class="severity-badge severity-{{ g.worst_sev }}">{{ g.worst_sev.title() }}</span>
+                  <span class="group-name">{{ g.title }}</span>
+            </div>
+                <div class="group-stats">
+                  {{ g.endpoint_count }} endpoint{{ 's' if g.endpoint_count != 1 else '' }} • 
+                  {{ g.occurrence_count }} vulnerability{{ 'ies' if g.occurrence_count != 1 else 'y' }}
+                  {% if g.conf_min or g.conf_max %} • {{ g.conf_min }}–{{ g.conf_max }}% confidence{% endif %}
+              </div>
+              </div>
+              <div class="group-meta">
+                <div class="group-tags">
+                  {% if g.source == 'nuclei' %}<span class="tag tag-nuclei">Nuclei</span>{% else %}<span class="tag tag-detector">Detector</span>{% endif %}
+                  {% if g.owasp %}<span class="tag tag-owasp">{{ g.owasp }}</span>{% endif %}
+                  {% if g.cwe %}<span class="tag tag-cwe">{{ g.cwe }}</span>{% endif %}
+              </div>
+                <div class="group-actions">
+                  <select class="triage-select" onchange="bulkTriageGroup('{{ g.key }}', this.value)">
+                    <option value="" selected>Bulk Triage…</option>
+                    <option value="open">Open</option>
+                    <option value="accepted_risk">Accepted Risk</option>
+                    <option value="false_positive">False Positive</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+                  <button class="btn ghost btn-sm" onclick="exportGroup('{{ g.key }}')">Export</button>
+                  <button class="btn ghost btn-sm" onclick="addGroupToQueue('{{ g.key }}')">Add to Queue</button>
+            </div>
+          </div>
+            </div>
+          </summary>
+
+          <div class="findings-list">
+          {% for item in g.items_list %}
+            <div class="finding-item" 
+                 data-severity="{{ item.severity }}" 
+               data-source="{{ 'nuclei' if item.detector_id and item.detector_id.startswith('nuclei::') else 'detector' }}"
+               data-owasp="{{ item.owasp or item.owasp_api or '' }}"
+                 data-cwe="{{ item.cwe or '' }}"
+               data-confidence="{{ item.confidence or 0 }}">
+              <div class="finding-main">
+                <div class="finding-title">
+                <span class="severity-badge severity-{{ item.severity }}">{{ item.severity.title() }}</span>
+                  <span class="finding-name">{{ item.title }}</span>
+                  <span class="confidence-badge">{{ item.confidence or 0 }}%</span>
+              </div>
+                <div class="finding-meta">
+                <span class="method-chip {{ item.method }}">{{ item.method }}</span>
+                  <span class="finding-path">{{ item.path or item.url }}</span>
+                </div>
+                <div class="finding-tags">
+                  {% if item.owasp or item.owasp_api %}<span class="tag tag-owasp">{{ item.owasp or item.owasp_api }}</span>{% endif %}
+                  {% if item.cwe %}<span class="tag tag-cwe">{{ item.cwe }}</span>{% endif %}
+                {% if item.detector_id %}
+                    {% if item.detector_id.startswith('nuclei::') %}<span class="tag tag-nuclei">Nuclei</span>{% else %}<span class="tag tag-detector">Detector</span>{% endif %}
+                {% endif %}
+                </div>
+              </div>
+              <div class="finding-actions">
+                <button class="btn ghost btn-sm" type="button"
+                        hx-get="{{ url_for('web.finding_detail', pid=pid, idx=item.idx) }}"
+                        hx-target="#panel-body" hx-swap="innerHTML"
+                        hx-indicator="#global-indicator"
+                        onclick="openPanelWith('Finding', '{{ item.method }}', '{{ item.path }}', '{{ item.url or item.path }}')">Details</button>
+                <select class="triage-select" data-finding-id="{{ item.idx }}" onchange="triageFinding(this)">
+                  <option value="open" {% if item.status in [None,'open'] %}selected{% endif %}>Open</option>
+                  <option value="accepted_risk" {% if item.status == 'accepted_risk' %}selected{% endif %}>Accepted Risk</option>
+                  <option value="false_positive" {% if item.status == 'false_positive' %}selected{% endif %}>False Positive</option>
+                  <option value="fixed" {% if item.status == 'fixed' %}selected{% endif %}>Fixed</option>
+                </select>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </details>
+        {% endfor %}
+    </div>
+  </div>
+
+  <style>
+    .findings-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--card);
+      border: 1px solid var(--card-b);
+      border-radius: var(--radius);
+    }
+
+    .summary-stats {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .filter-section {
+      background: var(--card);
+      border: 1px solid var(--card-b);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-label {
+      font-weight: 500;
+      color: var(--fg);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--card-b);
+      background: var(--card);
+      color: var(--fg);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255,255,255,.14);
+      transform: translateY(-1px);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #0b1020;
+      border-color: var(--accent);
+    }
+
+    .filter-range {
+      width: 80px;
+    }
+    
+    .filter-select {
+      padding: 6px 10px;
+      border: 1px solid var(--card-b);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--fg);
+      font-size: 14px;
+      min-width: 150px;
+    }
+    
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .filter-actions {
+      margin-left: auto;
+    }
+
+    .findings-container {
+      margin-top: 1rem;
+    }
+
+    .findings-view h2 {
+      margin-bottom: 1rem;
+      color: var(--fg);
+    }
+
+    .finding-group {
+      border: 1px solid var(--card-b);
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--card), transparent 120%);
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .finding-group summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: var(--card);
+      border: none;
+      outline: none;
+      font: inherit;
+    }
+
+    .finding-group summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .finding-group summary:hover {
+      background: rgba(255,255,255,.05);
+    }
+
+    .finding-group[open] summary {
+      border-radius: 8px 8px 0 0;
+      border-bottom: 1px solid var(--card-b);
+    }
+
+    .chev {
+      transition: transform .15s ease;
+      margin-right: 12px;
+      color: var(--muted);
+    }
+
+    .finding-group[open] .chev {
+      transform: rotate(90deg);
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 16px;
+    }
+
+    .group-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .group-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--fg);
+      word-break: break-all;
+    }
+
+    .group-stats {
+      font-size: 13px;
+      color: var(--muted);
+      margin-left: 24px;
+    }
+
+    .group-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .group-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .group-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Severity color classes removed - now handled by severity-badge classes below */
+
+    .findings-list {
+      padding: 6px 10px;
+    }
+
+    .finding-item {
+      padding: 12px 16px;
+      border: 1px solid var(--card-b);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .finding-item:hover {
+      background: rgba(255,255,255,.05);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .finding-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .finding-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .finding-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .finding-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--fg);
+    }
+
+    .finding-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .method-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .method-chip.GET { background: var(--chip-get); color: white; }
+    .method-chip.POST { background: var(--chip-post); color: white; }
+    .method-chip.PUT { background: var(--chip-put); color: white; }
+    .method-chip.DELETE { background: var(--chip-del); color: white; }
+    .method-chip.PATCH { background: var(--accent); color: white; }
+
+    .finding-path {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .finding-tags {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+
+    .tag-nuclei { background: #8b5cf6; color: white; }
+    .tag-detector { background: #06b6d4; color: white; }
+    .tag-owasp { background: #f59e0b; color: white; }
+    .tag-cwe { background: #ef4444; color: white; }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    /* Phase 5: Triaging Styles */
+    .triage-controls {
+      display: inline-block;
+      margin-left: 4px;
+    }
+    
+    .triage-select {
+      padding: 3px 6px;
+      border: 1px solid var(--card-b);
+      border-radius: 4px;
+      background: var(--bg2);
+      color: var(--fg);
+      font-size: 0.8rem;
+      min-width: 90px;
+      max-width: 110px;
+    }
+    
+    .triage-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .finding-item.triaged {
+      opacity: 0.8;
+      border-left: 3px solid var(--accent);
+    }
+    
+    .finding-item[data-status="accepted_risk"] {
+      border-left-color: #f59e0b;
+    }
+    
+    .finding-item[data-status="false_positive"] {
+      border-left-color: #ef4444;
+    }
+    
+    .finding-item[data-status="fixed"] {
+      border-left-color: #10b981;
+    }
+
+    .finding-header {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .severity-badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .severity-critical { background: #ff6b6b; color: #0b1020; }
+    .severity-high { background: #ffa726; color: #0b1020; }
+    .severity-medium { background: #ffeb3b; color: #0b1020; }
+    .severity-low { background: #4caf50; color: #0b1020; }
+    .severity-info { background: #9e9e9e; color: #0b1020; }
+
+    .finding-title {
+      font-weight: 500;
+      color: var(--fg);
+      flex: 1;
+    }
+
+    .confidence-badge {
+      padding: 4px 8px;
+      background: rgba(34,211,238,.20);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+
+    /* Method chips now use standard .chip class from main.css */
+
+    .finding-path {
+      color: var(--muted);
+      font-family: monospace;
+      font-size: 0.8rem;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Tags now use standard .tag class from main.css */
+
+    .finding-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    /* Buttons now use standard .btn class from main.css */
+    
+  </style>
+
+  <script>
+    // --- State ---
+    let currentFilters = {
+      severity: 'all',     // all | critical | high | medium | low
+      confidence: 0,       // 0..100
+      source: 'all'        // all | detector | nuclei
+    };
+
+    // --- Helpers ---
+    function setActiveButton(groupAttr, value) {
+      document.querySelectorAll(`[data-${groupAttr}]`).forEach(btn => {
+        btn.classList.toggle('active', btn.dataset[groupAttr] === value);
+      });
+    }
+
+    // --- Grouping: reload with query parameter so server can pre-group efficiently ---
+    function switchGroup(groupKey) {
+      try {
+        const u = new URL(window.location.href);
+        u.searchParams.set('group', groupKey);  // Fixed: server expects 'group', not 'group_by'
+        // Preserve current source selection when regrouping
+        if (currentFilters.source && currentFilters.source !== 'all') {
+          u.searchParams.set('source', currentFilters.source);
+        }
+        
+        // Redirect immediately
+        window.location.href = u.toString();
+      } catch (error) {
+        console.error('Error in switchGroup:', error);
+        alert('Error switching grouping: ' + error.message);
+      }
+    }
+
+    // --- Source filter (All / Our Rules / Nuclei): client-side toggle + URL sync (optional) ---
+    function filterSource(sourceVal) {
+      currentFilters.source = sourceVal;      // update state
+      setActiveButton('source', sourceVal);   // update button highlight
+      // Optional: persist source in URL without reload
+      const u = new URL(window.location.href);
+      if (sourceVal === 'all') u.searchParams.delete('source');
+      else u.searchParams.set('source', sourceVal);
+      window.history.replaceState({}, '', u.toString());
+
+      // Apply to current DOM
+      filterFindings();
+    }
+
+    // --- Generic filter entry point (severity, confidence slider) ---
+    function applyFilter(type, value) {
+      if (type === 'confidence') {
+        currentFilters.confidence = parseInt(value, 10) || 0;
+        document.getElementById('confidence-value').textContent = currentFilters.confidence + '%';
+      } else if (type === 'severity') {
+        currentFilters.severity = value;
+        // Update severity button highlights
+        document.querySelectorAll('[data-filter="severity"]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.value === value);
+        });
+      }
+      filterFindings();
+    }
+
+    // --- Main filtering (runs on the already-rendered grouped list) ---
+    function filterFindings() {
+      const items  = document.querySelectorAll('.finding-item');
+      const groups = document.querySelectorAll('.finding-group');
+
+      // Per-severity counters for the summary header
+      const counts = { total: 0, critical: 0, high: 0, medium: 0, low: 0 };
+
+      // Show everything initially
+      items.forEach(el => { el.style.removeProperty('display'); });
+      groups.forEach(g => { g.style.removeProperty('display'); });
+
+      // Item-level filtering
+      items.forEach(el => {
+        let show = true;
+
+        // Source filter (data-source="detector" | "nuclei")
+        if (currentFilters.source !== 'all') {
+          const src = (el.dataset.source || '').toLowerCase();
+          if (currentFilters.source !== src) show = false;
+        }
+
+        // Severity filter
+        const sev = (el.dataset.severity || '').toLowerCase();
+        if (currentFilters.severity !== 'all' && sev !== currentFilters.severity) {
+          show = false;
+        }
+
+        // Confidence filter
+        const conf = parseInt(el.dataset.confidence || '0', 10);
+        if (conf < (currentFilters.confidence || 0)) {
+          show = false;
+        }
+
+        el.style.display = show ? 'flex' : 'none';
+
+        if (show) {
+          counts.total++;
+          if (sev in counts) counts[sev]++;
+        }
+      });
+
+      // Group-level visibility (hide groups with 0 visible children)
+      groups.forEach(group => {
+        const visible = Array.from(group.querySelectorAll('.finding-item'))
+                      .some(el => el.style.display !== 'none');
+        group.style.display = visible ? 'block' : 'none';
+        // Update the "x instances" text in the subtitle (if present)
+        const subtitle = group.querySelector('.group-subtitle');
+        if (subtitle) {
+          const totalInGroup = group.querySelectorAll('.finding-item').length;
+          const visibleInGroup = group.querySelectorAll('.finding-item:not([style*="display: none"])').length;
+          // keep the left part (endpoints) intact; just swap instance count
+          // expected format: "<endpoints> endpoints • <instances> instances • <confidence-range>"
+          const parts = subtitle.textContent.split('•').map(s => s.trim());
+          if (parts.length >= 3) {
+            parts[1] = `${visibleInGroup} ${visibleInGroup === 1 ? 'instance' : 'instances'}`;
+            subtitle.textContent = parts.join(' • ');
+          }
+        }
+      });
+
+      // Update summary numbers
+      (document.getElementById('total-findings')   || {}).textContent   = counts.total;
+      (document.getElementById('critical-findings')|| {}).textContent   = counts.critical;
+      (document.getElementById('high-findings')    || {}).textContent   = counts.high;
+      (document.getElementById('medium-findings')  || {}).textContent   = counts.medium;
+      (document.getElementById('low-findings')     || {}).textContent   = counts.low;
+    }
+
+    // --- Bulk triage for a whole group (hooked from the select in each <summary>) ---
+    async function bulkTriageGroup(groupKey, status) {
+      if (!status) return;
+      try {
+        const res = await fetch(`/p/{{ pid }}/findings/triage-group`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: groupKey, status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showNotification(data.message || 'Group triaged', 'success');
+          // Optimistic UI update: mark all items in this group
+          const group = Array.from(document.querySelectorAll('.finding-group'))
+                        .find(d => d.querySelector(`[onclick*="${groupKey}"]`));
+          if (group) {
+            group.querySelectorAll('.finding-item').forEach(fi => {
+              fi.dataset.status = status;
+              fi.classList.add('triaged');
+            });
+          }
+        } else {
+          showNotification(data.error || 'Failed to triage group', 'error');
+        }
+      } catch (e) {
+        showNotification('Error updating group: ' + e.message, 'error');
+      }
+    }
+
+    // --- Stubs for the buttons in summaries (can wire later) ---
+    function exportGroup(groupKey) {
+      // You can POST to an export endpoint and download CSV/JSON.
+      showNotification('Export functionality coming soon', 'info');
+    }
+    function addGroupToQueue(groupKey) {
+      showNotification('Add to Queue functionality coming soon', 'info');
+    }
+
+    // --- Individual finding triage ---
+    function triageFinding(selectElement) {
+      const findingId = selectElement.dataset.findingId;
+      const status = selectElement.value;
+      
+      // Show loading state
+      const originalValue = selectElement.value;
+      selectElement.disabled = true;
+      
+      // Send triage request
+      const formData = new FormData();
+      formData.append('finding_id', findingId);
+      formData.append('status', status);
+      
+      fetch(`/p/{{ pid }}/findings/triage`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update UI to reflect new status
+          const findingItem = selectElement.closest('.finding-item');
+          if (findingItem) {
+            // Add visual indicator of triaged status
+            findingItem.classList.add('triaged');
+            findingItem.dataset.status = status;
+          }
+          
+          // Show success message
+          showNotification(data.message, 'success');
+        } else {
+          // Revert selection on error
+          selectElement.value = originalValue;
+          showNotification(data.error, 'error');
+        }
+      })
+      .catch(error => {
+        // Revert selection on error
+        selectElement.value = originalValue;
+        showNotification('Error updating finding status: ' + error.message, 'error');
+      })
+      .finally(() => {
+        selectElement.disabled = false;
+      });
+    }
+    
+    function showTriageStats() {
+      fetch(`/p/{{ pid }}/findings/triage-stats`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const stats = data.stats;
+            const message = `📊 Triage Statistics:
+            
+🔍 Open: ${stats.open}
+⚠️ Accepted Risk: ${stats.accepted_risk}
+❌ False Positive: ${stats.false_positive}
+✅ Fixed: ${stats.fixed}
+📋 Total: ${stats.total}`;
+            
+            showNotification(message, 'info');
+          } else {
+            showNotification(data.error, 'error');
+          }
+        })
+        .catch(error => {
+          showNotification('Error loading triage stats: ' + error.message, 'error');
+        });
+    }
+    
+
+    function confirmClearFindings() {
+      // Use themed confirmation modal instead of browser confirm
+      openClearFindingsConfirmation();
+      return false; // Prevent form submission
+    }
+
+    function openClearFindingsConfirmation() {
+      const modal = document.getElementById('clear-findings-modal');
+      if (!modal) {
+        // Create modal if it doesn't exist
+        createClearFindingsModal();
+        return;
+      }
+      modal.classList.add('open');
+    }
+
+    function createClearFindingsModal() {
+      const modal = document.createElement('div');
+      modal.id = 'clear-findings-modal';
+      modal.className = 'modal';
+      modal.setAttribute('aria-hidden', 'true');
+      modal.innerHTML = `
+        <div class="modal-content" style="width: min(400px, 90vw)">
+          <div class="modal-head">
+            <h3 style="margin:0">Clear Findings</h3>
+          </div>
+          <div class="clear-findings-content">
+            <div class="card">
+              <p style="margin:0 0 16px;color:var(--fg)">
+                Are you sure you want to clear all findings?
+              </p>
+              <p class="muted" style="margin:0 0 16px;font-size:12px">
+                This action cannot be undone.
+              </p>
+              <div class="row" style="gap:8px;justify-content:flex-end">
+                <button class="btn ghost" onclick="closeClearFindingsConfirmation()">Cancel</button>
+                <button class="btn" onclick="confirmClearFindingsAction()" style="background:var(--err);color:white">Clear All</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.classList.add('open');
+    }
+
+    function closeClearFindingsConfirmation() {
+      const modal = document.getElementById('clear-findings-modal');
+      if (!modal) return;
+      modal.classList.remove('open');
+    }
+
+    function confirmClearFindingsAction() {
+      // Close the modal first
+      closeClearFindingsConfirmation();
+      
+      // Show loading notification
+      showNotification('Clearing all findings...', 'info');
+      
+      // Submit the form via fetch to handle the response
+      fetch(`/p/{{ pid }}/findings/clear`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      })
+      .then(response => {
+        console.log('Clear findings response:', response.status, response.statusText);
+        if (response.ok) {
+          showNotification('All findings cleared successfully', 'success');
+          // Reload the page to show empty state
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          showNotification('Error clearing findings: ' + response.status, 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error clearing findings:', error);
+        showNotification('Error clearing findings: ' + error.message, 'error');
+      });
+    }
+
+
+    function expandAllFindings() {
+      document.querySelectorAll('.finding-group').forEach(group => {
+        group.open = true;
+      });
+    }
+
+    function collapseAllFindings() {
+      document.querySelectorAll('.finding-group').forEach(group => {
+        group.open = false;
+      });
+    }
+
+    // --- Init: hydrate 'source' from URL if present; run initial filter ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const u = new URL(window.location.href);
+      const src = u.searchParams.get('source');
+      if (src) {
+        currentFilters.source = src;
+        setActiveButton('source', src);
+      }
+      
+      // Initialize severity filter highlighting
+      document.querySelectorAll('[data-filter="severity"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === currentFilters.severity);
+      });
+      
+      // severity defaults to 'all', confidence to 0
+      filterFindings();
+    });
+  </script>
+{% endblock %}

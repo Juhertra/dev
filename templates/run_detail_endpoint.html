@@ -1,0 +1,86 @@
+<div>
+  <h3 style="margin:0 0 6px">Run {{ run.run_id }}</h3>
+  <div class="muted">{{ run.started_at }} → {{ run.finished_at }}</div>
+  <div class="divider" style="margin:12px 0"></div>
+
+  {% if not r or (not r.nuclei and not r.detector) %}
+    <div class="muted">No findings for this endpoint in this run.</div>
+  {% else %}
+    {% for f in (r.nuclei or []) %}
+      <details class="finding-item" open>
+        <summary>
+          <span class="chip {{ f.info.severity|upper if f.info else 'info' }}">{{ f.info.severity|title if f.info else 'info' }}</span>
+          <strong style="margin-left:6px">{{ f.info.name if f.info else f.template_id or 'Unknown' }}</strong>
+          <span class="tag">Nuclei</span>
+          {% if f.info and f.info.classification and f.info.classification.cwe_id %}<span class="tag">{{ f.info.classification.cwe_id[0] if f.info.classification.cwe_id else '' }}</span>{% endif %}
+          {% set _cve = f.cve_id or f.cve %}
+          {% if _cve and _cve is string and _cve|regex_search('^CVE-\\d{4}-\\d+$') %}
+          <span class="tag cve-chip" onclick="openCveLink('{{ _cve }}')" style="cursor:pointer;background:#ff6b6b;color:white;">{{ _cve }}</span>
+          {% endif %}
+        </summary>
+        <div style="padding:8px 12px">
+          {% if f.info and f.info.description %}
+          <div class="muted" style="margin-bottom:6px">Description</div>
+          <div style="margin-bottom:12px">{{ f.info.description }}</div>
+          {% endif %}
+          
+          {% if f.curl_command %}
+          <div class="muted" style="margin-bottom:6px">cURL Command</div>
+          <pre class="codeblock">{{ f.curl_command }}</pre>
+          {% endif %}
+          
+          {% if f.request %}
+          <div class="muted" style="margin-top:8px">Request</div>
+          <pre class="codeblock">{{ f.request }}</pre>
+          {% endif %}
+          
+          {% if f.response %}
+          <div class="muted" style="margin-top:8px">Response</div>
+          <pre class="codeblock">{{ f.response }}</pre>
+          {% endif %}
+          
+          {% if f.matched_at %}
+          <div class="muted" style="margin-top:8px">Matched At</div>
+          <div style="font-family: monospace; font-size: 0.9rem;">{{ f.matched_at }}</div>
+          {% endif %}
+        </div>
+      </details>
+    {% endfor %}
+
+    {% for f in (r.detector or []) %}
+      <details class="finding-item" open>
+        <summary>
+          <span class="chip {{ f.severity|upper }}">{{ f.severity|title }}</span>
+          <strong style="margin-left:6px">{{ f.detector_id }}</strong>
+          <span class="tag">Detector</span>
+          {% if f.owasp %}<span class="tag">{{ f.owasp }}</span>{% endif %}
+          {% if f.cwe %}<span class="tag">{{ f.cwe }}</span>{% endif %}
+          {% set _cve = f.cve_id or f.cve %}
+          {% if _cve and _cve is string and _cve|regex_search('^CVE-\\d{4}-\\d+$') %}
+          <span class="tag cve-chip" onclick="openCveLink('{{ _cve }}')" style="cursor:pointer;background:#ff6b6b;color:white;">{{ _cve }}</span>
+          {% endif %}
+        </summary>
+        <div style="padding:8px 12px">
+          {% if f.curl_command %}
+          <div class="muted" style="margin-bottom:6px">curl</div>
+          <pre class="codeblock">{{ f.curl_command }}</pre>
+          {% endif %}
+          {% if f.request %}
+          <div class="muted" style="margin-top:8px">Request</div>
+          <pre class="codeblock">{{ f.request }}</pre>
+          {% endif %}
+          {% if f.response %}
+          <div class="muted" style="margin-top:8px">Response</div>
+          <pre class="codeblock">{{ f.response }}</pre>
+          {% endif %}
+          {% if f.evidence %}
+          <div class="muted" style="margin-top:8px">Evidence</div>
+          <pre class="codeblock">{{ f.evidence }}</pre>
+          {% endif %}
+        </div>
+      </details>
+    {% endfor %}
+  {% endif %}
+</div>
+
+

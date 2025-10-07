@@ -1,0 +1,36 @@
+{
+  "name": "jwt_weak",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "jwt.none",
+      "title": "JWT using alg 'none' (hint)",
+      "where": ["request.headers", "response.headers", "response.body"],
+      "regex": "eyJhbGciOiJub25lIiw",
+      "cwe": "287",
+      "cvss": 6.5,
+      "confidence": 60,
+      "tags": ["jwt", "auth"]
+    },
+    {
+      "id": "jwt.weak_secret",
+      "title": "JWT with weak secret (HS256)",
+      "where": ["request.headers", "response.headers", "response.body"],
+      "regex": "eyJhbGciOiJIUzI1NiIs",
+      "cwe": "287",
+      "cvss": 4.3,
+      "confidence": 50,
+      "tags": ["jwt", "auth", "weak"]
+    },
+    {
+      "id": "jwt.missing_claims",
+      "title": "JWT missing critical claims",
+      "where": ["request.headers", "response.headers", "response.body"],
+      "regex": "eyJhbGciOiJ[^.]*\\.[^.]*\\.[^.]*",
+      "cwe": "287",
+      "cvss": 3.1,
+      "confidence": 40,
+      "tags": ["jwt", "auth", "claims"]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "detector_id": "http-methods",
+  "severity": "medium",
+  "method": "GET",
+  "url": "https://api.petstore.com/v2/pets",
+  "path": "/v2/pets",
+  "title": "HTTP Methods Disclosure",
+  "subcategory": "info-disclosure",
+  "cwe": "CWE-200",
+  "owasp": "A05:2021",
+  "confidence": 90,
+  "status": "open",
+  "req": {
+    "method": "GET",
+    "url": "https://api.petstore.com/v2/pets",
+    "headers": {
+      "User-Agent": "Mozilla/5.0",
+      "Accept": "application/json"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "headers": {
+      "Server": "nginx/1.18.0",
+      "Allow": "GET, POST, PUT, DELETE, OPTIONS"
+    },
+    "body": "{\"pets\": []}"
+  },
+  "match": "Allow: GET, POST, PUT, DELETE, OPTIONS",
+  "run_id": "run-20240115-1045",
+  "created_at": "2024-01-15T10:35:00Z"
+}

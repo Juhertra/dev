@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://security-toolkit.dev/schemas/dossier",
+  "title": "Endpoint Dossier Record",
+  "description": "Complete history and metadata for a single API endpoint across all test runs",
+  "type": "object",
+  "required": [
+    "endpoint_key",
+    "total_runs",
+    "latest_run",
+    "history"
+  ],
+  "properties": {
+    "endpoint_key": {
+      "type": "string",
+      "pattern": "^(GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD) https://[^\\s]+$",
+      "description": "Canonical endpoint identifier: HTTP_METHOD + complete URI"
+    },
+    "total_runs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of times this endpoint has been tested"
+    },
+    "latest_run": {
+      "type": "object",
+      "required": ["run_id", "finished_at", "findings", "worst"],
+      "properties": {
+        "run_id": {
+          "$ref": "#/definitions/run_id"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the most recent test completed"
+        },
+        "findings": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Vulnerabilities found in most recent test"
+        },
+        "worst": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "info"],
+          "description": "Highest severity from most recent test"
+        }
+      },
+      "additionalProperties": false
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/historical_run"
+      },
+      "description": "Complete chronological history of all tests run against this endpoint"
+    },
+    "retired": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this endpoint is deprecated/no longer active"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "last_modified": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this dossier was last updated"
+        },
+        "migration_version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Schema version for automatic migration compatibility"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional tags for endpoint categorization"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^run-[0-9]{13}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "historical_run": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "started_at",
+        "finished_at", 
+        "findings",
+        "worst"
+      ],
+      "properties": {
+        "run_id": {
+          "$ref": "#/definitions/run_id"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "type": "string", 
+          "format": "date-time"
+        },
+        "findings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "worst": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "info", "none"]
+        },
+        "artifact": {
+          "type": ["string", "null"],
+          "pattern": "^/[^\0]*\\.(ndjson|json)$"
+        },
+        "templates_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of detection templates used"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

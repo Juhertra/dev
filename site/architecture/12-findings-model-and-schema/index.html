@@ -1,0 +1,1611 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
+      
+      
+        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
+      
+      
+      
+        <link rel="prev" href="../11-project-isolation-and-data-sharing/">
+      
+      
+        <link rel="next" href="../13-cve-cwe-poc-enrichment-layer/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>SecFlow — Findings Model & Schema Normalization - SecFlow Architecture & Validation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#12-findings-model-schema-normalization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SecFlow Architecture & Validation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SecFlow — Findings Model & Schema Normalization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SecFlow Architecture & Validation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-title-and-executive-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Executive Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-architecture-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Philosophy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-repository-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repository Layout
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-core-packages-and-responsibilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Packages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Orchestration Engine
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-plugin-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plugin System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-tools-integration-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Manager & UX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-resource-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resource Registry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wordlists & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-project-isolation-and-data-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Isolation & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧭 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Data Flow Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indexing-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Indexing &amp; Analytics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔮 Future Enhancements
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Enrichment Layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PoC Sources & Legal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-garbage-collection-and-retention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Garbage Collection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-security-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-risk-assessment-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Risk Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Migration Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD & Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev Experience & Docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-future-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-final-consensus-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Review & Validation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Review & Validation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Checklist
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/glossary.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="12-findings-model-schema-normalization">12 — Findings Model &amp; Schema Normalization<a class="headerlink" href="#12-findings-model-schema-normalization" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Findings Schema</strong> is the canonical data contract for SecFlow —<br />
+it defines how vulnerabilities, anomalies, and tool outputs are normalized, enriched, and persisted.</p>
+<p>Every discovery, scan, or enrichment step in the workflow produces <strong>Findings</strong>, which are standardized across tools (Nuclei, Ferox, ZAP, Caido, custom detectors).</p>
+<p>The schema ensures:
+- Cross-tool consistency<br />
+- Automated CVE/CWE/OWASP correlation<br />
+- Risk scoring alignment (CVSS/NIST)<br />
+- Deterministic enrichment for analytics and triage  </p>
+<hr />
+<h2 id="data-flow-summary">🧱 Data Flow Summary<a class="headerlink" href="#data-flow-summary" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[ Tool Output ]
+        ↓
+[ Findings Engine ]
+        ↓
+[ Normalization Layer ]
+        ↓
+[ Enrichment Layer (CVE/CWE/OWASP) ]
+        ↓
+[ Persistent Store + Cache + Analytics ]
+```text
+
+---
+
+## ⚙️ Findings Core Model
+
+```python
+from pydantic import BaseModel, Field
+from typing import Optional, List, Dict
+from uuid import UUID
+from datetime import datetime
+
+class Finding(BaseModel):
+    id: UUID
+    project_id: UUID
+    run_id: Optional[UUID]
+    detector_id: str = Field(description=&quot;canonical tool or plugin id, e.g. scan.nuclei&quot;)
+    title: str
+    severity: str  # enum: info, low, medium, high, critical
+    resource: str  # canonical URL or identifier
+    evidence: Dict[str, object] = {}
+    cwe: Optional[int]
+    owasp: Optional[str]
+    cve_ids: List[str] = []
+    cvss: Optional[float]
+    mitre_attack: List[str] = []
+    poc_links: List[str] = []
+    created_at: datetime
+    provenance: Dict[str, object] = {}
+```python
+
+## 🧩 Normalization Process
+
+Each wrapper or plugin output goes through the Findings Normalizer, which performs:
+
+1. Schema validation
+2. Severity normalization
+3. Field mapping
+4. Evidence compression
+5. Deduplication
+
+### Example Normalized Finding
+
+```json
+{
+  &quot;id&quot;: &quot;7a3d9f8e-1f83-4a55-9a6c-5ea9e1a3b8d2&quot;,
+  &quot;project_id&quot;: &quot;b0b8b6e0-7c6a-43e8-8b2f-8a0d0e8b0f3c&quot;,
+  &quot;run_id&quot;: &quot;2a2b3c4d-5e6f-7081-92a3-b4c5d6e7f809&quot;,
+  &quot;detector_id&quot;: &quot;scan.nuclei&quot;,
+  &quot;title&quot;: &quot;X-Frame-Options header missing&quot;,
+  &quot;severity&quot;: &quot;low&quot;,
+  &quot;resource&quot;: &quot;https://app.acme.com/&quot;,
+  &quot;evidence&quot;: { &quot;request_id&quot;: &quot;r-01HXXQ5AKP0NWS&quot;, &quot;template&quot;: &quot;misconfig/headers/xfo-missing.yaml&quot; },
+  &quot;cwe&quot;: 693,
+  &quot;owasp&quot;: &quot;A05&quot;,
+  &quot;cve_ids&quot;: [],
+  &quot;cvss&quot;: 3.7,
+  &quot;mitre_attack&quot;: [&quot;T1190&quot;],
+  &quot;poc_links&quot;: [],
+  &quot;created_at&quot;: &quot;2025-10-07T08:22:31Z&quot;,
+  &quot;provenance&quot;: { &quot;tool_version&quot;: &quot;nuclei 3.1.0&quot;, &quot;host&quot;: &quot;runner-12&quot; }
+}
+```json
+
+```python
+def normalize(raw: dict, source: str) -&gt; Finding:
+    severity_map = {&quot;info&quot;: &quot;info&quot;, &quot;low&quot;: &quot;low&quot;, &quot;medium&quot;: &quot;medium&quot;, &quot;high&quot;: &quot;high&quot;, &quot;critical&quot;: &quot;critical&quot;}
+    return Finding(
+        id=str(uuid4()),
+        project_id=raw.get(&quot;project_id&quot;),
+        detector_id=source,
+        title=raw.get(&quot;info&quot;, {}).get(&quot;name&quot;) or raw.get(&quot;title&quot;, &quot;Unnamed Finding&quot;),
+        severity=severity_map.get(raw.get(&quot;severity&quot;, &quot;info&quot;)),
+        path=raw.get(&quot;matched-at&quot;) or raw.get(&quot;url&quot;),
+        evidence=raw,
+        created_at=datetime.utcnow(),
+        provenance={&quot;tool&quot;: source, &quot;version&quot;: raw.get(&quot;version&quot;, &quot;unknown&quot;)}
+    )
+```python
+
+## 🧩 Normalization Rules by Source
+
+| Tool | Input Format | Mapping |
+|------|--------------|---------|
+| **Nuclei** | JSON lines | `info.name` → `title`, `info.severity` → `severity`, `matched-at` → `path` |
+| **Feroxbuster** | Text | `URL` → `path`, `status` → `evidence.status` |
+| **ZAP/Burp** | XML/JSON | `PluginId` → `cwe`, `RiskDesc` → `severity` |
+| **Caido** | SQLite | `Vulnerability.name` → `title`, `score` → `cvss_score` |
+| **Custom Detectors** | Python dict | Arbitrary fields normalized via schema mapping |
+
+Normalization is performed by `findings-engine` using source-specific adapters.
+
+## 🧠 Severity Mapping
+
+| Raw Severity | Normalized | CVSS Equivalent |
+|--------------|------------|-----------------|
+| informational | info | 0.0–3.9 |
+| low | low | 4.0–6.9 |
+| medium | medium | 6.0–7.4 |
+| high | high | 7.5–8.9 |
+| critical | critical | 9.0–10.0 |
+
+## 🧠 Deduplication Strategy
+
+Findings are hashed on a deterministic fingerprint:
+
+```python
+hash_input = f&quot;{finding.path}:{finding.title}:{finding.detector_id}&quot;
+finding_hash = hashlib.sha256(hash_input.encode()).hexdigest()
+```python
+
+If the hash already exists in the same project and run scope, the finding is merged rather than duplicated.
+
+## 🧩 Enrichment Metadata Structure
+
+```python
+finding.enrichment = {
+    &quot;cwe&quot;: {&quot;id&quot;: 89, &quot;name&quot;: &quot;SQL Injection&quot;},
+    &quot;owasp&quot;: {&quot;category&quot;: &quot;A03&quot;, &quot;name&quot;: &quot;Injection&quot;},
+    &quot;CVSS&quot;: {&quot;score&quot;: 9.1, &quot;vector&quot;: &quot;CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H&quot;},
+    &quot;mitre&quot;: {&quot;technique&quot;: &quot;T1505&quot;, &quot;tactic&quot;: &quot;Persistence&quot;},
+    &quot;poc&quot;: {&quot;source&quot;: &quot;exploitdb&quot;, &quot;link&quot;: &quot;https://www.exploit-db.com/exploits/52341&quot;}
+}
+```python
+
+This metadata is populated during the Enrichment Phase (CVE/CWE/CVSS sync).
+
+## 🧩 CVE / CWE / OWASP Mapping
+
+### CVE → CWE
+- NVD API provides `cve.affects.vendor.vendor_data` → `cwe.id`
+- Mapping stored in local SQLite cache.
+
+### CWE → OWASP
+| CWE | OWASP Category |
+|-----|----------------|
+| CWE-79 | A03: Injection |
+| CWE-89 | A03: Injection |
+| CWE-287 | A07: Identification and Authentication Failures |
+| CWE-601 | A10: Server-Side Request Forgery (SSRF) |
+
+### Example Mapping Resolver
+```python
+def resolve_owasp(cwe_id):
+    mapping = {&quot;79&quot;: &quot;A03&quot;, &quot;89&quot;: &quot;A03&quot;, &quot;287&quot;: &quot;A07&quot;, &quot;601&quot;: &quot;A10&quot;}
+    return mapping.get(str(cwe_id))
+```python
+
+## 🧩 Confidence &amp; Risk Scoring
+
+Confidence combines tool reliability, correlation consistency, and enrichment coverage.
+
+### Formula
+```python
+confidence = (tool_weight * 0.5) + (enrichment_score * 0.3) + (cross_source_count * 0.2)
+```python
+
+### Risk Score Calculation
+```python
+risk_score = CVSS * confidence
+```python
+
+This allows probabilistic triage prioritization.
+
+## 🧠 Evidence Normalization
+
+Evidence is stored in compact, structured form for indexing:
+
+```json
+{
+  &quot;request&quot;: {
+    &quot;method&quot;: &quot;POST&quot;,
+    &quot;url&quot;: &quot;https://target.com/login&quot;,
+    &quot;headers&quot;: {&quot;Content-Type&quot;: &quot;application/json&quot;},
+    &quot;body&quot;: &quot;{\&quot;username\&quot;:\&quot;admin\&quot;}&quot;
+  },
+  &quot;response&quot;: {
+    &quot;status&quot;: 500,
+    &quot;headers&quot;: {&quot;Server&quot;: &quot;Apache&quot;},
+    &quot;body_snippet&quot;: &quot;SQL syntax error&quot;
+  }
+}
+```json
+
+Large payloads are truncated or compressed to avoid storage overhead.
+
+## 🧩 Finding Status Lifecycle
+
+| Status | Meaning | Managed By |
+|--------|---------|------------|
+| open | Newly discovered issue | Scanner |
+| triaged | Analyst reviewed | Analyst |
+| resolved | Fixed or confirmed | Analyst |
+| false_positive | Invalid finding | Analyst |
+| archived | Expired or obsolete | System (GC) |
+
+Each status change triggers an audit log event and optional webhook notification.
+
+## 🧱 Storage Layer Integration
+
+Findings are persisted via the `StoragePort` interface:
+
+```python
+class FindingsRepository(Protocol):
+    def save(self, finding: Finding) -&gt; None:
+        &quot;&quot;&quot;Save a finding to storage.&quot;&quot;&quot;
+        pass
+
+    def list(self, project_id: str) -&gt; List[Finding]:
+        &quot;&quot;&quot;List findings for a project.&quot;&quot;&quot;
+        pass
+
+    def get(self, id: str) -&gt; Finding:
+        &quot;&quot;&quot;Get a finding by ID.&quot;&quot;&quot;
+        pass
+```python
+
+### Supported backends:
+- SQLite (default local mode)
+- PostgreSQL (production multi-project)
+- JSON (testing or demo mode)
+
+## 🧩 Findings Export Schema
+
+SecFlow exports findings in structured formats for interoperability:
+
+| Format | Command |
+|--------|---------|
+| JSON | `SecFlow export findings --format json` |
+| CSV | `SecFlow export findings --format csv` |
+| HTML | `SecFlow report findings --template summary.html` |
+| SARIF | `SecFlow export findings --format sarif` |
+
+### Example JSON export:
+```json
+{
+  &quot;project&quot;: &quot;acme-api&quot;,
+  &quot;findings&quot;: [
+    {
+      &quot;id&quot;: &quot;a2b4f3c8-d9e2-4f1a-5b6c-7d8e9f0a1b2c&quot;,
+      &quot;title&quot;: &quot;SQL Injection&quot;,
+      &quot;severity&quot;: &quot;critical&quot;,
+      &quot;cwe&quot;: 89,
+      &quot;cvss_score&quot;: 9.1,
+      &quot;path&quot;: &quot;/login&quot;,
+      &quot;created_at&quot;: &quot;2025-10-06T10:15:00Z&quot;
+    }
+  ]
+}
+</code></pre></div>
+<h2 id="indexing-analytics">🧠 Indexing &amp; Analytics<a class="headerlink" href="#indexing-analytics" title="Permanent link">&para;</a></h2>
+<p>Each finding is indexed in the analytics database:</p>
+<ul>
+<li><strong>Primary Index:</strong> <code>project_id</code> + <code>severity</code> + <code>cwe</code></li>
+<li><strong>Full-Text Search:</strong> <code>title</code>, <code>path</code>, <code>evidence.body_snippet</code></li>
+<li><strong>Aggregations:</strong> count by severity, top affected endpoints, common CWE classes.</li>
+</ul>
+<p>The metrics system (see <a href="../06-plugin-system/">06-plugin-system.md</a> &amp; <a href="../17-observability-logging-and-metrics/">17-observability-logging-and-metrics.md</a>) uses these indexes to generate dashboards.</p>
+<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Graph-based finding correlation (attack paths).</li>
+<li>AI-driven risk clustering ("find similar vulnerabilities").</li>
+<li>Contextual auto-triage (OWASP/NIST mapping feedback loops).</li>
+<li>Delta reports between runs (<code>run_id</code> diff).</li>
+<li>Live sync to vulnerability management platforms (DefectDojo, VulnDB).</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../13-cve-cwe-poc-enrichment-layer/">CVE/CWE/POC Enrichment Layer</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

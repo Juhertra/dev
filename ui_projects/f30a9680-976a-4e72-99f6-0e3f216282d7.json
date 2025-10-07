@@ -1,0 +1,10 @@
+{
+  "session": {
+    "proxy": null,
+    "verify": true,
+    "bearer": null
+  },
+  "specs": [],
+  "queue": [],
+  "sends": []
+}

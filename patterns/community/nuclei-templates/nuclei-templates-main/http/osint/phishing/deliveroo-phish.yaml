@@ -1,0 +1,36 @@
+id: deliveroo-phish
+
+info:
+  name: deliveroo phishing Detection
+  author: rxerium
+  severity: info
+  description: |
+    A deliveroo phishing website was detected
+  reference:
+    - https://deliveroo.co.uk
+  metadata:
+    max-request: 1
+  tags: phishing,deliveroo,osint
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - 'Deliveroo - Takeaway Food Delivery from Local Restaurants &amp; Shops'
+
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - '!contains(host,"deliveroo.com")'
+          - '!contains(host,"deliveroo.co.uk")'
+# digest: 4a0a0047304502205e3c5162c8e41d350e6cbb6106aea8d0f6f666918e9c665bdca531250d16bb5a022100904438c2bbbf8d3c94bcb50168c9fd91ce188cc24e0d884a18072e655b5a074b:922c64590222798bb761d5b6d8e72950

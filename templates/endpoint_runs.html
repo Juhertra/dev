@@ -1,0 +1,39 @@
+<div>
+  <h3 style="margin:0 0 8px">{{ method }} {{ path }}</h3>
+  <div class="muted">{{ base }}{{ path }}</div>
+  <div class="divider" style="margin:12px 0"></div>
+
+  {% if not runs %}
+    <div class="muted">No runs yet for this endpoint.</div>
+  {% else %}
+    <table class="tight">
+      <thead>
+        <tr>
+          <th>Run</th>
+          <th>When</th>
+          <th>Findings</th>
+          <th>Worst</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in runs %}
+        <tr>
+          <td><code>{{ r.run_id }}</code></td>
+          <td>{{ r.finished_at or r.started_at }}</td>
+          <td>{{ r.findings }}</td>
+          <td><span class="chip {{ r.worst|upper }}">{{ r.worst|title }}</span></td>
+          <td>
+            <button class="btn ghost"
+              hx-post="{{ url_for('web.run_detail_for_endpoint', pid=pid) }}"
+              hx-vals='{"run_id":"{{ r.run_id }}","base":"{{ base }}","method":"{{ method }}","path":"{{ path }}"}'
+              hx-target="#panel-body" hx-swap="innerHTML">Open</button>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+

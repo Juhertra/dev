@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://security-toolkit.dev/schemas/queue",
+  "title": "Test Queue State Record",
+  "description": "Legacy runtime state container including OpenAPI specs, test queue, and session data",
+  "type": "object",
+  "required": [
+    "session",
+    "specs", 
+    "queue",
+    "sends"
+  ],
+  "properties": {
+    "session": {
+      "type": "object",
+      "required": ["verify"],
+      "properties": {
+        "proxy": {
+          "type": ["string", "null"],
+          "pattern": "^https?://[^:\\s]+(:[0-9]+)?$",
+          "description": "HTTP proxy URL for outbound requests"
+        },
+        "verify": {
+          "type": "boolean",
+          "description": "Whether to verify SSL certificates"
+        },
+        "bearer": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "description": "OAuth Bearer token for API authentication"
+        },
+        "api_key": {
+          "type": ["string", "null"],
+          "description": "API key for authentication"
+        },
+        "basic_auth": {
+          "type": "object",
+          "properties": {
+            "username": {"type": "string"},
+            "password": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "specs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "title", 
+          "version",
+          "base_url",
+          "ops",
+          "spec"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Original OpenAPI specification URL"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "API title from specification"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.([0-9]+|\\*)(\\.([0-9]+|\\*))?$",
+            "description": "API version from specification"
+          },
+          "base_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Base URL for API requests"
+          },
+          "ops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/api_operation"
+            },
+            "description": "Parsed API operations from specification"
+          },
+          "spec": {
+            "type": "object",
+            "description": "Original OpenAPI specification object"
+          },
+          "safe_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "Sanitized identifier for use in HTML/filenames"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "queue": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["spec_id", "idx"],
+        "properties": {
+          "spec_id": {
+            "type": "string",
+            "format": "uri",
+            "description": "Foreign key to specs array entry"
+          },
+          "idx": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Index into the corresponding spec.ops array"
+          },
+          "override": {
+            "type": "object",
+            "properties": {
+              "headers": {
+                "type": "object",
+                "description": "Additional/modified request headers"
+              },
+              "query": {
+                "type": "object", 
+                "description": "Query parameter overrides"
+              },
+              "path_params": {
+                "type": "object",
+                "description": "Path parameter values"
+              },
+              "body_kind": {
+                "type": "string",
+                "enum": ["default", "json", "form", "raw"],
+                "description": "Type of request body"
+              },
+              "json": {
+                "type": "object",
+                "description": "JSON request body"
+              },
+              "form": {
+                "type": "object",
+                "description": "Form data body"
+              },
+              "raw": {
+                "type": "object",
+                "properties": {
+                  "content_type": {"type": "string"},
+                  "data": {"type": "string"}
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "description": "Queue execution priority"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "sends": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "method", "timestamp"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status_code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "response_size": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "History of manually sent requests"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "last_modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "schema_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "api_operation": {
+      "type": "object",
+      "required": ["method", "path"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/[^\\0]*$"
+        },
+        "operationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_\\-]+$"
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "in": {"type": "string", "enum": ["query", "path", "header", "cookie"]},
+              "required": {"type": "boolean"},
+              "type": {"type": "string"}
+            }
+          }
+        },
+        "responses": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]{3}$": {"type": "object"}
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/app.py", line 2, in <module>
+    from web_routes import bp as web_bp
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/web_routes.py", line 18, in <module>
+    from findings import analyze_and_record, get_findings, count_findings, clear_findings, count_findings_cached
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/findings.py", line 36, in <module>
+    @cache_module.cached(ttl_seconds=60)  # Cache for 60 seconds
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/cache/__init__.py", line 7, in cached
+    return cache.cached(ttl_seconds)
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/cache/__init__.py", line 7, in cached
+    return cache.cached(ttl_seconds)
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/cache/__init__.py", line 7, in cached
+    return cache.cached(ttl_seconds)
+  [Previous line repeated 982 more times]
+RecursionError: maximum recursion depth exceeded

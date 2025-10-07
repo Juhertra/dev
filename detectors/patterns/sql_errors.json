@@ -1,0 +1,49 @@
+{
+  "name": "sql_errors",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "sql.err.mysql",
+      "title": "Database error (MySQL)",
+      "where": ["response.body"],
+      "regex": "(SQL syntax.*MySQL|Warning: mysqli?_.*|MySQLSyntaxErrorException|com\\.mysql\\.)",
+      "cwe": "89",
+      "cvss": 5.5,
+      "confidence": 85,
+      "tags": ["sqli", "error"],
+      "allow_error_responses": true
+    },
+    {
+      "id": "sql.err.generic",
+      "title": "Database error (Generic SQLSTATE)",
+      "where": ["response.body"],
+      "regex": "SQLSTATE\\[[A-Z0-9]+\\]:",
+      "cwe": "89",
+      "cvss": 4.3,
+      "confidence": 70,
+      "tags": ["sqli", "error"],
+      "allow_error_responses": true
+    },
+    {
+      "id": "sql.err.postgresql",
+      "title": "Database error (PostgreSQL)",
+      "where": ["response.body"],
+      "regex": "ERROR:\\s+syntax error at or near|PostgreSQL.*error|psql:",
+      "cwe": "89",
+      "cvss": 5.5,
+      "confidence": 75,
+      "tags": ["sqli", "error"]
+    },
+    {
+      "id": "sql.err.sqlite",
+      "title": "Database error (SQLite)",
+      "where": ["response.body"],
+      "regex": "SQLITE_ERROR|sqlite3\\.|SQLite error",
+      "cwe": "89",
+      "cvss": 5.0,
+      "confidence": 70,
+      "tags": ["sqli", "error"],
+      "allow_error_responses": true
+    }
+  ]
+}

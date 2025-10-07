@@ -1,0 +1,6 @@
+{
+  "nuclei_templates_dir": "/Users/hernan.trajtemberg/nuclei-templates",
+  "nuclei_extra_sources": [
+    "/Users/hernan.trajtemberg/nuclei-templates/asvs"
+  ]
+}

@@ -1,0 +1,35 @@
+id: ebay-phish
+
+info:
+  name: ebay phishing Detection
+  author: rxerium
+  severity: info
+  description: |
+    A ebay phishing website was detected
+  reference:
+    - https://ebay.com
+  metadata:
+    max-request: 1
+  tags: phishing,ebay,osint
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - 'Electronics, Cars, Fashion, Collectibles &amp; More | eBay'
+
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - '!contains(host,"ebay.com")'
+# digest: 4a0a0047304502203746baeef961416185bc922a2c4f0c2d9a25eac282efdcbc80262620dcc31e7d022100ae88a8ab4f9b3ff0b33b15ed0f1ad835a2b043d056a2838ecd4a548b97322ae1:922c64590222798bb761d5b6d8e72950

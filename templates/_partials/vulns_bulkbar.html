@@ -1,0 +1,149 @@
+<div id="bulk-bar" class="bulkbar" style="display: none;">
+  <div class="bulkbar-content">
+    <div class="bulkbar-info">
+      <span id="bulk-count" class="bulk-count">0 selected</span>
+    </div>
+    
+    <div class="bulkbar-actions">
+      <!-- Status Actions -->
+      <div class="bulk-action-group">
+        <select id="bulk-status" class="bulk-select" aria-label="Set status">
+          <option value="">Set Status</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
+          <option value="risk_accepted">Risk Accepted</option>
+          <option value="false_positive">False Positive</option>
+          <option value="resolved">Resolved</option>
+        </select>
+        <button class="btn btn-sm bulk-btn" 
+                hx-post="/p/{{ pid }}/vulns/bulk"
+                hx-target="#vulns-list"
+                hx-trigger="click"
+                hx-headers='{"Content-Type":"application/json"}'
+                hx-vals="js:window.VulnsBulk.buildPayload('set_status')"
+                hx-indicator=".hx-indicator"
+                aria-label="Apply status change">
+          Apply
+        </button>
+      </div>
+
+      <!-- Owner Actions -->
+      <div class="bulk-action-group">
+        <input type="text" id="bulk-owner" class="bulk-input" placeholder="Owner email" aria-label="Set owner">
+        <button class="btn btn-sm bulk-btn"
+                hx-post="/p/{{ pid }}/vulns/bulk"
+                hx-target="#vulns-list"
+                hx-trigger="click"
+                hx-headers='{"Content-Type":"application/json"}'
+                hx-vals="js:window.VulnsBulk.buildPayload('set_owner')"
+                hx-indicator=".hx-indicator"
+                aria-label="Apply owner assignment">
+          Apply
+        </button>
+      </div>
+
+      <!-- Tag Actions -->
+      <div class="bulk-action-group">
+        <input type="text" id="bulk-tag" class="bulk-input" placeholder="Tag name" aria-label="Tag name">
+        <button class="btn btn-sm bulk-btn"
+                hx-post="/p/{{ pid }}/vulns/bulk"
+                hx-target="#vulns-list"
+                hx-trigger="click"
+                hx-headers='{"Content-Type":"application/json"}'
+                hx-vals="js:window.VulnsBulk.buildPayload('add_tag')"
+                hx-indicator=".hx-indicator"
+                aria-label="Add tag">
+          Add
+        </button>
+        <button class="btn btn-sm bulk-btn"
+                hx-post="/p/{{ pid }}/vulns/bulk"
+                hx-target="#vulns-list"
+                hx-trigger="click"
+                hx-headers='{"Content-Type":"application/json"}'
+                hx-vals="js:window.VulnsBulk.buildPayload('remove_tag')"
+                hx-indicator=".hx-indicator"
+                aria-label="Remove tag">
+          Remove
+        </button>
+      </div>
+
+      <!-- Suppression Actions -->
+      <div class="bulk-action-group">
+        <button class="btn btn-sm bulk-btn" id="suppress-btn" aria-label="Suppress findings">
+          Suppress
+        </button>
+        <button class="btn btn-sm bulk-btn"
+                hx-post="/p/{{ pid }}/vulns/bulk"
+                hx-target="#vulns-list"
+                hx-trigger="click"
+                hx-headers='{"Content-Type":"application/json"}'
+                hx-vals="js:window.VulnsBulk.buildPayload('unsuppress')"
+                hx-indicator=".hx-indicator"
+                aria-label="Unsuppress findings">
+          Unsuppress
+        </button>
+      </div>
+
+      <!-- Clear Selection -->
+      <div class="bulk-action-group">
+        <button class="btn btn-sm bulk-btn" id="clear-selection" aria-label="Clear selection">
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suppression Panel -->
+  <div id="suppress-panel" class="suppress-panel" style="display: none;">
+    <div class="suppress-content">
+      <h4>Suppress Findings</h4>
+      
+      <div class="suppress-field">
+        <label for="suppress-reason">Reason (required):</label>
+        <input type="text" id="suppress-reason" class="bulk-input" placeholder="Reason for suppression" required>
+      </div>
+
+      <div class="suppress-field">
+        <label for="suppress-duration">Duration:</label>
+        <select id="suppress-duration" class="bulk-select">
+          <option value="1d">1 day</option>
+          <option value="7d">7 days</option>
+          <option value="30d">30 days</option>
+          <option value="permanent">Permanent</option>
+        </select>
+      </div>
+
+      <div class="suppress-field">
+        <label for="suppress-scope">Scope:</label>
+        <select id="suppress-scope" class="bulk-select">
+          <option value="this">This finding only</option>
+          <option value="endpoint">All findings on this endpoint</option>
+          <option value="detector">All findings from this detector</option>
+        </select>
+      </div>
+
+      <div class="suppress-actions">
+        <button class="btn btn-sm bulk-btn"
+                hx-post="/p/{{ pid }}/vulns/bulk"
+                hx-target="#vulns-list"
+                hx-trigger="click"
+                hx-headers='{"Content-Type":"application/json"}'
+                hx-vals="js:window.VulnsBulk.buildPayload('suppress')"
+                hx-indicator=".hx-indicator"
+                aria-label="Apply suppression">
+          Apply Suppression
+        </button>
+        <button class="btn btn-sm bulk-btn" id="cancel-suppress" aria-label="Cancel suppression">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HTMX Loading Indicator -->
+<div class="hx-indicator" style="display: none;">
+  <div class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i> Processing...
+  </div>
+</div>

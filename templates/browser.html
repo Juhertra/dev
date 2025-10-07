@@ -1,0 +1,179 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'explorer' %}
+
+{% block page_title %}API Explorer{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>API Explorer</span>
+{% endblock %}
+
+{% block content %}
+  <style>
+    .findings-count {
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    
+    /* Fix table row vertical alignment */
+    table tr {
+      vertical-align: middle;
+    }
+    
+    table td {
+      vertical-align: middle;
+    }
+    
+    /* Ensure chips and buttons are vertically centered */
+    .chip {
+      vertical-align: middle;
+    }
+    
+    .btn {
+      vertical-align: middle;
+    }
+    /* Full-width content area overrides */
+    .wrap{ max-width:none; width:100%; }
+    .grid{ grid-template-columns: minmax(420px, 1fr) 420px; }
+    /* Keep spec headers stable */
+    /* Group header layout */
+    details.spec summary{ display:grid; grid-template-columns: 20px 1fr auto; align-items:center; gap:12px; padding:14px 16px }
+    .spec-head{ display:flex; flex-direction:column; gap:4px; min-width:0; line-height:1.2 }
+    .spec-title{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:800 }
+    .spec .muted{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    /* Full-size spec body with stable sizing */
+    details.spec{ width:100% }
+    .spec-body{ overflow:auto; width:100% }
+    .spec-body table{ table-layout:fixed; width:100%; border-collapse:separate; border-spacing:0 }
+    .spec-body thead th, .spec-body tbody td{ padding:8px 12px; vertical-align:middle }
+    .spec-body tbody tr{ height:40px }
+    /* Column sizing */
+    .spec-body table th:nth-child(1), .spec-body table td:nth-child(1){ width:36px }
+    .spec-body table th:nth-child(2), .spec-body table td:nth-child(2){ width:88px }
+    .spec-body table th:nth-child(4), .spec-body table td:nth-child(4){ width:22% }
+    .spec-body table th:nth-child(5), .spec-body table td:nth-child(5){ width:80px }
+    .spec-body table th:nth-child(6), .spec-body table td:nth-child(6){ width:160px }
+    /* Path column behaves elastically */
+    .spec-body table td:nth-child(3), .spec-body table th:nth-child(3){ overflow:hidden; white-space:nowrap; text-overflow:ellipsis }
+    /* Keep group details collapsed by default unless user opened */
+    details.spec{ contain: layout }
+  </style>
+    
+    <div class="toolbar">
+      <button class="btn ghost" type="button" onclick="expandAll()">Expand all</button>
+      <button class="btn ghost" type="button" onclick="collapseAll()">Collapse all</button>
+    </div>
+
+    <div class="card">
+      <form hx-post="{{ url_for('web.add_specs', pid=pid) }}" hx-target="#specs" hx-swap="innerHTML" hx-indicator="#global-indicator">
+        <div class="grid">
+          <div>
+            <div class="muted">Spec URLs (one per line)</div>
+            <textarea name="spec_urls" placeholder="https://…/openapi.yaml&#10;https://…/swagger.json"></textarea>
+            <div class="muted" style="margin-top:8px">Or paste raw text (auto-detects OpenAPI/Postman/HAR)</div>
+            <textarea name="raw_text" placeholder="Paste raw OpenAPI JSON/YAML, Postman v2.1, or HAR …" style="height:120px"></textarea>
+          </div>
+          <div>
+            <div class="muted">Proxy</div>
+            <input type="text" name="proxy" placeholder="http://127.0.0.1:8080" value="{{ proxy or '' }}">
+            <div class="muted" style="margin-top:8px">TLS verify</div>
+            <select name="verify"><option value="1" {% if verify %}selected{% endif %}>Verify TLS</option><option value="0" {% if not verify %}selected{% endif %}>Skip TLS verification</option></select>
+            <div class="muted" style="margin-top:8px">Spec Authorization</div>
+            <input type="text" name="bearer" placeholder="Bearer token (just token)" value="{{ bearer or '' }}">
+            <div class="muted" style="margin-top:8px">Custom Headers (JSON)</div>
+            <input type="text" name="headers_json" placeholder='{"x-api-key":"…"}'>
+            <div class="muted" style="margin-top:8px">Type</div>
+            <select name="input_type">
+              <option value="auto" selected>Auto-detect</option>
+              <option value="openapi">OpenAPI/Swagger</option>
+              <option value="postman">Postman Collection</option>
+              <option value="har">HAR (HTTP Archive)</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn primary" type="submit">Load</button>
+          <button class="btn ghost" type="button" hx-post="{{ url_for('web.clear_specs', pid=pid) }}" hx-target="#specs" hx-swap="innerHTML" hx-on::after-request="if(typeof showNotification === 'function') showNotification('Specifications cleared successfully', 'success'); else alert('Specifications cleared successfully');" hx-on::response-error="if(typeof showNotification === 'function') showNotification('Error clearing specifications', 'error'); else alert('Error clearing specifications');">Clear</button>
+          
+        </div>
+      </form>
+
+      <div class="filters">
+        <span class="muted">Filter methods:</span>
+        <button type="button" class="tag GET active" data-m="GET"    onclick="toggleFilter('GET')">GET</button>
+        <button type="button" class="tag POST active" data-m="POST"  onclick="toggleFilter('POST')">POST</button>
+        <button type="button" class="tag PUT active" data-m="PUT"    onclick="toggleFilter('PUT')">PUT</button>
+        <button type="button" class="tag DELETE active" data-m="DELETE" onclick="toggleFilter('DELETE')">DELETE</button>
+        <button type="button" class="tag active" data-m="PATCH" onclick="toggleFilter('PATCH')">PATCH</button>
+        <span class="sep">•</span>
+        <button type="button" class="btn ghost" onclick="resetFilters()">Reset</button>
+      </div>
+    </div>
+
+    <div id="specs">{{ spec_html|safe }}</div>
+    <script>
+      // Collapse all groups on first load; respect persisted open state via localStorage
+      (function(){
+        try{
+          const opened = JSON.parse(localStorage.getItem('open_specs')||'[]');
+          document.querySelectorAll('details.spec').forEach(d=>{
+            const id = d.id||'';
+            d.open = opened.includes(id);
+            d.addEventListener('toggle', ()=>{
+              const cur = new Set(JSON.parse(localStorage.getItem('open_specs')||'[]'));
+              if (d.open) cur.add(id); else cur.delete(id);
+              localStorage.setItem('open_specs', JSON.stringify([...cur]));
+            });
+          });
+        }catch(_){}
+      })();
+      // Re-apply after HTMX swaps of #specs
+      document.addEventListener('htmx:afterSwap', (e)=>{
+        if (e.target && (e.target.id === 'specs' || (e.target.closest && e.target.closest('#specs')))){
+          try{
+            const opened = JSON.parse(localStorage.getItem('open_specs')||'[]');
+            document.querySelectorAll('#specs details.spec').forEach(d=>{
+              const id = d.id||'';
+              d.open = opened.includes(id);
+              d.addEventListener('toggle', ()=>{
+                const cur = new Set(JSON.parse(localStorage.getItem('open_specs')||'[]'));
+                if (d.open) cur.add(id); else cur.delete(id);
+                localStorage.setItem('open_specs', JSON.stringify([...cur]));
+              });
+            });
+          }catch(_){}
+        }
+      });
+    </script>
+
+    {% if results %}
+      <div class="card">
+        <h3 style="margin:0 0 8px">Results</h3>
+        <table>
+          <thead><tr><th>#</th><th>Status</th><th>Method</th><th>URL</th><th>Detail</th></tr></thead>
+          <tbody>
+            {% for r in results %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td class="{{ 'ok' if r.ok else 'err' }}">{{ r.status }}</td>
+              <td><span class="chip {{ r.method }}">{{ r.method }}</span></td>
+              <td>{{ r.url }}</td>
+              <td class="muted">{{ r.detail or '' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+
+    
+{% endblock %}
+
+

@@ -1,0 +1,134 @@
+<div id="vulns-list" hx-swap-oob="true">
+  {% if vulns %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="sel" style="width: 40px;">
+            <input id="sel-all" type="checkbox" aria-label="Select all on this page" aria-controls="vulns-list">
+          </th>
+          <th>Endpoint</th>
+          <th>Title / Template</th>
+          <th>Occurrences</th>
+          <th>Latest Run</th>
+          <th>Worst Severity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vulns-table-body">
+        {% for vuln in vulns %}
+        <tr data-vuln-index="{{ loop.index0 }}" class="vuln-row">
+          <td class="sel">
+            <input type="checkbox"
+                   class="row-sel"
+                   aria-label="Select this vulnerability"
+                   data-index="{{ loop.index0 }}">
+          </td>
+          <td>
+            {% set method = vuln.endpoint_key.split(' ')[0] %}
+            {% set url = vuln.endpoint_key.split(' ', 1)[1] if ' ' in vuln.endpoint_key else vuln.endpoint_key %}
+            <span class="pill" style="font-size: 0.8em; margin-right: 4px;">{{ method }}</span>
+            <span style="font-family: monospace; font-size: 0.9em;">{{ url }}</span>
+          </td>
+          <td>
+            <div>
+              <strong>{{ vuln.title }}</strong>
+              {% if vuln.template_id %}
+              <br><span class="muted" style="font-size: 0.8em;">{{ vuln.template_id }}</span>
+              {% endif %}
+              
+              <!-- P5 Triage Status Indicators -->
+              {% if vuln.counts_by_status %}
+              <div style="margin-top: 4px; display: flex; gap: 4px; flex-wrap: wrap;">
+                {% set status_colors = {
+                  'open': '#dc3545',
+                  'in_progress': '#fd7e14',
+                  'risk_accepted': '#6c757d',
+                  'false_positive': '#28a745',
+                  'resolved': '#17a2b8'
+                } %}
+                {% for status, count in vuln.counts_by_status.items() %}
+                  {% if count > 0 %}
+                  <span class="pill" style="background: {{ status_colors.get(status, '#6c757d') }}; color: white; font-size: 0.7em;">
+                    {{ count }} {{ status.replace('_', ' ') }}
+                  </span>
+                  {% endif %}
+                {% endfor %}
+                {% if vuln.has_suppressed %}
+                <span class="pill" style="background: #6c757d; color: white; font-size: 0.7em;">
+                  <i class="fas fa-eye-slash"></i> Suppressed
+                </span>
+                {% endif %}
+              </div>
+              {% endif %}
+              
+              <div style="margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap;">
+                {% if vuln.detector_id and vuln.detector_id.startswith('nuclei.') %}
+                <span class="pill" style="background: #8b5cf6; color: white; font-size: 0.75em;">Nuclei</span>
+                {% endif %}
+                {% set _cve = vuln.cve_id or vuln.cve %}
+                {% if _cve and _cve is string and _cve|regex_search('^CVE-\\d{4}-\\d+$') %}
+                <span class="pill cve-chip" onclick="openCveLink('{{ _cve }}')" style="cursor:pointer;background:#ff6b6b;color:white;font-size:0.75em;">{{ _cve }}</span>
+                {% endif %}
+                {% if vuln.cwe %}
+                <span class="pill" style="background: #06b6d4; color: white; font-size: 0.75em;">{{ vuln.cwe }}</span>
+                {% endif %}
+                {% if vuln.owasp %}
+                <span class="pill" style="background: #f59e0b; color: white; font-size: 0.75em;">{{ vuln.owasp }}</span>
+                {% elif vuln.owasp_api %}
+                <span class="pill" style="background: #f59e0b; color: white; font-size: 0.75em;">{{ vuln.owasp_api }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="pill">{{ vuln.occurrences }}</span>
+          </td>
+          <td>
+            {% if vuln.latest_at %}
+            <span title="{{ vuln.latest_at }}">{{ vuln.latest_at[:10] }}</span>
+            {% else %}
+            <span class="muted">-</span>
+            {% endif %}
+          </td>
+          <td>
+            {% set severity_colors = {
+              'critical': '#dc3545',
+              'high': '#fd7e14', 
+              'medium': '#ffc107',
+              'low': '#28a745',
+              'info': '#6c757d'
+            } %}
+            <span class="pill" style="background: {{ severity_colors.get(vuln.worst_severity, '#6c757d') }}; color: white;">
+              {{ vuln.worst_severity }}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 4px;">
+              <button class="btn ghost btn-sm" type="button" 
+                      onclick="openPreview('{{ vuln.endpoint_key }}')">
+                Preview
+              </button>
+              <button class="btn ghost btn-sm" type="button" 
+                      onclick="openRuns('{{ vuln.endpoint_key }}')">
+                Runs
+              </button>
+              <button class="btn primary btn-sm" type="button" 
+                      onclick="openTriage('{{ vuln.endpoint_key }}', '{{ vuln.detector_id }}')">
+                <i class="fas fa-clipboard-check"></i> Triage
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="text-center" style="padding: 40px;">
+    <h4>No vulnerabilities found</h4>
+    <p class="muted">Run some security tests to populate this view</p>
+    <a href="/p/{{ pid }}/sitemap" class="btn primary">Go to Site Map</a>
+  </div>
+  {% endif %}
+</div>

@@ -1,0 +1,1622 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
+      
+      
+        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
+      
+      
+      
+        <link rel="prev" href="../10-wordlist-and-output-sharing/">
+      
+      
+        <link rel="next" href="../12-findings-model-and-schema/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>SecFlow — Project Isolation & Data Sharing Controls - SecFlow Architecture & Validation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#11-project-isolation-data-sharing-controls" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SecFlow Architecture & Validation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SecFlow — Project Isolation & Data Sharing Controls
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SecFlow Architecture & Validation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-title-and-executive-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Executive Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-architecture-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Philosophy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-repository-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repository Layout
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-core-packages-and-responsibilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Packages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Orchestration Engine
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-plugin-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plugin System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-tools-integration-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Manager & UX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-resource-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resource Registry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wordlists & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Project Isolation & Sharing
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Isolation & Sharing
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧭 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Design Principles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Architectural Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔮 Future Enhancements
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-findings-model-and-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Enrichment Layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PoC Sources & Legal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-garbage-collection-and-retention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Garbage Collection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-security-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-risk-assessment-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Risk Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Migration Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD & Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev Experience & Docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-future-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-final-consensus-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Review & Validation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Review & Validation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Checklist
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/glossary.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="11-project-isolation-data-sharing-controls">11 — Project Isolation &amp; Data Sharing Controls<a class="headerlink" href="#11-project-isolation-data-sharing-controls" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Project Isolation &amp; Sharing</strong> subsystem defines how multiple SecFlow projects coexist securely within the same environment.<br />
+Each project has its <strong>own namespace</strong>, <strong>storage domain</strong>, and <strong>execution context</strong>, but can optionally <strong>share data or resources</strong> under controlled policies.</p>
+<p>SecFlow's isolation model is designed to:
+- Protect sensitive customer or target data.<br />
+- Enable reuse of discovery outputs between related engagements.<br />
+- Support team-based collaboration while maintaining auditability.</p>
+<hr />
+<h2 id="design-principles">🧱 Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Default Isolation</strong></td>
+<td>Every project operates in its own workspace and database namespace.</td>
+</tr>
+<tr>
+<td><strong>Explicit Sharing</strong></td>
+<td>No cross-project access occurs unless explicitly declared.</td>
+</tr>
+<tr>
+<td><strong>Scoped Resources</strong></td>
+<td>Shared assets must be tagged and versioned.</td>
+</tr>
+<tr>
+<td><strong>Least Privilege Access</strong></td>
+<td>Users only see or manage projects they are assigned to.</td>
+</tr>
+<tr>
+<td><strong>Full Traceability</strong></td>
+<td>Every cross-project data access is logged and auditable.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architectural-overview">⚙️ Architectural Overview<a class="headerlink" href="#architectural-overview" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+-----------------------------------------------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">|                Project Manager                            |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Workspace Manager (namespacing, FS isolation)           |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Data Access Layer (scope resolution)                   |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Sharing Policy Engine (group + project-level rules)     |</span>
+<span class="l l-Scalar l-Scalar-Plain">| - Audit Log (cross-project actions)                      |</span>
+<span class="l l-Scalar l-Scalar-Plain">+------------------------┬----------------------------------+</span>
+<span class="w">                         </span><span class="l l-Scalar l-Scalar-Plain">|</span>
+<span class="w">                         </span><span class="l l-Scalar l-Scalar-Plain">▼</span>
+<span class="l l-Scalar l-Scalar-Plain">+-----------------------------------------------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">|              Project Storage Structure                    |</span>
+<span class="l l-Scalar l-Scalar-Plain">+-----------------------------------------------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">| ~/.SecFlow/projects/&lt;project_id&gt;/                        |</span>
+<span class="l l-Scalar l-Scalar-Plain">| ├── config.yaml                                          |</span>
+<span class="l l-Scalar l-Scalar-Plain">| ├── findings/                                             |</span>
+<span class="l l-Scalar l-Scalar-Plain">| ├── runs/                                                 |</span>
+<span class="l l-Scalar l-Scalar-Plain">| ├── reports/                                              |</span>
+<span class="l l-Scalar l-Scalar-Plain">| └── cache/                                                |</span>
+<span class="l l-Scalar l-Scalar-Plain">+-----------------------------------------------------------+</span>
+<span class="l l-Scalar l-Scalar-Plain">```python</span>
+
+<span class="nn">---</span>
+
+<span class="c1">## 🧩 Project Data Model</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="l l-Scalar l-Scalar-Plain"># core-lib/models/project.py</span>
+<span class="l l-Scalar l-Scalar-Plain">from typing import List, Optional</span>
+<span class="l l-Scalar l-Scalar-Plain">from datetime import datetime</span>
+<span class="l l-Scalar l-Scalar-Plain">from pydantic import BaseModel</span>
+
+<span class="l l-Scalar l-Scalar-Plain">class Project(BaseModel)</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Optional[str]</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Optional[str]</span>
+<span class="w">    </span><span class="nt">created_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
+<span class="w">    </span><span class="nt">updated_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
+<span class="w">    </span><span class="nt">sharing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Optional[dict] = {</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&quot;enabled&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False,</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&quot;with&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="err">,</span>
+<span class="w">        </span><span class="s">&quot;resources&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="err">,</span>
+<span class="w">        </span><span class="s">&quot;outputs&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="c1">## 🧩 Workspace Isolation</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Each project is backed by its own filesystem and database schema.</span>
+
+<span class="c1">### Example Directory Layout</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">~/.SecFlow/projects/</span>
+<span class="l l-Scalar l-Scalar-Plain">├── acme-api/</span>
+<span class="l l-Scalar l-Scalar-Plain">│   ├── config.yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">│   ├── runs/</span>
+<span class="l l-Scalar l-Scalar-Plain">│   ├── findings/</span>
+<span class="l l-Scalar l-Scalar-Plain">│   └── cache/</span>
+<span class="l l-Scalar l-Scalar-Plain">├── finance-portal/</span>
+<span class="l l-Scalar l-Scalar-Plain">│   ├── config.yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">│   ├── runs/</span>
+<span class="l l-Scalar l-Scalar-Plain">│   ├── findings/</span>
+<span class="l l-Scalar l-Scalar-Plain">│   └── cache/</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="c1">### Database Schema Isolation</span>
+
+<span class="nt">Each project gets a dedicated schema</span><span class="p">:</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">public.findings_acme_api</span>
+<span class="l l-Scalar l-Scalar-Plain">public.findings_finance_portal</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+
+<span class="l l-Scalar l-Scalar-Plain">This allows multiple concurrent engagements with strict data boundaries.</span>
+
+<span class="c1">## 🧠 Data Sharing Configuration</span>
+
+<span class="c1">### Example: Controlled Cross-Project Sharing</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="nt">project</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span>
+<span class="w">  </span><span class="nt">sharing</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;internal-api&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;qa-staging&quot;</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;wordlists&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;templates&quot;</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;urls&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;parameters&quot;</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="nt">In this configuration</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The `acme-api` project shares wordlists and templates with two sibling projects.</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The outputs (e.g., discovered URLs) are made available for enrichment or scanning reuse.</span>
+
+<span class="c1">## 🧩 Sharing Policy Engine</span>
+
+<span class="c1">### Logic Flow</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="l l-Scalar l-Scalar-Plain">User Request</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
+<span class="l l-Scalar l-Scalar-Plain">Policy Check (Project A → Project B)</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
+<span class="l l-Scalar l-Scalar-Plain">Scope Validation</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
+<span class="l l-Scalar l-Scalar-Plain">Access Decision (allow | deny)</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+
+<span class="c1">### Policy Structure</span>
+
+<span class="p p-Indicator">|</span><span class="err"> Field | Description |</span>
+<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
+<span class="p p-Indicator">|</span><span class="err"> **resource_type** | What type of data is being shared (wordlist, output, finding). |</span>
+<span class="p p-Indicator">|</span><span class="err"> **scope** | Allowed scope (project, group, global). |</span>
+<span class="p p-Indicator">|</span><span class="err"> **mode** | Access type (read-only, read-write, clone). |</span>
+<span class="p p-Indicator">|</span><span class="err"> **ttl** | Time-to-live for shared access. |</span>
+
+<span class="c1">### Example Policy Definition</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="nt">policies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resource_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;outputs&quot;</span>
+<span class="w">    </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;group&quot;</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;read-only&quot;</span>
+<span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30d</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+
+<span class="c1">## 🧩 Isolation Enforcement Mechanisms</span>
+
+<span class="p p-Indicator">|</span><span class="err"> Layer | Enforcement |</span>
+<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
+<span class="p p-Indicator">|</span><span class="err"> **Filesystem** | Each project path is sandboxed under `~/.SecFlow/projects/&lt;id&gt;`. |</span>
+<span class="p p-Indicator">|</span><span class="err"> **Database** | Separate schema per project (namespaced tables). |</span>
+<span class="p p-Indicator">|</span><span class="err"> **Cache** | Project-specific cache directories. |</span>
+<span class="p p-Indicator">|</span><span class="err"> **Runtime Context** | Workers run with `PROJECT_ID` environment variable. |</span>
+<span class="p p-Indicator">|</span><span class="err"> **Authorization** | API tokens include `project_id` scope claim. |</span>
+
+<span class="c1">## 🧠 Access Token Scoping</span>
+
+<span class="nt">API tokens encode the project scope</span><span class="p">:</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="p p-Indicator">{</span>
+<span class="w">  </span><span class="s">&quot;sub&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;hernan.trajtemberg&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;project_id&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;roles&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;analyst&quot;</span><span class="p p-Indicator">],</span>
+<span class="w">  </span><span class="s">&quot;exp&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1759870400</span>
+<span class="p p-Indicator">}</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Tokens can be project-scoped or group-scoped.</span>
+<span class="l l-Scalar l-Scalar-Plain">The access control middleware rejects out-of-scope operations.</span>
+
+<span class="c1">## 🧩 Resource Linking Between Projects</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Projects can import shared assets from another project&#39;s registry.</span>
+
+<span class="c1">### Example Command</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
+<span class="l l-Scalar l-Scalar-Plain">SecFlow projects link internal-api --resources wordlists templates</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="c1">### Example Output</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="nt">Linked resources</span><span class="p">:</span>
+<span class="l l-Scalar l-Scalar-Plain">✔ wordlists (3)</span>
+<span class="l l-Scalar l-Scalar-Plain">✔ templates (5)</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="nt">Linked resources are marked in metadata</span><span class="p">:</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
+<span class="nt">linked_from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;project:internal-api&quot;</span>
+<span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;read-only&quot;</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🧱 Output Sharing</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Outputs (datasets or findings) can also be shared for cross-project correlation or enrichment.</span>
+
+<span class="c1">### Example Workflow:</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="l l-Scalar l-Scalar-Plain">Project A → Discovery + Scan</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
+<span class="l l-Scalar l-Scalar-Plain">Shared Outputs (URLs, endpoints)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
+<span class="l l-Scalar l-Scalar-Plain">Project B → Enrichment / Retesting</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="c1">### Sharing Command</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
+<span class="l l-Scalar l-Scalar-Plain">SecFlow share outputs acme-api --with finance-portal --types urls parameters</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+
+<span class="l l-Scalar l-Scalar-Plain">The receiving project&#39;s engine imports the shared dataset as a read-only reference.</span>
+
+<span class="c1">## 🧩 Audit Logging</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Every cross-project access event is logged.</span>
+
+<span class="c1">### Example Log Entry</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="p p-Indicator">{</span>
+<span class="w">  </span><span class="s">&quot;event&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;resource_access&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;actor&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;hernan.trajtemberg&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;source_project&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;target_project&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;internal-api&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;resource&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;wordlists&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;timestamp&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;2025-10-06T11:42:21Z&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">  </span><span class="s">&quot;action&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;read&quot;</span>
+<span class="p p-Indicator">}</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+
+<span class="c1">## 🧠 Isolation Example Scenarios</span>
+
+<span class="c1">### 1. Strict Isolation (Default)</span>
+<span class="l l-Scalar l-Scalar-Plain">Each project operates completely independently.</span>
+<span class="l l-Scalar l-Scalar-Plain">Useful for sensitive pentests or regulated environments.</span>
+
+<span class="c1">### 2. Group-Level Sharing</span>
+<span class="l l-Scalar l-Scalar-Plain">Multiple analysts share discovery data across projects within the same team.</span>
+
+<span class="c1">### 3. Selective Sharing</span>
+<span class="l l-Scalar l-Scalar-Plain">A red-team lead selectively shares Nuclei findings between &quot;internal-api&quot; and &quot;staging-api&quot;.</span>
+
+<span class="c1">## 🔐 Security Considerations</span>
+
+<span class="p p-Indicator">|</span><span class="err"> Risk | Mitigation |</span>
+<span class="p p-Indicator">|</span><span class="err">------|------------|</span>
+<span class="p p-Indicator">|</span><span class="err"> Unauthorized access to shared data | Token-scoped enforcement and audit logging |</span>
+<span class="p p-Indicator">|</span><span class="err"> Resource version drift | Immutable hashes + version pinning |</span>
+<span class="p p-Indicator">|</span><span class="err"> Data leakage across clients | No implicit sharing; explicit only |</span>
+<span class="p p-Indicator">|</span><span class="err"> Lateral movement between project schemas | Database role isolation |</span>
+<span class="p p-Indicator">|</span><span class="err"> Policy misconfiguration | Policy validation + test harness |</span>
+
+<span class="c1">## 🧩 Example Policy Validation Script</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">def validate_policy(policy)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">assert policy[&quot;mode&quot;] in (&quot;read-only&quot;, &quot;read-write&quot;, &quot;clone&quot;)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">assert policy[&quot;scope&quot;] in (&quot;project&quot;, &quot;group&quot;, &quot;global&quot;)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">if policy[&quot;ttl&quot;]</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">assert re.match(r&quot;^\d+[dh]$&quot;, policy[&quot;ttl&quot;])</span>
+</code></pre></div>
+<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Group-level "Shared Intelligence Pool" for recurring findings.</li>
+<li>Automatic synchronization of enrichment data across related projects.</li>
+<li>AI-based data deduplication and anomaly detection.</li>
+<li>Visual dependency graph of shared resources in UI.</li>
+<li>Temporal sharing policies ("auto-expire after 30 days").</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../12-findings-model-and-schema/">Findings Model &amp; Schema Normalization</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

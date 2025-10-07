@@ -1,0 +1,216 @@
+{% extends "_layout.html" %}
+{% block title %}Metrics · {{ pid }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+  <!-- Header -->
+  <div class="metrics-header">
+    <div>
+      <h1>Project Metrics</h1>
+      <div class="muted" id="metrics-updated">
+        Last updated: <span>{{ metrics.last_updated or "—" }}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="/p/{{ pid }}/export?format=csv" aria-label="Export CSV">Export CSV</a>
+      <a class="btn" href="/p/{{ pid }}/export?format=json" aria-label="Export JSON">Export JSON</a>
+      <a class="btn" href="/p/{{ pid }}/export?format=pdf" aria-label="Export PDF">Export PDF</a>
+    </div>
+  </div>
+
+  <!-- Filters (HTMX reloads this same page) -->
+  <form id="metrics-filters"
+        class="filters"
+        hx-get="/p/{{ pid }}/metrics"
+        hx-target="#metrics-root"
+        hx-swap="innerHTML"
+        hx-indicator="#metrics-loading">
+    <div class="filter-row">
+      <label>Status
+        <select name="status" multiple>
+          {% for s in ["open","in_progress","risk_accepted","false_positive","resolved"] %}
+            <option value="{{ s }}" {% if request.args.getlist('status') and s in request.args.getlist('status') %}selected{% endif %}>{{ s.replace('_',' ') }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Owner
+        <input type="text" name="owner" value="{{ request.args.get('owner','') }}" placeholder="alice@acme.io">
+      </label>
+      <label>Since
+        <input type="date" name="since" value="{{ request.args.get('since','') }}">
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" name="hide_suppressed" value="1" {% if request.args.get('hide_suppressed') %}checked{% endif %}>
+        Hide suppressed
+      </label>
+      <button class="btn" type="submit">Apply</button>
+      <button class="btn ghost" type="reset" hx-get="/p/{{ pid }}/metrics" hx-target="#metrics-root" hx-swap="innerHTML">Reset</button>
+    </div>
+  </form>
+
+  <div id="metrics-loading" class="htmx-indicator">Loading…</div>
+
+  <!-- Root container (for HTMX swaps) -->
+  <div id="metrics-root">
+    {% set m = metrics or {} %}
+    {% if not m or m.total_findings is none %}
+      <div class="empty">
+        <h3>No data yet</h3>
+        <p class="muted">Run a scan or add findings to see metrics here.</p>
+        <a class="btn" href="/p/{{ pid }}/active">Start Active Scan</a>
+      </div>
+    {% else %}
+
+    <!-- Summary Cards -->
+    <div class="cards">
+      <div class="card kpi">
+        <div class="kpi-title">Total Findings</div>
+        <div class="kpi-value">{{ m.total_findings }}</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-title">Active</div>
+        <div class="kpi-value">{{ m.active }}</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-title">Resolved</div>
+        <div class="kpi-value">{{ m.resolved }}</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-title">False Positives</div>
+        <div class="kpi-value">{{ m.false_positives }}</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-title">Avg. Fix Time</div>
+        <div class="kpi-value">{{ (m.avg_fix_time_days or 0) | round(1) }}d</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts">
+      <div class="card chart">
+        <div class="card-title">30-day Trend</div>
+        <canvas id="trendChart" height="120"></canvas>
+      </div>
+      <div class="card chart">
+        <div class="card-title">Severity</div>
+        <canvas id="severityChart" height="120"></canvas>
+      </div>
+      <div class="card chart">
+        <div class="card-title">Top Tags</div>
+        <canvas id="tagsChart" height="120"></canvas>
+      </div>
+      <div class="card chart">
+        <div class="card-title">Top Owners (Open)</div>
+        <canvas id="ownersChart" height="120"></canvas>
+      </div>
+    </div>
+
+    <!-- Table (Top Open Groups / quick nav) -->
+    <div class="card table">
+      <div class="card-title">Quick Links</div>
+      <div class="table-note muted">Jump to Vulnerabilities for full triage.</div>
+      <div class="table-actions">
+        <a class="btn" href="/p/{{ pid }}/vulns">Open Vulnerabilities Hub</a>
+      </div>
+      <!-- Optionally in future: hydrate with a top-N list -->
+    </div>
+
+    {% endif %}
+  </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="" crossorigin="anonymous"></script>
+
+<!-- Metrics boot script -->
+<script>
+  (function(){
+    const m = {{ (metrics or {}) | tojson }};
+    if (!m || !m.total_findings) return;
+
+    // Trend
+    const trend = m.trend_30d || [];
+    new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: {
+        labels: trend.map(d => d.day),
+        datasets: [
+          { label: 'Created', data: trend.map(d => d.created) },
+          { label: 'Resolved', data: trend.map(d => d.resolved) }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { position: 'bottom' } },
+        scales: { x: { ticks: { maxRotation: 0 } } }
+      }
+    });
+
+    // Severity
+    const sev = m.severity_breakdown || {};
+    new Chart(document.getElementById('severityChart'), {
+      type: 'pie',
+      data: {
+        labels: ['critical','high','medium','low','info'],
+        datasets: [{ data: [
+          sev.critical||0, sev.high||0, sev.medium||0, sev.low||0, sev.info||0
+        ]}]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Top tags
+    const tags = (m.most_common_tags || []).slice(0,10);
+    new Chart(document.getElementById('tagsChart'), {
+      type: 'bar',
+      data: {
+        labels: tags.map(t => t.name || t[0]),
+        datasets: [{ label: 'Count', data: tags.map(t => t.count || t[1]) }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+
+    // Top owners (open)
+    const owners = (m.top_owners || []).slice(0,10);
+    new Chart(document.getElementById('ownersChart'), {
+      type: 'bar',
+      data: {
+        labels: owners.map(o => o.name || o[0]),
+        datasets: [{ label: 'Open Findings', data: owners.map(o => o.count || o[1]) }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+  })();
+</script>
+
+<style>
+  .metrics-header{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;margin-bottom:1rem}
+  .metrics-header h1{margin:0}
+  .muted{opacity:.75}
+  .actions .btn{margin-left:.5rem}
+  .filters{background:var(--card);padding:.75rem;border-radius:12px;margin-bottom:1rem}
+  .filter-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:end}
+  .filter-row label{display:flex;flex-direction:column;font-size:.9rem;gap:.25rem}
+  .cards{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:.75rem;margin-bottom:1rem}
+  .card{background:var(--card);border-radius:12px;padding:1rem}
+  .kpi-title{font-size:.8rem;opacity:.7}
+  .kpi-value{font-size:1.8rem;font-weight:700}
+  .charts{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1rem}
+  .chart{height:260px}
+  .card-title{font-weight:600;margin-bottom:.5rem}
+  .table-note{margin-bottom:.5rem}
+  .empty{text-align:center;padding:3rem;border:1px dashed var(--muted);border-radius:12px}
+  .htmx-indicator{display:none}
+  .htmx-request #metrics-loading{display:block}
+  @media(max-width:1000px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .charts{grid-template-columns:1fr}
+  }
+</style>
+{% endblock %}

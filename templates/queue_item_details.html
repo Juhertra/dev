@@ -1,0 +1,97 @@
+<div class="drawer">
+  {% set curl %}
+    curl -X {{ pre.method }} '{{ pre.url }}'
+    {%- if headers %}{% for k, v in headers.items() %} \
+      -H '{{ k }}: {{ v }}'{% endfor %}{% endif %}
+    {%- if pre.json is not none %} \
+      -d '{{ pre.json|tojson }}'
+    {%- elif pre.data is not none %} \
+      -d '{{ pre.data }}'
+    {%- endif %}
+  {% endset %}
+  <script id="panel-curl" type="application/json">{{ curl|trim }}</script>
+  
+  <!-- Header section with consistent height -->
+  <div class="drawer-header" style="flex-shrink: 0; margin-bottom: 12px;">
+    <div class="row" style="justify-content:flex-start; align-items:center; gap:8px;">
+      <span class="chip {{ pre.method }}">{{ pre.method }}</span>
+      <span id="panel-url" style="word-break:break-all; flex:1;">{{ pre.url }}</span>
+    </div>
+  </div>
+  
+  <!-- Content section with consistent height -->
+  <div class="drawer-content" style="flex: 1; overflow-y: auto; height: calc(100vh - 180px); max-height: calc(100vh - 180px);">
+    {% if pre.query %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>Query Parameters</strong></div>
+      <pre class="code-block">{{ pre.query|tojson(indent=2) }}</pre>
+    </div>
+    {% endif %}
+    
+    {% if headers %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>Headers</strong></div>
+      <pre class="code-block">{{ headers|tojson(indent=2) }}</pre>
+    </div>
+    {% endif %}
+    
+    {% if pre.cookies %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>Cookies</strong></div>
+      <pre class="code-block">{{ pre.cookies|tojson(indent=2) }}</pre>
+    </div>
+    {% endif %}
+    
+    {% if files_map %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>Files</strong></div>
+      <pre class="code-block">{{ files_map|tojson(indent=2) }}</pre>
+    </div>
+    {% elif pre.json is not none %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>JSON Body</strong></div>
+      <pre class="code-block">{{ pre.json|tojson(indent=2) }}</pre>
+    </div>
+    {% elif pre.data is not none %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>Data</strong></div>
+      <pre class="code-block">{{ pre.data|tojson(indent=2) }}</pre>
+    </div>
+    {% else %}
+    <div class="content-section" style="margin-bottom: 12px;">
+      <div class="section-title"><strong>Body</strong></div>
+      <div class="muted">No body content</div>
+    </div>
+    {% endif %}
+  </div>
+  
+  <style>
+    .drawer-header {
+      border-bottom: 1px solid var(--card-b);
+      padding-bottom: 8px;
+    }
+    .content-section {
+      border: 1px solid var(--card-b);
+      border-radius: 8px;
+      padding: 8px;
+      background: var(--bg2);
+    }
+    .section-title {
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--fg);
+    }
+    .code-block {
+      background: var(--bg);
+      color: var(--fg);
+      padding: 8px;
+      border-radius: 6px;
+      overflow: auto;
+      max-height: 200px;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+  </style>
+</div>
+
+

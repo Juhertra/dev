@@ -1,0 +1,271 @@
+<div class="drawer">
+  <!-- Header with METHOD chip + path and copyable full URL -->
+  <div class="row" style="justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <div class="row" style="gap: 12px; align-items: center; flex: 1; min-width: 0;">
+      <span class="chip {{ ep.method|lower }}" style="font-weight: 600; text-transform: uppercase;">{{ ep.method }}</span>
+      <div style="flex: 1; min-width: 0;">
+        <strong style="word-break: break-word; font-size: 16px;">{{ ep.path }}</strong>
+        <div class="muted" style="font-size: 14px; margin-top: 4px; word-break: break-all;">
+          {{ ep.base_url }}{{ ep.path }}
+          <button class="btn ghost btn-sm" 
+                  style="margin-left: 8px; padding: 2px 6px; font-size: 12px;"
+                  aria-label="Copy full URL to clipboard"
+                  onclick='copyUrlWithFeedback("{{ ep.base_url }}{{ ep.path }}")'>
+            <i class="fas fa-copy"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action bar with all required buttons -->
+  <div class="row" style="gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+    <button class="btn ghost" 
+            type="button"
+            aria-label="Copy URL to clipboard"
+            onclick='copyUrlWithFeedback("{{ ep.base_url }}{{ ep.path }}")'>
+      <i class="fas fa-copy"></i> Copy URL
+    </button>
+
+    <button class="btn ghost" 
+            type="button"
+            aria-label="Copy cURL command to clipboard"
+            onclick="copyCurlWithFeedback('{{ preview.curl or ep.curl or '' }}')">
+      <i class="fas fa-terminal"></i> Copy cURL
+    </button>
+
+    <button class="btn ghost" 
+            type="button"
+            aria-label="Add endpoint to scan queue"
+            hx-post="/p/{{ pid }}/queue/add_single"
+            hx-vals='{"method":"{{ ep.method }}","url":"{{ ep.base_url }}{{ ep.path }}"}'
+            hx-indicator="#global-indicator">
+      <i class="fas fa-plus"></i> Add to Queue
+    </button>
+
+    <button class="btn primary" 
+            type="button" 
+            id="primary-action"
+            aria-label="Run security scan immediately"
+            hx-post="/p/{{ pid }}/nuclei/scan"
+            hx-vals='{"run_now":"1","endpoint":"{{ ep.method }} {{ ep.base_url }}{{ ep.path }}"}'
+            hx-indicator="#global-indicator">
+      <i class="fas fa-play"></i> Run Now
+    </button>
+
+    <button class="btn ghost" 
+            type="button"
+            aria-label="View runs history for this endpoint"
+            hx-post="/p/{{ pid }}/sitemap/endpoint-runs"
+            hx-vals='{"method":"{{ ep.method }}","url":"{{ ep.base_url }}{{ ep.path }}"}'
+            hx-target="#panel-body" 
+            onclick="openPanelWith('Runs', '{{ ep.method }}', '{{ ep.path }}', '{{ ep.base_url }}{{ ep.path }}')">
+      <i class="fas fa-history"></i> View Runs
+    </button>
+  </div>
+
+  <div class="divider" style="margin: 16px 0;"></div>
+
+  <!-- Request preview sections IN ORDER -->
+  
+  <!-- 1. cURL (always show first) -->
+  <section style="margin-bottom: 20px;">
+    <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: var(--muted);">cURL Command</h4>
+    <pre class="code small" style="background: var(--card-b); padding: 12px; border-radius: 6px; overflow-x: auto;">{{ (preview.curl or ep.curl or '') }}</pre>
+  </section>
+
+  <!-- 2. Headers (if present) -->
+  {% if preview.headers and preview.headers|length > 0 %}
+  <section style="margin-bottom: 20px;">
+    <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: var(--muted);">Headers</h4>
+    <pre class="code small" style="background: var(--card-b); padding: 12px; border-radius: 6px; overflow-x: auto;">{{ preview.headers | tojson(indent=2) }}</pre>
+  </section>
+  {% endif %}
+
+  <!-- 3. Query Parameters (if present) -->
+  {% if preview.params and preview.params|length > 0 %}
+  <section style="margin-bottom: 20px;">
+    <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: var(--muted);">Query Parameters</h4>
+    <div class="table-responsive">
+      <table class="table" style="font-size: 14px;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Required</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in preview.params %}
+          <tr>
+            <td><code>{{ p.name }}</code></td>
+            <td><span class="chip" style="font-size: 12px;">{{ p.in }}</span></td>
+            <td>
+              {% if p.required %}
+                <span class="chip" style="background: var(--err); color: white; font-size: 12px;">Required</span>
+              {% else %}
+                <span class="chip" style="background: var(--muted); color: white; font-size: 12px;">Optional</span>
+              {% endif %}
+            </td>
+            <td><code>{{ p.example or '—' }}</code></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- 4. Body (if present or has_body) -->
+  {% if preview.body %}
+  <section style="margin-bottom: 20px;">
+    <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: var(--muted);">Request Body</h4>
+    <pre class="code small" style="background: var(--card-b); padding: 12px; border-radius: 6px; overflow-x: auto;">{{ preview.body | tojson(indent=2) }}</pre>
+  </section>
+  {% elif ep.has_body %}
+  <section style="margin-bottom: 20px;">
+    <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: var(--muted);">Request Body</h4>
+    <div class="muted" style="padding: 12px; background: var(--card-b); border-radius: 6px; font-style: italic;">
+      No example body in spec.
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Coverage row from dossier -->
+  <section style="margin-bottom: 20px;">
+    <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--muted);">Coverage</h4>
+    <div class="row" style="gap: 12px; flex-wrap: wrap;">
+      <div class="drawer" style="padding: 12px;">
+        <div class="row" style="align-items: center; gap: 8px;">
+          <span class="muted" style="font-size: 14px;">Queued:</span>
+          <span class="chip" style="background: {% if coverage.queued == 'yes' %}var(--ok){% else %}var(--muted){% endif %}; color: white; font-size: 12px; font-weight: 600;">
+            {{ coverage.queued|default('no')|upper }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="drawer" style="padding: 12px;">
+        <div class="row" style="align-items: center; gap: 8px;">
+          <span class="muted" style="font-size: 14px;">Last run:</span>
+          <span class="relative-time" title="{{ coverage.last_when|default('') }}" style="font-size: 14px; font-weight: 600;">
+            {{ coverage.last_when|default('—') }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="drawer" style="padding: 12px;">
+        <div class="row" style="align-items: center; gap: 8px;">
+          <span class="muted" style="font-size: 14px;">Findings:</span>
+          <span class="chip" style="background: {% if coverage.findings|default(0) > 0 %}var(--err){% else %}var(--ok){% endif %}; color: white; font-size: 12px; font-weight: 600;">
+            {{ coverage.findings|default(0) }}
+          </span>
+        </div>
+      </div>
+      
+      {% if coverage.worst and coverage.worst != 'info' %}
+      <div class="drawer" style="padding: 12px;">
+        <div class="row" style="align-items: center; gap: 8px;">
+          <span class="muted" style="font-size: 14px;">Worst:</span>
+          <span class="chip" style="background: {% if coverage.worst == 'critical' %}#dc2626{% elif coverage.worst == 'high' %}#f97316{% elif coverage.worst == 'medium' %}#eab308{% elif coverage.worst == 'low' %}#3b82f6{% else %}#6b7280{% endif %}; color: {% if coverage.worst == 'medium' %}black{% else %}white{% endif %}; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+            {{ coverage.worst }}
+          </span>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<style>
+/* Responsive drawer buttons */
+@media (max-width: 480px) {
+  .drawer .row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .drawer .btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+}
+
+/* Focus ring for accessibility */
+.drawer .btn:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Code blocks */
+.drawer .code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Table styling */
+.drawer .table {
+  font-size: 14px;
+}
+
+.drawer .table th {
+  background: var(--card-b);
+  font-weight: 600;
+  padding: 8px 12px;
+}
+
+.drawer .table td {
+  padding: 8px 12px;
+  border-top: 1px solid var(--card-b);
+}
+</style>
+
+<script>
+// Keyboard support for drawers
+document.addEventListener('keydown', function(e) {
+  // ESC closes drawer
+  if (e.key === 'Escape') {
+    const drawer = document.querySelector('.drawer');
+    if (drawer) {
+      const overlay = document.querySelector('#panel-overlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+    }
+  }
+  
+  // Enter triggers primary action
+  if (e.key === 'Enter' && !e.target.matches('input, textarea')) {
+    const primaryBtn = document.getElementById('primary-action');
+    if (primaryBtn) {
+      e.preventDefault();
+      primaryBtn.click();
+    }
+  }
+});
+
+// Initialize relative time formatting
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.relative-time').forEach(function(element) {
+    const isoTime = element.getAttribute('title');
+    if (isoTime) {
+      const date = new Date(isoTime);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) {
+        element.textContent = 'Today';
+      } else if (diffDays === 1) {
+        element.textContent = 'Yesterday';
+      } else if (diffDays < 7) {
+        element.textContent = `${diffDays} days ago`;
+      } else {
+        element.textContent = date.toLocaleDateString();
+      }
+    }
+  });
+});
+</script>

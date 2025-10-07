@@ -1,0 +1,34 @@
+id: lorex-panel
+
+info:
+  name: Lorex Panel - Detect
+  author: rxerium
+  severity: info
+  description: |
+    A lorex panel was detected.
+  reference:
+    - https://www.lorex.com/
+  classification:
+    cwe-id: CWE-200
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: "Lorex"
+  tags: panel,login,detect,lorex
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains_all(tolower(body), "<title>web service</title>", "lorex")'
+          - 'contains_any(body, "/LOREX_webplugin", "lorex_msg")'
+        condition: or
+# digest: 4b0a00483046022100d358680b447b80a244207de7832862b3b7e96ebd7a9982297364486e6a38ca4f022100b02658eee411b30d9729fb966d929aadda3d20312ba31fdb77e7f667a6578055:922c64590222798bb761d5b6d8e72950

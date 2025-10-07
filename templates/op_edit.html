@@ -1,0 +1,104 @@
+<div class="drawer">
+  <div><strong>{{ pre.method }}</strong> <span id="panel-url">{{ pre.url }}</span></div>
+  {% set curl %}
+    curl -X {{ pre.method }} '{{ pre.url }}'
+    {%- if pre.headers %}{% for k, v in pre.headers.items() %} \
+      -H '{{ k }}: {{ v }}'{% endfor %}{% endif %}
+    {%- if pre.json is not none %} \
+      -d '{{ pre.json|tojson }}'
+    {%- elif pre.data is not none %} \
+      -d '{{ pre.data }}'
+    {%- endif %}
+  {% endset %}
+  <script id="panel-curl" type="application/json">{{ curl|trim }}</script>
+  <form id="ovform-{{ sid }}-{{ idx }}">
+    <input type="hidden" name="spec_id" value="{{ spec_id }}">
+    <input type="hidden" name="index" value="{{ idx }}">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(260px,1fr));gap:12px;margin-top:8px;">
+      <div>
+        <div class="muted">Path params (JSON)</div>
+        <textarea name="path_params_json" rows="4">{{ pre.path_params_default|tojson }}</textarea>
+      </div>
+      <div>
+        <div class="muted">Query (JSON)</div>
+        <textarea name="query_json" rows="4">{{ pre.query|tojson }}</textarea>
+      </div>
+      <div>
+        <div class="muted">Headers (JSON)</div>
+        <textarea name="headers_json" rows="6">{{ pre.headers|tojson }}</textarea>
+      </div>
+      <div>
+        <div class="muted">Cookies (JSON)</div>
+        <textarea name="cookies_json" rows="4"></textarea>
+      </div>
+      <div>
+        <div class="muted">Body kind</div>
+        <select name="body_kind">
+          <option value="default" selected>default (from spec)</option>
+          <option value="json">json</option>
+          <option value="form">form</option>
+          <option value="raw">raw</option>
+          <option value="none">none</option>
+        </select>
+      </div>
+      <div>
+        <div class="muted">Content-Type override (optional)</div>
+        <input type="text" name="content_type" placeholder="application/json">
+      </div>
+      <div style="grid-column:1/-1">
+        <div class="muted">JSON body (when body_kind=json)</div>
+        <textarea name="json_body" rows="8">{% if pre.json %}{{ pre.json|tojson(indent=2) }}{% endif %}</textarea>
+      </div>
+      <div style="grid-column:1/-1">
+        <div class="muted">Form body (JSON map, when body_kind=form)</div>
+        <textarea name="form_json" rows="6"></textarea>
+      </div>
+      <div style="grid-column:1/-1">
+        <div class="muted">Raw body (when body_kind=raw)</div>
+        <input type="text" name="raw_ct" placeholder="text/plain or application/json" style="width:100%;margin-bottom:6px;">
+        <textarea name="raw_data" rows="6"></textarea>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px;">
+      <button class="btn ghost" type="button"
+              hx-post="{{ url_for('web.op_preview_override', pid=pid) }}"
+              hx-target="#ovprev-{{ sid }}-{{ idx }}" hx-swap="innerHTML"
+              hx-include="#ovform-{{ sid }}-{{ idx }}">Preview</button>
+
+      <button class="btn primary"
+              hx-post="{{ url_for('web.queue_add_override', pid=pid) }}"
+              hx-target="#ovtoast-{{ sid }}-{{ idx }}"
+              hx-swap="innerHTML"
+              hx-include="#ovform-{{ sid }}-{{ idx }}"
+              hx-indicator="#global-indicator"
+              hx-on::after-request="showNotification('Added to Test Queue', 'success')"
+              hx-on::response-error="showNotification('Error adding to Test Queue', 'error')">
+        Add to Test Queue
+      </button>
+
+      <button class="btn primary" type="button"
+              hx-post="{{ url_for('web.send_now_override', pid=pid) }}"
+              hx-target="#ovsend-{{ sid }}-{{ idx }}"
+              hx-swap="innerHTML"
+              hx-include="#ovform-{{ sid }}-{{ idx }}"
+              hx-indicator="#global-indicator"
+              hx-on::after-request="showNotification('Request sent successfully', 'success')"
+              hx-on::response-error="showNotification('Send failed', 'error')">
+        Send now
+      </button>
+
+      <button class="btn ghost" type="button"
+              hx-post="{{ url_for('web.op_edit', pid=pid) }}"
+              hx-target="#det-{{ sid }}-{{ idx }}" hx-swap="innerHTML"
+              hx-vals='{"spec_id":"{{ spec_id|e }}","index":"{{ idx }}","fresh":"1"}'>Recompute defaults</button>
+
+      <button class="btn ghost" type="button"
+              onclick="document.getElementById('ovform-{{ sid }}-{{ idx }}').reset()">Reset all</button>
+    </div>
+    <div id="ovtoast-{{ sid }}-{{ idx }}"></div>
+    <div id="ovprev-{{ sid }}-{{ idx }}" style="margin-top:8px;"></div>
+    <div id="ovsend-{{ sid }}-{{ idx }}" style="margin-top:8px;"></div>
+  </form>
+</div>
+
+

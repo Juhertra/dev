@@ -1,0 +1,622 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'template_manager' %}
+
+{% block page_title %}Template Manager{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Template Manager</span>
+{% endblock %}
+
+{% block content %}
+  <div id="template-manager-content">
+    <!-- Template Status Overview -->
+    <div class="card">
+      <div class="header">
+        <h2>Template Manager</h2>
+        <p class="muted">Manage security testing templates from multiple sources</p>
+        <div class="row" style="gap:8px;align-items:center;flex-wrap:wrap">
+          {% if templates_dir %}
+            <p class="muted" style="margin:0">Using templates directory: <code>{{ templates_dir }}</code></p>
+          {% else %}
+            <p class="muted" style="margin:0">Templates directory not set yet. Register a source or install ASVS.</p>
+          {% endif %}
+          <button class="btn ghost" type="button" onclick="showChangeDir()">Change</button>
+        </div>
+      </div>
+
+      <!-- Template Status Overview -->
+      <div class="status-overview" id="template-status">
+        <div class="status-card">
+          <h3>Template Sources</h3>
+          <div class="sources-list" id="sources-list">
+            <div class="loading">Loading template sources...</div>
+          </div>
+          <div id="reindex-status" class="muted" style="margin-top:8px"></div>
+        </div>
+        
+        <div class="status-card">
+          <h3>Quick Actions</h3>
+          <div class="quick-actions">
+            <button class="btn primary" onclick="updateAllTemplates()">
+              <span class="icon">🔄</span> Update All Templates
+            </button>
+            <button class="btn ghost" onclick="refreshStatus()">
+              <span class="icon">↻</span> Refresh Status
+            </button>
+            <button class="btn ghost" id="btn-reindex" onclick="startReindex()">
+              <span class="icon">⚙️</span> Reindex In Background
+            </button>
+            <button class="btn ghost" onclick="showAddSource()">
+              <span class="icon">➕</span> Add Template Source
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Source Modal -->
+      <div class="modal" id="add-source-modal" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Add Template Source</h3>
+            <button class="btn ghost" onclick="hideAddSource()">×</button>
+          </div>
+          <div class="modal-body">
+            <form id="add-source-form">
+              <div class="form-group">
+                <label for="source-name">Source Name</label>
+                <input type="text" id="source-name" name="name" placeholder="e.g., Custom Templates" required>
+              </div>
+              <div class="form-group">
+                <label for="source-path">Directory Path</label>
+                <input type="text" id="source-path" name="path" placeholder="/path/to/templates" required>
+                <small class="muted">Path to directory containing .yaml template files</small>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn ghost" onclick="hideAddSource()">Cancel</button>
+                <button type="submit" class="btn primary">Add Source</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Templates Dir Modal -->
+      <div class="modal" id="change-dir-modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Change Templates Directory</h3>
+            <button class="btn ghost" onclick="hideChangeDir()">×</button>
+          </div>
+          <div class="modal-body">
+            <form id="change-dir-form">
+              <div class="form-group">
+                <label for="new-templates-dir">Directory Path</label>
+                <input type="text" id="new-templates-dir" name="path" placeholder="/path/to/nuclei/templates" value="{{ templates_dir or '' }}" required>
+                <small class="muted">This will be saved and used on every run.</small>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn ghost" onclick="hideChangeDir()">Cancel</button>
+                <button type="submit" class="btn primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Progress -->
+      <div class="update-progress" id="update-progress" style="display: none;">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">Updating templates...</div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+  .template-manager {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .status-overview {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .status-card {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .status-card h3 {
+    margin: 0 0 15px 0;
+    color: var(--fg);
+  }
+
+  .sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .source-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .source-info h4 {
+    margin: 0 0 5px 0;
+    color: var(--fg);
+  }
+
+  .source-info p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .source-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .template-count {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .status-badge.installed {
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .status-badge.not-installed {
+    background: var(--warning-bg);
+    color: var(--warning);
+  }
+
+  .quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .quick-actions .btn {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: var(--bg);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-header h3 {
+    margin: 0;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  .form-group small {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .update-progress {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .loading {
+    text-align: center;
+    color: var(--muted);
+    padding: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .status-overview {
+      grid-template-columns: 1fr;
+    }
+    
+    .source-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .source-stats {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  </style>
+
+  <script>
+  // Load template status on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    refreshStatus();
+  });
+
+  function refreshStatus() {
+    const sourcesList = document.getElementById('sources-list');
+    sourcesList.innerHTML = '<div class="loading">Loading template sources...</div>';
+    
+    fetch(`/p/${window.currentProjectId}/templates/status`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          renderSources(data.sources);
+        } else {
+          sourcesList.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+        }
+      })
+      .catch(error => {
+        sourcesList.innerHTML = `<div class="error">Error loading status: ${error.message}</div>`;
+      });
+  }
+
+  function renderSources(sources) {
+    const sourcesList = document.getElementById('sources-list');
+    sourcesList.innerHTML = '';
+    
+    Object.entries(sources).forEach(([key, source]) => {
+      const sourceItem = document.createElement('div');
+      sourceItem.className = 'source-item';
+      
+      const statusClass = source.available ? 'installed' : 'not-installed';
+      const statusText = source.available ? 'Available' : 'Not Installed';
+      
+      sourceItem.innerHTML = `
+        <div class="source-info">
+          <h4>${source.name}</h4>
+          <p>${source.description}</p>
+          ${source.path ? `<small class="muted">Path: ${source.path}</small>` : ''}
+        </div>
+        <div class="source-stats">
+          <span class="template-count">${source.count} templates</span>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+          ${source.install_url ? `<button class="btn ghost btn-sm" onclick="installASVS()">Install</button>` : ''}
+        </div>
+      `;
+      
+      sourcesList.appendChild(sourceItem);
+    });
+  }
+
+  function updateAllTemplates() {
+    const progressDiv = document.getElementById('update-progress');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    
+    progressDiv.style.display = 'block';
+    progressFill.style.width = '0%';
+    progressText.textContent = 'Updating templates...';
+    
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 10;
+      progressFill.style.width = progress + '%';
+      if (progress >= 90) {
+        clearInterval(progressInterval);
+      }
+    }, 200);
+    
+    fetch(`/p/${window.currentProjectId}/templates/update`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'source=all&action=update'
+    })
+    .then(response => response.json())
+    .then(data => {
+      clearInterval(progressInterval);
+      progressFill.style.width = '100%';
+      progressText.textContent = 'Update completed!';
+      
+      setTimeout(() => {
+        progressDiv.style.display = 'none';
+        refreshStatus();
+        if (typeof showNotification === 'function') {
+          showNotification('Templates updated successfully', 'success');
+        }
+      }, 1000);
+    })
+    .catch(error => {
+      clearInterval(progressInterval);
+      progressDiv.style.display = 'none';
+      if (typeof showNotification === 'function') {
+        showNotification('Error updating templates: ' + error.message, 'error');
+      }
+    });
+  }
+
+  // Background reindex controls
+  let _reindexPoll = null;
+  function startReindex(){
+    const btn = document.getElementById('btn-reindex');
+    const statusEl = document.getElementById('reindex-status');
+    if (btn) { btn.disabled = true; btn.innerText = 'Reindexing…'; }
+    statusEl.textContent = 'Starting background reindex…';
+    fetch(`/p/${window.currentProjectId}/templates/reindex`, { method: 'POST' })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success){
+          statusEl.textContent = 'Reindex failed to start: ' + (data.error || 'unknown error');
+          if (btn) { btn.disabled = false; btn.innerText = 'Reindex In Background'; }
+          return;
+        }
+        statusEl.textContent = 'Reindex running…';
+        if (_reindexPoll) clearInterval(_reindexPoll);
+        _reindexPoll = setInterval(pollReindexStatus, 1000);
+      })
+      .catch(err => {
+        statusEl.textContent = 'Reindex start error: ' + err.message;
+        if (btn) { btn.disabled = false; btn.innerText = 'Reindex In Background'; }
+      });
+  }
+
+  function pollReindexStatus(){
+    const btn = document.getElementById('btn-reindex');
+    const statusEl = document.getElementById('reindex-status');
+    fetch(`/p/${window.currentProjectId}/templates/reindex-status`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success){
+          statusEl.textContent = 'Reindex status error: ' + (data.error || 'unknown');
+          return;
+        }
+        if (data.running){
+          statusEl.textContent = 'Reindexing…';
+        } else if (data.finished){
+          statusEl.textContent = data.error ? ('Reindex failed: ' + data.error) : (`Reindex complete. ${data.count||0} templates indexed.`);
+          if (_reindexPoll) { clearInterval(_reindexPoll); _reindexPoll = null; }
+          if (btn) { btn.disabled = false; btn.innerText = 'Reindex In Background'; }
+          refreshStatus();
+          if (typeof showNotification === 'function') {
+            showNotification('Template index refreshed', data.error ? 'error' : 'success');
+          }
+        }
+      })
+      .catch(err => {
+        statusEl.textContent = 'Reindex status error: ' + err.message;
+      });
+  }
+
+  function installASVS() {
+    const progressDiv = document.getElementById('update-progress');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    
+    progressDiv.style.display = 'block';
+    progressFill.style.width = '0%';
+    progressText.textContent = 'Installing ASVS templates...';
+    
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 5;
+      progressFill.style.width = progress + '%';
+      if (progress >= 90) {
+        clearInterval(progressInterval);
+      }
+    }, 500);
+    
+    fetch(`/p/${window.currentProjectId}/templates/install-asvs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      clearInterval(progressInterval);
+      progressFill.style.width = '100%';
+      
+      if (data.success) {
+        progressText.textContent = `Installed ${data.count} ASVS templates!`;
+        if (typeof showNotification === 'function') {
+          showNotification(data.message, 'success');
+        }
+      } else {
+        progressText.textContent = 'Installation failed!';
+        if (typeof showNotification === 'function') {
+          showNotification('Error: ' + (data.error || 'Installation failed'), 'error');
+        }
+      }
+      
+      setTimeout(() => {
+        progressDiv.style.display = 'none';
+        refreshStatus();
+      }, 2000);
+    })
+    .catch(error => {
+      clearInterval(progressInterval);
+      progressDiv.style.display = 'none';
+      if (typeof showNotification === 'function') {
+        showNotification('Error installing ASVS: ' + error.message, 'error');
+      }
+    });
+  }
+
+  function showChangeDir(){
+    document.getElementById('change-dir-modal').style.display = 'flex';
+  }
+  function hideChangeDir(){
+    document.getElementById('change-dir-modal').style.display = 'none';
+    const f = document.getElementById('change-dir-form');
+    if (f) f.reset();
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    const f = document.getElementById('change-dir-form');
+    if (!f) return;
+    f.addEventListener('submit', function(e){
+      e.preventDefault();
+      const formData = new FormData(f);
+      fetch(`/p/${window.currentProjectId}/templates/set-dir`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success){
+          if (typeof showNotification === 'function') showNotification('Templates directory updated', 'success');
+          hideChangeDir();
+          refreshStatus();
+          // also refresh header text
+          window.location.reload();
+        } else {
+          if (typeof showNotification === 'function') showNotification('Error: ' + (data.error || 'Failed to save'), 'error');
+        }
+      })
+      .catch(err => {
+        if (typeof showNotification === 'function') showNotification('Error: ' + err.message, 'error');
+      });
+    });
+  });
+
+  function showAddSource() {
+    document.getElementById('add-source-modal').style.display = 'flex';
+  }
+
+  function hideAddSource() {
+    document.getElementById('add-source-modal').style.display = 'none';
+    document.getElementById('add-source-form').reset();
+  }
+
+  document.getElementById('add-source-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch(`/p/${window.currentProjectId}/templates/register-source`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        hideAddSource();
+        refreshStatus();
+        if (typeof showNotification === 'function') {
+          showNotification(data.message, 'success');
+        }
+      } else {
+        if (typeof showNotification === 'function') {
+          showNotification('Error: ' + data.error, 'error');
+        }
+      }
+    })
+    .catch(error => {
+      if (typeof showNotification === 'function') {
+        showNotification('Error: ' + error.message, 'error');
+      }
+    });
+  });
+  </script>
+{% endblock %}

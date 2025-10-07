@@ -1,0 +1,37 @@
+terms:
+  SecFlow:
+    preferred: "SecFlow"
+    also_ok: ["Secflow", "SECFLOW"]
+    forbidden: ["secflow", "secFlow"]
+    note: "Brand capitalization rule"
+  Hexagonal Architecture:
+    preferred: "Hexagonal Architecture"
+    also_ok: ["Ports & Adapters"]
+    forbidden: []
+    note: "Architecture pattern name"
+  CVSS:
+    preferred: "CVSS"
+    also_ok: ["CVSS v3.1", "CVSSv3.1"]
+    forbidden: ["cvss"]
+    note: "Common Vulnerability Scoring System"
+  CWE:
+    preferred: "CWE"
+  CVE:
+    preferred: "CVE"
+  MITRE ATT&CK:
+    preferred: "MITRE ATT&CK"
+    also_ok: ["ATT&CK"]
+  PoC:
+    preferred: "PoC"
+    also_ok: ["Proof of Concept"]
+  RBAC:
+    preferred: "RBAC"
+  OpenTelemetry:
+    preferred: "OpenTelemetry"
+    also_ok: ["OTel"]
+  Prometheus:
+    preferred: "Prometheus"
+  NIST:
+    preferred: "NIST"
+  EPSS:
+    preferred: "EPSS"

@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://security-toolkit.dev/schemas/finding",
+  "title": "Security Finding Record", 
+  "description": "Individual security vulnerability with technical details and classification",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "detector_id",
+      "severity",
+      "method", 
+      "url",
+      "path",
+      "title",
+      "confidence",
+      "status",
+      "req",
+      "res",
+      "created_at"
+    ],
+    "properties": {
+      "detector_id": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+        "description": "Unique identifier for the detection rule/template that found this issue"
+      },
+      "severity": {
+        "type": "string", 
+        "enum": ["critical", "high", "medium", "low", "info"],
+        "description": "Risk level of this vulnerability"
+      },
+      "method": {
+        "type": "string",
+        "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
+        "description": "HTTP method used when vulnerability was discovered"
+      },
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "description": "Complete URL where the vulnerability was found"
+      },
+      "path": {
+        "type": "string",
+        "pattern": "^/[^\\0]*$",
+        "description": "URL path component (parsed for consistency)"
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200,
+        "description": "Human-readable title for this finding"
+      },
+      "subcategory": {
+        "type": "string",
+        "enum": ["sqli", "xss", "rce", "ssrf", "xxe", "idor", "authentication", "authorization", "misconfig", "info-disclosure"],
+        "description": "Technical categorization of vulnerability type"
+      },
+      "cwe": {
+        "type": "string",
+        "pattern": "^CWE-[0-9]{1,5}$",
+        "description": "Common Weakness Enumeration identifier"
+      },
+      "cve_id": {
+        "type": ["string", "null"],
+        "pattern": "^CVE-\\d{4}-\\d+$",
+        "description": "Common Vulnerabilities and Exposures identifier (Phase 4A)",
+        "examples": ["CVE-2023-1234", "CVE-2024-5678"]
+      },
+      "affected_component": {
+        "type": "string",
+        "description": "Component affected by the vulnerability (Phase 4A)",
+        "examples": ["database", "authentication", "web_application", "file_system"]
+      },
+      "evidence_anchors": {
+        "type": "array",
+        "description": "Evidence location anchors (Phase 4A)",
+        "items": {
+          "type": "string"
+        },
+        "examples": [["request_body", "response_body", "url"], ["line:45", "param:user_id"]]
+      },
+      "suggested_remediation": {
+        "type": "string",
+        "description": "Suggested remediation steps (Phase 4A)",
+        "examples": ["Use parameterized queries", "Implement proper input validation"]
+      },
+      "owasp": {
+        "type": "string",
+        "pattern": "^A[0-9]{2}:[0-9]{4}$",
+        "description": "OWASP Top 10 mapping (e.g., A03:2021)"
+      },
+      "confidence": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100,
+        "description": "Detection confidence percentage (0-100)"
+      },
+      "status": {
+        "type": "string",
+        "enum": ["open", "accepted_risk", "false_positive", "fixed"],
+        "default": "open",
+        "description": "Current triage status"
+      },
+      "req": {
+        "type": "object",
+        "required": ["method", "url"],
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "headers": {
+            "type": "object",
+            "description": "HTTP request headers"
+          },
+          "body": {
+            "type": ["string", "object"],
+            "description": "Request body content (JSON or string)"
+          },
+          "params": {
+            "type": "object",
+            "description": "Query parameters"
+          }
+        },
+        "additionalProperties": false
+      },
+      "res": {
+        "type": "object",
+        "required": ["status_code"],
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "headers": {
+            "type": "object",
+            "description": "HTTP response headers"
+          },
+          "body": {
+            "type": "string",
+            "description": "Response body content"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Response body size in bytes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "match": {
+        "type": ["string", "null"],
+        "maxLength": 1000,
+        "description": "Specific text/pattern that triggered detection"
+      },
+      "param": {
+        "type": ["string", "null"],
+        "description": "Parameter name/value that contained vulnerability"
+      },
+      "run_id": {
+        "$ref": "#/definitions/run_id",
+        "description": "Foreign key to the test run that discovered this finding"
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Timestamp when finding was recorded"
+      },
+      "triage_info": {
+        "type": "object",
+        "properties": {
+          "triaged_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "triaged_by": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9@._-]+$"
+          },
+          "triage_notes": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "assignee": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9@._-]+$"
+          },
+          "fix_deadline": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  },
+  "definitions": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^run-[0-9]{13}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    }
+  }
+}

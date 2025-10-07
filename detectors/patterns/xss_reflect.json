@@ -1,0 +1,36 @@
+{
+  "name": "xss_reflect",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "xss.reflected",
+      "title": "Reflected input appears unencoded",
+      "where": ["response.body"],
+      "regex": "(<script[^>]*>.*?</script>|onerror=|onload=|<img[^>]+src=javascript:|<svg[^>]+on[a-z]+\\s*=)",
+      "cwe": "79",
+      "cvss": 6.1,
+      "confidence": 60,
+      "tags": ["xss"]
+    },
+    {
+      "id": "xss.script_tag",
+      "title": "Script tag in response body",
+      "where": ["response.body"],
+      "regex": "<script[^>]*>.*?</script>",
+      "cwe": "79",
+      "cvss": 6.1,
+      "confidence": 70,
+      "tags": ["xss", "script"]
+    },
+    {
+      "id": "xss.event_handler",
+      "title": "Event handler in HTML attribute",
+      "where": ["response.body"],
+      "regex": "on(load|error|click|mouseover|focus|blur)\\s*=",
+      "cwe": "79",
+      "cvss": 6.1,
+      "confidence": 65,
+      "tags": ["xss", "event"]
+    }
+  ]
+}

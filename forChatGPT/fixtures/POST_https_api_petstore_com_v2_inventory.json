@@ -1,0 +1,39 @@
+{
+  "endpoint_key": "POST https://api.petstore.com/v2/inventory",
+  "total_runs": 2,
+  "latest_run": {
+    "run_id": "run-20240115-1045",
+    "finished_at": "2024-01-15T10:45:00Z",
+    "findings": 1,
+    "worst": "high"
+  },
+  "history": [
+    {
+      "run_id": "run-20240115-1045",
+      "started_at": "2024-01-15T10:30:00Z",
+      "finished_at": "2024-01-15T10:45:00Z",
+      "findings": 1,
+      "worst": "high",
+      "artifact": "/tmp/nuclei-output.ndjson",
+      "templates_count": 8,
+      "duration_ms": 900000
+    },
+    {
+      "run_id": "run-20240114-1430",
+      "started_at": "2024-01-14T14:30:00Z",
+      "finished_at": "2024-01-14T14:45:00Z",
+      "findings": 0,
+      "worst": "none",
+      "templates_count": 5,
+      "duration_ms": 900000
+    }
+  ],
+  "version": 1,
+  "retired": false,
+  "metadata": {
+    "last_modified": "2024-01-15T10:45:00Z",
+    "first_seen": "2024-01-14T14:30:00Z",
+    "tags": ["inventory", "admin"],
+    "risk_score": 8.2
+  }
+}

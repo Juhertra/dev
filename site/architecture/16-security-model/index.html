@@ -1,0 +1,1622 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
+      
+      
+        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
+      
+      
+      
+        <link rel="prev" href="../15-garbage-collection-and-retention/">
+      
+      
+        <link rel="next" href="../17-observability-logging-and-metrics/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>SecFlow — Security Model (RBAC, Authentication, and Sandboxing) - SecFlow Architecture & Validation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#16-security-model-rbac-authentication-and-sandboxing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SecFlow Architecture & Validation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SecFlow — Security Model (RBAC, Authentication, and Sandboxing)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SecFlow Architecture & Validation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-title-and-executive-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Executive Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-architecture-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Philosophy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-repository-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repository Layout
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-core-packages-and-responsibilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Packages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Orchestration Engine
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-plugin-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plugin System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-tools-integration-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Manager & UX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-resource-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resource Registry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wordlists & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-project-isolation-and-data-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Isolation & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-findings-model-and-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Enrichment Layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PoC Sources & Legal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-garbage-collection-and-retention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Garbage Collection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Security Model
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Model
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧭 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layers-of-the-security-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Layers of the Security Model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Authentication Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧠 Authentication Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#token-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Token Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔮 Future Enhancements
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-risk-assessment-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Risk Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Migration Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD & Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev Experience & Docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-future-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-final-consensus-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Review & Validation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Review & Validation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Checklist
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/glossary.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="16-security-model-rbac-authentication-and-sandboxing">16 — Security Model (RBAC, Authentication, and Sandboxing)<a class="headerlink" href="#16-security-model-rbac-authentication-and-sandboxing" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Security is a <strong>first-class design goal</strong> in the SecFlow architecture.<br />
+Every user action, process execution, and data mutation is subject to authentication, authorization, and sandboxing.</p>
+<p>This model ensures:
+- <strong>Strict access separation</strong> between users, projects, and data.<br />
+- <strong>Controlled execution</strong> of potentially dangerous tools or PoCs.<br />
+- <strong>Immutable auditability</strong> of all operations.<br />
+- <strong>Zero-trust posture</strong> inside the orchestration environment.</p>
+<hr />
+<h2 id="layers-of-the-security-model">🧩 Layers of the Security Model<a class="headerlink" href="#layers-of-the-security-model" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Scope</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>User identity verification</td>
+<td>JWT / OAuth2 tokens</td>
+</tr>
+<tr>
+<td><strong>Authorization (RBAC)</strong></td>
+<td>Access control</td>
+<td>Role-based &amp; scope-aware</td>
+</tr>
+<tr>
+<td><strong>Execution Sandboxing</strong></td>
+<td>Process isolation</td>
+<td>Containerized runners</td>
+</tr>
+<tr>
+<td><strong>Secrets Management</strong></td>
+<td>API keys, credentials</td>
+<td>Encrypted vault</td>
+</tr>
+<tr>
+<td><strong>Audit Logging</strong></td>
+<td>Accountability</td>
+<td>Immutable append-only logs</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="authentication-architecture">🧠 Authentication Architecture<a class="headerlink" href="#authentication-architecture" title="Permanent link">&para;</a></h2>
+<p>SecFlow supports two auth models:
+1. <strong>Local Auth (default):</strong> For standalone or on-premise deployments.<br />
+2. <strong>Federated Auth (optional):</strong> OAuth2/OpenID Connect integration (GitHub, Google, Azure AD).</p>
+<h3 id="token-model">Token Model<a class="headerlink" href="#token-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hernan&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1738783200</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;projects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;proj-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;proj-02&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="err">```jso</span><span class="kc">n</span>
+
+<span class="err">###</span><span class="w"> </span><span class="err">Toke</span><span class="kc">n</span><span class="w"> </span><span class="err">Flow</span><span class="w"> </span><span class="err">Diagram</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="p">[</span><span class="err">User</span><span class="w"> </span><span class="err">Logi</span><span class="kc">n</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">Au</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">Provider</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">JWT</span><span class="w"> </span><span class="err">Issued</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">API</span><span class="w"> </span><span class="err">Ga</span><span class="kc">te</span><span class="err">way</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Web/API</span><span class="p">]</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+
+<span class="err">Each</span><span class="w"> </span><span class="err">reques</span><span class="kc">t</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">`/api/*` must include:</span>
+<span class="err">```text</span>
+<span class="err">Authorization: Bearer &lt;token&gt;</span>
+<span class="err">```text</span>
+
+<span class="err">Tokens are verified by the API middleware using RS256 signature validation.</span>
+
+<span class="err">## 🧩 Role-Based Access Control (RBAC)</span>
+
+<span class="err">Roles define the scope of capabilities across the platform.</span>
+
+<span class="err">| Role | Permissions |</span>
+<span class="err">|------|-------------|</span>
+<span class="err">| **Admin** | Full control — manage tools, users, projects, retention, policies. |</span>
+<span class="err">| **Analyst** | Execute workflows, triage findings, view reports, limited editing. |</span>
+<span class="err">| **Viewer** | Read-only access to results and dashboards. |</span>
+<span class="err">| **Automation (Service)** | Used by background tasks (limited scoped tokens). |</span>
+
+<span class="err">### Example permission matrix:</span>
+
+<span class="err">| Action | Admin | Analyst | Viewer | Service |</span>
+<span class="err">|--------|-------|---------|--------|---------|</span>
+<span class="err">| Run workflow | ✅ | ✅ | ❌ | ✅ |</span>
+<span class="err">| Modify tool config | ✅ | ❌ | ❌ | ❌ |</span>
+<span class="err">| View findings | ✅ | ✅ | ✅ | ✅ |</span>
+<span class="err">| Delete project | ✅ | ❌ | ❌ | ❌ |</span>
+<span class="err">| Access PoCs | ✅ | ✅ | ❌ | ❌ |</span>
+<span class="err">| Run GC tasks | ✅ | ❌ | ❌ | ✅ |</span>
+
+<span class="err">## ⚙️ Policy Enforcement</span>
+
+<span class="err">Every endpoint and command passes through an Access Policy Filter:</span>
+
+<span class="err">```python</span>
+<span class="err">def authorize(action: str, user: User, project: Optional[str] = None):</span>
+<span class="err">    if not user.has_permission(action, project):</span>
+<span class="err">        raise HTTPException(403, detail=f&quot;Forbidden: {action}&quot;)</span>
+<span class="err">```python</span>
+
+<span class="err">### Example route decorator:</span>
+<span class="err">```python</span>
+<span class="err">@app.get(&quot;/api/v1/findings&quot;)</span>
+<span class="err">@require_role([&quot;admin&quot;, &quot;analyst&quot;, &quot;viewer&quot;])</span>
+<span class="err">def list_findings():</span>
+<span class="err">    def authorize(self, action: str, user: User, project: Optional[str] = None) -&gt; bool:</span>
+<span class="err">        &quot;&quot;&quot;Check if user is authorized for action.&quot;&quot;&quot;</span>
+<span class="err">        return user.has_permission(action, project)</span>
+<span class="err">```python</span>
+
+<span class="err">## 🧱 Secrets Management</span>
+
+<span class="err">### Secret Types</span>
+<span class="err">- API tokens for external tools (e.g., Shodan, Vulners)</span>
+<span class="err">- Private SSH keys for remote scans</span>
+<span class="err">- Encrypted credentials for authenticated targets</span>
+
+<span class="err">### Storage Backend</span>
+<span class="err">All secrets are stored in the SecFlow Vault, an encrypted JSON database backed by Fernet (AES-256).</span>
+
+<span class="err">```python</span>
+<span class="err">class SecretVault:</span>
+<span class="err">    def __init__(self, keyfile: Path):</span>
+<span class="err">        self.key = load_key(keyfile)</span>
+<span class="err">    def store(self, id: str, data: dict):</span>
+<span class="err">        enc = fernet_encrypt(json.dumps(data), self.key)</span>
+<span class="err">        write_file(f&quot;/vault/{id}.enc&quot;, enc)</span>
+<span class="err">```python</span>
+
+<span class="err">### Secrets CLI</span>
+<span class="err">```bash</span>
+<span class="err">SecFlow secrets add nuclei_api --value &quot;TOKEN123&quot;</span>
+<span class="err">SecFlow secrets list</span>
+<span class="err">SecFlow secrets remove nuclei_api</span>
+<span class="err">```yaml</span>
+
+<span class="err">All access is scoped by user and project context.</span>
+
+<span class="err">## 🔒 Execution Sandboxing</span>
+
+<span class="err">All scanner and PoC executions run inside restricted containers or subprocess jails.</span>
+
+<span class="err">### Isolation Techniques</span>
+<span class="err">| Mechanism | Purpose |</span>
+<span class="err">|-----------|---------|</span>
+<span class="err">| Namespaces (PID, NET, MNT) | Process isolation |</span>
+<span class="err">| Seccomp Filters | Syscall restriction |</span>
+<span class="err">| cgroups v2 | CPU/memory limits |</span>
+<span class="err">| No-root UID mapping | Drops privileges |</span>
+<span class="err">| AppArmor profiles | File access control |</span>
+<span class="err">| Read-only FS | Prevents persistence |</span>
+
+<span class="err">### Example</span>
+<span class="err">```bash</span>
+<span class="err">docker run --rm --cap-drop=ALL \</span>
+<span class="err">  --security-opt=no-new-privileges \</span>
+<span class="err">  --read-only -m 512m --cpus=1 \</span>
+<span class="err">  SecFlow-runner:latest nuclei -t /templates</span>
+<span class="err">```python</span>
+
+<span class="err">## 🧩 Network &amp; Data Security</span>
+
+<span class="err">| Channel | Encryption | Notes |</span>
+<span class="err">|---------|------------|-------|</span>
+<span class="err">| API &lt;-&gt; UI | HTTPS (TLS 1.3) | Strict transport enforced |</span>
+<span class="err">| Worker &lt;-&gt; API | Mutual TLS | Each worker has its own cert |</span>
+<span class="err">| File Sync | AES-256 encrypted | Optional compression |</span>
+<span class="err">| Database | At-rest encryption | SQLite: SEE, Postgres: TDE |</span>
+<span class="err">| Audit Logs | Signed + timestamped | Prevents tampering |</span>
+
+<span class="err">## 🧠 Secure Inter-Process Communication</span>
+
+<span class="err">Internal apps communicate via ZeroMQ or Redis queues over TLS.</span>
+
+<span class="err">Each message includes a signed envelope:</span>
+
+<span class="err">```json</span>
+<span class="err">{</span>
+<span class="err">  &quot;msg_id&quot;: &quot;uuid&quot;,</span>
+<span class="err">  &quot;issuer&quot;: &quot;worker-1&quot;,</span>
+<span class="err">  &quot;signature&quot;: &quot;HMAC-SHA256&quot;,</span>
+<span class="err">  &quot;payload&quot;: {&quot;data&quot;: &quot;encrypted_content&quot;}</span>
+<span class="err">}</span>
+<span class="err">```json</span>
+
+<span class="err">This ensures authenticity and non-repudiation.</span>
+
+<span class="err">## 🧩 Security Hooks &amp; Middleware</span>
+
+<span class="err">SecFlow injects middleware for:</span>
+<span class="err">- Request validation (pydantic schemas)</span>
+<span class="err">- JWT token expiry verification</span>
+<span class="err">- Role validation (fast-path lookup)</span>
+<span class="err">- Audit log writing after each mutating operation</span>
+
+<span class="err">### Example:</span>
+<span class="err">```python</span>
+<span class="err">@app.middleware(&quot;http&quot;)</span>
+<span class="err">async def audit_request(request, call_next):</span>
+<span class="err">    response = await call_next(request)</span>
+<span class="err">    if request.method in (&quot;POST&quot;, &quot;DELETE&quot;, &quot;PATCH&quot;):</span>
+<span class="err">        log_audit(request, response)</span>
+<span class="err">    return response</span>
+<span class="err">```yaml</span>
+
+<span class="err">## 🔐 Audit Trail &amp; Tamper Resistance</span>
+
+<span class="err">### Log Format</span>
+<span class="err">```json</span>
+<span class="err">{</span>
+<span class="err">  &quot;timestamp&quot;: &quot;2025-10-06T09:40:00Z&quot;,</span>
+<span class="err">  &quot;user&quot;: &quot;hernan&quot;,</span>
+<span class="err">  &quot;action&quot;: &quot;workflow_run&quot;,</span>
+<span class="err">  &quot;project&quot;: &quot;api-audit&quot;,</span>
+<span class="err">  &quot;status&quot;: &quot;success&quot;,</span>
+<span class="err">  &quot;hash&quot;: &quot;sha256:0a3b1c2d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2&quot;</span>
+<span class="err">}</span>
+<span class="err">```json</span>
+
+<span class="err">### Storage &amp; Verification</span>
+<span class="err">- Logs stored as JSON lines under `/audit/`</span>
+<span class="err">- Each file signed with an HMAC chain:</span>
+
+<span class="err">```python</span>
+<span class="err">H_i = HMAC(H_prev + log_i, key)</span>
+<span class="err">```yaml</span>
+
+<span class="err">Immutable and verifiable chain-of-trust.</span>
+
+<span class="err">## 🧠 Security Monitoring</span>
+
+<span class="err">| Metric | Description |</span>
+<span class="err">|--------|-------------|</span>
+<span class="err">| auth_failures_total | Failed login attempts |</span>
+<span class="err">| sandbox_executions_total | Containers spawned |</span>
+<span class="err">| policy_violations_total | Unauthorized actions |</span>
+<span class="err">| vault_accesses_total | Secret retrievals |</span>
+<span class="err">| audit_events_total | Log entries recorded |</span>
+
+<span class="err">## ⚙️ Compliance Framework Alignment</span>
+
+<span class="err">SecFlow&#39;s security architecture aligns with:</span>
+
+<span class="err">| Framework | Compliance Area |</span>
+<span class="err">|-----------|-----------------|</span>
+<span class="err">| **NIST SP 800-53** | Access control, auditing, system protection |</span>
+<span class="err">| **ISO/IEC 27001** | Information security management |</span>
+<span class="err">| **OWASP SAMM** | Secure software development lifecycle |</span>
+<span class="err">| **MITRE ATT&amp;CK** | Mapping detection behaviors |</span>
+<span class="err">| **GDPR Art. 32** | Data confidentiality and integrity |</span>
+
+<span class="err">## 🔒 Key Rotation &amp; Secrets Expiry</span>
+
+<span class="err">- Secrets have explicit TTLs (default: 180 days).</span>
+<span class="err">- Vault rotation command:</span>
+
+<span class="err">```bash</span>
+<span class="err">SecFlow vault rotate</span>
+<span class="err">```text</span>
+
+<span class="err">Rotation regenerates the encryption key and re-encrypts all entries.</span>
+
+<span class="err">## 🧩 Example Access Workflow</span>
+
+<span class="err">```text</span>
+<span class="err">[Analyst] → [Login via OIDC] → [JWT Issued]</span>
+<span class="err">→ [UI/API Gateway] → [RBAC Policy Check]</span>
+<span class="err">→ [Worker Executes Workflow in Sandbox]</span>
+<span class="err">→ [Findings Logged + Audit Entry Created]</span>
+</code></pre></div>
+<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Hardware-backed encryption (YubiKey / TPM) for Vault keys.</li>
+<li>FIPS-compliant container sandbox.</li>
+<li>Behavior-based anomaly detection on audit logs.</li>
+<li>Single Sign-On (SSO) with just-in-time role provisioning.</li>
+<li>Runtime policy engine (OPA / Rego integration).</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../17-observability-logging-and-metrics/">Observability, Logging &amp; Metrics</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

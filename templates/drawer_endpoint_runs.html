@@ -1,0 +1,240 @@
+<div class="drawer">
+  <!-- Header with METHOD chip + path -->
+  <div class="row" style="align-items: center; gap: 12px; margin-bottom: 16px;">
+    <span class="chip {{ method|lower }}" style="font-weight: 600; text-transform: uppercase;">{{ method }}</span>
+    <div style="flex: 1; min-width: 0;">
+      <strong style="word-break: break-word; font-size: 16px;">{{ path }}</strong>
+      <div class="muted" style="font-size: 14px; margin-top: 4px; word-break: break-all;">{{ url }}</div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin: 16px 0;"></div>
+
+  {% if runs and runs|length %}
+    <!-- Runs table -->
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 20%;">When</th>
+            <th style="width: 25%;">Run ID</th>
+            <th style="width: 12%;">Templates</th>
+            <th style="width: 12%;">Findings</th>
+            <th style="width: 12%;">Worst</th>
+            <th style="width: 19%;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for r in runs %}
+          <tr {% if request.args.get('highlight') == r.run_id %}style="background-color: rgba(34, 211, 238, 0.1); border-left: 3px solid var(--accent);"{% endif %}>
+            <td>
+              <span class="relative-time" title="{{ r.finished_at or r.started_at }}" style="font-size: 14px;">
+                {{ r.finished_at or r.started_at }}
+              </span>
+            </td>
+            <td>
+              <code style="font-size: 13px;">{{ r.run_id[:12] }}...</code>
+            </td>
+            <td>
+              {% if r.test_details and r.test_details.total_tests %}
+                {{ r.test_details.total_tests }}
+              {% else %}
+                {{ r.templates or r.templates_count or '—' }}
+              {% endif %}
+            </td>
+            <td>
+              <span class="chip" style="background: {% if r.findings|default(0) > 0 %}var(--err){% else %}var(--ok){% endif %}; color: white; font-size: 12px; font-weight: 600;">
+                {{ r.findings|default(0) }}
+              </span>
+            </td>
+            <td>
+              {% if r.worst and r.worst != 'info' %}
+                <span class="chip" style="background: {% if r.worst == 'critical' %}#dc2626{% elif r.worst == 'high' %}#f97316{% elif r.worst == 'medium' %}#eab308{% elif r.worst == 'low' %}#3b82f6{% else %}#6b7280{% endif %}; color: {% if r.worst == 'medium' %}black{% else %}white{% endif %}; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                  {{ r.worst }}
+                </span>
+              {% else %}
+                <span class="muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="row" style="gap: 6px;">
+                <button class="btn ghost btn-sm" 
+                        type="button"
+                        aria-label="Open run details"
+                        hx-post="/p/{{ pid }}/runs/detail-for-endpoint"
+                        hx-vals='{"run_id":"{{ r.run_id }}","method":"{{ method }}","url":"{{ url }}"}'
+                        hx-target="#panel-body" 
+                        hx-indicator="#global-indicator"
+                        onclick="openPanelWith('Run Details', '{{ method }}', '{{ path }}', '{{ url }}')">
+                  <i class="fas fa-external-link-alt"></i> Open
+                </button>
+                {% if r.artifact %}
+                <a class="btn ghost btn-sm" 
+                   href="/p/{{ pid }}/runs/export?run_id={{ r.run_id }}" 
+                   aria-label="Export run results"
+                   style="padding: 6px 8px;">
+                  <i class="fas fa-download"></i>
+                </a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% if r.test_details %}
+          <tr class="test-details-row" style="background-color: rgba(255,255,255,0.02);">
+            <td colspan="6" style="padding: 8px 12px; border-top: none;">
+              <div style="font-size: 13px; color: var(--muted);">
+                <strong>{{ r.test_details.template_name }}</strong>
+                {% if r.test_details.severity %}
+                  <span class="chip" style="background: {% if r.test_details.severity == 'critical' %}#dc2626{% elif r.test_details.severity == 'high' %}#f97316{% elif r.test_details.severity == 'medium' %}#eab308{% elif r.test_details.severity == 'low' %}#3b82f6{% else %}#6b7280{% endif %}; color: {% if r.test_details.severity == 'medium' %}black{% else %}white{% endif %}; font-size: 11px; margin-left: 8px; text-transform: uppercase;">{{ r.test_details.severity }}</span>
+                {% endif %}
+                {% if r.test_details.matcher_name %}
+                  <div style="margin-top: 4px; font-size: 12px;">{{ r.test_details.matcher_name }}</div>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <!-- Empty state -->
+    <div style="text-align: center; padding: 40px 20px;">
+      <div style="margin-bottom: 16px;">
+        <i class="fas fa-history" style="font-size: 48px; color: var(--muted); opacity: 0.5;"></i>
+      </div>
+      <h3 style="margin: 0 0 8px 0; color: var(--muted);">No runs yet for this endpoint.</h3>
+      <p class="muted" style="margin: 0 0 24px 0;">Queue this endpoint and start an Active Scan to discover vulnerabilities.</p>
+      
+      <!-- Empty state actions -->
+      <div class="row" style="gap: 12px; justify-content: center;">
+        <button class="btn ghost" 
+                type="button"
+                aria-label="Add endpoint to scan queue"
+                hx-post="/p/{{ pid }}/queue/add_single"
+                hx-vals='{"method":"{{ method }}","url":"{{ url }}"}'
+                hx-indicator="#global-indicator">
+          <i class="fas fa-plus"></i> Queue this endpoint
+        </button>
+
+        <button class="btn primary" 
+                type="button"
+                aria-label="Run security scan immediately"
+                hx-post="/p/{{ pid }}/nuclei/scan"
+                hx-vals='{"run_now":"1","endpoint":"{{ method }} {{ url }}"}'
+                hx-indicator="#global-indicator">
+          <i class="fas fa-play"></i> Run Active Scan
+        </button>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Footer actions -->
+  <div class="row" style="margin-top: 24px; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
+    <a class="btn ghost" href="/p/{{ pid }}/findings">
+      <i class="fas fa-exclamation-triangle"></i> Back to Findings
+    </a>
+    <a class="btn ghost" href="/p/{{ pid }}/runs">
+      <i class="fas fa-list"></i> Open Runs Page
+    </a>
+  </div>
+</div>
+
+<style>
+/* Responsive drawer runs */
+@media (max-width: 480px) {
+  .drawer .row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .drawer .btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+  .drawer table {
+    font-size: 12px;
+  }
+  .drawer table th, .drawer table td {
+    padding: 6px 4px;
+  }
+}
+
+/* Focus ring for accessibility */
+.drawer .btn:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Table styling */
+.drawer .table {
+  font-size: 14px;
+}
+
+.drawer .table th {
+  background: var(--card-b);
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--card-b);
+}
+
+.drawer .table td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--card-b);
+  vertical-align: middle;
+}
+
+/* Highlighted row */
+.drawer .table tr[style*="background-color: rgba(34, 211, 238, 0.1)"] {
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0% { background-color: rgba(34, 211, 238, 0.2); }
+  50% { background-color: rgba(34, 211, 238, 0.1); }
+  100% { background-color: rgba(34, 211, 238, 0.1); }
+}
+
+/* Test details row */
+.test-details-row td {
+  padding: 8px 12px !important;
+  font-size: 13px;
+}
+</style>
+
+<script>
+// Convert timestamps to relative format when drawer loads
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.querySelector('.relative-time')) {
+    convertToRelativeTimes();
+  }
+});
+
+function convertToRelativeTimes() {
+  const timeElements = document.querySelectorAll('.relative-time');
+  timeElements.forEach(element => {
+    const isoString = element.getAttribute('title');
+    if (isoString) {
+      const relative = toRelativeTime(isoString);
+      element.textContent = relative;
+    }
+  });
+}
+
+function toRelativeTime(isoString) {
+  const now = new Date();
+  const date = new Date(isoString);
+  const diffMs = now - date;
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffSecs < 60) return `${diffSecs}s ago`;
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return `${diffDays}d ago`;
+}
+</script>

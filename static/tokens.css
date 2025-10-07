@@ -1,0 +1,49 @@
+/* Spacing scale */
+:root{ --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-6:24px; --s-8:32px }
+
+/* Typography */
+:root{ --font-sans: ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,sans-serif;
+       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace }
+body{ font-family:var(--font-sans) }
+pre,code,kbd,samp,.id{ font-family:var(--font-mono) }
+
+/* Accessible focus outline (dark & light) */
+:root{ --focus: 0 0 0 3px rgba(34,211,238,.65) }
+:root.light{ --focus: 0 0 0 3px rgba(14,165,233,.55) }
+:focus-visible{ outline: none !important; box-shadow: var(--focus) !important; border-radius: 10px }
+
+/* Indicator */
+.htmx-indicator{
+  position:fixed; left:18px; bottom:18px; z-index:50;
+  display:none; align-items:center; gap:10px; padding:10px 12px; border-radius:12px;
+  background:var(--card); border:1px solid var(--card-b); box-shadow:var(--ring); color:var(--fg); font-weight:700;
+}
+.indicator.htmx-request{ display:flex }
+.indicator .dot{ width:10px; height:10px; border-radius:999px; background:white; animation: b 1s infinite ease-in-out }
+@keyframes b{ 0%{opacity:.3; transform:scale(.9)} 50%{opacity:1; transform:scale(1)} 100%{opacity:.3; transform:scale(.9)} }
+.htmx-request .htmx-indicator{ display:flex }
+.spinner{ width:14px; height:14px; border-radius:50%; border:2px solid currentColor; border-right-color:transparent; animation:spin .8s linear infinite; }
+@keyframes spin{ to{ transform: rotate(360deg) } }
+
+/* WCAG-friendly "muted" in light mode */
+:root.light .muted{ color:#334155 }
+
+/* Method chip colors */
+:root{
+  --chip-get:    #22d3ee;
+  --chip-post:   #34d399;
+  --chip-put:    #fbbf24;
+  --chip-delete: #f87171;
+  --chip-patch:  #a78bfa;
+}
+
+/* General table wrapping */
+td, th{ vertical-align: top; }
+td[style*="word-break"]{ word-break: break-word; }
+.tbl-findings td:nth-child(4),
+.tbl-findings td:nth-child(6){ color: var(--muted); }
+
+/* Responsive table fallback */
+@media (max-width: 780px){
+  table{ display:block; overflow:auto; -webkit-overflow-scrolling:touch; }
+}

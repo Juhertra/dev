@@ -1,0 +1,69 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'sitemap' %}
+
+{% block page_title %}Site Map{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Site Map</span>
+{% endblock %}
+
+{% block content %}
+
+  <!-- Site Map Header -->
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div>
+        <h2 style="margin:0">Site Map</h2>
+        <div class="muted">Hierarchical view of all API endpoints</div>
+      </div>
+      <div class="row" style="gap:8px">
+        <a href="/p/{{ pid }}/vulns" class="btn ghost">Vulnerabilities Hub</a>
+        <button class="btn ghost" type="button" onclick="expandAllSitemap()">Expand All</button>
+        <button class="btn ghost" type="button" onclick="collapseAllSitemap()">Collapse All</button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters" style="gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
+      <div>
+        <span class="muted">Method:</span>
+        <button class="tag GET active" data-m="GET" onclick="toggleFilter('GET')">GET</button>
+        <button class="tag POST active" data-m="POST" onclick="toggleFilter('POST')">POST</button>
+        <button class="tag PUT active" data-m="PUT" onclick="toggleFilter('PUT')">PUT</button>
+        <button class="tag DELETE active" data-m="DELETE" onclick="toggleFilter('DELETE')">DELETE</button>
+      </div>
+      <div>
+        <span class="muted">Status:</span>
+        <button class="tag status-filter active" data-status="all" onclick="toggleSitemapStatusFilter(this)">All</button>
+        <button class="tag status-filter" data-status="untested" onclick="toggleSitemapStatusFilter(this)">Untested</button>
+        <button class="tag status-filter" data-status="tested" onclick="toggleSitemapStatusFilter(this)">Tested</button>
+      </div>
+      <div>
+        <span class="muted">Vulns:</span>
+        <button class="tag vulns-filter active" data-vulns="all" onclick="toggleSitemapVulnsFilter(this)">All</button>
+        <button class="tag vulns-filter" data-vulns="has-vulns" onclick="toggleSitemapVulnsFilter(this)">Has Vulns</button>
+      </div>
+      <div style="margin-left:auto">
+        <input id="smap-search" type="text" placeholder="Filter by path…" oninput="applySitemapFilters()">
+        <button class="btn ghost" onclick="resetFilters(); applySitemapFilters()">Clear Filters</button>
+      </div>
+    </div>
+
+    <!-- Site Map Content -->
+    <div id="sitemap-content">
+      {% include 'sitemap_fragment.html' %}
+    </div>
+  </div>
+
+  <script>
+    function expandAllSitemap() {
+      document.querySelectorAll('#sitemap-content details.spec').forEach(d => d.open = true);
+    }
+
+    function collapseAllSitemap() {
+      document.querySelectorAll('#sitemap-content details.spec').forEach(d => d.open = false);
+    }
+  </script>
+{% endblock %}

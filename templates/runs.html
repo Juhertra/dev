@@ -1,0 +1,322 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'runs' %}
+
+{% block page_title %}Runs{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Runs</span>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2 style="margin:0 0 12px">Recent Runs</h2>
+    {% if not runs %}
+      <div class="muted">No runs yet.</div>
+    {% else %}
+      <!-- Search/Filter Bar -->
+        <div class="search-bar" style="margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;">
+          <input type="text" id="runs-search" placeholder="Search by endpoint, method, run_id, or severity..." 
+                 style="flex:1;min-width:200px;padding:8px;border:1px solid #ddd;border-radius:4px;" 
+                 value="{{ request.args.get('search', '') }}"
+                 onkeyup="updateFilters()" />
+          <input type="text" id="endpoint-filter" placeholder="Endpoint contains..." 
+                 style="width:200px;min-width:150px;padding:8px;border:1px solid #ddd;border-radius:4px;" 
+                 value="{{ request.args.get('endpoint', '') }}"
+                 onkeyup="updateFilters()" />
+          <button class="btn ghost" onclick="triggerCSVExport()" 
+                  title="Export filtered rows to CSV"
+                  style="white-space:nowrap;">
+            📊 Export CSV
+          </button>
+        </div>
+      
+      <style>
+      /* Sticky table header */
+      #runs-table thead {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      /* Severity chip styling to match drawers */
+      .chip.critical { background: #dc3545; color: white; }
+      .chip.high { background: #fd7e14; color: white; }
+      .chip.medium { background: #ffc107; color: black; }
+      .chip.low { background: #28a745; color: white; }
+      .chip.info { background: #17a2b8; color: white; }
+      
+      /* Responsive table */
+      @media (max-width: 768px) {
+        .search-bar { 
+          flex-direction: column; 
+          gap: 8px; 
+        }
+        .search-bar input { 
+          width: 100% !important; 
+          min-width: auto !important; 
+        }
+        .search-bar button { 
+          width: 100%; 
+          justify-content: center; 
+        }
+        
+        #runs-table { 
+          font-size: 0.9rem; 
+        }
+        #runs-table th, #runs-table td { 
+          padding: 6px 4px; 
+        }
+        #runs-table .chip { 
+          font-size: 10px; 
+          padding: 2px 6px; 
+        }
+      }
+      
+      @media (max-width: 480px) {
+        #runs-table { 
+          font-size: 0.8rem; 
+        }
+        #runs-table th, #runs-table td { 
+          padding: 4px 2px; 
+        }
+        #runs-table th:nth-child(3), 
+        #runs-table td:nth-child(3) { 
+          display: none; /* Hide endpoint column on very small screens */
+        }
+      }
+      </style>
+      
+      <table class="tight" id="runs-table" style="position:relative;">
+        {% if sort == 'findings' %}
+        {% set sort_param = request.args.get('sort') %}
+        {% endif %}
+        <thead>
+          <tr>
+            <th><a href="?sort=run_id">Run</a></th>
+            <th><a href="?sort=when{% if request.args.get('sort') != 'when' %}_desc{% endif %}">When {% if request.args.get('sort') == 'when_desc' %}▼{% elif request.args.get('sort') == 'when' %}▲{% endif %}</a></th>
+            <th><a href="?sort=endpoint">Endpoint</a></th>
+            <th><a href="?sort=findings{% if request.args.get('sort') != 'findings' %}_desc{% endif %}">Findings {% if request.args.get('sort') == 'findings_desc' %}▼{% elif request.args.get('sort') == 'findings' %}▲{% endif %}</a></th>
+            <th><a href="?sort=worst">Worst {% if request.args.get('sort') == 'worst' %}▼{% endif %}</a></th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in runs %}
+          {% set highlight_run = request.args.get('highlight') %}
+          <tr data-search="{{ [r.run_id or '', r.endpoint_method or '', r.endpoint_path or '', r.stats.worst if r.stats else r.worst or 'info']|join(' ')|lower }}" 
+              {% if highlight_run == r.run_id %}style="background-color: rgba(255, 255, 0, 0.1);"{% endif %}>
+              <td><button onclick="openRunDetail('{{ r.run_id }}', '{{ r.endpoint_key }}')" 
+                           style="background:none;border:none;color:#007bff;cursor:pointer;text-decoration:underline;font-family:monospace;font-size:inherit;padding:0;"
+                           {% if highlight_run == r.run_id %} style="background:none;border:none;color:#ff6b35;cursor:pointer;text-decoration:underline;font-family:monospace;font-weight:bold;"{% endif %}>{{ r.run_id }}</button></td>
+            <td><span title="{{ r.finished_at or r.started_at }}" class="relative-time">{{ r.finished_at or r.started_at }}</span></td>
+            <td>
+              {% if r.endpoint_method and r.endpoint_path %}
+              <span class="chip {{ (r.endpoint_method)|upper }}" style="margin-right:8px;">{{ r.endpoint_method|upper }}</span>
+              <span title="{{ r.endpoint_path }}" style="max-width:200px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                {{ r.endpoint_path }}
+              </span>
+              {% else %}
+              <span class="muted">(various)</span>
+              {% endif %}
+            </td>
+            <td>{{ r.stats.findings if r.stats else r.findings or 0 }}</td>
+            <td><span class="chip {{ (r.stats.worst if r.stats else r.worst or 'info')|upper }}">{{ (r.stats.worst if r.stats else r.worst or 'info')|title }}</span></td>
+            <td>
+              <a class="btn ghost" href="{{ url_for('web.run_export', pid=pid) }}?run_id={{ r.run_id }}">Export</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+      <script>
+        function updateFilters() {
+          const searchTerm = document.getElementById('runs-search').value;
+          const endpointTerm = document.getElementById('endpoint-filter').value;
+          
+          // Update URL without page reload
+          const url = new URL(window.location);
+          if (searchTerm) url.searchParams.set('search', searchTerm);
+          else url.searchParams.delete('search');
+          if (endpointTerm) url.searchParams.set('endpoint', endpointTerm);
+          else url.searchParams.delete('endpoint');
+          
+          window.history.pushState({}, '', url);
+          
+          filterRuns();
+        }
+        
+        function filterRuns() {
+          const searchTerm = document.getElementById('runs-search').value.toLowerCase();
+          const endpointTerm = document.getElementById('endpoint-filter').value.toLowerCase();
+          const rows = document.querySelectorAll('#runs-table tbody tr');
+          let visibleCount = 0;
+          
+          rows.forEach(row => {
+            const searchData = row.getAttribute('data-search');
+            const matchesSearch = searchTerm === '' || searchData.includes(searchTerm);
+            const matchesEndpoint = endpointTerm === '' || (row.children[2].textContent && row.children[2].textContent.toLowerCase().includes(endpointTerm));
+            
+            if (matchesSearch && matchesEndpoint) {
+              row.style.display = '';
+              row.classList.add('visible-row');
+              visibleCount++;
+            } else {
+              row.style.display = 'none';
+              row.classList.remove('visible-row');
+            }
+          });
+          
+          // Update CSV export button to show count
+          const csvBtn = document.querySelector('[onclick="triggerCSVExport()"]');
+          if (csvBtn && visibleCount >= 0) {
+            csvBtn.textContent = `📊 Export CSV (${visibleCount})`;
+          }
+        }
+          
+        function triggerCSVExport() {
+          const visibleRows = document.querySelectorAll('#runs-table tbody tr.visible-row');
+          const csvData = [];
+          
+          // Headers
+          csvData.push(['Run ID', 'When', 'Endpoint Method', 'Endpoint Path', 'Findings', 'Worst Severity']);
+          
+          // Data rows
+          visibleRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const runId = cells[0].textContent.trim();
+            const when = cells[1].textContent.trim();
+            const endpoint = cells[2].textContent.trim();
+            const findings = cells[3].textContent.trim();
+            const worst = cells[4].textContent.trim();
+            
+            // Split endpoint into method and path
+            const endpointParts = endpoint.split(' ');
+            const method = endpointParts.length > 0 ? endpointParts[0] : '';
+            const path = endpointParts.slice(1).join(' ') || '(various)';
+            
+            csvData.push([runId, when, method, path, findings, worst]);
+          });
+          
+          // Convert to CSV string
+          const csvString = csvData.map(row => 
+            row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',')
+          ).join('\n');
+          
+          // Download
+          const blob = new Blob([csvString], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `runs-${new Date().toISOString().split('T')[0]}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          
+          showToast(`Exported ${visibleRows.length} runs`, 'success');
+        }
+      
+      function openEndpointRuns(endpointKey) {
+        // Parse endpoint key to get method and path
+        const parts = endpointKey.split(' /');
+        if (parts.length >= 2) {
+          const method = parts[0];
+          const path = '/' + parts[1];
+          
+          // Open drawer with endpoint runs
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '{{ url_for("web.sitemap_runs_for_endpoint", pid=pid) }}';
+          form.target = '_blank';
+          
+          // Add form data
+          const urlInput = document.createElement('input');
+          urlInput.type = 'hidden';
+          urlInput.name = 'url';
+          urlInput.value = '{{ "https://petstore3.swagger.io" }}' + path;
+          
+          const methodInput = document.createElement('input');
+          methodInput.type = 'hidden';
+          methodInput.name = 'method';
+          methodInput.value = method;
+          
+          form.appendChild(urlInput);
+          form.appendChild(methodInput);
+          document.body.appendChild(form);
+          form.submit();
+          document.body.removeChild(form);
+        }
+        
+        function openRunDetail(runId, endpointKey) {
+          // If endpoint key is available, open endpoint runs drawer
+          if (endpointKey) {
+            const parts = endpointKey.split(' /');
+            if (parts.length >= 2) {
+              const method = parts[0];
+              const path = '/' + parts[1];
+              openEndpointRuns(endpointKey);
+            } else {
+              // Fallback to run detail drawer
+              window.location.href = `/p/${window.APP_CTX?.pid || ''}/runs/detail/${runId}`;
+            }
+          } else {
+            // Fallback to raw run summary
+            window.location.href = `/p/${window.APP_CTX?.pid || ''}/runs/detail/${runId}`;
+          }
+        }
+      }
+        }
+        
+        // Convert timestamps to relative format on page load
+        document.addEventListener('DOMContentLoaded', function() {
+          convertToRelativeTimes();
+          
+          // Apply URL filters on page load
+          const urlParams = new URLSearchParams(window.location.search);
+          const searchTerm = urlParams.get('search') || '';
+          const endpointTerm = urlParams.get('endpoint') || '';
+          
+          if (searchTerm) document.getElementById('runs-search').value = searchTerm;
+          if (endpointTerm) document.getElementById('endpoint-filter').value = endpointTerm;
+          
+          filterRuns();
+        });
+        
+        function convertToRelativeTimes() {
+          const timeElements = document.querySelectorAll('.relative-time');
+          timeElements.forEach(element => {
+            const isoString = element.getAttribute('title');
+            if (isoString) {
+              const relative = toRelativeTime(isoString);
+              element.textContent = relative;
+              element.setAttribute('title', isoString); // Keep ISO string in title
+            }
+          });
+        }
+        
+        function toRelativeTime(isoString) {
+          const now = new Date();
+          const date = new Date(isoString);
+          const diffMs = now - date;
+          const diffSecs = Math.floor(diffMs / 1000);
+          const diffMins = Math.floor(diffMs / (1000 * 60));
+          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          
+          if (diffSecs < 60) return `${diffSecs}s ago`;
+          if (diffMins < 60) return `${diffMins}m ago`;
+          if (diffHours < 24) return `${diffHours}h ago`;
+          return `${diffDays}d ago`;
+        }
+      }
+      </script>
+    {% endif %}
+  </div>
+{% endblock %}
+
+

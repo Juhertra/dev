@@ -1,0 +1,201 @@
+{% extends "_layout.html" %}
+
+{% block title %}Tools Manager - {{ project_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Tools Manager</h1>
+      <p class="muted">Manage security testing tools and templates</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 24px;">
+    <!-- Nuclei Templates Card -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>Nuclei Templates</h3>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span><strong>Template Count:</strong></span>
+              <span class="pill">{{ template_count }}</span>
+            </div>
+            {% if last_indexed %}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span><strong>Last Indexed:</strong></span>
+              <span class="muted">{{ last_indexed }}</span>
+            </div>
+            {% endif %}
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span><strong>Status:</strong></span>
+              {% if nuclei_status.available %}
+                <span class="pill" style="background: #28a745; color: white;">Available</span>
+              {% else %}
+                <span class="pill" style="background: #dc3545; color: white;">Unavailable</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Preset Selector -->
+          <div style="margin-bottom: 16px;">
+            <label for="preset-select"><strong>Quick Select Presets:</strong></label>
+            <select id="preset-select" class="form-control" style="margin-top: 4px;">
+              <option value="">Select a preset...</option>
+              {% for preset_name, template_ids in presets.items() %}
+              <option value="{{ preset_name }}">{{ preset_name }} ({{ template_ids|length }} templates)</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn primary" type="button" onclick="reindexTemplates()">
+              Reindex
+            </button>
+            <button class="btn ghost" type="button" onclick="runSelfTest()">
+              Self-test
+            </button>
+          </div>
+
+          <!-- Status Messages -->
+          <div id="tools-status" style="margin-top: 12px; display: none;">
+            <div class="alert" id="tools-message"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Tools Card -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>Active Tools</h3>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom: 16px;">
+            <p class="muted">Select which tools to use for security testing:</p>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="active-tools" value="nuclei" checked>
+              <span>Nuclei</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="active-tools" value="detectors-pack-a">
+              <span>Detectors Pack A</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="active-tools" value="detectors-pack-b">
+              <span>Detectors Pack B</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="active-tools" value="custom-tool">
+              <span>Custom Tool (Placeholder)</span>
+            </label>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <button class="btn primary" type="button" onclick="saveActiveTools()">
+              Save Selection
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function reindexTemplates() {
+  const statusDiv = document.getElementById('tools-status');
+  const messageDiv = document.getElementById('tools-message');
+  
+  statusDiv.style.display = 'block';
+  messageDiv.textContent = 'Reindexing templates...';
+  messageDiv.className = 'alert alert-info';
+  
+  fetch(`/p/{{ pid }}/tools/nuclei/reindex`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      messageDiv.textContent = `Reindexed ${data.count} templates in ${data.took_ms}ms`;
+      messageDiv.className = 'alert alert-success';
+      // Reload page to show updated count
+      setTimeout(() => window.location.reload(), 1000);
+    } else {
+      messageDiv.textContent = `Reindex failed: ${data.error}`;
+      messageDiv.className = 'alert alert-danger';
+    }
+  })
+  .catch(error => {
+    messageDiv.textContent = `Error: ${error.message}`;
+    messageDiv.className = 'alert alert-danger';
+  });
+}
+
+function runSelfTest() {
+  const statusDiv = document.getElementById('tools-status');
+  const messageDiv = document.getElementById('tools-message');
+  
+  statusDiv.style.display = 'block';
+  messageDiv.textContent = 'Running self-test...';
+  messageDiv.className = 'alert alert-info';
+  
+  fetch(`/p/{{ pid }}/tools/nuclei/selftest`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.ok) {
+      messageDiv.textContent = `Self-test completed: ${data.sample_ids.length} templates tested in ${data.took_ms}ms`;
+      messageDiv.className = 'alert alert-success';
+    } else {
+      messageDiv.textContent = `Self-test failed: ${data.error}`;
+      messageDiv.className = 'alert alert-danger';
+    }
+  })
+  .catch(error => {
+    messageDiv.textContent = `Error: ${error.message}`;
+    messageDiv.className = 'alert alert-danger';
+  });
+}
+
+function saveActiveTools() {
+  const checkboxes = document.querySelectorAll('input[name="active-tools"]:checked');
+  const activeTools = Array.from(checkboxes).map(cb => cb.value);
+  
+  // For now, just show a success message
+  const statusDiv = document.getElementById('tools-status');
+  const messageDiv = document.getElementById('tools-message');
+  
+  statusDiv.style.display = 'block';
+  messageDiv.textContent = `Saved ${activeTools.length} active tools: ${activeTools.join(', ')}`;
+  messageDiv.className = 'alert alert-success';
+  
+  // TODO: Implement actual persistence in PR-7
+}
+
+// Preset selector change handler
+document.getElementById('preset-select').addEventListener('change', function(e) {
+  if (e.target.value) {
+    const presets = {{ presets|tojson }};
+    const templateIds = presets[e.target.value];
+    console.log(`Selected preset "${e.target.value}" with ${templateIds.length} templates:`, templateIds);
+    // TODO: Implement preset application in future PR
+  }
+});
+</script>
+{% endblock %}

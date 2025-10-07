@@ -1,0 +1,64 @@
+{
+  "name": "security_headers",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "headers.missing.csp",
+      "title": "Missing Content-Security-Policy",
+      "where": ["response.headers"],
+      "regex": "(?s)^(?!.*content-security-policy)",
+      "cwe": "693",
+      "cvss": 0.0,
+      "severity": "info",
+      "confidence": 90,
+      "tags": ["headers", "missing"],
+      "enabled": true
+    },
+    {
+      "id": "headers.missing.hsts",
+      "title": "Missing Strict-Transport-Security",
+      "where": ["response.headers"],
+      "regex": "(?s)^(?!.*strict-transport-security)",
+      "cwe": "319",
+      "cvss": 0.0,
+      "severity": "info",
+      "confidence": 90,
+      "tags": ["headers", "missing"],
+      "enabled": true
+    },
+    {
+      "id": "headers.missing.xfo",
+      "title": "Missing X-Frame-Options",
+      "where": ["response.headers"],
+      "regex": "(?s)^(?!.*x-frame-options)",
+      "cwe": "693",
+      "cvss": 0.0,
+      "severity": "info",
+      "confidence": 85,
+      "tags": ["headers", "missing"],
+      "enabled": true
+    },
+    {
+      "id": "headers.missing.xcto",
+      "title": "Missing X-Content-Type-Options",
+      "where": ["response.headers"],
+      "regex": "(?s)^(?!.*x-content-type-options)",
+      "cwe": "693",
+      "cvss": 0.0,
+      "severity": "info",
+      "confidence": 85,
+      "tags": ["headers", "missing"],
+      "enabled": true
+    },
+    {
+      "id": "headers.server.leak",
+      "title": "Server header discloses technology",
+      "where": ["response.headers"],
+      "regex": "Server\"?\\s*:\\s*(Apache|nginx|IIS|Gunicorn|Caddy|Express|Jetty|Tomcat)",
+      "cwe": "200",
+      "cvss": 3.1,
+      "confidence": 60,
+      "tags": ["headers", "info", "server"]
+    }
+  ]
+}

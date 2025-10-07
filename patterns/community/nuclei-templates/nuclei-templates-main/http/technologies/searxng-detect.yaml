@@ -1,0 +1,32 @@
+id: searxng-detect
+
+info:
+  name: SearXNG - Detect
+  author: rxerium
+  severity: info
+  description: |
+    A SearXNG search engine was detected.
+  reference:
+    - https://github.com/searxng/searxng
+  metadata:
+    max-request: 1
+    verified: true
+    shodan-query: http.title:SearXNG
+  tags: searxng,search-engine,tech
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "<title>SearXNG</title>"
+
+      - type: status
+        status:
+          - 200
+# digest: 4b0a00483046022100bda9be920de36894e8817721116310eb7c529eeb077da28f38e274be6f86fe68022100d107c04805ff19d363ea3713641a90c6d3a713400ca66dfe3ae23191f6039bf1:922c64590222798bb761d5b6d8e72950

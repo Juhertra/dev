@@ -1,0 +1,56 @@
+[
+  {
+    "detector_id": "test.1",
+    "severity": "high",
+    "method": "GET",
+    "url": "https://example.com/test1",
+    "path": "/test1",
+    "title": "Test 1",
+    "confidence": 80,
+    "status": "open",
+    "req": {
+      "method": "GET",
+      "url": "https://example.com/test1"
+    },
+    "res": {
+      "status_code": 200
+    },
+    "created_at": "2024-01-01T00:00:00Z",
+    "triage": {
+      "status": "in_progress",
+      "tags": [
+        "urgent"
+      ],
+      "notes": [],
+      "owner": "test@example.com"
+    },
+    "updated_at": "2025-10-06T06:38:36.330183+00:00"
+  },
+  {
+    "detector_id": "test.2",
+    "severity": "medium",
+    "method": "POST",
+    "url": "https://example.com/test2",
+    "path": "/test2",
+    "title": "Test 2",
+    "confidence": 70,
+    "status": "open",
+    "req": {
+      "method": "POST",
+      "url": "https://example.com/test2"
+    },
+    "res": {
+      "status_code": 200
+    },
+    "created_at": "2024-01-01T00:00:00Z",
+    "triage": {
+      "status": "in_progress",
+      "tags": [
+        "urgent"
+      ],
+      "notes": [],
+      "owner": "test@example.com"
+    },
+    "updated_at": "2025-10-06T06:38:36.330184+00:00"
+  }
+]

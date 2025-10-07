@@ -1,0 +1,27 @@
+{
+  "name": "rate_limit",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "ratelimit.present",
+      "title": "Rate limit headers present (info)",
+      "where": ["response.headers"],
+      "regex": "(X-RateLimit-Limit|X-RateLimit-Remaining|X-RateLimit-Reset|Retry-After)",
+      "cwe": null,
+      "cvss": 0.0,
+      "confidence": 90,
+      "tags": ["info"]
+    },
+    {
+      "id": "ratelimit.missing",
+      "title": "No rate limiting headers on auth endpoint",
+      "where": ["response.headers"],
+      "regex": "(?s)^(?!.*(X-RateLimit|Retry-After))",
+      "cwe": "770",
+      "cvss": 3.1,
+      "confidence": 60,
+      "tags": ["rate-limit", "missing"],
+      "enabled": false
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "top-50-web": [
+    "http-methods",
+    "sqli-auth", 
+    "xss",
+    "path-traversal",
+    "ssrf",
+    "xxe",
+    "ldap-injection",
+    "nosql-injection",
+    "jwt-secrets",
+    "oauth-bypass"
+  ],
+  "auth": [
+    "jwt-secrets",
+    "oauth-bypass",
+    "basic-auth",
+    "session-fixation",
+    "csrf"
+  ],
+  "info": [
+    "http-methods",
+    "tech-detect",
+    "server-info",
+    "directory-listing",
+    "backup-files"
+  ],
+  "high-impact": [
+    "rce",
+    "ssrf", 
+    "xxe",
+    "sqli-auth",
+    "path-traversal"
+  ]
+}

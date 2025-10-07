@@ -1,0 +1,24 @@
+{
+  "name": "Nuclei Templates",
+  "version": "latest",
+  "description": "Converted ProjectDiscovery Nuclei security templates",
+  "rules": [
+    {
+      "id": "nuclei_http_headers",
+      "title": "Security Headers Missing",
+      "regex": "(?i)(x-frame-options|x-content-type-options|strict-transport-security)",
+      "severity": "medium",
+      "confidence": 80,
+      "cwe": "CWE-693",
+      "tags": [
+        "headers",
+        "security",
+        "nuclei"
+      ],
+      "where": [
+        "response.headers"
+      ],
+      "enabled": true
+    }
+  ]
+}

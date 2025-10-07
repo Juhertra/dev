@@ -1,0 +1,248 @@
+{% extends "_layout.html" %}
+
+{% block title %}Vulnerabilities Hub - {{ project_name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/vulns-bulk.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Vulnerabilities Hub</h1>
+      <p class="muted">Aggregated view of security findings across all runs</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 24px;">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Vulnerability Summary</h3>
+            <button class="btn ghost" 
+                    hx-get="/p/{{ pid }}/vulns/summary.json" 
+                    hx-target="#vulns-table-body" 
+                    hx-swap="innerHTML"
+                    hx-trigger="click">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center; margin-top: 8px;">
+            <span class="pill">{{ vulns|length }} total vulnerabilities</span>
+            {% set critical_count = vulns|selectattr('worst_severity', 'equalto', 'critical')|list|length %}
+            {% set high_count = vulns|selectattr('worst_severity', 'equalto', 'high')|list|length %}
+            {% set medium_count = vulns|selectattr('worst_severity', 'equalto', 'medium')|list|length %}
+            {% if critical_count > 0 %}<span class="pill" style="background: #dc3545; color: white;">{{ critical_count }} critical</span>{% endif %}
+            {% if high_count > 0 %}<span class="pill" style="background: #fd7e14; color: white;">{{ high_count }} high</span>{% endif %}
+            {% if medium_count > 0 %}<span class="pill" style="background: #ffc107; color: black;">{{ medium_count }} medium</span>{% endif %}
+          </div>
+          
+          <!-- P5 Triage Filters -->
+          <div style="display: flex; gap: 12px; align-items: center; margin-top: 12px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+            <span style="font-weight: 500; color: #495057;">Filters:</span>
+            
+            <!-- Status Filter -->
+            <select id="status-filter" style="padding: 4px 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9em;">
+              <option value="">All Status</option>
+              <option value="open">Open</option>
+              <option value="in_progress">In Progress</option>
+              <option value="risk_accepted">Risk Accepted</option>
+              <option value="false_positive">False Positive</option>
+              <option value="resolved">Resolved</option>
+            </select>
+            
+            <!-- Hide Suppressed Toggle -->
+            <label style="display: flex; align-items: center; gap: 4px; font-size: 0.9em;">
+              <input type="checkbox" id="hide-suppressed" style="margin: 0;">
+              Hide Suppressed
+            </label>
+            
+            <!-- Apply Filters Button -->
+            <button class="btn ghost btn-sm" onclick="applyTriageFilters()">
+              <i class="fas fa-filter"></i> Apply
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Include bulk action bar -->
+          {% include "_partials/vulns_bulkbar.html" %}
+          
+          <!-- Include vulnerabilities table -->
+          {% include "_partials/vulns_table.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPreview(endpointKey) {
+  fetch('/p/{{ pid }}/vulns/preview', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `endpoint_key=${encodeURIComponent(endpointKey)}`
+  })
+  .then(response => response.text())
+  .then(html => {
+    // For now, just show an alert
+    alert(`Preview for: ${endpointKey}`);
+  })
+  .catch(error => {
+    console.error('Error opening preview:', error);
+  });
+}
+
+function openRuns(endpointKey) {
+  fetch('/p/{{ pid }}/vulns/runs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `endpoint_key=${encodeURIComponent(endpointKey)}`
+  })
+  .then(response => response.text())
+  .then(html => {
+    // For now, just show an alert
+    alert(`Runs for: ${endpointKey}`);
+  })
+  .catch(error => {
+    console.error('Error opening runs:', error);
+  });
+}
+
+function openCveLink(cveId) {
+  if (cveId && cveId !== 'null' && cveId !== 'None') {
+    window.open(`https://cve.mitre.org/cgi-bin/cvename.cgi?name=${cveId}`, '_blank', 'noopener,noreferrer');
+  }
+}
+
+function openTriage(endpointKey, detectorId) {
+  // Open triage panel for this vulnerability group
+  const triagePanel = document.getElementById('triage-panel');
+  if (triagePanel) {
+    triagePanel.style.display = 'block';
+    // Load triage data for this group
+    loadTriageData(endpointKey, detectorId);
+  } else {
+    // Create triage panel if it doesn't exist
+    createTriagePanel(endpointKey, detectorId);
+  }
+}
+
+function createTriagePanel(endpointKey, detectorId) {
+  // Create modal overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 1000; display: flex;
+    align-items: center; justify-content: center;
+  `;
+  
+  // Create panel
+  const panel = document.createElement('div');
+  panel.style.cssText = `
+    background: white; border-radius: 8px; padding: 24px;
+    max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  `;
+  
+  panel.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h3>Triage Vulnerability</h3>
+      <button onclick="closeTriagePanel()" style="background: none; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+    </div>
+    <div id="triage-content">
+      <p>Loading triage data...</p>
+    </div>
+  `;
+  
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+  
+  // Load triage data
+  loadTriageData(endpointKey, detectorId);
+}
+
+function loadTriageData(endpointKey, detectorId) {
+  // This would load the actual findings for this group and show triage options
+  const content = document.getElementById('triage-content');
+  if (content) {
+    content.innerHTML = `
+      <div>
+        <p><strong>Endpoint:</strong> ${endpointKey}</p>
+        <p><strong>Detector:</strong> ${detectorId}</p>
+        
+        <div style="margin-top: 20px;">
+          <label><strong>Status:</strong></label>
+          <select id="triage-status" style="margin-left: 8px; padding: 4px 8px;">
+            <option value="open">Open</option>
+            <option value="in_progress">In Progress</option>
+            <option value="risk_accepted">Risk Accepted</option>
+            <option value="false_positive">False Positive</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <label><strong>Owner:</strong></label>
+          <input type="text" id="triage-owner" placeholder="email@example.com" style="margin-left: 8px; padding: 4px 8px; width: 200px;">
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <label><strong>Tags:</strong></label>
+          <input type="text" id="triage-tags" placeholder="auth, header, critical" style="margin-left: 8px; padding: 4px 8px; width: 200px;">
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <label><strong>Note:</strong></label>
+          <textarea id="triage-note" placeholder="Add a note..." style="margin-left: 8px; padding: 8px; width: 100%; height: 80px; resize: vertical;"></textarea>
+        </div>
+        
+        <div style="margin-top: 20px; display: flex; gap: 8px;">
+          <button class="btn primary" onclick="saveTriage('${endpointKey}', '${detectorId}')">Save Changes</button>
+          <button class="btn ghost" onclick="closeTriagePanel()">Cancel</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function saveTriage(endpointKey, detectorId) {
+  const status = document.getElementById('triage-status').value;
+  const owner = document.getElementById('triage-owner').value;
+  const tags = document.getElementById('triage-tags').value.split(',').map(t => t.trim()).filter(t => t);
+  const note = document.getElementById('triage-note').value;
+  
+  // This would make API calls to update triage for all findings in this group
+  console.log('Saving triage:', { endpointKey, detectorId, status, owner, tags, note });
+  
+  // For now, just show success message
+  alert('Triage saved successfully!');
+  closeTriagePanel();
+}
+
+function closeTriagePanel() {
+  const overlay = document.querySelector('div[style*="position: fixed"]');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function applyTriageFilters() {
+  const statusFilter = document.getElementById('status-filter').value;
+  const hideSuppressed = document.getElementById('hide-suppressed').checked;
+  
+  // This would filter the table rows based on triage status and suppression
+  console.log('Applying filters:', { statusFilter, hideSuppressed });
+  
+  // For now, just show alert
+  alert('Filter functionality coming soon!');
+}
+</script>
+
+<script defer src="{{ url_for('static', filename='js/vulns-bulk.js') }}"></script>
+{% endblock %}

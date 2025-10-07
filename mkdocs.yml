@@ -1,0 +1,66 @@
+site_name: "SecFlow Architecture & Validation"
+site_description: "Hexagonal architecture, workflows, plugins, and validation portal"
+site_url: ""
+repo_url: ""
+theme:
+  name: material
+  features:
+    - navigation.indexes
+    - navigation.expand
+    - content.code.copy
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.tabbed
+plugins:
+  - search
+  - mermaid2
+
+nav:
+  - Overview:
+      - Home: architecture/00-index.md
+      - Executive Summary: architecture/01-title-and-executive-summary.md
+  - Architecture:
+      - Philosophy: architecture/02-architecture-philosophy.md
+      - Repository Layout: architecture/03-repository-layout.md
+      - Core Packages: architecture/04-core-packages-and-responsibilities.md
+      - Orchestration Engine: architecture/05-orchestration-and-workflow-engine.md
+      - Plugin System: architecture/06-plugin-system.md
+      - Tools Integration: architecture/07-tools-integration-model.md
+      - Tool Manager & UX: architecture/08-tool-manager-and-ux-design.md
+      - Resource Registry: architecture/09-resource-registry.md
+      - Wordlists & Sharing: architecture/10-wordlist-and-output-sharing.md
+      - Project Isolation & Sharing: architecture/11-project-isolation-and-data-sharing.md
+      - Findings Schema: architecture/12-findings-model-and-schema.md
+      - Enrichment Layer: architecture/13-cve-cwe-poc-enrichment-layer.md
+      - PoC Sources & Legal: architecture/14-poc-sources-and-legal-guidelines.md
+      - Garbage Collection: architecture/15-garbage-collection-and-retention.md
+      - Security Model: architecture/16-security-model.md
+      - Observability: architecture/17-observability-logging-and-metrics.md
+      - Error Handling: architecture/18-error-handling-and-recovery.md
+      - Risk Assessment: architecture/19-risk-assessment-framework.md
+      - Migration Plan: architecture/20-migration-and-implementation-phases.md
+      - CI/CD & Testing: architecture/21-ci-cd-and-testing-strategy.md
+      - Dev Experience & Docs: architecture/22-developer-experience-and-docs.md
+      - Future Roadmap: architecture/23-future-roadmap.md
+      - Final Consensus: architecture/24-final-consensus-summary.md
+  - Review & Validation:
+      - Guidelines: review/REVIEW_GUIDELINES.md
+      - Workflow: review/review_workflow.md
+      - Assignments: review/review_assignments.md
+      - Checklist: review/validation_checklist.md
+      - Status: review/REVIEW_STATUS.md
+      - Report: review/validation_report.md
+      - AI Summary: review/VALIDATION_SUMMARY.md
+      - Glossary: review/glossary.yml

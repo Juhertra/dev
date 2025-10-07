@@ -1,0 +1,49 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 115-972-514
+127.0.0.1 - - [04/Oct/2025 11:54:22] "POST /p/ec4c0976-fd94-463c-8ada-0705fe12b944/sitemap/endpoint-preview HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2025 11:54:31] "POST /p/ec4c0976-fd94-463c-8ada-0705fe12b944/sitemap/endpoint-preview HTTP/1.1" 200 -
+[2025-10-04 11:54:39,607] INFO in sitemap: DOSSIER_READ key="GET https://petstore3.swagger.io/api/v3/store/inventory" file="/Users/hernan.trajtemberg/Documents/Test/dev/ui_projects/ec4c0976-fd94-463c-8ada-0705fe12b944/endpoints/GET_https_petstore3.swagger.io_api_v3_store_inventory.json" count=2
+127.0.0.1 - - [04/Oct/2025 11:54:39] "POST /p/ec4c0976-fd94-463c-8ada-0705fe12b944/sitemap/endpoint-runs HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2025 11:54:47] "POST /p/ec4c0976-fd94-463c-8ada-0705fe12b944/sitemap/endpoint-preview HTTP/1.1" 200 -
+ * Detected change in '/Users/hernan.trajtemberg/Documents/Test/dev/routes/sitemap.py', reloading
+DEBUG: sitemap_endpoint_preview called
+DEBUG: url=https://petstore3.swagger.io/api/v3/store/inventory, method=GET
+DEBUG: Rendering drawer_endpoint_preview.html
+DEBUG: Template rendered, length=2696
+DEBUG: sitemap_endpoint_preview called
+DEBUG: url=https://petstore3.swagger.io/api/v3/store/inventory, method=GET
+DEBUG: Rendering drawer_endpoint_preview.html
+DEBUG: Template rendered, length=2696
+DEBUG: sitemap_endpoint_preview called
+DEBUG: url=https://petstore3.swagger.io/api/v3/pet, method=POST
+DEBUG: Rendering drawer_endpoint_preview.html
+DEBUG: Template rendered, length=2638
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 115-972-514
+ * Detected change in '/Users/hernan.trajtemberg/Documents/Test/dev/routes/sitemap.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 115-972-514
+ * Detected change in '/Users/hernan.trajtemberg/Documents/Test/dev/cache/keys.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 115-972-514
+ * Detected change in '/Users/hernan.trajtemberg/Documents/Test/dev/routes/sitemap.py', reloading
+ * Restarting with stat
+Traceback (most recent call last):
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/app.py", line 2, in <module>
+    from web_routes import bp as web_bp
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/web_routes.py", line 18, in <module>
+    from findings import analyze_and_record, get_findings, count_findings, clear_findings, count_findings_cached
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/findings.py", line 34, in <module>
+    from cache import cached, invalidate_cache
+  File "/Users/hernan.trajtemberg/Documents/Test/dev/cache/__init__.py", line 4, in <module>
+    from ..cache import cached, invalidate_cache, get_cache_stats
+ImportError: attempted relative import beyond top-level package

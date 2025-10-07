@@ -1,0 +1,123 @@
+name: Docs Validation & Snapshot
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+  push:
+    branches: [ main ]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install pyyaml mkdocs mkdocs-material mkdocs-mermaid2
+      - name: Run validation
+        run: python3 docs/review/automated_validation.py
+      - name: Check quality gates
+        run: |
+          # Extract metrics from validation report
+          CRITICALS=$(grep -o '\*\*Criticals\*\*: [0-9]*' docs/review/validation_report.md | grep -o '[0-9]*')
+          WARNINGS=$(grep -o '\*\*Warnings\*\*: [0-9]*' docs/review/validation_report.md | grep -o '[0-9]*')
+          DQI=$(grep -o '\*\*Score\*\*: [0-9.]*' docs/review/validation_report.md | grep -o '[0-9.]*')
+          
+          echo "Quality Gates Check:"
+          echo "Criticals: $CRITICALS"
+          echo "Warnings: $WARNINGS"
+          echo "DQI: $DQI"
+          
+          # Quality Gate 1: Fail if criticals > 0
+          if [ "$CRITICALS" -gt 0 ]; then
+            echo "❌ QUALITY GATE FAILED: Critical issues found ($CRITICALS)"
+            exit 1
+          fi
+          
+          # Quality Gate 2: Fail if warnings > 0
+          if [ "$WARNINGS" -gt 0 ]; then
+            echo "❌ QUALITY GATE FAILED: Warnings found ($WARNINGS). Must be 0 for merge."
+            exit 1
+          fi
+          
+          # Quality Gate 3: Fail if DQI < 99
+          if (( $(echo "$DQI < 99" | bc -l) )); then
+            echo "❌ QUALITY GATE FAILED: DQI ($DQI) below threshold (99)"
+            exit 1
+          fi
+          
+          echo "✅ All quality gates passed!"
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: docs/review/validation_report.md
+      - name: Generate documentation snapshot
+        if: success()
+        run: make snapshot
+      - name: Upload documentation snapshot
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs_snapshot
+          path: docs_snapshot_*.tgz
+          retention-days: 30
+      - name: Comment PR with validation results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'docs/review/validation_report.md';
+            if (fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf8');
+              const criticalMatch = report.match(/- \*\*Criticals\*\*: (\d+)/);
+              const warningMatch = report.match(/- \*\*Warnings\*\*: (\d+)/);
+              const dqiMatch = report.match(/- \*\*Score\*\*: ([\d.]+)/100/);
+              const trendMatch = report.match(/- \*\*Trend\*\*: ([↑↓→—])/);
+              
+              const criticals = criticalMatch ? parseInt(criticalMatch[1]) : 0;
+              const warnings = warningMatch ? parseInt(warningMatch[1]) : 0;
+              const dqi = dqiMatch ? parseFloat(dqiMatch[1]) : null;
+              const trend = trendMatch ? trendMatch[1] : '—';
+              
+              let status = '✅';
+              let message = 'All quality gates passed!';
+              let qualityGateStatus = '🟢 PASSED';
+              
+              if (criticals > 0) {
+                status = '❌';
+                message = `${criticals} critical issues found. PR blocked.`;
+                qualityGateStatus = '🔴 FAILED';
+              } else if (warnings > 0) {
+                status = '❌';
+                message = `${warnings} warnings found. PR blocked (warnings must be 0).`;
+                qualityGateStatus = '🔴 FAILED';
+              } else if (dqi !== null && dqi < 99) {
+                status = '❌';
+                message = `DQI ${dqi}/100 below threshold (99). PR blocked.`;
+                qualityGateStatus = '🔴 FAILED';
+              }
+              
+              let dqiInfo = '';
+              if (dqi !== null) {
+                const dqiDelta = dqi >= 99 ? '✅' : '❌';
+                dqiInfo = `\n- **DQI**: ${dqi}/100 (Trend: ${trend}) ${dqiDelta}`;
+              }
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🚪 Quality Gates Status: ${qualityGateStatus}\n\n${status} **${message}**\n\n### 📊 Metrics\n- Critical Issues: ${criticals}\n- Warnings: ${warnings}${dqiInfo}\n\n### 🎯 Quality Gates\n- ✅ Criticals: ${criticals} (must be 0)\n- ✅ Warnings: ${warnings} (must be 0)\n- ✅ DQI: ${dqi !== null ? dqi : 'N/A'}/100 (must be ≥99)\n\n📦 **Documentation snapshot** has been generated and uploaded as an artifact.\n\n<details>\n<summary>View Full Report</summary>\n\n\`\`\`markdown\n${report}\n\`\`\`\n\n</details>`
+              });
+            }

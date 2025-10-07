@@ -1,0 +1,326 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'queue' %}
+
+{% block page_title %}Test Queue{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Test Queue</span>
+{% endblock %}
+
+{% block content %}
+  <style>
+    .findings-count {
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    
+    /* Fix table row vertical alignment */
+    table tr {
+      vertical-align: middle;
+    }
+    
+    table td {
+      vertical-align: middle;
+    }
+    
+    /* Ensure chips and buttons are vertically centered */
+    .chip {
+      vertical-align: middle;
+    }
+    
+    .btn {
+      vertical-align: middle;
+    }
+    
+    /* Ensure consistent sizing for queue cards */
+    .card {
+      min-height: 200px; /* Ensure minimum height for consistency */
+    }
+    
+    /* Ensure queue details behave exactly like sitemap details */
+    details.spec {
+      min-height: 60px !important; /* Force consistent minimum height */
+      transition: min-height 0.2s ease; /* Smooth transition */
+    }
+    
+    details.spec[open] {
+      min-height: auto; /* Allow natural height when open */
+    }
+    
+    details.spec:not([open]) {
+      min-height: 60px !important; /* Maintain minimum height when closed */
+    }
+    
+    /* Ensure spec-body maintains consistent spacing */
+    .spec-body {
+      padding: 6px 10px;
+      min-height: 40px; /* Ensure content area has minimum height */
+    }
+    
+    /* Ensure the main content area maintains consistent height */
+    .content {
+      min-height: calc(100vh - 60px); /* Account for toprow height */
+    }
+  </style>
+    
+
+    <div class="card">
+      <form hx-post="{{ url_for('web.queue_update_settings', pid=pid) }}"
+            hx-target="#settings-toast" hx-swap="innerHTML" hx-indicator="#global-indicator">
+        <div class="grid">
+          <div>
+            <div class="muted">Proxy</div>
+            <input type="text" name="proxy" value="{{ proxy or '' }}" placeholder="http://127.0.0.1:8080" aria-label="HTTP proxy">
+          </div>
+          <div>
+            <div class="muted">TLS verify</div>
+            <select name="verify" aria-label="TLS verification">
+              <option value="1" {% if verify %}selected{% endif %}>Verify TLS</option>
+              <option value="0" {% if not verify %}selected{% endif %}>Skip TLS verification</option>
+            </select>
+          </div>
+          <div>
+            <div class="muted">Bearer token</div>
+            <input type="text" name="bearer" value="{{ bearer or '' }}" placeholder="token only" aria-label="Bearer token">
+          </div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start">
+          <button id="save-settings" class="btn primary" type="submit">Save Settings</button>
+        </div>
+        <div id="settings-toast" style="margin-top:8px"></div>
+      </form>
+    </div>
+
+    <div class="card">
+    {% if not groups_list %}
+      <div style="text-align: center; padding: 48px 24px;">
+        <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;">⏳</div>
+        <h3 style="margin: 0 0 8px; color: var(--fg);">Test Queue is Empty</h3>
+        <div class="muted" style="margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+          Add API endpoints to the queue to test them for vulnerabilities and security issues.
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+            <div style="font-weight: 600; margin-bottom: 4px;">🔍 API Explorer</div>
+            <div class="muted" style="font-size: 0.9rem;">Select endpoints to test</div>
+          </div>
+          <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+            <div style="font-weight: 600; margin-bottom: 4px;">🗺️ Site Map</div>
+            <div class="muted" style="font-size: 0.9rem;">Bulk add folders</div>
+          </div>
+          <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+            <div style="font-weight: 600; margin-bottom: 4px;">⚡ Send Tests</div>
+            <div class="muted" style="font-size: 0.9rem;">Execute when ready</div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <form method="post" action="{{ url_for('web.queue_send_selected', pid=pid) }}">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px">
+          <button class="btn ghost" type="button" onclick="document.querySelectorAll('input[name=sel]').forEach(cb=>cb.checked=true)">Select All (all groups)</button>
+          <button class="btn ghost" type="button" onclick="document.querySelectorAll('input[name=sel]').forEach(cb=>cb.checked=false)">Deselect All (all groups)</button>
+        </div>
+
+        {% for sid, g in groups_list %}
+        <details class="spec" id="q-{{ g.safe_id }}" open>
+          <summary>
+            <span class="chev">▶</span>
+            <div class="spec-head">
+              <div class="spec-title">{{ g.spec_title }}</div>
+              <div class="muted">{{ g.spec_url }}</div>
+            </div>
+          </summary>
+          <div class="spec-body" id="grp-{{ g.safe_id }}">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px">
+              <button class="btn ghost" type="button" onclick="document.querySelectorAll('#grp-{{ g.safe_id }} input[name=sel]').forEach(cb=>cb.checked=true)">Select All</button>
+              <button class="btn ghost" type="button" onclick="document.querySelectorAll('#grp-{{ g.safe_id }} input[name=sel]').forEach(cb=>cb.checked=false)">Deselect</button>
+            </div>
+            <table>
+              <thead><tr><th></th><th>#</th><th>Method</th><th>URL</th><th>operationId</th><th>Override</th><th></th></tr></thead>
+              <tbody>
+              {% for it in g["items"] %}
+                <tr class="op-row" data-method="{{ it.method }}">
+                  <td><input type="checkbox" name="sel" value="{{ it.qid }}"></td>
+                  <td>{{ loop.index }}</td>
+                  <td><span class="chip {{ it.method }}">{{ it.method }}</span></td>
+                  <td style="word-break:break-word">{{ it.url }}</td>
+                  <td>{{ it.operationId }}</td>
+                  <td>{{ 'Yes' if it.has_override else '' }}</td>
+                  <td style="white-space:nowrap">
+                    <button class="btn ghost" type="button"
+                            hx-post="{{ url_for('web.queue_item_details', pid=pid) }}"
+                            hx-vals='{"qid":"{{ it.qid }}"}'
+                            hx-target="#panel-body" hx-swap="innerHTML"
+                            hx-indicator="#global-indicator"
+                            onclick="openPanelWith('Queue Item', '{{ it.method }}', '{{ it.path or it.url }}', '{{ it.url }}')">Preview</button>
+                    <button class="btn btn-danger" type="submit" formmethod="post" formaction="{{ url_for('web.queue_remove', pid=pid) }}" name="qid" value="{{ it.qid }}">Remove</button>
+                  </td>
+                </tr>
+                <tr class="op-details-row"><td colspan="7"><div id="qd-{{ g.safe_id }}-{{ it.qid }}"></div></td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </details>
+        {% endfor %}
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn primary" type="submit">Send Selected</button>
+          <button class="btn ghost" type="submit" formmethod="post" formaction="{{ url_for('web.queue_remove_selected', pid=pid) }}">Remove Selected</button>
+          <button class="btn ghost" type="button" onclick="confirmClearQueue()">Clear Queue</button>
+        </div>
+      </form>
+    {% endif %}
+    </div>
+
+    <!-- Quick Action: Link to Active Testing -->
+    <div class="card" style="margin-top: 16px;">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div>
+          <h3 style="margin:0">🔬 Active Testing</h3>
+          <div class="muted">Run comprehensive security scans on your queued endpoints</div>
+        </div>
+        <a href="{{ url_for('web.active_testing_page', pid=pid) }}" class="btn primary">
+          Configure & Run Scan
+        </a>
+      </div>
+    </div>
+
+    <!-- Clear Queue Confirmation Modal -->
+    <div id="clear-queue-modal" class="modal" aria-hidden="true">
+      <div class="modal-content" style="width: min(400px, 90vw)">
+        <div class="modal-head">
+          <h3 style="margin:0">Clear Queue</h3>
+        </div>
+        <div class="clear-queue-content">
+          <div class="card">
+            <p style="margin:0 0 16px;color:var(--fg)">
+              Are you sure you want to clear all items from the test queue?
+            </p>
+            <p class="muted" style="margin:0 0 16px;font-size:12px">
+              This action cannot be undone.
+            </p>
+            <div class="row" style="gap:8px;justify-content:flex-end">
+              <button class="btn ghost" onclick="closeClearQueueConfirmation()">Cancel</button>
+              <button class="btn" onclick="confirmClearQueueAction()" style="background:var(--err);color:white">Clear Queue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Ensure details elements maintain consistent sizing like sitemap
+      document.addEventListener('DOMContentLoaded', function() {
+        const detailsElements = document.querySelectorAll('details.spec');
+        
+        detailsElements.forEach(details => {
+          // Set initial minimum height
+          details.style.minHeight = '60px';
+          
+          // Listen for toggle events
+          details.addEventListener('toggle', function() {
+            if (this.open) {
+              // When opening, allow natural height
+              this.style.minHeight = 'auto';
+            } else {
+              // When closing, maintain minimum height
+              this.style.minHeight = '60px';
+            }
+          });
+        });
+      });
+      
+      function confirmClearQueue() {
+        // Use themed confirmation modal instead of browser confirm
+        openClearQueueConfirmation();
+      }
+
+      function openClearQueueConfirmation() {
+        const modal = document.getElementById('clear-queue-modal');
+        if (!modal) {
+          createClearQueueModal();
+          return;
+        }
+        modal.classList.add('open');
+      }
+
+      function createClearQueueModal() {
+        const modal = document.createElement('div');
+        modal.id = 'clear-queue-modal';
+        modal.className = 'modal';
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+          <div class="modal-content" style="width: min(400px, 90vw)">
+            <div class="modal-head">
+              <h3 style="margin:0">Clear Queue</h3>
+            </div>
+            <div class="clear-queue-content">
+              <div class="card">
+                <p style="margin:0 0 16px;color:var(--fg)">
+                  Are you sure you want to clear all items from the test queue?
+                </p>
+                <p class="muted" style="margin:0 0 16px;font-size:12px">
+                  This action cannot be undone.
+                </p>
+                <div class="row" style="gap:8px;justify-content:flex-end">
+                  <button class="btn ghost" onclick="closeClearQueueConfirmation()">Cancel</button>
+                  <button class="btn" onclick="confirmClearQueueAction()" style="background:var(--err);color:white">Clear Queue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        modal.classList.add('open');
+      }
+
+      function closeClearQueueConfirmation() {
+        const modal = document.getElementById('clear-queue-modal');
+        if (!modal) return;
+        modal.classList.remove('open');
+      }
+
+      function confirmClearQueueAction() {
+        // Close the modal first
+        closeClearQueueConfirmation();
+        
+        // Show loading notification
+        showNotification('Clearing test queue...', 'info');
+        
+        // Submit via fetch to handle the response
+        fetch('{{ url_for("web.queue_clear", pid=pid) }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        })
+        .then(response => {
+          console.log('Clear queue response:', response.status, response.statusText);
+          if (response.ok) {
+            showNotification('Test queue cleared successfully', 'success');
+            // Reload the page to show empty state
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            showNotification('Error clearing test queue: ' + response.status, 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error clearing test queue:', error);
+          showNotification('Error clearing test queue: ' + error.message, 'error');
+        });
+      }
+    </script>
+{% endblock %}
+
+

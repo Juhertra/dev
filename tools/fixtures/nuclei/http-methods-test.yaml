@@ -1,0 +1,14 @@
+id: http-methods-test
+info:
+  name: HTTP Methods Test
+  author: phase4a-test
+  severity: info
+  description: Test template for Phase 4A self-test
+requests:
+  - method: GET
+    path: "{{BaseURL}}/test"
+    matchers:
+      - type: word
+        words:
+          - "GET"
+        part: body

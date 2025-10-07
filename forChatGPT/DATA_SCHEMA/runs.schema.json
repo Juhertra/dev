@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://security-toolkit.dev/schemas/run",
+  "title": "Security Scan Run Record",
+  "description": "A single security scan execution with metadata and results",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "run_id",
+      "started_at", 
+      "findings",
+      "worst",
+      "templates_count",
+      "project_id",
+      "endpoints_scanned"
+    ],
+    "properties": {
+      "run_id": {
+        "type": "string",
+        "pattern": "^run-[0-9]{13}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        "description": "Unique identifier for this run, typically UUID or timestamp-based"
+      },
+      "started_at": {
+        "type": "string",
+        "format": "date-time",
+        "description": "ISO 8601 timestamp when scan execution began"
+      },
+      "finished_at": {
+        "type": ["string", "null"],
+        "format": "date-time",
+        "description": "ISO 8601 timestamp when scan completed, null if still running"
+      },
+      "findings": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Total number of vulnerabilities found in this run"
+      },
+      "worst": {
+        "type": "string",
+        "enum": ["critical", "high", "medium", "low", "info"],
+        "description": "Highest severity level found across all findings"
+      },
+      "templates": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_,-]+$",
+        "description": "Comma-separated list of Nuclei templates used (optional if templates_count present)"
+      },
+      "templates_count": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Number of templates executed in this run"
+      },
+      "artifact": {
+        "type": ["string", "null"],
+        "pattern": "^/[^\0]*\\.(ndjson|json)$",
+        "description": "File path to raw Nuclei output artifact, null if not available"
+      },
+      "project_id": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        "description": "Foreign key to the project this run belongs to"
+      },
+      "endpoints_scanned": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Number of unique endpoints tested in this run"
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,930 @@
+{% extends "_layout.html" %}
+{% set active_nav = 'patterns' %}
+
+{% block page_title %}Detection Rules{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <span class="sep">›</span>
+  <span>Detection Rules</span>
+{% endblock %}
+
+{% block content %}
+  <style>
+    .findings-count {
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+  </style>
+    
+
+<div class="container">
+  <div class="header">
+    <h1>Pattern Management</h1>
+    <div class="muted">Manage security detection patterns for {{ project_name }}</div>
+  </div>
+
+  <!-- Statistics Overview -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.total_rules }}</div>
+      <div class="stat-label">Total Patterns</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.enabled_rules }}</div>
+      <div class="stat-label">Enabled</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.disabled_rules }}</div>
+      <div class="stat-label">Disabled</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.packs_loaded }}</div>
+      <div class="stat-label">Pattern Packs</div>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <div class="action-group">
+      <button class="btn btn-primary" onclick="showImportModal()">
+        <span class="icon">📁</span> Import Patterns
+      </button>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="exportPatterns('json')">
+          <span class="icon">📄</span> Export JSON
+        </button>
+        <button class="btn btn-secondary" onclick="exportPatterns('csv')">
+          <span class="icon">📊</span> Export CSV
+        </button>
+        <button class="btn btn-secondary" onclick="exportPatterns('yaml')">
+          <span class="icon">⚙️</span> Export YAML
+        </button>
+      </div>
+    </div>
+    <div class="action-group">
+      <button class="btn btn-info" onclick="updateCommunityPacks()">
+        <span class="icon">🔄</span> Update Community Packs
+      </button>
+      <button class="btn btn-warning" onclick="showTestModal()">
+        <span class="icon">🧪</span> Test Pattern
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <form method="GET" class="filter-form">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="severity">Severity:</label>
+          <select name="severity" id="severity">
+            <option value="">All</option>
+            {% for severity in unique_severities %}
+            <option value="{{ severity }}" {{ 'selected' if current_filters.severity == severity else '' }}>
+              {{ severity.title() }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="cwe">CWE:</label>
+          <select name="cwe" id="cwe">
+            <option value="">All</option>
+            {% for cwe in unique_cwes %}
+            <option value="{{ cwe }}" {{ 'selected' if current_filters.cwe == cwe else '' }}>
+              {{ cwe }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="pack_type">Pack Type:</label>
+          <select name="pack_type" id="pack_type">
+            <option value="">All</option>
+            {% for pack_type in unique_pack_types %}
+            <option value="{{ pack_type }}" {{ 'selected' if current_filters.pack_type == pack_type else '' }}>
+              {{ pack_type.title() }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="pack_name">Pack Name:</label>
+          <select name="pack_name" id="pack_name">
+            <option value="">All</option>
+            {% for pack_name in unique_pack_names %}
+            <option value="{{ pack_name }}" {{ 'selected' if current_filters.pack_name == pack_name else '' }}>
+              {{ pack_name }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="confidence_min">Min Confidence:</label>
+          <input type="number" name="confidence_min" id="confidence_min" 
+                 min="0" max="100" value="{{ current_filters.confidence_min or '' }}" 
+                 placeholder="0">
+        </div>
+        
+        <div class="filter-group">
+          <label for="confidence_max">Max Confidence:</label>
+          <input type="number" name="confidence_max" id="confidence_max" 
+                 min="0" max="100" value="{{ current_filters.confidence_max or '' }}" 
+                 placeholder="100">
+        </div>
+        
+        <div class="filter-group">
+          <label for="tags">Tags (comma-separated):</label>
+          <input type="text" name="tags" id="tags" 
+                 value="{{ current_filters.tags or '' }}" 
+                 placeholder="sql, xss, injection">
+        </div>
+        
+        <div class="filter-group">
+          <button type="submit" class="btn btn-primary">Apply Filters</button>
+          <a href="/p/{{ pid }}/patterns" class="btn btn-secondary">Clear</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Patterns Table -->
+  <div class="patterns-table-container">
+    <table class="patterns-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Severity</th>
+          <th>Confidence</th>
+          <th>CWE</th>
+          <th>Pack</th>
+          <th>Tags</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pattern in patterns %}
+        <tr class="pattern-row" data-pattern-id="{{ pattern.id }}">
+          <td class="pattern-id">{{ pattern.id }}</td>
+          <td class="pattern-title">{{ pattern.title }}</td>
+          <td class="pattern-severity">
+            <span class="severity-badge severity-{{ pattern.severity or 'info' }}">
+              {{ (pattern.severity or 'info').title() }}
+            </span>
+          </td>
+          <td class="pattern-confidence">
+            <div class="confidence-bar">
+              <div class="confidence-fill" style="width: {{ pattern.confidence }}%"></div>
+              <span class="confidence-text">{{ pattern.confidence }}%</span>
+            </div>
+          </td>
+          <td class="pattern-cwe">{{ pattern.cwe or '-' }}</td>
+          <td class="pattern-pack">
+            <span class="pack-badge pack-{{ pattern.pack_type or 'unknown' }}">
+              {{ pattern.pack_name or 'Unknown' }}
+            </span>
+          </td>
+          <td class="pattern-tags">
+            {% for tag in pattern.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </td>
+          <td class="pattern-status">
+            <label class="toggle-switch">
+              <input type="checkbox" 
+                     {{ 'checked' if pattern.enabled else '' }}
+                     onchange="togglePattern('{{ pattern.id }}', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </td>
+          <td class="pattern-actions">
+            <button class="btn btn-sm btn-info" onclick="testPattern('{{ pattern.id }}', '{{ pattern.title }}')">
+              Test
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="viewPattern('{{ pattern.id }}')">
+              View
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if not patterns %}
+  <div class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>No patterns found</h3>
+    <p>Try adjusting your filters or import some patterns to get started.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Import Modal -->
+<div id="importModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Import Patterns</h3>
+      <button class="modal-close" onclick="hideImportModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="importForm" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="importFile">Select file:</label>
+          <input type="file" id="importFile" name="file" accept=".json,.csv,.yaml,.yml" required>
+          <div class="form-help">Supported formats: JSON, CSV, YAML</div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="hideImportModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="importPatterns()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- Test Modal -->
+<div id="testModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Test Pattern</h3>
+      <button class="modal-close" onclick="hideTestModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="testForm">
+        <div class="form-group">
+          <label for="testPatternId">Pattern ID:</label>
+          <input type="text" id="testPatternId" name="pattern_id" required>
+        </div>
+        <div class="form-group">
+          <label for="testText">Test Text:</label>
+          <textarea id="testText" name="test_text" rows="5" 
+                    placeholder="Enter text to test against the pattern..." required></textarea>
+        </div>
+      </form>
+      <div id="testResults" class="test-results" style="display: none;">
+        <h4>Test Results:</h4>
+        <div id="testResultsContent"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="hideTestModal()">Close</button>
+      <button class="btn btn-primary" onclick="runPatternTest()">Test</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pattern Details Modal -->
+<div id="patternModal" class="modal">
+  <div class="modal-content large">
+    <div class="modal-header">
+      <h3>Pattern Details</h3>
+      <button class="modal-close" onclick="hidePatternModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="patternDetailsContent"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: var(--radius);
+}
+
+.action-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.filters-section {
+  background: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 0.5rem;
+  border: 1px solid var(--card-b);
+  border-radius: 4px;
+  background: var(--bg2);
+  color: var(--fg);
+}
+
+.patterns-table-container {
+  background: var(--card);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.patterns-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.patterns-table th {
+  background: var(--card);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--card-b);
+}
+
+.patterns-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--card-b);
+  vertical-align: middle;
+}
+
+.pattern-row:hover {
+  background: rgba(255,255,255,.14);
+}
+
+.severity-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.severity-critical { background: #dc3545; color: white; }
+.severity-high { background: #fd7e14; color: white; }
+.severity-medium { background: #ffc107; color: black; }
+.severity-low { background: #20c997; color: white; }
+.severity-info { background: #6c757d; color: white; }
+
+.confidence-bar {
+  position: relative;
+  width: 100px;
+  height: 20px;
+  background: var(--card-b);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #dc3545 0%, #ffc107 50%, #20c997 100%);
+  transition: width 0.3s ease;
+}
+
+.confidence-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.pack-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.pack-builtin { background: #e3f2fd; color: #1976d2; }
+.pack-community { background: #f3e5f5; color: #7b1fa2; }
+.pack-project { background: #e8f5e8; color: #388e3c; }
+.pack-nuclei { background: #fff3e0; color: #f57c00; }
+.pack-modsecurity { background: #fce4ec; color: #c2185b; }
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  margin: 0.1rem;
+  background: rgba(34,211,238,.20);
+  color: var(--accent);
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--accent);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--muted);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: var(--bg2);
+  margin: 5% auto;
+  padding: 0;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content.large {
+  max-width: 900px;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--card-b);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--card-b);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--card-b);
+  border-radius: 4px;
+  background: var(--bg2);
+  color: var(--fg);
+}
+
+.form-help {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+.test-results {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--card);
+  border-radius: 4px;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+}
+
+.btn-secondary {
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--card-b);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,.14);
+}
+
+.btn-info {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: black;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.icon {
+  font-size: 1rem;
+}
+</style>
+
+<script>
+// Modal functions
+function showImportModal() {
+  document.getElementById('importModal').style.display = 'block';
+}
+
+function hideImportModal() {
+  document.getElementById('importModal').style.display = 'none';
+}
+
+function showTestModal() {
+  document.getElementById('testModal').style.display = 'block';
+}
+
+function hideTestModal() {
+  document.getElementById('testModal').style.display = 'none';
+  document.getElementById('testResults').style.display = 'none';
+}
+
+function showPatternModal() {
+  document.getElementById('patternModal').style.display = 'block';
+}
+
+function hidePatternModal() {
+  document.getElementById('patternModal').style.display = 'none';
+}
+
+// Pattern management functions
+function togglePattern(patternId, enabled) {
+  fetch(`/p/{{ pid }}/patterns/toggle`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `pattern_id=${patternId}&enabled=${enabled}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Update UI to reflect the change
+      const row = document.querySelector(`[data-pattern-id="${patternId}"]`);
+      if (row) {
+        const statusCell = row.querySelector('.pattern-status');
+        if (enabled) {
+          statusCell.innerHTML = `
+            <label class="toggle-switch">
+              <input type="checkbox" checked onchange="togglePattern('${patternId}', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          `;
+        } else {
+          statusCell.innerHTML = `
+            <label class="toggle-switch">
+              <input type="checkbox" onchange="togglePattern('${patternId}', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          `;
+        }
+      }
+    } else {
+      showNotification('Error toggling pattern: ' + data.error, 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showNotification('Error toggling pattern', 'error');
+  });
+}
+
+function testPattern(patternId, patternTitle) {
+  document.getElementById('testPatternId').value = patternId;
+  document.getElementById('testText').value = '';
+  document.getElementById('testResults').style.display = 'none';
+  showTestModal();
+}
+
+function runPatternTest() {
+  const patternId = document.getElementById('testPatternId').value;
+  const testText = document.getElementById('testText').value;
+  
+  if (!patternId || !testText) {
+    showNotification('Please fill in both fields', 'error');
+    return;
+  }
+  
+  fetch(`/p/{{ pid }}/patterns/test`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `pattern_id=${patternId}&test_text=${encodeURIComponent(testText)}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    const resultsDiv = document.getElementById('testResultsContent');
+    if (data.error) {
+      resultsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+    } else {
+      let html = `<h5>Pattern: ${data.pattern_title}</h5>`;
+      html += `<p><strong>Total Matches:</strong> ${data.total_matches}</p>`;
+      
+      if (data.matches && data.matches.length > 0) {
+        html += '<h6>Matches:</h6><ul>';
+        data.matches.forEach(match => {
+          html += `<li><strong>${match.where}:</strong> "${match.match}" (position ${match.start}-${match.end})</li>`;
+        });
+        html += '</ul>';
+      } else {
+        html += '<p>No matches found.</p>';
+      }
+      
+      resultsDiv.innerHTML = html;
+    }
+    document.getElementById('testResults').style.display = 'block';
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById('testResultsContent').innerHTML = '<div class="error">Error running test</div>';
+    document.getElementById('testResults').style.display = 'block';
+  });
+}
+
+function viewPattern(patternId) {
+  // This would show detailed pattern information
+  // For now, just show a placeholder
+  const content = `
+    <h4>Pattern Details</h4>
+    <p>Pattern ID: ${patternId}</p>
+    <p>Detailed pattern information would be displayed here.</p>
+  `;
+  document.getElementById('patternDetailsContent').innerHTML = content;
+  showPatternModal();
+}
+
+function exportPatterns(format) {
+  window.open(`/p/{{ pid }}/patterns/export?format=${format}`, '_blank');
+}
+
+function importPatterns() {
+  const form = document.getElementById('importForm');
+  const formData = new FormData(form);
+  
+  fetch(`/p/{{ pid }}/patterns/import`, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showNotification('Patterns imported successfully!', 'success');
+      hideImportModal();
+      location.reload();
+    } else {
+      showNotification('Import failed: ' + (data.error || 'Unknown error'), 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showNotification('Error importing patterns', 'error');
+  });
+}
+
+function openUpdateCommunityPacksConfirmation() {
+  const modal = document.getElementById('update-community-packs-modal');
+  if (!modal) {
+    createUpdateCommunityPacksModal();
+    return;
+  }
+  modal.classList.add('open');
+}
+
+function createUpdateCommunityPacksModal() {
+  const modal = document.createElement('div');
+  modal.id = 'update-community-packs-modal';
+  modal.className = 'modal';
+  modal.setAttribute('aria-hidden', 'true');
+  modal.innerHTML = `
+    <div class="modal-content" style="width: min(400px, 90vw)">
+      <div class="modal-head">
+        <h3 style="margin:0">Update Community Packs</h3>
+      </div>
+      <div class="update-community-packs-content">
+        <div class="card">
+          <p style="margin:0 0 16px;color:var(--fg)">
+            This will update community pattern packs. Continue?
+          </p>
+          <p class="muted" style="margin:0 0 16px;font-size:12px">
+            This may take a few moments to download and install updates.
+          </p>
+          <div class="row" style="gap:8px;justify-content:flex-end">
+            <button class="btn ghost" onclick="closeUpdateCommunityPacksConfirmation()">Cancel</button>
+            <button class="btn" onclick="confirmUpdateCommunityPacks()" style="background:var(--accent);color:var(--bg)">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.classList.add('open');
+}
+
+function closeUpdateCommunityPacksConfirmation() {
+  const modal = document.getElementById('update-community-packs-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+}
+
+function confirmUpdateCommunityPacks() {
+  closeUpdateCommunityPacksConfirmation();
+  updateCommunityPacksAction();
+}
+
+function updateCommunityPacksAction() {
+  fetch(`/p/{{ pid }}/patterns/community/update`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'force=false'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showNotification(data.message, 'success');
+        location.reload();
+      } else {
+        showNotification('Update failed: ' + data.error, 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Error updating community packs', 'error');
+    });
+  }
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach(modal => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+}
+</script>
+  </div>
+{% endblock %}

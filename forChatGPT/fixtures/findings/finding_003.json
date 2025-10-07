@@ -1,0 +1,30 @@
+{
+  "detector_id": "xss",
+  "severity": "medium",
+  "method": "GET",
+  "url": "https://api.petstore.com/v2/pets?search=<script>alert('xss')</script>",
+  "path": "/v2/pets",
+  "title": "Reflected XSS in Search Parameter",
+  "subcategory": "xss",
+  "cwe": "CWE-79",
+  "owasp": "A03:2021",
+  "confidence": 80,
+  "status": "open",
+  "req": {
+    "method": "GET",
+    "url": "https://api.petstore.com/v2/pets?search=<script>alert('xss')</script>",
+    "headers": {
+      "User-Agent": "Mozilla/5.0"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "text/html"
+    },
+    "body": "<html><body>Search results for: <script>alert('xss')</script></body></html>"
+  },
+  "match": "<script>alert('xss')</script>",
+  "run_id": "run-20240115-1045",
+  "created_at": "2024-01-15T10:42:00Z"
+}

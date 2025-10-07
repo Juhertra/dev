@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://security-toolkit.dev/schemas/vulns_summary",
+  "title": "Vulnerabilities Summary Cache",
+  "description": "Cached aggregation of vulnerabilities across runs",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "endpoint_key",
+      "detector_id",
+      "title",
+      "occurrences",
+      "worst_severity"
+    ],
+    "properties": {
+      "endpoint_key": {
+        "type": "string",
+        "description": "Canonical endpoint key (METHOD scheme://host/path)",
+        "pattern": "^[A-Z]+ https?://[^\\s]+$"
+      },
+      "detector_id": {
+        "type": "string",
+        "description": "Detector/template identifier",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+      },
+      "template_id": {
+        "type": "string",
+        "description": "Nuclei template ID (optional)"
+      },
+      "title": {
+        "type": "string",
+        "description": "Vulnerability title",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "occurrences": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Total number of occurrences across runs"
+      },
+      "latest_run_id": {
+        "type": "string",
+        "description": "Most recent run ID that found this vulnerability"
+      },
+      "latest_at": {
+        "type": "string",
+        "description": "Timestamp of most recent occurrence",
+        "format": "date-time"
+      },
+      "worst_severity": {
+        "type": "string",
+        "enum": ["critical", "high", "medium", "low", "info"],
+        "description": "Highest severity level found"
+      },
+      "severity_rank": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5,
+        "description": "Numeric severity rank for sorting"
+      }
+    },
+    "additionalProperties": false
+  }
+}

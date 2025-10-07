@@ -1,0 +1,65 @@
+{% from "_macros.html" import method_chip, op_row %}
+{% if not specs %}
+  <div class="card" style="text-align: center; padding: 48px 24px;">
+    <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;">🔍</div>
+    <h3 style="margin: 0 0 8px; color: var(--fg);">No API Specifications Loaded</h3>
+    <div class="muted" style="margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+      Load OpenAPI/Swagger specifications to explore endpoints, test APIs, and discover vulnerabilities.
+    </div>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+        <div style="font-weight: 600; margin-bottom: 4px;">📋 Paste URLs</div>
+        <div class="muted" style="font-size: 0.9rem;">Add OpenAPI spec URLs above</div>
+      </div>
+      <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+        <div style="font-weight: 600; margin-bottom: 4px;">⚡ Load & Explore</div>
+        <div class="muted" style="font-size: 0.9rem;">Click Load to fetch specs</div>
+      </div>
+      <div style="background: var(--card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--card-b);">
+        <div style="font-weight: 600; margin-bottom: 4px;">🚨 Test & Find</div>
+        <div class="muted" style="font-size: 0.9rem;">Discover vulnerabilities</div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  {% for spec_id, s in specs.items() %}
+  <details class="spec" id="section-{{ s.safe_id }}" open>
+    <summary>
+      <span class="chev">▶</span>
+      <div class="spec-head">
+        <div class="spec-title">{{ s.title }} {% if s.version %}<span class="badge">v{{ s.version }}</span>{% endif %}</div>
+        <div class="muted">{{ s.url }}{% if s.base_url %} • Base: {{ s.base_url }}{% endif %}</div>
+      </div>
+      <div class="spec-actions">
+        <form hx-post="{{ url_for('web.remove_spec', pid=pid) }}" hx-target="#specs" hx-swap="innerHTML" hx-indicator="#global-indicator">
+          <input type="hidden" name="spec_id" value="{{ spec_id }}">
+          <button class="btn ghost" type="submit">Remove</button>
+        </form>
+      </div>
+    </summary>
+    <div class="spec-body">
+      <form hx-post="{{ url_for('web.queue_add', pid=pid) }}" hx-target="#queue-toast-{{ s.safe_id }}" hx-swap="innerHTML" hx-indicator="#global-indicator">
+        <input type="hidden" name="spec_id" value="{{ spec_id }}">
+        <table id="tbl-{{ s.safe_id }}" style="margin-top:8px; width:100%;">
+          <thead><tr><th></th><th>Method</th><th>Path</th><th>operationId</th><th>Body?</th><th></th></tr></thead>
+          <tbody>
+            {% for op in s.ops %}
+              {% set _ = op.__setitem__('base', s.base_url) %}
+              {{ op_row(op, spec_id, s.safe_id, loop.index0, pid) }}
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="row toolbar" style="margin-top:8px;">
+          <button class="btn ghost" type="button" onclick="checkAllInTable('{{ s.safe_id }}', true)">Select All</button>
+          <button class="btn ghost" type="button" onclick="checkAllInTable('{{ s.safe_id }}', false)">Deselect</button>
+          <button class="btn primary" type="submit" hx-indicator="#global-indicator" hx-on::after-request="if(typeof showNotification === 'function') showNotification('Added to Test Queue', 'success'); else alert('Added to Test Queue');" hx-on::response-error="if(typeof showNotification === 'function') showNotification('Error adding to Test Queue', 'error'); else alert('Error adding to Test Queue');">Add to Test Queue</button>
+          <a class="link" href="{{ url_for('web.queue_page', pid=pid) }}">Open Queue</a>
+        </div>
+        <div id="queue-toast-{{ s.safe_id }}"></div>
+      </form>
+    </div>
+  </details>
+  {% endfor %}
+{% endif %}
+
+

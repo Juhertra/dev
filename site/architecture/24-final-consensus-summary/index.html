@@ -1,0 +1,1853 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
+      
+      
+        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
+      
+      
+      
+        <link rel="prev" href="../23-future-roadmap/">
+      
+      
+        <link rel="next" href="../../review/REVIEW_GUIDELINES/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>SecFlow — Final Consensus Summary - SecFlow Architecture & Validation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#24-final-consensus-summary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SecFlow Architecture & Validation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SecFlow — Final Consensus Summary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SecFlow Architecture & Validation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-title-and-executive-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Executive Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-architecture-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Philosophy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-repository-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repository Layout
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-core-packages-and-responsibilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Packages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Orchestration Engine
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-plugin-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plugin System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-tools-integration-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Integration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Manager & UX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-resource-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resource Registry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wordlists & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-project-isolation-and-data-sharing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Isolation & Sharing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-findings-model-and-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Findings Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Enrichment Layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PoC Sources & Legal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-garbage-collection-and-retention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Garbage Collection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-security-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-risk-assessment-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Risk Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Migration Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD & Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dev Experience & Docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-future-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Final Consensus
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧭 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-consensus-highlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Core Consensus Highlights
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundational-architecture-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Foundational Architecture Principles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧱 Foundational Architecture Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hexagonal-architecture-ports-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Hexagonal Architecture (Ports &amp; Adapters)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-event-driven-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Event-Driven Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-immutable-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Immutable Data Flow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-technical-agreements" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Key Technical Agreements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧱 Key Technical Agreements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-core-packages-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Core Packages Structure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-path-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Migration Path Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Validation Metrics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strategic-extensions-agreed" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Strategic Extensions Agreed
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧱 Strategic Extensions Agreed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ai-integration-phase-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. AI Integration (Phase 2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multi-tenant-architecture-phase-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Multi-Tenant Architecture (Phase 3)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-autonomous-orchestration-phase-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Autonomous Orchestration (Phase 4)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Documentation Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consensus-from-cursor-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Consensus from Cursor Review
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧱 Consensus from Cursor Review">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strengths-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strengths Identified
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#areas-for-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Areas for Improvement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-path-forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Execution Path Forward
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧱 Execution Path Forward">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Immediate Next Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-architectural-mantra" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Final Architectural Mantra
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-deliverables" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Next Deliverables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closure-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧱 Closure Statement
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Review & Validation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Review & Validation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/review_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Checklist
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/validation_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Summary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../review/glossary.yml" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="24-final-consensus-summary">24 — Final Consensus Summary<a class="headerlink" href="#24-final-consensus-summary" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document consolidates the <strong>final architectural consensus</strong> between ChatGPT and Cursor regarding the design, structure, and roadmap of the SecFlow platform.</p>
+<p>It serves as the <strong>canonical closure</strong> of the initial R&amp;D phase and provides a clear blueprint for implementation.</p>
+<hr />
+<h2 id="core-consensus-highlights">🧱 Core Consensus Highlights<a class="headerlink" href="#core-consensus-highlights" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Consensus Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Architecture Pattern</strong></td>
+<td>Hexagonal (Ports &amp; Adapters)</td>
+<td>Enforces separation of concerns, testability, and modularity</td>
+</tr>
+<tr>
+<td><strong>Repository Structure</strong></td>
+<td>Mono-repo with Poetry</td>
+<td>Simplifies dependency management and cross-package development</td>
+</tr>
+<tr>
+<td><strong>Workflow Engine</strong></td>
+<td>DAG-based orchestration</td>
+<td>Enables complex tool chaining and parallel execution</td>
+</tr>
+<tr>
+<td><strong>Plugin System</strong></td>
+<td>Decorator-based registration</td>
+<td>Provides clean extensibility without complex frameworks</td>
+</tr>
+<tr>
+<td><strong>Security Model</strong></td>
+<td>RBAC + Sandboxing</td>
+<td>Balances usability with security requirements</td>
+</tr>
+<tr>
+<td><strong>Data Model</strong></td>
+<td>Pydantic + SQLModel</td>
+<td>Ensures type safety and database integration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="foundational-architecture-principles">🧱 Foundational Architecture Principles<a class="headerlink" href="#foundational-architecture-principles" title="Permanent link">&para;</a></h2>
+<h3 id="1-hexagonal-architecture-ports-adapters">1. <strong>Hexagonal Architecture (Ports &amp; Adapters)</strong><a class="headerlink" href="#1-hexagonal-architecture-ports-adapters" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Core business logic</strong> isolated from I/O concerns</li>
+<li><strong>Ports</strong> define interfaces, <strong>Adapters</strong> implement them</li>
+<li><strong>Dependency inversion</strong> ensures testability and modularity</li>
+</ul>
+<h3 id="2-event-driven-design">2. <strong>Event-Driven Design</strong><a class="headerlink" href="#2-event-driven-design" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Asynchronous workflows</strong> using Celery/RQ</li>
+<li><strong>Event sourcing</strong> for audit trails and replay capabilities</li>
+<li><strong>Pub/Sub patterns</strong> for loose coupling</li>
+</ul>
+<h3 id="3-immutable-data-flow">3. <strong>Immutable Data Flow</strong><a class="headerlink" href="#3-immutable-data-flow" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Findings</strong> are immutable once created</li>
+<li><strong>Versioned resources</strong> for reproducibility</li>
+<li><strong>Audit trails</strong> for all data modifications</li>
+</ul>
+<hr />
+<h2 id="key-technical-agreements">🧱 Key Technical Agreements<a class="headerlink" href="#key-technical-agreements" title="Permanent link">&para;</a></h2>
+<h3 id="1-core-packages-structure">1. <strong>Core Packages Structure</strong><a class="headerlink" href="#1-core-packages-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>packages/
+├── core-lib/          # Business logic, ports, DTOs
+├── findings-engine/   # Normalization, enrichment, deduplication
+├── wrappers/          # Tool integration adapters
+├── resources/         # Resource registry and management
+├── storage/           # Database and file system adapters
+├── plugins/           # Plugin system and registry
+└── utils/             # Shared utilities and helpers
+```text
+
+### 2. **Applications Structure**
+```text
+apps/
+├── cli/               # Command-line interface
+├── web/               # Web dashboard and API
+├── worker/            # Background task processor
+└── admin/             # Administrative tools
+```yaml
+
+### 3. **Workflow Orchestration**
+- **YAML-based DAG definitions** for tool chaining
+- **Node-based execution** with parallel processing
+- **Error handling** with retry logic and circuit breakers
+- **Caching** for intermediate results and resource reuse
+
+### 4. **Security Model**
+- **JWT-based authentication** with role-based access control
+- **Sandboxed execution** for external tools and PoCs
+- **Fernet encryption** for sensitive data storage
+- **Audit logging** for all security-relevant operations
+
+---
+
+## 🧱 Risk &amp; Compliance Integration
+
+### Frameworks Adopted
+- **NIST 5x5 Risk Matrix** for business risk assessment
+- **CVSS v3.1** for technical severity scoring
+- **CWE/OWASP** for vulnerability classification
+- **MITRE ATT&amp;CK** for attack pattern mapping
+
+### Risk Formula
+```text
+Risk Score = (Likelihood × Impact) × Contextual_Factor
+Where:
+- Likelihood = CVSS_Exploitability + EPSS_Score
+- Impact = CVSS_Impact + Business_Criticality
+- Contextual_Factor = Asset_Value + Exposure_Level
+</code></pre></div>
+<hr />
+<h2 id="migration-path-summary">🧱 Migration Path Summary<a class="headerlink" href="#migration-path-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Duration</th>
+<th>Focus</th>
+<th>Deliverables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Phase 0</strong></td>
+<td>2 weeks</td>
+<td>Foundation &amp; Guardrails</td>
+<td>Poetry setup, import boundaries, CI/CD</td>
+</tr>
+<tr>
+<td><strong>Phase 1</strong></td>
+<td>4 weeks</td>
+<td>Core Models &amp; Data Persistence</td>
+<td>Pydantic models, SQLModel, basic CRUD</td>
+</tr>
+<tr>
+<td><strong>Phase 2</strong></td>
+<td>6 weeks</td>
+<td>Findings Engine &amp; Workflow</td>
+<td>Normalization, DAG execution, tool wrappers</td>
+</tr>
+<tr>
+<td><strong>Phase 3</strong></td>
+<td>8 weeks</td>
+<td>API, Worker &amp; Triage UI</td>
+<td>REST API, background tasks, web dashboard</td>
+</tr>
+<tr>
+<td><strong>Phase 4</strong></td>
+<td>4 weeks</td>
+<td>GC, AI &amp; Advanced Analytics</td>
+<td>Cleanup, enrichment, risk scoring</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="validation-metrics">🧱 Validation Metrics<a class="headerlink" href="#validation-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Measurement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Test Coverage</strong></td>
+<td>≥ 90%</td>
+<td>pytest + coverage.py</td>
+</tr>
+<tr>
+<td><strong>Type Safety</strong></td>
+<td>100%</td>
+<td>pyright + mypy</td>
+</tr>
+<tr>
+<td><strong>Import Boundaries</strong></td>
+<td>0 violations</td>
+<td>import-linter</td>
+</tr>
+<tr>
+<td><strong>Security Scan</strong></td>
+<td>0 high/critical</td>
+<td>bandit + safety</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>&lt; 2s API response</td>
+<td>locust load testing</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="strategic-extensions-agreed">🧱 Strategic Extensions Agreed<a class="headerlink" href="#strategic-extensions-agreed" title="Permanent link">&para;</a></h2>
+<h3 id="1-ai-integration-phase-2">1. <strong>AI Integration (Phase 2)</strong><a class="headerlink" href="#1-ai-integration-phase-2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>LLM-based triage</strong> for finding summarization</li>
+<li><strong>ML risk prediction</strong> using EPSS and CVSS correlation</li>
+<li><strong>Anomaly detection</strong> for outlier findings</li>
+<li><strong>Natural language queries</strong> for analysis</li>
+</ul>
+<h3 id="2-multi-tenant-architecture-phase-3">2. <strong>Multi-Tenant Architecture (Phase 3)</strong><a class="headerlink" href="#2-multi-tenant-architecture-phase-3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tenant isolation</strong> with shared infrastructure</li>
+<li><strong>Role-based analytics</strong> and dashboards</li>
+<li><strong>Cross-project correlation</strong> and federated search</li>
+<li><strong>Collaboration tools</strong> for team workflows</li>
+</ul>
+<h3 id="3-autonomous-orchestration-phase-4">3. <strong>Autonomous Orchestration (Phase 4)</strong><a class="headerlink" href="#3-autonomous-orchestration-phase-4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Adaptive scanning</strong> with reinforcement learning</li>
+<li><strong>Self-healing workflows</strong> with automatic retry</li>
+<li><strong>Predictive risk forecasting</strong> using time-series models</li>
+<li><strong>Security knowledge graph</strong> for semantic reasoning</li>
+</ul>
+<hr />
+<h2 id="documentation-structure">🧱 Documentation Structure<a class="headerlink" href="#documentation-structure" title="Permanent link">&para;</a></h2>
+<p>The architecture documentation follows a <strong>MkDocs-based structure</strong> with:
+- <strong>Material theme</strong> for professional presentation
+- <strong>Internal linking</strong> between related concepts
+- <strong>Code examples</strong> in Python, YAML, and JSON
+- <strong>ASCII diagrams</strong> for visual understanding
+- <strong>Version control</strong> with semantic versioning</p>
+<hr />
+<h2 id="consensus-from-cursor-review">🧱 Consensus from Cursor Review<a class="headerlink" href="#consensus-from-cursor-review" title="Permanent link">&para;</a></h2>
+<h3 id="strengths-identified">Strengths Identified<a class="headerlink" href="#strengths-identified" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Clear separation of concerns</strong> through hexagonal architecture</li>
+<li><strong>Comprehensive security model</strong> with multiple layers</li>
+<li><strong>Scalable plugin system</strong> for extensibility</li>
+<li><strong>Robust error handling</strong> and recovery mechanisms</li>
+</ul>
+<h3 id="areas-for-improvement">Areas for Improvement<a class="headerlink" href="#areas-for-improvement" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Performance optimization</strong> for large-scale deployments</li>
+<li><strong>Monitoring and observability</strong> enhancements</li>
+<li><strong>Developer experience</strong> improvements</li>
+<li><strong>Community contribution</strong> guidelines</li>
+</ul>
+<hr />
+<h2 id="execution-path-forward">🧱 Execution Path Forward<a class="headerlink" href="#execution-path-forward" title="Permanent link">&para;</a></h2>
+<h3 id="immediate-next-steps">Immediate Next Steps<a class="headerlink" href="#immediate-next-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Set up Poetry workspace</strong> with proper dependency management</li>
+<li><strong>Implement import boundaries</strong> using import-linter</li>
+<li><strong>Create core Pydantic models</strong> for findings and projects</li>
+<li><strong>Establish CI/CD pipeline</strong> with quality gates</li>
+</ol>
+<h3 id="success-criteria">Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>All 24 architecture documents</strong> reviewed and approved</li>
+<li><strong>Core packages</strong> implemented with 90%+ test coverage</li>
+<li><strong>Basic workflow orchestration</strong> functional</li>
+<li><strong>Security model</strong> validated through penetration testing</li>
+</ul>
+<hr />
+<h2 id="final-architectural-mantra">🧱 Final Architectural Mantra<a class="headerlink" href="#final-architectural-mantra" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>"Hexagonal by design, event-driven by nature, secure by default, extensible by plugin."</strong></p>
+</blockquote>
+<p>This mantra encapsulates the core principles that will guide all future development of SecFlow.</p>
+<hr />
+<h2 id="next-deliverables">🧱 Next Deliverables<a class="headerlink" href="#next-deliverables" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Timeline</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Poetry Workspace Setup</strong></td>
+<td>Week 1</td>
+<td>Lead Engineer</td>
+</tr>
+<tr>
+<td><strong>Core Models Implementation</strong></td>
+<td>Week 2-3</td>
+<td>Backend Team</td>
+</tr>
+<tr>
+<td><strong>Import Boundaries Enforcement</strong></td>
+<td>Week 1</td>
+<td>DevOps Team</td>
+</tr>
+<tr>
+<td><strong>CI/CD Pipeline</strong></td>
+<td>Week 2</td>
+<td>DevOps Team</td>
+</tr>
+<tr>
+<td><strong>Basic Workflow Engine</strong></td>
+<td>Week 4-6</td>
+<td>Backend Team</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="closure-statement">🧱 Closure Statement<a class="headerlink" href="#closure-statement" title="Permanent link">&para;</a></h2>
+<p>This document represents the <strong>official closure</strong> of the SecFlow architecture design phase. All stakeholders have reached consensus on:</p>
+<ul>
+<li><strong>Technical architecture</strong> and implementation approach</li>
+<li><strong>Security model</strong> and compliance requirements</li>
+<li><strong>Migration strategy</strong> and timeline</li>
+<li><strong>Future roadmap</strong> and evolution path</li>
+</ul>
+<p>The project is now ready to proceed to <strong>Phase 0: Foundation &amp; Guardrails</strong> implementation.</p>
+<hr />
+<p><strong>Previous:</strong> <a href="../23-future-roadmap/">Future Roadmap</a><br />
+<strong>Back to:</strong> <a href="../00-index/">Architecture Index</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
