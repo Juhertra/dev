@@ -227,6 +227,54 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#findings-core-model" class="nav-link">⚙️ Findings Core Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#normalization-process" class="nav-link">🧩 Normalization Process</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#normalization-rules-by-source" class="nav-link">🧩 Normalization Rules by Source</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#severity-mapping" class="nav-link">🧠 Severity Mapping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#deduplication-strategy" class="nav-link">🧠 Deduplication Strategy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#enrichment-metadata-structure" class="nav-link">🧩 Enrichment Metadata Structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cve-cwe-owasp-mapping" class="nav-link">🧩 CVE / CWE / OWASP Mapping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#confidence-risk-scoring" class="nav-link">🧩 Confidence &amp; Risk Scoring</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#evidence-normalization" class="nav-link">🧠 Evidence Normalization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#finding-status-lifecycle" class="nav-link">🧩 Finding Status Lifecycle</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#storage-layer-integration" class="nav-link">🧱 Storage Layer Integration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#findings-export-schema" class="nav-link">🧩 Findings Export Schema</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#indexing-analytics" class="nav-link">🧠 Indexing &amp; Analytics</a>
               <ul class="nav flex-column">
               </ul>
@@ -263,14 +311,10 @@ it defines how vulnerabilities, anomalies, and tool outputs are normalized, enri
 [ Enrichment Layer (CVE/CWE/OWASP) ]
         ↓
 [ Persistent Store + Cache + Analytics ]
-```text
-
----
-
-## ⚙️ Findings Core Model
-
-```python
-from pydantic import BaseModel, Field
+</code></pre></div>
+<hr />
+<h2 id="findings-core-model">⚙️ Findings Core Model<a class="headerlink" href="#findings-core-model" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 from uuid import UUID
 from datetime import datetime
@@ -292,22 +336,18 @@ class Finding(BaseModel):
     poc_links: List[str] = []
     created_at: datetime
     provenance: Dict[str, object] = {}
-```python
-
-## 🧩 Normalization Process
-
-Each wrapper or plugin output goes through the Findings Normalizer, which performs:
-
-1. Schema validation
-2. Severity normalization
-3. Field mapping
-4. Evidence compression
-5. Deduplication
-
-### Example Normalized Finding
-
-```json
-{
+</code></pre></div>
+<h2 id="normalization-process">🧩 Normalization Process<a class="headerlink" href="#normalization-process" title="Permanent link">&para;</a></h2>
+<p>Each wrapper or plugin output goes through the Findings Normalizer, which performs:</p>
+<ol>
+<li>Schema validation</li>
+<li>Severity normalization</li>
+<li>Field mapping</li>
+<li>Evidence compression</li>
+<li>Deduplication</li>
+</ol>
+<h3 id="example-normalized-finding">Example Normalized Finding<a class="headerlink" href="#example-normalized-finding" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
   &quot;id&quot;: &quot;7a3d9f8e-1f83-4a55-9a6c-5ea9e1a3b8d2&quot;,
   &quot;project_id&quot;: &quot;b0b8b6e0-7c6a-43e8-8b2f-8a0d0e8b0f3c&quot;,
   &quot;run_id&quot;: &quot;2a2b3c4d-5e6f-7081-92a3-b4c5d6e7f809&quot;,
@@ -325,10 +365,8 @@ Each wrapper or plugin output goes through the Findings Normalizer, which perfor
   &quot;created_at&quot;: &quot;2025-10-07T08:22:31Z&quot;,
   &quot;provenance&quot;: { &quot;tool_version&quot;: &quot;nuclei 3.1.0&quot;, &quot;host&quot;: &quot;runner-12&quot; }
 }
-```json
-
-```python
-def normalize(raw: dict, source: str) -&gt; Finding:
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>def normalize(raw: dict, source: str) -&gt; Finding:
     severity_map = {&quot;info&quot;: &quot;info&quot;, &quot;low&quot;: &quot;low&quot;, &quot;medium&quot;: &quot;medium&quot;, &quot;high&quot;: &quot;high&quot;, &quot;critical&quot;: &quot;critical&quot;}
     return Finding(
         id=str(uuid4()),
@@ -341,98 +379,148 @@ def normalize(raw: dict, source: str) -&gt; Finding:
         created_at=datetime.utcnow(),
         provenance={&quot;tool&quot;: source, &quot;version&quot;: raw.get(&quot;version&quot;, &quot;unknown&quot;)}
     )
-```python
-
-## 🧩 Normalization Rules by Source
-
-| Tool | Input Format | Mapping |
-|------|--------------|---------|
-| **Nuclei** | JSON lines | `info.name` → `title`, `info.severity` → `severity`, `matched-at` → `path` |
-| **Feroxbuster** | Text | `URL` → `path`, `status` → `evidence.status` |
-| **ZAP/Burp** | XML/JSON | `PluginId` → `cwe`, `RiskDesc` → `severity` |
-| **Caido** | SQLite | `Vulnerability.name` → `title`, `score` → `cvss_score` |
-| **Custom Detectors** | Python dict | Arbitrary fields normalized via schema mapping |
-
-Normalization is performed by `findings-engine` using source-specific adapters.
-
-## 🧠 Severity Mapping
-
-| Raw Severity | Normalized | CVSS Equivalent |
-|--------------|------------|-----------------|
-| informational | info | 0.0–3.9 |
-| low | low | 4.0–6.9 |
-| medium | medium | 6.0–7.4 |
-| high | high | 7.5–8.9 |
-| critical | critical | 9.0–10.0 |
-
-## 🧠 Deduplication Strategy
-
-Findings are hashed on a deterministic fingerprint:
-
-```python
-hash_input = f&quot;{finding.path}:{finding.title}:{finding.detector_id}&quot;
+</code></pre></div>
+<h2 id="normalization-rules-by-source">🧩 Normalization Rules by Source<a class="headerlink" href="#normalization-rules-by-source" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Input Format</th>
+<th>Mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nuclei</strong></td>
+<td>JSON lines</td>
+<td><code>info.name</code> → <code>title</code>, <code>info.severity</code> → <code>severity</code>, <code>matched-at</code> → <code>path</code></td>
+</tr>
+<tr>
+<td><strong>Feroxbuster</strong></td>
+<td>Text</td>
+<td><code>URL</code> → <code>path</code>, <code>status</code> → <code>evidence.status</code></td>
+</tr>
+<tr>
+<td><strong>ZAP/Burp</strong></td>
+<td>XML/JSON</td>
+<td><code>PluginId</code> → <code>cwe</code>, <code>RiskDesc</code> → <code>severity</code></td>
+</tr>
+<tr>
+<td><strong>Caido</strong></td>
+<td>SQLite</td>
+<td><code>Vulnerability.name</code> → <code>title</code>, <code>score</code> → <code>cvss_score</code></td>
+</tr>
+<tr>
+<td><strong>Custom Detectors</strong></td>
+<td>Python dict</td>
+<td>Arbitrary fields normalized via schema mapping</td>
+</tr>
+</tbody>
+</table>
+<p>Normalization is performed by <code>findings-engine</code> using source-specific adapters.</p>
+<h2 id="severity-mapping">🧠 Severity Mapping<a class="headerlink" href="#severity-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Raw Severity</th>
+<th>Normalized</th>
+<th>CVSS Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>informational</td>
+<td>info</td>
+<td>0.0–3.9</td>
+</tr>
+<tr>
+<td>low</td>
+<td>low</td>
+<td>4.0–6.9</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>medium</td>
+<td>6.0–7.4</td>
+</tr>
+<tr>
+<td>high</td>
+<td>high</td>
+<td>7.5–8.9</td>
+</tr>
+<tr>
+<td>critical</td>
+<td>critical</td>
+<td>9.0–10.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deduplication-strategy">🧠 Deduplication Strategy<a class="headerlink" href="#deduplication-strategy" title="Permanent link">&para;</a></h2>
+<p>Findings are hashed on a deterministic fingerprint:</p>
+<div class="highlight"><pre><span></span><code>hash_input = f&quot;{finding.path}:{finding.title}:{finding.detector_id}&quot;
 finding_hash = hashlib.sha256(hash_input.encode()).hexdigest()
-```python
-
-If the hash already exists in the same project and run scope, the finding is merged rather than duplicated.
-
-## 🧩 Enrichment Metadata Structure
-
-```python
-finding.enrichment = {
+</code></pre></div>
+<p>If the hash already exists in the same project and run scope, the finding is merged rather than duplicated.</p>
+<h2 id="enrichment-metadata-structure">🧩 Enrichment Metadata Structure<a class="headerlink" href="#enrichment-metadata-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>finding.enrichment = {
     &quot;cwe&quot;: {&quot;id&quot;: 89, &quot;name&quot;: &quot;SQL Injection&quot;},
     &quot;owasp&quot;: {&quot;category&quot;: &quot;A03&quot;, &quot;name&quot;: &quot;Injection&quot;},
     &quot;CVSS&quot;: {&quot;score&quot;: 9.1, &quot;vector&quot;: &quot;CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H&quot;},
     &quot;mitre&quot;: {&quot;technique&quot;: &quot;T1505&quot;, &quot;tactic&quot;: &quot;Persistence&quot;},
     &quot;poc&quot;: {&quot;source&quot;: &quot;exploitdb&quot;, &quot;link&quot;: &quot;https://www.exploit-db.com/exploits/52341&quot;}
 }
-```python
-
-This metadata is populated during the Enrichment Phase (CVE/CWE/CVSS sync).
-
-## 🧩 CVE / CWE / OWASP Mapping
-
-### CVE → CWE
-- NVD API provides `cve.affects.vendor.vendor_data` → `cwe.id`
-- Mapping stored in local SQLite cache.
-
-### CWE → OWASP
-| CWE | OWASP Category |
-|-----|----------------|
-| CWE-79 | A03: Injection |
-| CWE-89 | A03: Injection |
-| CWE-287 | A07: Identification and Authentication Failures |
-| CWE-601 | A10: Server-Side Request Forgery (SSRF) |
-
-### Example Mapping Resolver
-```python
-def resolve_owasp(cwe_id):
+</code></pre></div>
+<p>This metadata is populated during the Enrichment Phase (CVE/CWE/CVSS sync).</p>
+<h2 id="cve-cwe-owasp-mapping">🧩 CVE / CWE / OWASP Mapping<a class="headerlink" href="#cve-cwe-owasp-mapping" title="Permanent link">&para;</a></h2>
+<h3 id="cve-cwe">CVE → CWE<a class="headerlink" href="#cve-cwe" title="Permanent link">&para;</a></h3>
+<ul>
+<li>NVD API provides <code>cve.affects.vendor.vendor_data</code> → <code>cwe.id</code></li>
+<li>Mapping stored in local SQLite cache.</li>
+</ul>
+<h3 id="cwe-owasp">CWE → OWASP<a class="headerlink" href="#cwe-owasp" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>CWE</th>
+<th>OWASP Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CWE-79</td>
+<td>A03: Injection</td>
+</tr>
+<tr>
+<td>CWE-89</td>
+<td>A03: Injection</td>
+</tr>
+<tr>
+<td>CWE-287</td>
+<td>A07: Identification and Authentication Failures</td>
+</tr>
+<tr>
+<td>CWE-601</td>
+<td>A10: Server-Side Request Forgery (SSRF)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-mapping-resolver">Example Mapping Resolver<a class="headerlink" href="#example-mapping-resolver" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>def resolve_owasp(cwe_id):
     mapping = {&quot;79&quot;: &quot;A03&quot;, &quot;89&quot;: &quot;A03&quot;, &quot;287&quot;: &quot;A07&quot;, &quot;601&quot;: &quot;A10&quot;}
     return mapping.get(str(cwe_id))
-```python
-
-## 🧩 Confidence &amp; Risk Scoring
-
-Confidence combines tool reliability, correlation consistency, and enrichment coverage.
-
-### Formula
-```python
-confidence = (tool_weight * 0.5) + (enrichment_score * 0.3) + (cross_source_count * 0.2)
-```python
-
-### Risk Score Calculation
-```python
-risk_score = CVSS * confidence
-```python
-
-This allows probabilistic triage prioritization.
-
-## 🧠 Evidence Normalization
-
-Evidence is stored in compact, structured form for indexing:
-
-```json
-{
+</code></pre></div>
+<h2 id="confidence-risk-scoring">🧩 Confidence &amp; Risk Scoring<a class="headerlink" href="#confidence-risk-scoring" title="Permanent link">&para;</a></h2>
+<p>Confidence combines tool reliability, correlation consistency, and enrichment coverage.</p>
+<h3 id="formula">Formula<a class="headerlink" href="#formula" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>confidence = (tool_weight * 0.5) + (enrichment_score * 0.3) + (cross_source_count * 0.2)
+</code></pre></div>
+<h3 id="risk-score-calculation">Risk Score Calculation<a class="headerlink" href="#risk-score-calculation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>risk_score = CVSS * confidence
+</code></pre></div>
+<p>This allows probabilistic triage prioritization.</p>
+<h2 id="evidence-normalization">🧠 Evidence Normalization<a class="headerlink" href="#evidence-normalization" title="Permanent link">&para;</a></h2>
+<p>Evidence is stored in compact, structured form for indexing:</p>
+<div class="highlight"><pre><span></span><code>{
   &quot;request&quot;: {
     &quot;method&quot;: &quot;POST&quot;,
     &quot;url&quot;: &quot;https://target.com/login&quot;,
@@ -445,28 +533,49 @@ Evidence is stored in compact, structured form for indexing:
     &quot;body_snippet&quot;: &quot;SQL syntax error&quot;
   }
 }
-```json
-
-Large payloads are truncated or compressed to avoid storage overhead.
-
-## 🧩 Finding Status Lifecycle
-
-| Status | Meaning | Managed By |
-|--------|---------|------------|
-| open | Newly discovered issue | Scanner |
-| triaged | Analyst reviewed | Analyst |
-| resolved | Fixed or confirmed | Analyst |
-| false_positive | Invalid finding | Analyst |
-| archived | Expired or obsolete | System (GC) |
-
-Each status change triggers an audit log event and optional webhook notification.
-
-## 🧱 Storage Layer Integration
-
-Findings are persisted via the `StoragePort` interface:
-
-```python
-class FindingsRepository(Protocol):
+</code></pre></div>
+<p>Large payloads are truncated or compressed to avoid storage overhead.</p>
+<h2 id="finding-status-lifecycle">🧩 Finding Status Lifecycle<a class="headerlink" href="#finding-status-lifecycle" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+<th>Managed By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>open</td>
+<td>Newly discovered issue</td>
+<td>Scanner</td>
+</tr>
+<tr>
+<td>triaged</td>
+<td>Analyst reviewed</td>
+<td>Analyst</td>
+</tr>
+<tr>
+<td>resolved</td>
+<td>Fixed or confirmed</td>
+<td>Analyst</td>
+</tr>
+<tr>
+<td>false_positive</td>
+<td>Invalid finding</td>
+<td>Analyst</td>
+</tr>
+<tr>
+<td>archived</td>
+<td>Expired or obsolete</td>
+<td>System (GC)</td>
+</tr>
+</tbody>
+</table>
+<p>Each status change triggers an audit log event and optional webhook notification.</p>
+<h2 id="storage-layer-integration">🧱 Storage Layer Integration<a class="headerlink" href="#storage-layer-integration" title="Permanent link">&para;</a></h2>
+<p>Findings are persisted via the <code>StoragePort</code> interface:</p>
+<div class="highlight"><pre><span></span><code>class FindingsRepository(Protocol):
     def save(self, finding: Finding) -&gt; None:
         &quot;&quot;&quot;Save a finding to storage.&quot;&quot;&quot;
         pass
@@ -478,27 +587,43 @@ class FindingsRepository(Protocol):
     def get(self, id: str) -&gt; Finding:
         &quot;&quot;&quot;Get a finding by ID.&quot;&quot;&quot;
         pass
-```python
-
-### Supported backends:
-- SQLite (default local mode)
-- PostgreSQL (production multi-project)
-- JSON (testing or demo mode)
-
-## 🧩 Findings Export Schema
-
-SecFlow exports findings in structured formats for interoperability:
-
-| Format | Command |
-|--------|---------|
-| JSON | `SecFlow export findings --format json` |
-| CSV | `SecFlow export findings --format csv` |
-| HTML | `SecFlow report findings --template summary.html` |
-| SARIF | `SecFlow export findings --format sarif` |
-
-### Example JSON export:
-```json
-{
+</code></pre></div>
+<h3 id="supported-backends">Supported backends:<a class="headerlink" href="#supported-backends" title="Permanent link">&para;</a></h3>
+<ul>
+<li>SQLite (default local mode)</li>
+<li>PostgreSQL (production multi-project)</li>
+<li>JSON (testing or demo mode)</li>
+</ul>
+<h2 id="findings-export-schema">🧩 Findings Export Schema<a class="headerlink" href="#findings-export-schema" title="Permanent link">&para;</a></h2>
+<p>SecFlow exports findings in structured formats for interoperability:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON</td>
+<td><code>SecFlow export findings --format json</code></td>
+</tr>
+<tr>
+<td>CSV</td>
+<td><code>SecFlow export findings --format csv</code></td>
+</tr>
+<tr>
+<td>HTML</td>
+<td><code>SecFlow report findings --template summary.html</code></td>
+</tr>
+<tr>
+<td>SARIF</td>
+<td><code>SecFlow export findings --format sarif</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-json-export">Example JSON export:<a class="headerlink" href="#example-json-export" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
   &quot;project&quot;: &quot;acme-api&quot;,
   &quot;findings&quot;: [
     {

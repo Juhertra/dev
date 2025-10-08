@@ -235,6 +235,26 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sandbox-execution-architecture" class="nav-link">🔒 Sandbox Execution Architecture</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#poc-execution-policy" class="nav-link">⚙️ PoC Execution Policy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#policy-configuration-example" class="nav-link">🧠 Policy Configuration Example</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#governance-logging" class="nav-link">🧩 Governance Logging</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#legal-notice-enforcement" class="nav-link">🧠 Legal Notice Enforcement</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#cross-project-poc-access" class="nav-link">🧩 Cross-Project PoC Access</a>
               <ul class="nav flex-column">
               </ul>
@@ -248,6 +268,10 @@
               </ul>
             </li>
             <li class="nav-item" data-bs-level="2"><a href="#example-execution-trace" class="nav-link">🧠 Example Execution Trace</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -339,135 +363,169 @@ flowchart TD
     B --&gt; D
     B --&gt; E</div>
 <h3 id="example-metadatajson">Example <code>metadata.json</code><a class="headerlink" href="#example-metadatajson" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;cve&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CVE-2024-12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exploit-db&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://www.exploit-db.com/exploits/52341&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rce&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;sandbox_only&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GPLv2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;date_fetched&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-06T10:20:00Z&quot;</span>
-<span class="p">}</span>
-<span class="err">```jso</span><span class="kc">n</span>
-
-<span class="err">##</span><span class="w"> </span><span class="err">🔒</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Archi</span><span class="kc">te</span><span class="err">c</span><span class="kc">ture</span>
-
-<span class="err">###</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="err">Isola</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Model</span>
-
-<span class="err">All</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="w"> </span><span class="err">occur</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">hi</span><span class="kc">n</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="p">,</span><span class="w"> </span><span class="err">impleme</span><span class="kc">nte</span><span class="err">d</span><span class="w"> </span><span class="err">as</span><span class="p">:</span>
-
-<span class="mi">-</span><span class="w"> </span><span class="err">Docker</span><span class="w"> </span><span class="err">co</span><span class="kc">nta</span><span class="err">i</span><span class="kc">ner</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">res</span><span class="kc">tr</span><span class="err">ic</span><span class="kc">te</span><span class="err">d</span><span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">ies</span><span class="w"> </span><span class="err">(`</span><span class="mi">--</span><span class="err">cap</span><span class="mi">-</span><span class="err">drop=ALL`).</span>
-<span class="mi">-</span><span class="w"> </span><span class="err">Read</span><span class="mi">-</span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">mou</span><span class="kc">nt</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="kc">f</span><span class="err">iles.</span>
-<span class="mi">-</span><span class="w"> </span><span class="err">No</span><span class="w"> </span><span class="kc">net</span><span class="err">work</span><span class="w"> </span><span class="err">egress</span><span class="w"> </span><span class="err">u</span><span class="kc">nless</span><span class="w"> </span><span class="err">explici</span><span class="kc">tl</span><span class="err">y</span><span class="w"> </span><span class="err">allowed.</span>
-<span class="mi">-</span><span class="w"> </span><span class="err">Time</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="err">memory</span><span class="w"> </span><span class="err">quo</span><span class="kc">tas</span><span class="w"> </span><span class="err">e</span><span class="kc">nf</span><span class="err">orced</span><span class="w"> </span><span class="err">by</span><span class="w"> </span><span class="err">cgroups.</span>
-
-<span class="err">###</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="w"> </span><span class="err">Diagram</span>
-<span class="err">```yaml</span>
-<span class="err">+</span><span class="mf">-------------------------------------------------------+</span>
-<span class="err">|</span><span class="w">                </span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="w">                </span><span class="err">|</span>
-<span class="err">|</span><span class="mi">-------------------------------------------------------</span><span class="err">|</span>
-<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">Namespace</span><span class="w"> </span><span class="err">Isola</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">(PID</span><span class="p">,</span><span class="w"> </span><span class="err">NET</span><span class="p">,</span><span class="w"> </span><span class="err">MNT)</span><span class="w">                </span><span class="err">|</span>
-<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">Read</span><span class="mi">-</span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">FS</span><span class="w"> </span><span class="kc">f</span><span class="err">or</span><span class="w"> </span><span class="err">/poc</span><span class="w">                              </span><span class="err">|</span>
-<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">IPC</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">SYS_ADMIN</span><span class="w"> </span><span class="err">disabled</span><span class="w">                           </span><span class="err">|</span>
-<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">AppArmor</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">SELi</span><span class="kc">nu</span><span class="err">x</span><span class="w"> </span><span class="err">pro</span><span class="kc">f</span><span class="err">iles</span><span class="w">                        </span><span class="err">|</span>
-<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">Seccomp</span><span class="w"> </span><span class="kc">f</span><span class="err">il</span><span class="kc">ters</span><span class="w"> </span><span class="err">(de</span><span class="kc">n</span><span class="err">y</span><span class="w"> </span><span class="err">da</span><span class="kc">n</span><span class="err">gerous</span><span class="w"> </span><span class="err">syscalls)</span><span class="w">          </span><span class="err">|</span>
-<span class="err">+</span><span class="mf">-------------------------------------------------------+</span>
-<span class="w">         </span><span class="err">↑</span>
-<span class="w">         </span><span class="err">|</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">ar</span><span class="kc">t</span><span class="err">i</span><span class="kc">fa</span><span class="err">c</span><span class="kc">t</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">parame</span><span class="kc">ters</span>
-<span class="w">         </span><span class="err">|</span>
-<span class="p">[</span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Worker</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Orches</span><span class="kc">trat</span><span class="err">or</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">Co</span><span class="kc">nta</span><span class="err">i</span><span class="kc">ner</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="p">]</span>
-<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
-
-<span class="err">###</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="err">Sample</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">I</span><span class="kc">n</span><span class="err">voca</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span>
-<span class="err">```bash</span>
-<span class="err">SecFlow</span><span class="w"> </span><span class="err">sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">ru</span><span class="kc">n</span><span class="w"> </span><span class="err">poc</span><span class="w"> </span><span class="err">CVE</span><span class="mi">-2024-12345</span><span class="w"> </span><span class="mi">--</span><span class="kc">tar</span><span class="err">ge</span><span class="kc">t</span><span class="w"> </span><span class="err">h</span><span class="kc">tt</span><span class="err">ps</span><span class="p">:</span><span class="c1">//staging.example.com</span>
-<span class="err">```yaml</span>
-
-<span class="err">U</span><span class="kc">n</span><span class="err">der</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">hood</span><span class="p">:</span>
-<span class="err">```bash</span>
-<span class="err">subprocess.ru</span><span class="kc">n</span><span class="err">(</span><span class="p">[</span>
-<span class="w">  </span><span class="s2">&quot;docker&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--rm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--network&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;--memory&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;512m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--cpus&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;-v&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/pocstore/CVE-2024-12345:/poc:ro&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;SecFlow-sandbox:latest&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;python3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/poc/exploit.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--target&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;https://staging.example.com&quot;</span>
-<span class="p">]</span><span class="err">)</span>
-<span class="err">```yaml</span>
-
-<span class="err">##</span><span class="w"> </span><span class="err">⚙️</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Policy</span>
-
-<span class="err">|</span><span class="w"> </span><span class="err">Policy</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">E</span><span class="kc">nf</span><span class="err">orceme</span><span class="kc">nt</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="mi">--------</span><span class="err">|</span><span class="mi">-------------</span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">O</span><span class="kc">nl</span><span class="err">y**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">No</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">ru</span><span class="kc">ns</span><span class="w"> </span><span class="err">o</span><span class="kc">n</span><span class="w"> </span><span class="err">hos</span><span class="kc">t</span><span class="w"> </span><span class="err">sys</span><span class="kc">te</span><span class="err">m.</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**Read</span><span class="mi">-</span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">Filesys</span><span class="kc">te</span><span class="err">m**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Preve</span><span class="kc">nts</span><span class="w"> </span><span class="err">code</span><span class="w"> </span><span class="err">modi</span><span class="kc">f</span><span class="err">ica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">persis</span><span class="kc">ten</span><span class="err">ce.</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**No</span><span class="w"> </span><span class="err">Ne</span><span class="kc">t</span><span class="err">work</span><span class="w"> </span><span class="err">by</span><span class="w"> </span><span class="err">De</span><span class="kc">fault</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">All</span><span class="w"> </span><span class="err">ou</span><span class="kc">t</span><span class="err">bou</span><span class="kc">n</span><span class="err">d</span><span class="w"> </span><span class="err">co</span><span class="kc">nne</span><span class="err">c</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="w"> </span><span class="err">blocked.</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**User</span><span class="w"> </span><span class="err">Au</span><span class="kc">t</span><span class="err">horiza</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Each</span><span class="w"> </span><span class="err">ru</span><span class="kc">n</span><span class="w"> </span><span class="err">sig</span><span class="kc">ne</span><span class="err">d</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">user</span><span class="w"> </span><span class="err">ide</span><span class="kc">nt</span><span class="err">i</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp.</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**Loggi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="err">Replay**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">S</span><span class="kc">t</span><span class="err">dou</span><span class="kc">t</span><span class="err">/s</span><span class="kc">t</span><span class="err">derr</span><span class="w"> </span><span class="err">cap</span><span class="kc">ture</span><span class="err">d</span><span class="w"> </span><span class="err">i</span><span class="kc">n</span><span class="w"> </span><span class="err">audi</span><span class="kc">t</span><span class="w"> </span><span class="err">logs.</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**Time</span><span class="mi">-</span><span class="err">Bou</span><span class="kc">n</span><span class="err">d</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Hard</span><span class="w"> </span><span class="err">kill</span><span class="w"> </span><span class="err">i</span><span class="kc">f</span><span class="w"> </span><span class="err">ru</span><span class="kc">nt</span><span class="err">ime</span><span class="w"> </span><span class="err">exceeds</span><span class="w"> </span><span class="err">`</span><span class="kc">t</span><span class="err">imeou</span><span class="kc">t</span><span class="err">_seco</span><span class="kc">n</span><span class="err">ds`.</span><span class="w"> </span><span class="err">|</span>
-
-<span class="err">##</span><span class="w"> </span><span class="err">🧠</span><span class="w"> </span><span class="err">Policy</span><span class="w"> </span><span class="err">Co</span><span class="kc">nf</span><span class="err">igura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Example</span>
-
-<span class="err">```yaml</span>
-<span class="err">#</span><span class="w"> </span><span class="err">~/.SecFlow/policies/poc.yaml</span>
-<span class="err">sa</span><span class="kc">n</span><span class="err">dbox</span><span class="p">:</span>
-<span class="w">  </span><span class="err">image</span><span class="p">:</span><span class="w"> </span><span class="err">SecFlow</span><span class="mi">-</span><span class="err">sa</span><span class="kc">n</span><span class="err">dbox</span><span class="p">:</span><span class="err">la</span><span class="kc">test</span>
-<span class="w">  </span><span class="err">max_cpu</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">  </span><span class="err">max_memory_mb</span><span class="p">:</span><span class="w"> </span><span class="mi">512</span>
-<span class="w">  </span><span class="kc">t</span><span class="err">imeou</span><span class="kc">t</span><span class="err">_seco</span><span class="kc">n</span><span class="err">ds</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span>
-<span class="w">  </span><span class="err">allow_</span><span class="kc">net</span><span class="err">work</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<span class="w">  </span><span class="err">allow_</span><span class="kc">f</span><span class="err">ilesys</span><span class="kc">te</span><span class="err">m_wri</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-
-<span class="err">complia</span><span class="kc">n</span><span class="err">ce</span><span class="p">:</span>
-<span class="w">  </span><span class="err">require_disclaimer</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">  </span><span class="err">require_projec</span><span class="kc">t</span><span class="err">_au</span><span class="kc">t</span><span class="err">horiza</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">  </span><span class="err">au</span><span class="kc">t</span><span class="err">o_veri</span><span class="kc">f</span><span class="err">y_hashes</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="err">```py</span><span class="kc">t</span><span class="err">ho</span><span class="kc">n</span>
-
-<span class="err">##</span><span class="w"> </span><span class="err">🧩</span><span class="w"> </span><span class="err">Gover</span><span class="kc">nan</span><span class="err">ce</span><span class="w"> </span><span class="err">Loggi</span><span class="kc">n</span><span class="err">g</span>
-
-<span class="err">Every</span><span class="w"> </span><span class="err">PoC</span><span class="mi">-</span><span class="err">rela</span><span class="kc">te</span><span class="err">d</span><span class="w"> </span><span class="err">eve</span><span class="kc">nt</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">appe</span><span class="kc">n</span><span class="err">ded</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="kc">ta</span><span class="err">mper</span><span class="mi">-</span><span class="err">resis</span><span class="kc">tant</span><span class="w"> </span><span class="err">audi</span><span class="kc">t</span><span class="w"> </span><span class="err">log</span><span class="p">:</span>
-
-<span class="err">|</span><span class="w"> </span><span class="err">Field</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Descrip</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="mi">-------</span><span class="err">|</span><span class="mi">-------------</span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">eve</span><span class="kc">nt</span><span class="err">_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">UUID</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">audi</span><span class="kc">t</span><span class="w"> </span><span class="err">e</span><span class="kc">ntr</span><span class="err">y</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">user_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">user</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">UTC</span><span class="w"> </span><span class="err">ISO</span><span class="mi">-8601</span><span class="w"> </span><span class="kc">t</span><span class="err">ime</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">e.g.</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sandbox_run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;download&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;verify&quot;</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">cve_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Rela</span><span class="kc">te</span><span class="err">d</span><span class="w"> </span><span class="err">CVE</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="kc">t</span><span class="err">ool</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Source</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">wrapper</span><span class="w"> </span><span class="err">(e.g.</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;exploitdb&quot;</span><span class="err">)</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">sa</span><span class="kc">n</span><span class="err">dbox_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Co</span><span class="kc">nta</span><span class="err">i</span><span class="kc">ner</span><span class="w"> </span><span class="err">ide</span><span class="kc">nt</span><span class="err">i</span><span class="kc">f</span><span class="err">ier</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">hash</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">SHA</span><span class="mi">256</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">code</span><span class="w"> </span><span class="err">|</span>
-
-<span class="err">###</span><span class="w"> </span><span class="err">Example</span><span class="w"> </span><span class="err">Log</span><span class="w"> </span><span class="err">E</span><span class="kc">ntr</span><span class="err">y</span>
-<span class="err">```jso</span><span class="kc">n</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;event_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1f3b7c2-9f11-45d0-bc97-6c9472cbdcb2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hernan&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sandbox_run&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;cve_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CVE-2024-12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-06T10:43:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;sandbox_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sandbox-83214&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exploitdb&quot;</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
-
-<span class="err">##</span><span class="w"> </span><span class="err">🧠</span><span class="w"> </span><span class="err">Legal</span><span class="w"> </span><span class="err">No</span><span class="kc">t</span><span class="err">ice</span><span class="w"> </span><span class="err">E</span><span class="kc">nf</span><span class="err">orceme</span><span class="kc">nt</span>
-
-<span class="err">Be</span><span class="kc">f</span><span class="err">ore</span><span class="w"> </span><span class="err">a</span><span class="kc">n</span><span class="err">y</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">i</span><span class="kc">ntera</span><span class="err">c</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="err">users</span><span class="w"> </span><span class="err">mus</span><span class="kc">t</span><span class="w"> </span><span class="err">sig</span><span class="kc">n</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">legal</span><span class="w"> </span><span class="err">disclaimer</span><span class="p">:</span>
-
-<span class="err">```py</span><span class="kc">t</span><span class="err">ho</span><span class="kc">n</span>
-<span class="err">Respo</span><span class="kc">ns</span><span class="err">ible</span><span class="w"> </span><span class="err">Use</span><span class="w"> </span><span class="err">No</span><span class="kc">t</span><span class="err">ice</span><span class="p">:</span>
-<span class="err">You</span><span class="w"> </span><span class="err">ack</span><span class="kc">n</span><span class="err">owledge</span><span class="w"> </span><span class="kc">t</span><span class="err">ha</span><span class="kc">t</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">exploi</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">per</span><span class="kc">f</span><span class="err">ormed</span><span class="w"> </span><span class="err">exclusively</span><span class="w"> </span><span class="err">o</span><span class="kc">n</span><span class="w"> </span><span class="err">sys</span><span class="kc">te</span><span class="err">ms</span><span class="w"> </span><span class="err">you</span><span class="w"> </span><span class="err">ow</span><span class="kc">n</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">explici</span><span class="kc">tl</span><span class="err">y</span><span class="w"> </span><span class="err">au</span><span class="kc">t</span><span class="err">horized</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="kc">test</span><span class="err">.</span><span class="w"> </span><span class="err">SecFlow</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="kc">n</span><span class="err">o</span><span class="kc">t</span><span class="w"> </span><span class="err">liable</span><span class="w"> </span><span class="kc">f</span><span class="err">or</span><span class="w"> </span><span class="err">a</span><span class="kc">n</span><span class="err">y</span><span class="w"> </span><span class="err">misuse</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">damages</span><span class="w"> </span><span class="err">resul</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="kc">fr</span><span class="err">om</span><span class="w"> </span><span class="err">u</span><span class="kc">naut</span><span class="err">horized</span><span class="w"> </span><span class="err">use.</span>
-<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
-
-<span class="err">The</span><span class="w"> </span><span class="err">sys</span><span class="kc">te</span><span class="err">m</span><span class="w"> </span><span class="err">s</span><span class="kc">t</span><span class="err">ores</span><span class="w"> </span><span class="err">a</span><span class="kc">n</span><span class="w"> </span><span class="err">accep</span><span class="kc">tan</span><span class="err">ce</span><span class="w"> </span><span class="err">hash</span><span class="p">:</span>
-<span class="err">```yaml</span>
-<span class="err">~/.SecFlow/.disclaimer_accep</span><span class="kc">te</span><span class="err">d</span>
+<div class="highlight"><pre><span></span><code>{
+  &quot;cve&quot;: &quot;CVE-2024-12345&quot;,
+  &quot;source&quot;: &quot;exploit-db&quot;,
+  &quot;url&quot;: &quot;https://www.exploit-db.com/exploits/52341&quot;,
+  &quot;verified&quot;: true,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;type&quot;: &quot;rce&quot;,
+  &quot;hash&quot;: &quot;b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0&quot;,
+  &quot;sandbox_only&quot;: true,
+  &quot;license&quot;: &quot;GPLv2&quot;,
+  &quot;date_fetched&quot;: &quot;2025-10-06T10:20:00Z&quot;
+}
 </code></pre></div>
+<h2 id="sandbox-execution-architecture">🔒 Sandbox Execution Architecture<a class="headerlink" href="#sandbox-execution-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="1-isolation-model">1. Isolation Model<a class="headerlink" href="#1-isolation-model" title="Permanent link">&para;</a></h3>
+<p>All PoC executions occur within the SecFlow Sandbox Runtime, implemented as:</p>
+<ul>
+<li>Docker container with restricted capabilities (<code>--cap-drop=ALL</code>).</li>
+<li>Read-only mount of PoC files.</li>
+<li>No network egress unless explicitly allowed.</li>
+<li>Time &amp; memory quotas enforced by cgroups.</li>
+</ul>
+<h3 id="2-runtime-diagram">2. Runtime Diagram<a class="headerlink" href="#2-runtime-diagram" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>+-------------------------------------------------------+
+|                SecFlow Sandbox Runtime                |
+|-------------------------------------------------------|
+|  - Namespace Isolation (PID, NET, MNT)                |
+|  - Read-only FS for /poc                              |
+|  - IPC + SYS_ADMIN disabled                           |
+|  - AppArmor / SELinux profiles                        |
+|  - Seccomp filters (deny dangerous syscalls)          |
++-------------------------------------------------------+
+         ↑
+         | PoC artifact + parameters
+         |
+[SecFlow Worker] → [Sandbox Orchestrator] → [Container Runtime]
+</code></pre></div>
+<h3 id="3-sample-sandbox-invocation">3. Sample Sandbox Invocation<a class="headerlink" href="#3-sample-sandbox-invocation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SecFlow sandbox run poc CVE-2024-12345 --target https://staging.example.com
+</code></pre></div>
+<p>Under the hood:
+<div class="highlight"><pre><span></span><code>subprocess.run([
+  &quot;docker&quot;, &quot;run&quot;, &quot;--rm&quot;, &quot;--network&quot;, &quot;none&quot;,
+  &quot;--memory&quot;, &quot;512m&quot;, &quot;--cpus&quot;, &quot;1&quot;,
+  &quot;-v&quot;, &quot;/pocstore/CVE-2024-12345:/poc:ro&quot;,
+  &quot;SecFlow-sandbox:latest&quot;,
+  &quot;python3&quot;, &quot;/poc/exploit.py&quot;, &quot;--target&quot;, &quot;https://staging.example.com&quot;
+])
+</code></pre></div></p>
+<h2 id="poc-execution-policy">⚙️ PoC Execution Policy<a class="headerlink" href="#poc-execution-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sandbox Only</strong></td>
+<td>No PoC runs on host system.</td>
+</tr>
+<tr>
+<td><strong>Read-only Filesystem</strong></td>
+<td>Prevents code modification or persistence.</td>
+</tr>
+<tr>
+<td><strong>No Network by Default</strong></td>
+<td>All outbound connections blocked.</td>
+</tr>
+<tr>
+<td><strong>User Authorization</strong></td>
+<td>Each run signed with user identity &amp; timestamp.</td>
+</tr>
+<tr>
+<td><strong>Logging &amp; Replay</strong></td>
+<td>Stdout/stderr captured in audit logs.</td>
+</tr>
+<tr>
+<td><strong>Time-Bound Execution</strong></td>
+<td>Hard kill if runtime exceeds <code>timeout_seconds</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="policy-configuration-example">🧠 Policy Configuration Example<a class="headerlink" href="#policy-configuration-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code># ~/.SecFlow/policies/poc.yaml
+sandbox:
+  image: SecFlow-sandbox:latest
+  max_cpu: 1
+  max_memory_mb: 512
+  timeout_seconds: 300
+  allow_network: false
+  allow_filesystem_write: false
+
+compliance:
+  require_disclaimer: true
+  require_project_authorization: true
+  auto_verify_hashes: true
+</code></pre></div>
+<h2 id="governance-logging">🧩 Governance Logging<a class="headerlink" href="#governance-logging" title="Permanent link">&para;</a></h2>
+<p>Every PoC-related event is appended to a tamper-resistant audit log:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>event_id</td>
+<td>UUID of the audit entry</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>Executing user</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>UTC ISO-8601 time</td>
+</tr>
+<tr>
+<td>action</td>
+<td>e.g., "sandbox_run", "download", "verify"</td>
+</tr>
+<tr>
+<td>cve_id</td>
+<td>Related CVE</td>
+</tr>
+<tr>
+<td>tool</td>
+<td>Source or wrapper (e.g., "exploitdb")</td>
+</tr>
+<tr>
+<td>sandbox_id</td>
+<td>Container identifier</td>
+</tr>
+<tr>
+<td>hash</td>
+<td>SHA256 of PoC code</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-log-entry">Example Log Entry<a class="headerlink" href="#example-log-entry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;event_id&quot;: &quot;a1f3b7c2-9f11-45d0-bc97-6c9472cbdcb2&quot;,
+  &quot;user_id&quot;: &quot;hernan&quot;,
+  &quot;action&quot;: &quot;sandbox_run&quot;,
+  &quot;cve_id&quot;: &quot;CVE-2024-12345&quot;,
+  &quot;timestamp&quot;: &quot;2025-10-06T10:43:00Z&quot;,
+  &quot;sandbox_id&quot;: &quot;sandbox-83214&quot;,
+  &quot;hash&quot;: &quot;b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0&quot;,
+  &quot;tool&quot;: &quot;exploitdb&quot;
+}
+</code></pre></div>
+<h2 id="legal-notice-enforcement">🧠 Legal Notice Enforcement<a class="headerlink" href="#legal-notice-enforcement" title="Permanent link">&para;</a></h2>
+<p>Before any PoC interaction, users must sign a legal disclaimer:</p>
+<div class="highlight"><pre><span></span><code>Responsible Use Notice:
+You acknowledge that PoC exploitation is to be performed exclusively on systems you own or are explicitly authorized to test. SecFlow is not liable for any misuse or damages resulting from unauthorized use.
+</code></pre></div>
+<p>The system stores an acceptance hash:
+<div class="highlight"><pre><span></span><code>~/.SecFlow/.disclaimer_accepted
+</code></pre></div></p>
 <h2 id="cross-project-poc-access">🧩 Cross-Project PoC Access<a class="headerlink" href="#cross-project-poc-access" title="Permanent link">&para;</a></h2>
 <p>To prevent accidental disclosure:
 - PoC artifacts are scoped per project by default.
@@ -509,12 +567,12 @@ D --&gt; G[Available for Sandbox Run]</div>
 </code></pre></div></p>
 <p>Each is tagged with a quarantine reason.
 Admins can review and promote back to verified status.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">quarantine_poc</span><span class="p">(</span><span class="n">poc_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/pocstore/</span><span class="si">{</span><span class="n">poc_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/pocstore/quarantine/&quot;</span><span class="p">)</span>
-    <span class="n">write_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PoC </span><span class="si">{</span><span class="n">poc_id</span><span class="si">}</span><span class="s2"> quarantined: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code>def quarantine_poc(poc_id: str, reason: str):
+    shutil.move(f&quot;/pocstore/{poc_id}&quot;, &quot;/pocstore/quarantine/&quot;)
+    write_log(f&quot;PoC {poc_id} quarantined: {reason}&quot;)
 </code></pre></div>
 <h2 id="example-execution-trace">🧠 Example Execution Trace<a class="headerlink" href="#example-execution-trace" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code>[PoC: CVE-2024-12345] Verified source: ExploitDB
+<div class="highlight"><pre><span></span><code>[PoC: CVE-2024-12345] Verified source: ExploitDB
 [Sandbox] Starting container SecFlow-sandbox:latest
 [Sandbox] CPU quota: 1 core, Memory: 512MB
 [Sandbox] Network: disabled
@@ -522,20 +580,17 @@ Admins can review and promote back to verified status.</p>
     [+] Exploit successful: remote command executed
 [Cleanup]
     PoC container destroyed after 120s
-```text
-
-## 🔮 Future Enhancements
-
-- AppArmor enforcement policies with dynamic runtime profiling.
-- PoC provenance blockchain for cryptographic integrity.
-- AI-assisted PoC safety classification (RCE, DoS, PrivEsc).
-- Multi-tenant isolation for collaborative workspaces.
-- Live replay of PoC runs for training and documentation.
-
----
-
-**Next:** [Garbage Collection &amp; Data Retention Policy](15-garbage-collection-and-retention.md)
 </code></pre></div>
+<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AppArmor enforcement policies with dynamic runtime profiling.</li>
+<li>PoC provenance blockchain for cryptographic integrity.</li>
+<li>AI-assisted PoC safety classification (RCE, DoS, PrivEsc).</li>
+<li>Multi-tenant isolation for collaborative workspaces.</li>
+<li>Live replay of PoC runs for training and documentation.</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../15-garbage-collection-and-retention/">Garbage Collection &amp; Data Retention Policy</a>
 <div class="highlight"><pre><span></span><code>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>
@@ -558,7 +613,8 @@ Admins can review and promote back to verified status.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>
 </code></pre></div>
-```</p></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div></p></div>
             </div>
         </div>
 

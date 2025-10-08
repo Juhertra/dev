@@ -47,7 +47,7 @@ The workflow engine guarantees:
 
 ## ⚙️ Workflow Specification Schema
 
-```yaml
+```
 version: "1.0"
 name: "OWASP Top 10 Scan"
 description: "End-to-end test: discovery → scan → enrichment"
@@ -74,11 +74,11 @@ nodes:
     config:
       sources: ["nvd", "osv", "exploitdb"]
     outputs: ["enriched_findings"]
-```text
+```
 
 ## 🧩 Workflow Engine Architecture
 
-```text
+```
 +-------------------------------------------------------------+
 |                         Worker Engine                       |
 |-------------------------------------------------------------|
@@ -89,7 +89,7 @@ nodes:
 |-------------------------------------------------------------|
 | Uses: Celery (Redis), asyncio, Pydantic validation           |
 +-------------------------------------------------------------+
-```text
+```
 
 ### Key Components
 
@@ -103,7 +103,7 @@ nodes:
 
 ## ⚙️ Python Model — DAG Representation
 
-```python
+```
 # findings-engine/workflow_dag.py
 from typing import List, Dict, Any
 from pydantic import BaseModel
@@ -120,17 +120,17 @@ class Workflow(BaseModel):
     name: str
     description: str
     nodes: List[Node]
-```text
+```
 
 ### DAG Validation Example
-```python
+```
 def validate_dag(workflow: Workflow):
     ids = [n.id for n in workflow.nodes]
     for node in workflow.nodes:
         for inp in node.inputs:
             if inp not in [out for n in workflow.nodes for out in n.outputs]:
                 raise ValueError(f"Unresolved input '{inp}' in node {node.id}")
-```python
+```
 
 ## 🧠 Execution Flow
 
@@ -144,7 +144,7 @@ def validate_dag(workflow: Workflow):
 
 ## ⚙️ Node Executor (Simplified)
 
-```python
+```
 # worker/executor.py
 from core_lib.ports.tool_port import ToolPort
 
@@ -159,7 +159,7 @@ class NodeExecutor:
         results = tool.execute()
         self.context.store_results(self.node.outputs, results)
         return results
-```python
+```
 
 ## 🔄 Concurrency Model
 
@@ -202,7 +202,7 @@ Each failure is logged in the `workflow_runs` table and visible in the UI.
 The orchestration layer publishes real-time events to facilitate reactive behavior.
 
 ### Example Event Contract
-```json
+```
 {
   "event": "node_completed",
   "workflow_id": "abc123",
@@ -210,7 +210,7 @@ The orchestration layer publishes real-time events to facilitate reactive behavi
   "duration": 12.3,
   "findings": 124
 }
-```python
+```
 
 Events can be consumed by:
 - WebSocket clients in UI (live progress)
@@ -223,13 +223,13 @@ Events can be consumed by:
 - **ResultHashing:** SHA256 of config + inputs for cache hits
 - **Warm Runs:** Workflows can resume from cached intermediate outputs
 
-```python
+```
 cache_key = hashlib.sha256(json.dumps(node.config).encode()).hexdigest()
-```text
+```
 
 ## 🧱 Example DAG Execution Trace
 
-```text
+```
 [2025-10-06 12:01:02] Workflow "OWASP Top 10 Scan" started
 [2025-10-06 12:01:05] Node discovery.ferox completed (urls=356)
 [2025-10-06 12:01:07] Node scan.nuclei completed (findings=112)

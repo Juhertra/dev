@@ -235,6 +235,54 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#data-lifecycle" class="nav-link">🧱 Data Lifecycle</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#database-level-soft-delete" class="nav-link">🧠 Database-Level Soft Delete</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#file-system-garbage-collector" class="nav-link">🧩 File System Garbage Collector</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#gc-task-scheduling" class="nav-link">🧠 GC Task Scheduling</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#retention-policy-evaluation" class="nav-link">🧩 Retention Policy Evaluation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#audit-logging-for-gc" class="nav-link">🧩 Audit Logging for GC</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#orphan-detection" class="nav-link">🧱 Orphan Detection</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cache-lifecycle" class="nav-link">🧩 Cache Lifecycle</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#manual-cleanup-command" class="nav-link">🧠 Manual Cleanup Command</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-considerations" class="nav-link">🔐 Security Considerations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#gc-metrics-observability" class="nav-link">🔄 GC Metrics &amp; Observability</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-gc-cycle-log" class="nav-link">🧠 Example GC Cycle Log</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -298,59 +346,65 @@ flowchart TD
 <hr />
 <h2 id="retention-model">🧩 Retention Model<a class="headerlink" href="#retention-model" title="Permanent link">&para;</a></h2>
 <p>Each project defines its <strong>retention profile</strong> in <code>~/.SecFlow/projects/&lt;id&gt;/config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">retention</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">findings_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
-<span class="w">  </span><span class="nt">runs_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
-<span class="w">  </span><span class="nt">cache_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="w">  </span><span class="nt">artifacts_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
-<span class="w">  </span><span class="nt">soft_delete_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
-<span class="w">  </span><span class="nt">auto_cleanup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">## 🧱 Data Lifecycle</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Stage | Description |</span>
-<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Active** | Data used by ongoing projects or workflows. |</span>
-<span class="nt">| **Soft Deleted** | Marked for deletion but restorable (`flag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deleted=true`). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Expired** | TTL exceeded; scheduled for cleanup. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Hard Deleted** | Permanently removed after grace period. |</span>
-
-<span class="c1">## 🧠 Database-Level Soft Delete</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="nt">class BaseModel(SQLModel)</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UUID</span>
-<span class="w">    </span><span class="nt">created_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
-<span class="w">    </span><span class="nt">updated_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
-<span class="w">    </span><span class="nt">deleted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool = False</span>
-<span class="w">    </span><span class="nt">deleted_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Optional[datetime] = None</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="nt">When a record is soft-deleted</span><span class="p">:</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="nt">def soft_delete(obj)</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted = True</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted_at = datetime.utcnow()</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">session.add(obj)</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">session.commit()</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="nt">Recovery</span><span class="p">:</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="nt">def restore(obj)</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted = False</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted_at = None</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">session.commit()</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="c1">## 🧩 File System Garbage Collector</span>
-
-<span class="c1">### Directory Structure</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="l l-Scalar l-Scalar-Plain">/data/</span>
+<div class="highlight"><pre><span></span><code>retention:
+  findings_ttl_days: 180
+  runs_ttl_days: 90
+  cache_ttl_days: 30
+  artifacts_ttl_days: 180
+  soft_delete_ttl_days: 14
+  auto_cleanup: true
+</code></pre></div>
+<h2 id="data-lifecycle">🧱 Data Lifecycle<a class="headerlink" href="#data-lifecycle" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Active</strong></td>
+<td>Data used by ongoing projects or workflows.</td>
+</tr>
+<tr>
+<td><strong>Soft Deleted</strong></td>
+<td>Marked for deletion but restorable (<code>flag: deleted=true</code>).</td>
+</tr>
+<tr>
+<td><strong>Expired</strong></td>
+<td>TTL exceeded; scheduled for cleanup.</td>
+</tr>
+<tr>
+<td><strong>Hard Deleted</strong></td>
+<td>Permanently removed after grace period.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database-level-soft-delete">🧠 Database-Level Soft Delete<a class="headerlink" href="#database-level-soft-delete" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>class BaseModel(SQLModel):
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
+    deleted: bool = False
+    deleted_at: Optional[datetime] = None
+</code></pre></div>
+<p>When a record is soft-deleted:</p>
+<div class="highlight"><pre><span></span><code>def soft_delete(obj):
+    obj.deleted = True
+    obj.deleted_at = datetime.utcnow()
+    session.add(obj)
+    session.commit()
+</code></pre></div>
+<p>Recovery:</p>
+<div class="highlight"><pre><span></span><code>def restore(obj):
+    obj.deleted = False
+    obj.deleted_at = None
+    session.commit()
+</code></pre></div>
+<h2 id="file-system-garbage-collector">🧩 File System Garbage Collector<a class="headerlink" href="#file-system-garbage-collector" title="Permanent link">&para;</a></h2>
+<h3 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>/data/
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -373,154 +427,165 @@ flowchart TD
     C --&gt; F
     C --&gt; G</div>
 <p>The GC worker traverses these trees periodically:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sweep_directory</span><span class="p">(</span><span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">older_than</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">):</span>
-    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">older_than</span><span class="p">:</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-<span class="err">```</span><span class="n">python</span>
+<div class="highlight"><pre><span></span><code>def sweep_directory(base_path: Path, older_than: timedelta):
+    now = datetime.utcnow()
+    for p in base_path.rglob(&quot;*&quot;):
+        if p.is_file() and (now - datetime.fromtimestamp(p.stat().st_mtime)) &gt; older_than:
+            p.unlink()
+</code></pre></div>
+<h2 id="gc-task-scheduling">🧠 GC Task Scheduling<a class="headerlink" href="#gc-task-scheduling" title="Permanent link">&para;</a></h2>
+<h3 id="celery-task-definition">Celery Task Definition<a class="headerlink" href="#celery-task-definition" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>@app.task(name=&quot;gc.cleanup_expired&quot;)
+def cleanup_expired():
+    sweep_projects()
+    sweep_cache()
+    sweep_artifacts()
+</code></pre></div>
+<h3 id="scheduler-configuration">Scheduler Configuration<a class="headerlink" href="#scheduler-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>CELERY_BEAT_SCHEDULE = {
+    &quot;cleanup-every-6h&quot;: {
+        &quot;task&quot;: &quot;gc.cleanup_expired&quot;,
+        &quot;schedule&quot;: crontab(hour=&quot;*/6&quot;),
+    },
+}
+</code></pre></div>
+<p>GC tasks can be triggered manually:
+<div class="highlight"><pre><span></span><code>SecFlow gc run --project acme-api
+</code></pre></div></p>
+<h2 id="retention-policy-evaluation">🧩 Retention Policy Evaluation<a class="headerlink" href="#retention-policy-evaluation" title="Permanent link">&para;</a></h2>
+<h3 id="example-policy-rules">Example Policy Rules<a class="headerlink" href="#example-policy-rules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Condition</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inactive Runs</td>
+<td>Run ended &gt; 90 days ago</td>
+<td>Delete run logs</td>
+</tr>
+<tr>
+<td>Soft-Deleted Findings</td>
+<td>Deleted &gt; 14 days ago</td>
+<td>Purge permanently</td>
+</tr>
+<tr>
+<td>Cache Expired</td>
+<td>Cache entry older than 30 days</td>
+<td>Remove</td>
+</tr>
+<tr>
+<td>Unused Artifacts</td>
+<td>Artifact not accessed for 180 days</td>
+<td>Archive or delete</td>
+</tr>
+</tbody>
+</table>
+<h3 id="policy-engine-snippet">Policy Engine Snippet<a class="headerlink" href="#policy-engine-snippet" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>def evaluate_retention(entity, policy):
+    if entity.deleted and expired(entity.deleted_at, policy.soft_delete_ttl_days):
+        hard_delete(entity)
+    elif expired(entity.updated_at, policy.findings_ttl_days):
+        soft_delete(entity)
+</code></pre></div>
+<h2 id="audit-logging-for-gc">🧩 Audit Logging for GC<a class="headerlink" href="#audit-logging-for-gc" title="Permanent link">&para;</a></h2>
+<p>Each GC operation generates an audit record:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;event&quot;: &quot;gc_delete&quot;,
+  &quot;type&quot;: &quot;finding&quot;,
+  &quot;target_id&quot;: &quot;f123-45ac&quot;,
+  &quot;project_id&quot;: &quot;p001&quot;,
+  &quot;timestamp&quot;: &quot;2025-10-06T09:30:00Z&quot;,
+  &quot;user&quot;: &quot;system&quot;,
+  &quot;ttl_rule&quot;: &quot;soft_delete_ttl_days=14&quot;
+}
+</code></pre></div>
+<p>Stored in:
+<div class="highlight"><pre><span></span><code>~/.SecFlow/audit/gc.log
+</code></pre></div></p>
+<h2 id="orphan-detection">🧱 Orphan Detection<a class="headerlink" href="#orphan-detection" title="Permanent link">&para;</a></h2>
+<h3 id="sql-example">SQL Example<a class="headerlink" href="#sql-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SELECT f.id
+FROM findings f
+LEFT JOIN runs r ON f.run_id = r.id
+WHERE r.id IS NULL;
+</code></pre></div>
+<p>Any orphaned findings or artifacts (without associated runs/projects) are purged automatically.</p>
+<h2 id="cache-lifecycle">🧩 Cache Lifecycle<a class="headerlink" href="#cache-lifecycle" title="Permanent link">&para;</a></h2>
+<p>Caches (e.g., CVE data, scan results, tool logs) use a standardized interface:</p>
+<div class="highlight"><pre><span></span><code>class CacheEntry(BaseModel):
+    key: str
+    value: bytes
+    expires_at: datetime
 
-<span class="c1">## 🧠 GC Task Scheduling</span>
+def purge_expired():
+    session.query(CacheEntry).filter(CacheEntry.expires_at &lt; datetime.utcnow()).delete()
+</code></pre></div>
+<h2 id="manual-cleanup-command">🧠 Manual Cleanup Command<a class="headerlink" href="#manual-cleanup-command" title="Permanent link">&para;</a></h2>
+<p>Users can trigger GC manually via CLI:</p>
+<div class="highlight"><pre><span></span><code># Run full cleanup (all projects)
+SecFlow gc run
 
-<span class="c1">### Celery Task Definition</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;gc.cleanup_expired&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cleanup_expired</span><span class="p">():</span>
-    <span class="n">sweep_projects</span><span class="p">()</span>
-    <span class="n">sweep_cache</span><span class="p">()</span>
-    <span class="n">sweep_artifacts</span><span class="p">()</span>
-<span class="err">```</span><span class="n">text</span>
+# Run cleanup for one project
+SecFlow gc run --project acme-api
 
-<span class="c1">### Scheduler Configuration</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="n">CELERY_BEAT_SCHEDULE</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;cleanup-every-6h&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;gc.cleanup_expired&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">crontab</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="s2">&quot;*/6&quot;</span><span class="p">),</span>
-    <span class="p">},</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="n">GC</span> <span class="n">tasks</span> <span class="n">can</span> <span class="n">be</span> <span class="n">triggered</span> <span class="n">manually</span><span class="p">:</span>
-<span class="err">```</span><span class="n">bash</span>
-<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">run</span> <span class="o">--</span><span class="n">project</span> <span class="n">acme</span><span class="o">-</span><span class="n">api</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🧩 Retention Policy Evaluation</span>
-
-<span class="c1">### Example Policy Rules</span>
-<span class="o">|</span> <span class="n">Rule</span> <span class="o">|</span> <span class="n">Condition</span> <span class="o">|</span> <span class="n">Action</span> <span class="o">|</span>
-<span class="o">|------|-----------|--------|</span>
-<span class="o">|</span> <span class="n">Inactive</span> <span class="n">Runs</span> <span class="o">|</span> <span class="n">Run</span> <span class="n">ended</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="n">days</span> <span class="n">ago</span> <span class="o">|</span> <span class="n">Delete</span> <span class="n">run</span> <span class="n">logs</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Soft</span><span class="o">-</span><span class="n">Deleted</span> <span class="n">Findings</span> <span class="o">|</span> <span class="n">Deleted</span> <span class="o">&gt;</span> <span class="mi">14</span> <span class="n">days</span> <span class="n">ago</span> <span class="o">|</span> <span class="n">Purge</span> <span class="n">permanently</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Cache</span> <span class="n">Expired</span> <span class="o">|</span> <span class="n">Cache</span> <span class="n">entry</span> <span class="n">older</span> <span class="n">than</span> <span class="mi">30</span> <span class="n">days</span> <span class="o">|</span> <span class="n">Remove</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Unused</span> <span class="n">Artifacts</span> <span class="o">|</span> <span class="n">Artifact</span> <span class="ow">not</span> <span class="n">accessed</span> <span class="k">for</span> <span class="mi">180</span> <span class="n">days</span> <span class="o">|</span> <span class="n">Archive</span> <span class="ow">or</span> <span class="n">delete</span> <span class="o">|</span>
-
-<span class="c1">### Policy Engine Snippet</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_retention</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">policy</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">deleted</span> <span class="ow">and</span> <span class="n">expired</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">deleted_at</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">soft_delete_ttl_days</span><span class="p">):</span>
-        <span class="n">hard_delete</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">expired</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">updated_at</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">findings_ttl_days</span><span class="p">):</span>
-        <span class="n">soft_delete</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🧩 Audit Logging for GC</span>
-
-<span class="n">Each</span> <span class="n">GC</span> <span class="n">operation</span> <span class="n">generates</span> <span class="n">an</span> <span class="n">audit</span> <span class="n">record</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;gc_delete&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;finding&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;target_id&quot;</span><span class="p">:</span> <span class="s2">&quot;f123-45ac&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="s2">&quot;p001&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-10-06T09:30:00Z&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;ttl_rule&quot;</span><span class="p">:</span> <span class="s2">&quot;soft_delete_ttl_days=14&quot;</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="n">Stored</span> <span class="ow">in</span><span class="p">:</span>
-<span class="err">```</span><span class="n">text</span>
-<span class="o">~/.</span><span class="n">SecFlow</span><span class="o">/</span><span class="n">audit</span><span class="o">/</span><span class="n">gc</span><span class="o">.</span><span class="n">log</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🧱 Orphan Detection</span>
-
-<span class="c1">### SQL Example</span>
-<span class="err">```</span><span class="n">sql</span>
-<span class="n">SELECT</span> <span class="n">f</span><span class="o">.</span><span class="n">id</span>
-<span class="n">FROM</span> <span class="n">findings</span> <span class="n">f</span>
-<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">runs</span> <span class="n">r</span> <span class="n">ON</span> <span class="n">f</span><span class="o">.</span><span class="n">run_id</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span>
-<span class="n">WHERE</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="n">IS</span> <span class="n">NULL</span><span class="p">;</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="n">Any</span> <span class="n">orphaned</span> <span class="n">findings</span> <span class="ow">or</span> <span class="n">artifacts</span> <span class="p">(</span><span class="n">without</span> <span class="n">associated</span> <span class="n">runs</span><span class="o">/</span><span class="n">projects</span><span class="p">)</span> <span class="n">are</span> <span class="n">purged</span> <span class="n">automatically</span><span class="o">.</span>
-
-<span class="c1">## 🧩 Cache Lifecycle</span>
-
-<span class="n">Caches</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">CVE</span> <span class="n">data</span><span class="p">,</span> <span class="n">scan</span> <span class="n">results</span><span class="p">,</span> <span class="n">tool</span> <span class="n">logs</span><span class="p">)</span> <span class="n">use</span> <span class="n">a</span> <span class="n">standardized</span> <span class="n">interface</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CacheEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">expires_at</span><span class="p">:</span> <span class="n">datetime</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">purge_expired</span><span class="p">():</span>
-    <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">CacheEntry</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">CacheEntry</span><span class="o">.</span><span class="n">expires_at</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🧠 Manual Cleanup Command</span>
-
-<span class="n">Users</span> <span class="n">can</span> <span class="n">trigger</span> <span class="n">GC</span> <span class="n">manually</span> <span class="n">via</span> <span class="n">CLI</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">bash</span>
-<span class="c1"># Run full cleanup (all projects)</span>
-<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">run</span>
-
-<span class="c1"># Run cleanup for one project</span>
-<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">run</span> <span class="o">--</span><span class="n">project</span> <span class="n">acme</span><span class="o">-</span><span class="n">api</span>
-
-<span class="c1"># Preview what will be deleted</span>
-<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">dry</span><span class="o">-</span><span class="n">run</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">### Example output:</span>
-<span class="err">```</span><span class="n">text</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Found</span> <span class="mi">12</span> <span class="n">expired</span> <span class="n">runs</span><span class="p">,</span> <span class="mi">4</span> <span class="n">orphaned</span> <span class="n">findings</span><span class="p">,</span> <span class="mi">6</span> <span class="n">stale</span> <span class="n">cache</span> <span class="n">entries</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Total</span> <span class="n">reclaimed</span><span class="p">:</span> <span class="mf">1.2</span> <span class="n">GB</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🔐 Security Considerations</span>
-
-<span class="o">-</span> <span class="n">All</span> <span class="n">deletions</span> <span class="p">(</span><span class="n">soft</span> <span class="ow">or</span> <span class="n">hard</span><span class="p">)</span> <span class="n">are</span> <span class="n">logged</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Data</span> <span class="ow">is</span> <span class="n">never</span> <span class="n">removed</span> <span class="n">without</span> <span class="n">audit</span> <span class="n">trace</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">System</span> <span class="n">prevents</span> <span class="n">GC</span> <span class="k">while</span> <span class="n">a</span> <span class="n">project</span> <span class="ow">is</span> <span class="n">locked</span> <span class="ow">or</span> <span class="n">running</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Manual</span> <span class="n">GC</span> <span class="n">requires</span> <span class="n">Admin</span> <span class="n">role</span><span class="o">.</span>
-
-<span class="c1">## 🔄 GC Metrics &amp; Observability</span>
-
-<span class="o">|</span> <span class="n">Metric</span> <span class="o">|</span> <span class="n">Description</span> <span class="o">|</span>
-<span class="o">|--------|-------------|</span>
-<span class="o">|</span> <span class="n">gc_runs_total</span> <span class="o">|</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">GC</span> <span class="n">cycles</span> <span class="n">executed</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">gc_files_removed_total</span> <span class="o">|</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">files</span> <span class="n">deleted</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">gc_bytes_reclaimed_total</span> <span class="o">|</span> <span class="n">Storage</span> <span class="n">reclaimed</span> <span class="ow">in</span> <span class="nb">bytes</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">gc_duration_seconds</span> <span class="o">|</span> <span class="n">Time</span> <span class="n">per</span> <span class="n">GC</span> <span class="n">cycle</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">gc_errors_total</span> <span class="o">|</span> <span class="n">Failed</span> <span class="n">cleanup</span> <span class="n">operations</span> <span class="o">|</span>
-
-<span class="n">Exposed</span> <span class="n">via</span> <span class="n">Prometheus</span> <span class="n">at</span> <span class="err">`</span><span class="o">/</span><span class="n">metrics</span><span class="err">`</span><span class="o">.</span>
-
-<span class="c1">## 🧠 Example GC Cycle Log</span>
-
-<span class="err">```</span><span class="n">text</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Cycle</span> <span class="n">started</span> <span class="n">at</span> <span class="mi">2025</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">06</span><span class="n">T09</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="n">Z</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Processed</span> <span class="mi">3</span> <span class="n">projects</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Deleted</span> <span class="mi">15</span> <span class="n">findings</span> <span class="p">(</span><span class="n">soft</span><span class="p">)</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Purged</span> <span class="mi">10</span> <span class="n">runs</span> <span class="p">(</span><span class="n">hard</span><span class="p">)</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Reclaimed</span> <span class="mf">1.8</span><span class="n">GB</span> <span class="n">disk</span> <span class="n">space</span>
-<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Cycle</span> <span class="n">completed</span> <span class="ow">in</span> <span class="mf">42.3</span><span class="n">s</span>
+# Preview what will be deleted
+SecFlow gc dry-run
+</code></pre></div>
+<h3 id="example-output">Example output:<a class="headerlink" href="#example-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>[GC] Found 12 expired runs, 4 orphaned findings, 6 stale cache entries
+[GC] Total reclaimed: 1.2 GB
+</code></pre></div>
+<h2 id="security-considerations">🔐 Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All deletions (soft or hard) are logged.</li>
+<li>Data is never removed without audit trace.</li>
+<li>System prevents GC while a project is locked or running.</li>
+<li>Manual GC requires Admin role.</li>
+</ul>
+<h2 id="gc-metrics-observability">🔄 GC Metrics &amp; Observability<a class="headerlink" href="#gc-metrics-observability" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gc_runs_total</td>
+<td>Number of GC cycles executed</td>
+</tr>
+<tr>
+<td>gc_files_removed_total</td>
+<td>Number of files deleted</td>
+</tr>
+<tr>
+<td>gc_bytes_reclaimed_total</td>
+<td>Storage reclaimed in bytes</td>
+</tr>
+<tr>
+<td>gc_duration_seconds</td>
+<td>Time per GC cycle</td>
+</tr>
+<tr>
+<td>gc_errors_total</td>
+<td>Failed cleanup operations</td>
+</tr>
+</tbody>
+</table>
+<p>Exposed via Prometheus at <code>/metrics</code>.</p>
+<h2 id="example-gc-cycle-log">🧠 Example GC Cycle Log<a class="headerlink" href="#example-gc-cycle-log" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[GC] Cycle started at 2025-10-06T09:00:00Z
+[GC] Processed 3 projects
+[GC] Deleted 15 findings (soft)
+[GC] Purged 10 runs (hard)
+[GC] Reclaimed 1.8GB disk space
+[GC] Cycle completed in 42.3s
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

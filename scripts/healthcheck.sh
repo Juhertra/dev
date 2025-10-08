@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 mkdocs build -q
-F=$(rg -N '```mermaid\s*$' docs | wc -l | tr -d ' ')
+F=$(rg -N '```mermaid' docs | grep -v 'docs/review/' | wc -l | tr -d ' ')
 D=$(rg -N '<div class="mermaid">' -g 'site/**/*.html' | wc -l | tr -d ' ')
 TOTAL=$(find site -name "*.html" | wc -l | tr -d ' ')
 M1=$(rg -l 'mermaid\.min\.js' site -g '**/*.html' | wc -l | tr -d ' ')

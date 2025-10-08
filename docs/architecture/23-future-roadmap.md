@@ -47,7 +47,7 @@ The **AI Integration Phase** introduces cognitive automation into all major subs
 - Integrate MITRE ATT&CK correlation heatmaps
 
 ### Example architecture:
-```yaml
+```
 +--------------------------------------------------+
 |                AI Engine                         |
 | - LLM-based Triage Assistant                     |
@@ -55,12 +55,12 @@ The **AI Integration Phase** introduces cognitive automation into all major subs
 | - Anomaly Detector (Outlier Findings)            |
 | - Natural Language Query Interface               |
 +--------------------------------------------------+
-```text
+```
 
 ### 4. Conversational Analysis Interface
 A secure chat layer connected to `core-lib` enabling queries like:
 
-```text
+```
 show me all high-risk CVEs in projects using nginx
 summarize findings related to broken authentication
 predict which components will likely fail next pentest

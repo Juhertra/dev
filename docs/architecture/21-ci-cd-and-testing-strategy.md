@@ -39,7 +39,7 @@ flowchart TD
 ## 🧱 CI Pipeline Structure
 
 ### Files
-```text
+```
 .github/
 ```
 
@@ -97,7 +97,7 @@ flowchart TD
 
 ## 🧱 Test Folder Structure
 
-```text
+```
 tests/
 ```
 
@@ -146,7 +146,7 @@ flowchart TD
 
 ## 🧮 CI Matrix Configuration Example
 
-```yaml
+```
 # .github/workflows/ci.yml
 name: CI
 on:
@@ -172,7 +172,7 @@ jobs:
       - run: make lint
       - run: make test DB=${{ matrix.database }}
       - run: pytest --cov=src --cov-report=xml
-```yaml
+```
 
 ## 🧠 Deployment Pipeline
 
@@ -190,12 +190,12 @@ jobs:
 - Monitors deployment via Prometheus metrics
 
 ### Example job snippet:
-```yaml
+```
 - name: Deploy to Staging
   run: |
     docker-compose -f docker-compose.staging.yml up -d
     pytest tests/e2e/ --maxfail=1
-```yaml
+```
 
 ## 🧰 Build Artifacts & Packages
 
@@ -225,10 +225,10 @@ Failed gates block merges automatically.
 - **Secrets Detection:** via gitleaks pre-commit hook
 - **Infrastructure Scan:** via tfsec (for IaC configs)
 
-```bash
+```
 pip install pip-audit safety gitleaks trivy
 make security-scan
-```text
+```
 
 ## 🔄 Regression & Replay Testing
 
@@ -236,10 +236,10 @@ Each workflow run can be recorded and replayed for regression tests.
 This ensures stability across version upgrades.
 
 ### Example:
-```bash
+```
 pytest tests/e2e/test_workflow_dag_execution.py --record
 pytest --replay last-run
-```bash
+```
 
 Replay data is stored under `/tests/artifacts/replays/`.
 
@@ -247,15 +247,15 @@ Replay data is stored under `/tests/artifacts/replays/`.
 
 Developers can run lightweight tests locally:
 
-```bash
+```
 make test
 pytest -k "not e2e"
-```bash
+```
 
 With Docker-enabled integration tests:
-```bash
+```
 make test-docker
-```text
+```
 
 ## 📊 Metrics & Reporting
 
@@ -265,9 +265,9 @@ After each CI build:
 - Performance metrics logged to Prometheus
 
 ### Example coverage badge:
-```text
+```
 [![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)](https://codecov.io/gh/SecFlow)
-```text
+```
 
 ## 🧱 Disaster Recovery & Rollback
 
@@ -275,7 +275,7 @@ Every deployment is versioned:
 - Docker image tags = `vX.Y.Z-buildhash`
 
 ### Rollback command:
-```bash
+```
 docker pull SecFlow-api:v1.3.2
 docker compose up -d --no-build
 ```

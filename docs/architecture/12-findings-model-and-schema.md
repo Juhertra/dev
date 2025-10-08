@@ -25,7 +25,7 @@ The schema ensures:
 
 ## 🧱 Data Flow Summary
 
-```text
+```
 [ Tool Output ]
         ↓
 [ Findings Engine ]
@@ -35,13 +35,13 @@ The schema ensures:
 [ Enrichment Layer (CVE/CWE/OWASP) ]
         ↓
 [ Persistent Store + Cache + Analytics ]
-```text
+```
 
 ---
 
 ## ⚙️ Findings Core Model
 
-```python
+```
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 from uuid import UUID
@@ -64,7 +64,7 @@ class Finding(BaseModel):
     poc_links: List[str] = []
     created_at: datetime
     provenance: Dict[str, object] = {}
-```python
+```
 
 ## 🧩 Normalization Process
 
@@ -78,7 +78,7 @@ Each wrapper or plugin output goes through the Findings Normalizer, which perfor
 
 ### Example Normalized Finding
 
-```json
+```
 {
   "id": "7a3d9f8e-1f83-4a55-9a6c-5ea9e1a3b8d2",
   "project_id": "b0b8b6e0-7c6a-43e8-8b2f-8a0d0e8b0f3c",
@@ -97,9 +97,9 @@ Each wrapper or plugin output goes through the Findings Normalizer, which perfor
   "created_at": "2025-10-07T08:22:31Z",
   "provenance": { "tool_version": "nuclei 3.1.0", "host": "runner-12" }
 }
-```json
+```
 
-```python
+```
 def normalize(raw: dict, source: str) -> Finding:
     severity_map = {"info": "info", "low": "low", "medium": "medium", "high": "high", "critical": "critical"}
     return Finding(
@@ -113,7 +113,7 @@ def normalize(raw: dict, source: str) -> Finding:
         created_at=datetime.utcnow(),
         provenance={"tool": source, "version": raw.get("version", "unknown")}
     )
-```python
+```
 
 ## 🧩 Normalization Rules by Source
 
@@ -141,16 +141,16 @@ Normalization is performed by `findings-engine` using source-specific adapters.
 
 Findings are hashed on a deterministic fingerprint:
 
-```python
+```
 hash_input = f"{finding.path}:{finding.title}:{finding.detector_id}"
 finding_hash = hashlib.sha256(hash_input.encode()).hexdigest()
-```python
+```
 
 If the hash already exists in the same project and run scope, the finding is merged rather than duplicated.
 
 ## 🧩 Enrichment Metadata Structure
 
-```python
+```
 finding.enrichment = {
     "cwe": {"id": 89, "name": "SQL Injection"},
     "owasp": {"category": "A03", "name": "Injection"},
@@ -158,7 +158,7 @@ finding.enrichment = {
     "mitre": {"technique": "T1505", "tactic": "Persistence"},
     "poc": {"source": "exploitdb", "link": "https://www.exploit-db.com/exploits/52341"}
 }
-```python
+```
 
 This metadata is populated during the Enrichment Phase (CVE/CWE/CVSS sync).
 
@@ -177,25 +177,25 @@ This metadata is populated during the Enrichment Phase (CVE/CWE/CVSS sync).
 | CWE-601 | A10: Server-Side Request Forgery (SSRF) |
 
 ### Example Mapping Resolver
-```python
+```
 def resolve_owasp(cwe_id):
     mapping = {"79": "A03", "89": "A03", "287": "A07", "601": "A10"}
     return mapping.get(str(cwe_id))
-```python
+```
 
 ## 🧩 Confidence & Risk Scoring
 
 Confidence combines tool reliability, correlation consistency, and enrichment coverage.
 
 ### Formula
-```python
+```
 confidence = (tool_weight * 0.5) + (enrichment_score * 0.3) + (cross_source_count * 0.2)
-```python
+```
 
 ### Risk Score Calculation
-```python
+```
 risk_score = CVSS * confidence
-```python
+```
 
 This allows probabilistic triage prioritization.
 
@@ -203,7 +203,7 @@ This allows probabilistic triage prioritization.
 
 Evidence is stored in compact, structured form for indexing:
 
-```json
+```
 {
   "request": {
     "method": "POST",
@@ -217,7 +217,7 @@ Evidence is stored in compact, structured form for indexing:
     "body_snippet": "SQL syntax error"
   }
 }
-```json
+```
 
 Large payloads are truncated or compressed to avoid storage overhead.
 
@@ -237,7 +237,7 @@ Each status change triggers an audit log event and optional webhook notification
 
 Findings are persisted via the `StoragePort` interface:
 
-```python
+```
 class FindingsRepository(Protocol):
     def save(self, finding: Finding) -> None:
         """Save a finding to storage."""
@@ -250,7 +250,7 @@ class FindingsRepository(Protocol):
     def get(self, id: str) -> Finding:
         """Get a finding by ID."""
         pass
-```python
+```
 
 ### Supported backends:
 - SQLite (default local mode)
@@ -269,7 +269,7 @@ SecFlow exports findings in structured formats for interoperability:
 | SARIF | `SecFlow export findings --format sarif` |
 
 ### Example JSON export:
-```json
+```
 {
   "project": "acme-api",
   "findings": [

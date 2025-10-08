@@ -75,7 +75,7 @@ flowchart TD
 ```
 
 ### Example Model
-```python
+```
 # core-lib/models/finding.py
 from pydantic import BaseModel
 from datetime import datetime
@@ -94,10 +94,10 @@ class Finding(BaseModel):
     owasp: Optional[str]
     cve_ids: List[str] = []
     enrichment: Dict[str, any] = {}
-```python
+```
 
 ### Example Port
-```python
+```
 # core-lib/ports/tool_port.py
 from typing import Protocol, List
 from core_lib.models.finding import Finding
@@ -114,7 +114,7 @@ class ToolPort(Protocol):
     def validate_output(self, raw_output: str) -> bool:
         """Validate tool output format."""
         pass
-```python
+```
 
 This abstraction allows any external tool to be integrated simply by implementing `ToolPort`.
 
@@ -124,13 +124,13 @@ This abstraction allows any external tool to be integrated simply by implementin
 Responsible for normalizing, deduplicating, and enriching findings produced by wrappers.
 
 ### Example Normalization Flow
-```python
+```
 def normalize(raw_data: str, tool: str) -> Finding:
     if tool == "nuclei":
         return _normalize_nuclei_output(raw_data)
     elif tool == "ferox":
         return _normalize_ferox_output(raw_data)
-```python
+```
 
 ### Capabilities
 - Parse multiple output formats (JSON, XML, plain text).
@@ -144,7 +144,7 @@ def normalize(raw_data: str, tool: str) -> Finding:
 Wraps and executes third-party tools through a unified interface defined by `ToolPort`.
 
 ### Example Structure
-```text
+```
 wrappers/
 ```
 
@@ -164,7 +164,7 @@ flowchart TD
 ```
 
 ### Example Base Class
-```python
+```
 # wrappers/base_wrapper.py
 import subprocess
 from core_lib.models.finding import Finding
@@ -180,7 +180,7 @@ class BaseWrapper:
 
     def parse_output(self, raw: str) -> list[Finding]:
         raise NotImplementedError
-```python
+```
 
 All wrappers inherit from `BaseWrapper` and override `parse_output`.
 
@@ -194,7 +194,7 @@ All wrappers inherit from `BaseWrapper` and override `parse_output`.
 - Custom configurations
 
 ### Example Resource Model
-```python
+```
 # core-lib/models/resource.py
 class Resource(BaseModel):
     id: str
@@ -204,7 +204,7 @@ class Resource(BaseModel):
     hash: str
     version: str
     metadata: dict
-```python
+```
 
 ## 🗃️ Storage
 
@@ -212,7 +212,7 @@ class Resource(BaseModel):
 Implements all persistence operations via the `StoragePort` interface.
 
 ### Example Interface
-```python
+```
 # core-lib/ports/storage_port.py
 class StoragePort(Protocol):
     def save_finding(self, finding: Finding) -> None:
@@ -226,7 +226,7 @@ class StoragePort(Protocol):
     def delete_project(self, project_id: str) -> None:
         """Delete a project and all its findings."""
         pass
-```python
+```
 
 ### Implementation Examples
 - `SQLiteStorageAdapter`
@@ -241,7 +241,7 @@ All registered in the `storage.registry`.
 Extend SecFlow with additional detection or enrichment capabilities.
 
 ### Example Plugin Registration
-```python
+```
 # plugins/registry.py
 from typing import Dict, Callable
 
@@ -252,7 +252,7 @@ def register_plugin(name: str):
         PLUGIN_REGISTRY[name] = func
         return func
     return decorator
-```yaml
+```
 
 Plugins can dynamically hook into findings processing, orchestration, or resource management.
 
@@ -268,7 +268,7 @@ Plugins can dynamically hook into findings processing, orchestration, or resourc
 
 ## 🔗 Cross-Package Interaction Diagram
 
-```text
+```
 +-------------+       +----------------+       +---------------+
 |  Wrappers   | ----> | Findings-Engine| ----> |   Storage     |
 +-------------+       +----------------+       +---------------+

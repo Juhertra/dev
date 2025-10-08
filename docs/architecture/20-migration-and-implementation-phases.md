@@ -42,11 +42,11 @@ Establish the new repository structure and enforce architectural discipline befo
 - Developer guide for environment setup (`docs/dev-setup.md`)
 
 ### Example Command
-```bash
+```
 make init
 make lint
 make test
-```python
+```
 
 ## 🧱 Phase 1 — Core Models & Data Persistence (Week 2)
 
@@ -74,7 +74,7 @@ Move fundamental entities (Projects, Findings, Resources, Runs) into modular cor
 - 80%+ test coverage on models and repos
 
 ### Example Model
-```python
+```
 class Project(BaseModel):
     id: UUID
     name: str
@@ -82,7 +82,7 @@ class Project(BaseModel):
     description: Optional[str]
     created_at: datetime
     updated_at: datetime
-```python
+```
 
 ## ⚙️ Phase 2 — Findings Engine, Wrappers & Workflow (Week 3)
 
@@ -111,7 +111,7 @@ Integrate scanning tools (Nuclei, Feroxbuster, Katana, etc.) into the new workfl
 - Risk engine integration (Phase 1 of enrichment)
 
 ### Example Wrapper Interface
-```python
+```
 class ToolWrapper(Protocol):
     def prepare(self, config: Dict[str, Any]) -> None:
         """Prepare tool with configuration."""
@@ -124,7 +124,7 @@ class ToolWrapper(Protocol):
     def parse_output(self, raw: str) -> List[Finding]:
         """Parse raw output into findings."""
         pass
-```python
+```
 
 ## 🌐 Phase 3 — API, Worker, and Triage UI (Week 4)
 
@@ -153,12 +153,12 @@ Deliver full orchestration capability through APIs, background workers, and a li
 - Metrics export for dashboards
 
 ### Example Endpoint
-```python
+```
 @app.post("/api/v1/workflows/run")
 async def run_workflow(workflow_id: str):
     job_id = await worker.enqueue(workflow_id)
     return {"status": "queued", "job_id": job_id}
-```yaml
+```
 
 ## 🧹 Phase 4 — Garbage Collection, AI, and Advanced Analytics (Week 5+)
 
@@ -203,7 +203,7 @@ Introduce garbage collection, retention policy enforcement, and AI-assisted tria
 - Docker-compose dev stack for quick testing
 
 ### Example Command
-```bash
+```
 docker compose up -d
 pytest --maxfail=1 --disable-warnings
 ```

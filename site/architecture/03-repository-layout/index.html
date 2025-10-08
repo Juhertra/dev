@@ -231,6 +231,30 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#application-layering" class="nav-link">🧩 Application Layering</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#import-linter-configuration" class="nav-link">🧩 Import-Linter Configuration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-workflow" class="nav-link">🧠 Developer Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#continuous-integration-pipeline" class="nav-link">🧩 Continuous Integration Pipeline</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tooling-developer-aids" class="nav-link">🧰 Tooling &amp; Developer Aids</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ascii-diagram-high-level-view" class="nav-link">🧩 ASCII Diagram — High-Level View</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🧠 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -281,151 +305,185 @@ This allows us to:
 <hr />
 <h2 id="python-workspace-configuration">⚙️ Python Workspace Configuration<a class="headerlink" href="#python-workspace-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="pyprojecttoml-snippet"><strong><code>pyproject.toml</code> Snippet</strong><a class="headerlink" href="#pyprojecttoml-snippet" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SecFlow&quot;</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
-<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security Toolkit Orchestration Framework&quot;</span>
-<span class="n">authors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Hernan Trajtemberg &lt;hernan.trajtemberg@domain&gt;&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code>[tool.poetry]
+name = &quot;SecFlow&quot;
+version = &quot;1.0.0&quot;
+description = &quot;Security Toolkit Orchestration Framework&quot;
+authors = [&quot;Hernan Trajtemberg &lt;hernan.trajtemberg@domain&gt;&quot;]
 
-<span class="k">[tool.poetry.dependencies]</span>
-<span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^3.11&quot;</span>
-<span class="n">fastapi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^0.115&quot;</span>
-<span class="n">sqlmodel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^0.0.22&quot;</span>
-<span class="n">celery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^5.3&quot;</span>
-<span class="n">redis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^5.0&quot;</span>
-<span class="n">pydantic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^2.7&quot;</span>
-<span class="n">import-linter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^1.5&quot;</span>
-<span class="n">ruff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^0.7&quot;</span>
-<span class="n">pytest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^8.3&quot;</span>
+[tool.poetry.dependencies]
+python = &quot;^3.11&quot;
+fastapi = &quot;^0.115&quot;
+sqlmodel = &quot;^0.0.22&quot;
+celery = &quot;^5.3&quot;
+redis = &quot;^5.0&quot;
+pydantic = &quot;^2.7&quot;
+import-linter = &quot;^1.5&quot;
+ruff = &quot;^0.7&quot;
+pytest = &quot;^8.3&quot;
 
-<span class="k">[tool.poetry.group.dev.dependencies]</span>
-<span class="n">pyright</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="n">coverage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+[tool.poetry.group.dev.dependencies]
+pyright = &quot;*&quot;
+coverage = &quot;*&quot;
 
-<span class="k">[build-system]</span>
-<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;poetry-core&gt;=1.6&quot;</span><span class="p">]</span>
-<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;poetry.core.masonry.api&quot;</span>
-<span class="err">```</span><span class="n">python</span>
+[build-system]
+requires = [&quot;poetry-core&gt;=1.6&quot;]
+build-backend = &quot;poetry.core.masonry.api&quot;
+</code></pre></div>
+<h2 id="application-layering">🧩 Application Layering<a class="headerlink" href="#application-layering" title="Permanent link">&para;</a></h2>
+<p>Each app in <code>/apps/</code> uses internal packages exclusively via ports, ensuring loose coupling.</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Directory</th>
+<th>Import Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core</strong></td>
+<td><code>packages/core-lib</code></td>
+<td>No external imports</td>
+</tr>
+<tr>
+<td><strong>Findings Engine</strong></td>
+<td><code>packages/findings-engine</code></td>
+<td>May import core-lib</td>
+</tr>
+<tr>
+<td><strong>Wrappers</strong></td>
+<td><code>packages/wrappers</code></td>
+<td>May import core-lib, utils</td>
+</tr>
+<tr>
+<td><strong>API / Worker</strong></td>
+<td><code>apps/web-api</code>, <code>apps/worker</code></td>
+<td>May import via ports only</td>
+</tr>
+<tr>
+<td><strong>Plugins</strong></td>
+<td><code>packages/plugins</code></td>
+<td>Dynamically loaded at runtime</td>
+</tr>
+</tbody>
+</table>
+<h2 id="import-linter-configuration">🧩 Import-Linter Configuration<a class="headerlink" href="#import-linter-configuration" title="Permanent link">&para;</a></h2>
+<p><code>importlinter.ini</code> enforces import boundaries automatically:</p>
+<div class="highlight"><pre><span></span><code>[importlinter]
+root_package = SecFlow
 
-<span class="c1">## 🧩 Application Layering</span>
+[contract: core-isolation]
+name = Core-Lib Is Independent
+type = forbidden
+source_modules = SecFlow.packages.core_lib
+forbidden_modules =
+    SecFlow.apps
+    SecFlow.packages.wrappers
+    SecFlow.packages.findings_engine
 
-<span class="n">Each</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="err">`/</span><span class="n">apps</span><span class="err">/`</span><span class="w"> </span><span class="n">uses</span><span class="w"> </span><span class="n">internal</span><span class="w"> </span><span class="n">packages</span><span class="w"> </span><span class="n">exclusively</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="n">ports</span><span class="err">,</span><span class="w"> </span><span class="n">ensuring</span><span class="w"> </span><span class="n">loose</span><span class="w"> </span><span class="n">coupling</span><span class="p">.</span>
-
-<span class="err">|</span><span class="w"> </span><span class="n">Layer</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Directory</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Import</span><span class="w"> </span><span class="n">Rules</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="n">-------</span><span class="err">|</span><span class="n">-----------</span><span class="err">|</span><span class="n">--------------</span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Core</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">`</span><span class="n">packages</span><span class="err">/</span><span class="n">core-lib</span><span class="err">`</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">No</span><span class="w"> </span><span class="n">external</span><span class="w"> </span><span class="n">imports</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Findings</span><span class="w"> </span><span class="n">Engine</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">`</span><span class="n">packages</span><span class="err">/</span><span class="n">findings-engine</span><span class="err">`</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">May</span><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">core-lib</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Wrappers</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">`</span><span class="n">packages</span><span class="err">/</span><span class="n">wrappers</span><span class="err">`</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">May</span><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">core-lib</span><span class="err">,</span><span class="w"> </span><span class="n">utils</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">API</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="n">Worker</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">`</span><span class="n">apps</span><span class="err">/</span><span class="n">web-api</span><span class="err">`,</span><span class="w"> </span><span class="err">`</span><span class="n">apps</span><span class="err">/</span><span class="n">worker</span><span class="err">`</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">May</span><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="n">only</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Plugins</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">`</span><span class="n">packages</span><span class="err">/</span><span class="n">plugins</span><span class="err">`</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Dynamically</span><span class="w"> </span><span class="n">loaded</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">runtime</span><span class="w"> </span><span class="err">|</span>
-
-<span class="c1">## 🧩 Import-Linter Configuration</span>
-
-<span class="err">`</span><span class="n">importlinter</span><span class="p">.</span><span class="n">ini</span><span class="err">`</span><span class="w"> </span><span class="n">enforces</span><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">boundaries</span><span class="w"> </span><span class="n">automatically</span><span class="err">:</span>
-
-<span class="err">```</span><span class="n">ini</span>
-<span class="k">[importlinter]</span>
-<span class="n">root_package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">SecFlow</span>
-
-<span class="k">[contract</span><span class="err">:</span><span class="w"> </span><span class="k">core-isolation]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">Core-Lib Is Independent</span>
-<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">forbidden</span>
-<span class="n">source_modules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">SecFlow.packages.core</span><span class="mi">_</span><span class="n">lib</span>
-<span class="n">forbidden_modules</span><span class="w"> </span><span class="o">=</span>
-<span class="w">    </span><span class="err">SecFlow.apps</span>
-<span class="w">    </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">packages</span><span class="p">.</span><span class="n">wrappers</span>
-<span class="w">    </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">packages</span><span class="p">.</span><span class="n">findings_engine</span>
-
-<span class="k">[contract</span><span class="err">:</span><span class="w"> </span><span class="k">adapters-only]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">Adapters Only Depend On Ports</span>
-<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">layers</span>
-<span class="n">layers</span><span class="w"> </span><span class="o">=</span>
-<span class="w">    </span><span class="err">SecFlow.packages.core</span><span class="mi">_</span><span class="n">lib</span>
-<span class="w">    </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">packages</span><span class="p">.</span><span class="n">findings_engine</span>
-<span class="w">    </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">packages</span><span class="p">.</span><span class="n">wrappers</span>
-<span class="w">    </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">apps</span>
-<span class="err">```</span><span class="n">bash</span>
-
-<span class="n">If</span><span class="w"> </span><span class="n">violated</span><span class="err">,</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">CI</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="n">fails</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">build</span><span class="p">.</span>
-
-<span class="c1">## 🧠 Developer Workflow</span>
-
-<span class="c1">### Local Development</span>
-<span class="err">```</span><span class="n">bash</span>
-<span class="n">poetry</span><span class="w"> </span><span class="n">install</span>
-<span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">pre-commit</span><span class="w"> </span><span class="n">install</span>
-<span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">pytest</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="c1">### Run the Worker</span>
-<span class="err">```</span><span class="n">bash</span>
-<span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">celery</span><span class="w"> </span><span class="n">-A</span><span class="w"> </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">apps</span><span class="p">.</span><span class="n">worker</span><span class="w"> </span><span class="n">worker</span><span class="w"> </span><span class="n">--loglevel</span><span class="o">=</span><span class="mf">inf</span><span class="n">o</span>
-<span class="err">```</span><span class="n">bash</span>
-
-<span class="c1">### Run the Web API</span>
-<span class="err">```</span><span class="n">bash</span>
-<span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">uvicorn</span><span class="w"> </span><span class="n">SecFlow</span><span class="p">.</span><span class="n">apps</span><span class="p">.</span><span class="n">web_api</span><span class="p">.</span><span class="n">main</span><span class="err">:</span><span class="n">app</span><span class="w"> </span><span class="n">--reload</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="c1">## 🧩 Continuous Integration Pipeline</span>
-
-<span class="n">GitHub</span><span class="w"> </span><span class="n">Actions</span><span class="w"> </span><span class="err">(`</span><span class="p">.</span><span class="n">github</span><span class="err">/</span><span class="n">workflows</span><span class="err">/</span><span class="n">ci</span><span class="p">.</span><span class="n">yml</span><span class="err">`):</span>
-
-<span class="err">```</span><span class="n">yaml</span>
-<span class="n">name</span><span class="err">:</span><span class="w"> </span><span class="n">SecFlow</span><span class="w"> </span><span class="n">CI</span>
-<span class="n">on</span><span class="err">:</span><span class="w"> </span><span class="k">[push</span><span class="err">,</span><span class="w"> </span><span class="k">pull_request]</span>
-<span class="n">jobs</span><span class="err">:</span>
-<span class="w">  </span><span class="n">build</span><span class="err">:</span>
-<span class="w">    </span><span class="n">runs-on</span><span class="err">:</span><span class="w"> </span><span class="n">ubuntu-latest</span>
-<span class="w">    </span><span class="n">steps</span><span class="err">:</span>
-<span class="w">      </span><span class="n">-</span><span class="w"> </span><span class="n">uses</span><span class="err">:</span><span class="w"> </span><span class="n">actions</span><span class="err">/</span><span class="n">checkout</span><span class="err">@</span><span class="n">v4</span>
-<span class="w">      </span><span class="n">-</span><span class="w"> </span><span class="n">uses</span><span class="err">:</span><span class="w"> </span><span class="n">actions</span><span class="err">/</span><span class="n">setup-python</span><span class="err">@</span><span class="n">v5</span>
-<span class="w">        </span><span class="n">with</span><span class="err">:</span>
-<span class="w">          </span><span class="n">python-version</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;3.11&#39;</span>
-<span class="w">      </span><span class="n">-</span><span class="w"> </span><span class="n">name</span><span class="err">:</span><span class="w"> </span><span class="n">Install</span><span class="w"> </span><span class="n">dependencies</span>
-<span class="w">        </span><span class="n">run</span><span class="err">:</span><span class="w"> </span><span class="err">|</span>
-<span class="w">          </span><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">poetry</span>
-<span class="w">          </span><span class="n">poetry</span><span class="w"> </span><span class="n">install</span>
-<span class="w">      </span><span class="n">-</span><span class="w"> </span><span class="n">name</span><span class="err">:</span><span class="w"> </span><span class="n">Lint</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="n">Check</span>
-<span class="w">        </span><span class="n">run</span><span class="err">:</span><span class="w"> </span><span class="err">|</span>
-<span class="w">          </span><span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">ruff</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="p">.</span>
-<span class="w">          </span><span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">pyright</span>
-<span class="w">      </span><span class="n">-</span><span class="w"> </span><span class="n">name</span><span class="err">:</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">Tests</span>
-<span class="w">        </span><span class="n">run</span><span class="err">:</span><span class="w"> </span><span class="n">poetry</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">pytest</span><span class="w"> </span><span class="n">--maxfail</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="n">--disable-warnings</span><span class="w"> </span><span class="n">-q</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="c1">## 🧰 Tooling &amp; Developer Aids</span>
-
-<span class="err">|</span><span class="w"> </span><span class="n">Tool</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Purpose</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="n">------</span><span class="err">|</span><span class="n">---------</span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Ruff</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Linting</span><span class="err">,</span><span class="w"> </span><span class="n">formatting</span><span class="w"> </span><span class="n">enforcement</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Pyright</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Static</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="n">checking</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Import-Linter</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Architecture</span><span class="w"> </span><span class="n">enforcement</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Poetry</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Dependency</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="n">management</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Tox</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Multi-environment</span><span class="w"> </span><span class="n">testing</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">MkDocs</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Documentation</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="n">generation</span><span class="w"> </span><span class="err">|</span>
-<span class="err">|</span><span class="w"> </span><span class="err">**</span><span class="n">Coverage</span><span class="p">.</span><span class="n">py</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="n">coverage</span><span class="w"> </span><span class="n">reports</span><span class="w"> </span><span class="err">|</span>
-
-<span class="c1">## 🧩 ASCII Diagram — High-Level View</span>
-
-<span class="err">```</span><span class="n">text</span>
-<span class="w">         </span><span class="err">+</span><span class="n">-----------------------------</span><span class="err">+</span>
-<span class="w">         </span><span class="err">|</span><span class="w">          </span><span class="n">SecFlow</span><span class="err">/</span><span class="w">           </span><span class="err">|</span>
-<span class="w">         </span><span class="err">+</span><span class="n">-------------</span><span class="err">+</span><span class="n">---------------</span><span class="err">+</span>
-<span class="w">                       </span><span class="err">|</span>
-<span class="w">          </span><span class="err">+</span><span class="n">------------v-------------</span><span class="err">+</span>
-<span class="w">          </span><span class="err">|</span><span class="w">        </span><span class="n">packages</span><span class="err">/</span><span class="w">         </span><span class="err">|</span>
-<span class="w">          </span><span class="err">|</span><span class="w"> </span><span class="n">core-lib</span><span class="err">,</span><span class="w"> </span><span class="n">findings</span><span class="err">,</span><span class="w"> </span><span class="n">etc</span><span class="p">.</span><span class="w"> </span><span class="err">|</span>
-<span class="w">          </span><span class="err">+</span><span class="n">------------</span><span class="err">+</span><span class="n">-------------</span><span class="err">+</span>
-<span class="w">                       </span><span class="err">|</span>
-<span class="w">          </span><span class="err">+</span><span class="n">------------v-------------</span><span class="err">+</span>
-<span class="w">          </span><span class="err">|</span><span class="w">          </span><span class="n">apps</span><span class="err">/</span><span class="w">           </span><span class="err">|</span>
-<span class="w">          </span><span class="err">|</span><span class="w"> </span><span class="n">web-api</span><span class="err">,</span><span class="w"> </span><span class="n">worker</span><span class="err">,</span><span class="w"> </span><span class="n">cli</span><span class="err">,</span><span class="w"> </span><span class="n">ui</span><span class="w"> </span><span class="err">|</span>
-<span class="w">          </span><span class="err">+</span><span class="n">------------</span><span class="err">+</span><span class="n">-------------</span><span class="err">+</span>
-<span class="w">                       </span><span class="err">|</span>
-<span class="w">          </span><span class="err">+</span><span class="n">------------v-------------</span><span class="err">+</span>
-<span class="w">          </span><span class="err">|</span><span class="w">         </span><span class="n">tests</span><span class="err">/</span><span class="w">           </span><span class="err">|</span>
-<span class="w">          </span><span class="err">+</span><span class="n">--------------------------</span><span class="err">+</span>
+[contract: adapters-only]
+name = Adapters Only Depend On Ports
+type = layers
+layers =
+    SecFlow.packages.core_lib
+    SecFlow.packages.findings_engine
+    SecFlow.packages.wrappers
+    SecFlow.apps
+</code></pre></div>
+<p>If violated, the CI pipeline fails the build.</p>
+<h2 id="developer-workflow">🧠 Developer Workflow<a class="headerlink" href="#developer-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="local-development">Local Development<a class="headerlink" href="#local-development" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>poetry install
+poetry run pre-commit install
+poetry run pytest
+</code></pre></div>
+<h3 id="run-the-worker">Run the Worker<a class="headerlink" href="#run-the-worker" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>poetry run celery -A SecFlow.apps.worker worker --loglevel=info
+</code></pre></div>
+<h3 id="run-the-web-api">Run the Web API<a class="headerlink" href="#run-the-web-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>poetry run uvicorn SecFlow.apps.web_api.main:app --reload
+</code></pre></div>
+<h2 id="continuous-integration-pipeline">🧩 Continuous Integration Pipeline<a class="headerlink" href="#continuous-integration-pipeline" title="Permanent link">&para;</a></h2>
+<p>GitHub Actions (<code>.github/workflows/ci.yml</code>):</p>
+<div class="highlight"><pre><span></span><code>name: SecFlow CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: &#39;3.11&#39;
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+      - name: Lint &amp; Type Check
+        run: |
+          poetry run ruff check .
+          poetry run pyright
+      - name: Run Tests
+        run: poetry run pytest --maxfail=1 --disable-warnings -q
+</code></pre></div>
+<h2 id="tooling-developer-aids">🧰 Tooling &amp; Developer Aids<a class="headerlink" href="#tooling-developer-aids" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ruff</strong></td>
+<td>Linting, formatting enforcement</td>
+</tr>
+<tr>
+<td><strong>Pyright</strong></td>
+<td>Static type checking</td>
+</tr>
+<tr>
+<td><strong>Import-Linter</strong></td>
+<td>Architecture enforcement</td>
+</tr>
+<tr>
+<td><strong>Poetry</strong></td>
+<td>Dependency &amp; build management</td>
+</tr>
+<tr>
+<td><strong>Tox</strong></td>
+<td>Multi-environment testing</td>
+</tr>
+<tr>
+<td><strong>MkDocs</strong></td>
+<td>Documentation site generation</td>
+</tr>
+<tr>
+<td><strong>Coverage.py</strong></td>
+<td>Test coverage reports</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ascii-diagram-high-level-view">🧩 ASCII Diagram — High-Level View<a class="headerlink" href="#ascii-diagram-high-level-view" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>         +-----------------------------+
+         |          SecFlow/           |
+         +-------------+---------------+
+                       |
+          +------------v-------------+
+          |        packages/         |
+          | core-lib, findings, etc. |
+          +------------+-------------+
+                       |
+          +------------v-------------+
+          |          apps/           |
+          | web-api, worker, cli, ui |
+          +------------+-------------+
+                       |
+          +------------v-------------+
+          |         tests/           |
+          +--------------------------+
 </code></pre></div>
 <h2 id="future-enhancements">🧠 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

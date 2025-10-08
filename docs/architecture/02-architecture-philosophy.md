@@ -31,7 +31,7 @@ It is designed for **tool orchestration, data normalization, and future AI enric
 
 ## ⚙️ Core Architectural Layers
 
-```yaml
+```
 +---------------------------------------------------------------+
 |                    Applications                               |
 |                    Web-API                                   |
@@ -48,7 +48,7 @@ It is designed for **tool orchestration, data normalization, and future AI enric
 |                    External                                  |
 |                    Tools                                     |
 +---------------------------------------------------------------+
-```python
+```
 
 Each layer exposes **well-defined boundaries**:
 - *Applications* depend only on *Services* through **ports**.

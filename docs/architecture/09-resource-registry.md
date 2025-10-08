@@ -52,7 +52,7 @@ flowchart TD
 
 ## ⚙️ Resource Model
 
-```python
+```
 # core-lib/models/resource.py
 from typing import Literal, Optional
 from datetime import datetime
@@ -72,7 +72,7 @@ class Resource(BaseModel):
     updated_at: datetime
     usage_count: int
     last_used: Optional[datetime]
-```yaml
+```
 
 ## 🧩 Scope Hierarchy
 
@@ -94,7 +94,7 @@ If project-A has a custom wordlist `res://project/acme/dirb.yaml`, it overrides 
 
 ## 🧩 Example Registry Entry
 
-```yaml
+```
 id: "res://wordlists/dirb:1.2.0"
 name: "Dirbuster Common"
 type: "wordlist"
@@ -108,7 +108,7 @@ metadata:
   source: "https://github.com/digination/dirbuster"
 created_at: "2025-08-01T12:32:00Z"
 updated_at: "2025-08-15T09:21:00Z"
-```python
+```
 
 ## 🧱 Storage Backends
 
@@ -123,7 +123,7 @@ The Resource Registry supports multiple backends:
 
 ## 🧩 Resource Manager Interface
 
-```python
+```
 # core-lib/ports/resource_port.py
 from typing import List
 from .models import Resource
@@ -148,10 +148,10 @@ class ResourcePort(Protocol):
     def increment_usage(self, id: str) -> None:
         """Increment usage counter for a resource."""
         pass
-```python
+```
 
 ### Example Adapter Implementation
-```python
+```
 # storage/resource_repository.py
 import json, os
 from core_lib.models.resource import Resource
@@ -169,7 +169,7 @@ class FileResourceRepo:
     def get(self, id):
         path = os.path.join(self.base, f"{id.replace('res://','')}.json")
         return Resource.parse_file(path)
-```yaml
+```
 
 ## 🧩 Resource Fetching & Caching
 
@@ -180,10 +180,10 @@ When a workflow references `res://wordlists/dirb:latest`:
 3. If missing or outdated, it downloads or loads the file blob.
 4. The reference is then injected into the tool configuration.
 
-```python
+```
 resolved = ResourceManager.resolve("res://wordlists/dirb:latest")
 path = CacheManager.fetch(resolved)
-```yaml
+```
 
 ## 🧠 Resource Versioning
 
@@ -196,14 +196,14 @@ Resources are immutable once published; updates produce new versions.
 | **promote** | Moves a project resource to group/global scope. |
 
 ### Version Reference Syntax
-```text
+```
 res://wordlists/dirb:1.2.0
 res://templates/nuclei:latest
-```text
+```
 
 ## 🧩 Registry CLI Commands
 
-```bash
+```
 # List all resources
 SecFlow resources list
 
@@ -215,7 +215,7 @@ SecFlow resources add wordlist ./custom.txt --scope project
 
 # Promote resource
 SecFlow resources promote res://project/acme/dirb:latest --to global
-```text
+```
 
 ## 🧠 Integration with Tool Manager
 
@@ -223,7 +223,7 @@ Tools reference resources via symbolic URIs.
 At runtime, the registry automatically resolves URIs into local paths.
 
 ### Example Nuclei config:
-```yaml
+```
 templates: res://templates/nuclei:latest
 wordlist: res://wordlists/dirb:latest
 ```

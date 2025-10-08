@@ -34,7 +34,6 @@ SecFlow supports three primary plugin categories:
 
 ## 🧱 Plugin Architecture Overview
 
-```yaml
 +-------------------------------------------------------------+
 |                    Plugin Manager                           |
 | - Registry                                                  |
@@ -59,7 +58,7 @@ flowchart TD
 
 ## ⚙️ Base Interfaces
 
-```python
+```
 # core-lib/ports/plugin_port.py
 from typing import Protocol, Any, Dict
 
@@ -79,13 +78,13 @@ class PluginPort(Protocol):
     def teardown(self) -> None:
         """Clean up plugin resources."""
         pass
-```python
+```
 
 All plugins must subclass or conform to `PluginPort`.
 
 ## 🧩 Example Plugin Registry
 
-```python
+```
 # plugins/registry.py
 from typing import Dict, Type
 from core_lib.ports.plugin_port import PluginPort
@@ -105,16 +104,16 @@ class PluginRegistry:
     @classmethod
     def list_plugins(cls):
         return list(cls._registry.keys())
-```python
+```
 
 ### Registration via Decorator
-```python
+```
 def register_plugin(name: str):
     def decorator(cls):
         PluginRegistry.register(name, cls)
         return cls
     return decorator
-```python
+```
 
 ## 🧠 Plugin Lifecycle
 
@@ -126,7 +125,7 @@ def register_plugin(name: str):
 
 ## 🧩 Plugin Manifest Specification
 
-```yaml
+```
 name: nuclei-enricher
 version: "1.0.0"
 category: "enricher"
@@ -136,13 +135,13 @@ dependencies:
   - cpe
 config_schema: "schemas/nuclei_enricher.json"
 sandbox: true
-```python
+```
 
 Each manifest is stored under `/plugins/manifests/` and validated on startup.
 
 ## ⚙️ Example — CVE Enricher Plugin
 
-```python
+```
 # plugins/nuclei_enricher.py
 import requests
 from core_lib.models.finding import Finding
@@ -168,7 +167,7 @@ class CVEEnricher(PluginPort):
 
     def teardown(self):
         pass
-```yaml
+```
 
 ## 🔐 Sandbox Model
 
@@ -185,7 +184,7 @@ Each plugin executes inside a restricted environment:
 ## 🧩 Plugin Discovery
 
 ### Directory Layout
-```python
+```
 plugins/
 ```
 
@@ -211,19 +210,19 @@ flowchart TD
 ```
 
 ### Discovery Algorithm
-```python
+```
 def discover_plugins():
     for manifest in Path("plugins/manifests").glob("*.yaml"):
         data = yaml.safe_load(manifest.read_text())
         entrypoint = import_string(data["entrypoint"])
         PluginRegistry.register(data["name"], entrypoint)
-```python
+```
 
 ## 🧠 Plugin Telemetry
 
 Each plugin emits lifecycle events:
 
-```json
+```
 {
   "event": "plugin_executed",
   "plugin": "cve_enricher",
@@ -231,7 +230,7 @@ Each plugin emits lifecycle events:
   "memory_mb": 42,
   "success": true
 }
-```json
+```
 
 Telemetry is captured by the Observability subsystem (see [Observability, Logging & Metrics](17-observability-logging-and-metrics.md)).
 
@@ -246,7 +245,7 @@ Telemetry is captured by the Observability subsystem (see [Observability, Loggin
 
 ## 🧠 Example End-to-End Plugin Flow
 
-```text
+```
 [Plugin Manifest] → [Registry Register] → [Initialize] 
       ↓                       ↓                   ↓
  [Execute via Port] → [Telemetry + Logging] → [Teardown]

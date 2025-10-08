@@ -55,7 +55,7 @@ flowchart TD
 ## ⚙️ Python Workspace Configuration
 
 ### **`pyproject.toml` Snippet**
-```toml
+```
 [tool.poetry]
 name = "SecFlow"
 version = "1.0.0"
@@ -80,7 +80,7 @@ coverage = "*"
 [build-system]
 requires = ["poetry-core>=1.6"]
 build-backend = "poetry.core.masonry.api"
-```python
+```
 
 ## 🧩 Application Layering
 
@@ -98,7 +98,7 @@ Each app in `/apps/` uses internal packages exclusively via ports, ensuring loos
 
 `importlinter.ini` enforces import boundaries automatically:
 
-```ini
+```
 [importlinter]
 root_package = SecFlow
 
@@ -119,34 +119,34 @@ layers =
     SecFlow.packages.findings_engine
     SecFlow.packages.wrappers
     SecFlow.apps
-```bash
+```
 
 If violated, the CI pipeline fails the build.
 
 ## 🧠 Developer Workflow
 
 ### Local Development
-```bash
+```
 poetry install
 poetry run pre-commit install
 poetry run pytest
-```yaml
+```
 
 ### Run the Worker
-```bash
+```
 poetry run celery -A SecFlow.apps.worker worker --loglevel=info
-```bash
+```
 
 ### Run the Web API
-```bash
+```
 poetry run uvicorn SecFlow.apps.web_api.main:app --reload
-```yaml
+```
 
 ## 🧩 Continuous Integration Pipeline
 
 GitHub Actions (`.github/workflows/ci.yml`):
 
-```yaml
+```
 name: SecFlow CI
 on: [push, pull_request]
 jobs:
@@ -167,7 +167,7 @@ jobs:
           poetry run pyright
       - name: Run Tests
         run: poetry run pytest --maxfail=1 --disable-warnings -q
-```yaml
+```
 
 ## 🧰 Tooling & Developer Aids
 
@@ -183,7 +183,7 @@ jobs:
 
 ## 🧩 ASCII Diagram — High-Level View
 
-```text
+```
          +-----------------------------+
          |          SecFlow/           |
          +-------------+---------------+

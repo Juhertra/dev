@@ -231,6 +231,54 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#role-based-access-control-rbac" class="nav-link">🧩 Role-Based Access Control (RBAC)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#policy-enforcement" class="nav-link">⚙️ Policy Enforcement</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#secrets-management" class="nav-link">🧱 Secrets Management</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#execution-sandboxing" class="nav-link">🔒 Execution Sandboxing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#network-data-security" class="nav-link">🧩 Network &amp; Data Security</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#secure-inter-process-communication" class="nav-link">🧠 Secure Inter-Process Communication</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-hooks-middleware" class="nav-link">🧩 Security Hooks &amp; Middleware</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#audit-trail-tamper-resistance" class="nav-link">🔐 Audit Trail &amp; Tamper Resistance</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-monitoring" class="nav-link">🧠 Security Monitoring</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#compliance-framework-alignment" class="nav-link">⚙️ Compliance Framework Alignment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#key-rotation-secrets-expiry" class="nav-link">🔒 Key Rotation &amp; Secrets Expiry</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-access-workflow" class="nav-link">🧩 Example Access Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -295,227 +343,340 @@ Every user action, process execution, and data mutation is subject to authentica
 1. <strong>Local Auth (default):</strong> For standalone or on-premise deployments.<br />
 2. <strong>Federated Auth (optional):</strong> OAuth2/OpenID Connect integration (GitHub, Google, Azure AD).</p>
 <h3 id="token-model">Token Model<a class="headerlink" href="#token-model" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hernan&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1738783200</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;projects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;proj-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;proj-02&quot;</span><span class="p">]</span>
-<span class="p">}</span>
-<span class="err">```jso</span><span class="kc">n</span>
-
-<span class="err">###</span><span class="w"> </span><span class="err">Toke</span><span class="kc">n</span><span class="w"> </span><span class="err">Flow</span><span class="w"> </span><span class="err">Diagram</span>
-<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
-<span class="p">[</span><span class="err">User</span><span class="w"> </span><span class="err">Logi</span><span class="kc">n</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">Au</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">Provider</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">JWT</span><span class="w"> </span><span class="err">Issued</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">API</span><span class="w"> </span><span class="err">Ga</span><span class="kc">te</span><span class="err">way</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Web/API</span><span class="p">]</span>
-<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
-
-<span class="err">Each</span><span class="w"> </span><span class="err">reques</span><span class="kc">t</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">`/api/*` must include:</span>
-<span class="err">```text</span>
-<span class="err">Authorization: Bearer &lt;token&gt;</span>
-<span class="err">```text</span>
-
-<span class="err">Tokens are verified by the API middleware using RS256 signature validation.</span>
-
-<span class="err">## 🧩 Role-Based Access Control (RBAC)</span>
-
-<span class="err">Roles define the scope of capabilities across the platform.</span>
-
-<span class="err">| Role | Permissions |</span>
-<span class="err">|------|-------------|</span>
-<span class="err">| **Admin** | Full control — manage tools, users, projects, retention, policies. |</span>
-<span class="err">| **Analyst** | Execute workflows, triage findings, view reports, limited editing. |</span>
-<span class="err">| **Viewer** | Read-only access to results and dashboards. |</span>
-<span class="err">| **Automation (Service)** | Used by background tasks (limited scoped tokens). |</span>
-
-<span class="err">### Example permission matrix:</span>
-
-<span class="err">| Action | Admin | Analyst | Viewer | Service |</span>
-<span class="err">|--------|-------|---------|--------|---------|</span>
-<span class="err">| Run workflow | ✅ | ✅ | ❌ | ✅ |</span>
-<span class="err">| Modify tool config | ✅ | ❌ | ❌ | ❌ |</span>
-<span class="err">| View findings | ✅ | ✅ | ✅ | ✅ |</span>
-<span class="err">| Delete project | ✅ | ❌ | ❌ | ❌ |</span>
-<span class="err">| Access PoCs | ✅ | ✅ | ❌ | ❌ |</span>
-<span class="err">| Run GC tasks | ✅ | ❌ | ❌ | ✅ |</span>
-
-<span class="err">## ⚙️ Policy Enforcement</span>
-
-<span class="err">Every endpoint and command passes through an Access Policy Filter:</span>
-
-<span class="err">```python</span>
-<span class="err">def authorize(action: str, user: User, project: Optional[str] = None):</span>
-<span class="err">    if not user.has_permission(action, project):</span>
-<span class="err">        raise HTTPException(403, detail=f&quot;Forbidden: {action}&quot;)</span>
-<span class="err">```python</span>
-
-<span class="err">### Example route decorator:</span>
-<span class="err">```python</span>
-<span class="err">@app.get(&quot;/api/v1/findings&quot;)</span>
-<span class="err">@require_role([&quot;admin&quot;, &quot;analyst&quot;, &quot;viewer&quot;])</span>
-<span class="err">def list_findings():</span>
-<span class="err">    def authorize(self, action: str, user: User, project: Optional[str] = None) -&gt; bool:</span>
-<span class="err">        &quot;&quot;&quot;Check if user is authorized for action.&quot;&quot;&quot;</span>
-<span class="err">        return user.has_permission(action, project)</span>
-<span class="err">```python</span>
-
-<span class="err">## 🧱 Secrets Management</span>
-
-<span class="err">### Secret Types</span>
-<span class="err">- API tokens for external tools (e.g., Shodan, Vulners)</span>
-<span class="err">- Private SSH keys for remote scans</span>
-<span class="err">- Encrypted credentials for authenticated targets</span>
-
-<span class="err">### Storage Backend</span>
-<span class="err">All secrets are stored in the SecFlow Vault, an encrypted JSON database backed by Fernet (AES-256).</span>
-
-<span class="err">```python</span>
-<span class="err">class SecretVault:</span>
-<span class="err">    def __init__(self, keyfile: Path):</span>
-<span class="err">        self.key = load_key(keyfile)</span>
-<span class="err">    def store(self, id: str, data: dict):</span>
-<span class="err">        enc = fernet_encrypt(json.dumps(data), self.key)</span>
-<span class="err">        write_file(f&quot;/vault/{id}.enc&quot;, enc)</span>
-<span class="err">```python</span>
-
-<span class="err">### Secrets CLI</span>
-<span class="err">```bash</span>
-<span class="err">SecFlow secrets add nuclei_api --value &quot;TOKEN123&quot;</span>
-<span class="err">SecFlow secrets list</span>
-<span class="err">SecFlow secrets remove nuclei_api</span>
-<span class="err">```yaml</span>
-
-<span class="err">All access is scoped by user and project context.</span>
-
-<span class="err">## 🔒 Execution Sandboxing</span>
-
-<span class="err">All scanner and PoC executions run inside restricted containers or subprocess jails.</span>
-
-<span class="err">### Isolation Techniques</span>
-<span class="err">| Mechanism | Purpose |</span>
-<span class="err">|-----------|---------|</span>
-<span class="err">| Namespaces (PID, NET, MNT) | Process isolation |</span>
-<span class="err">| Seccomp Filters | Syscall restriction |</span>
-<span class="err">| cgroups v2 | CPU/memory limits |</span>
-<span class="err">| No-root UID mapping | Drops privileges |</span>
-<span class="err">| AppArmor profiles | File access control |</span>
-<span class="err">| Read-only FS | Prevents persistence |</span>
-
-<span class="err">### Example</span>
-<span class="err">```bash</span>
-<span class="err">docker run --rm --cap-drop=ALL \</span>
-<span class="err">  --security-opt=no-new-privileges \</span>
-<span class="err">  --read-only -m 512m --cpus=1 \</span>
-<span class="err">  SecFlow-runner:latest nuclei -t /templates</span>
-<span class="err">```python</span>
-
-<span class="err">## 🧩 Network &amp; Data Security</span>
-
-<span class="err">| Channel | Encryption | Notes |</span>
-<span class="err">|---------|------------|-------|</span>
-<span class="err">| API &lt;-&gt; UI | HTTPS (TLS 1.3) | Strict transport enforced |</span>
-<span class="err">| Worker &lt;-&gt; API | Mutual TLS | Each worker has its own cert |</span>
-<span class="err">| File Sync | AES-256 encrypted | Optional compression |</span>
-<span class="err">| Database | At-rest encryption | SQLite: SEE, Postgres: TDE |</span>
-<span class="err">| Audit Logs | Signed + timestamped | Prevents tampering |</span>
-
-<span class="err">## 🧠 Secure Inter-Process Communication</span>
-
-<span class="err">Internal apps communicate via ZeroMQ or Redis queues over TLS.</span>
-
-<span class="err">Each message includes a signed envelope:</span>
-
-<span class="err">```json</span>
-<span class="err">{</span>
-<span class="err">  &quot;msg_id&quot;: &quot;uuid&quot;,</span>
-<span class="err">  &quot;issuer&quot;: &quot;worker-1&quot;,</span>
-<span class="err">  &quot;signature&quot;: &quot;HMAC-SHA256&quot;,</span>
-<span class="err">  &quot;payload&quot;: {&quot;data&quot;: &quot;encrypted_content&quot;}</span>
-<span class="err">}</span>
-<span class="err">```json</span>
-
-<span class="err">This ensures authenticity and non-repudiation.</span>
-
-<span class="err">## 🧩 Security Hooks &amp; Middleware</span>
-
-<span class="err">SecFlow injects middleware for:</span>
-<span class="err">- Request validation (pydantic schemas)</span>
-<span class="err">- JWT token expiry verification</span>
-<span class="err">- Role validation (fast-path lookup)</span>
-<span class="err">- Audit log writing after each mutating operation</span>
-
-<span class="err">### Example:</span>
-<span class="err">```python</span>
-<span class="err">@app.middleware(&quot;http&quot;)</span>
-<span class="err">async def audit_request(request, call_next):</span>
-<span class="err">    response = await call_next(request)</span>
-<span class="err">    if request.method in (&quot;POST&quot;, &quot;DELETE&quot;, &quot;PATCH&quot;):</span>
-<span class="err">        log_audit(request, response)</span>
-<span class="err">    return response</span>
-<span class="err">```yaml</span>
-
-<span class="err">## 🔐 Audit Trail &amp; Tamper Resistance</span>
-
-<span class="err">### Log Format</span>
-<span class="err">```json</span>
-<span class="err">{</span>
-<span class="err">  &quot;timestamp&quot;: &quot;2025-10-06T09:40:00Z&quot;,</span>
-<span class="err">  &quot;user&quot;: &quot;hernan&quot;,</span>
-<span class="err">  &quot;action&quot;: &quot;workflow_run&quot;,</span>
-<span class="err">  &quot;project&quot;: &quot;api-audit&quot;,</span>
-<span class="err">  &quot;status&quot;: &quot;success&quot;,</span>
-<span class="err">  &quot;hash&quot;: &quot;sha256:0a3b1c2d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2&quot;</span>
-<span class="err">}</span>
-<span class="err">```json</span>
-
-<span class="err">### Storage &amp; Verification</span>
-<span class="err">- Logs stored as JSON lines under `/audit/`</span>
-<span class="err">- Each file signed with an HMAC chain:</span>
-
-<span class="err">```python</span>
-<span class="err">H_i = HMAC(H_prev + log_i, key)</span>
-<span class="err">```yaml</span>
-
-<span class="err">Immutable and verifiable chain-of-trust.</span>
-
-<span class="err">## 🧠 Security Monitoring</span>
-
-<span class="err">| Metric | Description |</span>
-<span class="err">|--------|-------------|</span>
-<span class="err">| auth_failures_total | Failed login attempts |</span>
-<span class="err">| sandbox_executions_total | Containers spawned |</span>
-<span class="err">| policy_violations_total | Unauthorized actions |</span>
-<span class="err">| vault_accesses_total | Secret retrievals |</span>
-<span class="err">| audit_events_total | Log entries recorded |</span>
-
-<span class="err">## ⚙️ Compliance Framework Alignment</span>
-
-<span class="err">SecFlow&#39;s security architecture aligns with:</span>
-
-<span class="err">| Framework | Compliance Area |</span>
-<span class="err">|-----------|-----------------|</span>
-<span class="err">| **NIST SP 800-53** | Access control, auditing, system protection |</span>
-<span class="err">| **ISO/IEC 27001** | Information security management |</span>
-<span class="err">| **OWASP SAMM** | Secure software development lifecycle |</span>
-<span class="err">| **MITRE ATT&amp;CK** | Mapping detection behaviors |</span>
-<span class="err">| **GDPR Art. 32** | Data confidentiality and integrity |</span>
-
-<span class="err">## 🔒 Key Rotation &amp; Secrets Expiry</span>
-
-<span class="err">- Secrets have explicit TTLs (default: 180 days).</span>
-<span class="err">- Vault rotation command:</span>
-
-<span class="err">```bash</span>
-<span class="err">SecFlow vault rotate</span>
-<span class="err">```text</span>
-
-<span class="err">Rotation regenerates the encryption key and re-encrypts all entries.</span>
-
-<span class="err">## 🧩 Example Access Workflow</span>
-
-<span class="err">```text</span>
-<span class="err">[Analyst] → [Login via OIDC] → [JWT Issued]</span>
-<span class="err">→ [UI/API Gateway] → [RBAC Policy Check]</span>
-<span class="err">→ [Worker Executes Workflow in Sandbox]</span>
-<span class="err">→ [Findings Logged + Audit Entry Created]</span>
+<div class="highlight"><pre><span></span><code>{
+  &quot;sub&quot;: &quot;hernan&quot;,
+  &quot;role&quot;: &quot;admin&quot;,
+  &quot;exp&quot;: 1738783200,
+  &quot;projects&quot;: [&quot;proj-01&quot;, &quot;proj-02&quot;]
+}
+</code></pre></div>
+<h3 id="token-flow-diagram">Token Flow Diagram<a class="headerlink" href="#token-flow-diagram" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>[User Login] → [Auth Provider] → [JWT Issued] → [API Gateway] → [SecFlow Web/API]
+</code></pre></div>
+<p>Each request to <code>/api/*</code> must include:
+<div class="highlight"><pre><span></span><code>Authorization: Bearer &lt;token&gt;
+</code></pre></div></p>
+<p>Tokens are verified by the API middleware using RS256 signature validation.</p>
+<h2 id="role-based-access-control-rbac">🧩 Role-Based Access Control (RBAC)<a class="headerlink" href="#role-based-access-control-rbac" title="Permanent link">&para;</a></h2>
+<p>Roles define the scope of capabilities across the platform.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Full control — manage tools, users, projects, retention, policies.</td>
+</tr>
+<tr>
+<td><strong>Analyst</strong></td>
+<td>Execute workflows, triage findings, view reports, limited editing.</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Read-only access to results and dashboards.</td>
+</tr>
+<tr>
+<td><strong>Automation (Service)</strong></td>
+<td>Used by background tasks (limited scoped tokens).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-permission-matrix">Example permission matrix:<a class="headerlink" href="#example-permission-matrix" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Admin</th>
+<th>Analyst</th>
+<th>Viewer</th>
+<th>Service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run workflow</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Modify tool config</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>View findings</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Delete project</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Access PoCs</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Run GC tasks</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h2 id="policy-enforcement">⚙️ Policy Enforcement<a class="headerlink" href="#policy-enforcement" title="Permanent link">&para;</a></h2>
+<p>Every endpoint and command passes through an Access Policy Filter:</p>
+<div class="highlight"><pre><span></span><code>def authorize(action: str, user: User, project: Optional[str] = None):
+    if not user.has_permission(action, project):
+        raise HTTPException(403, detail=f&quot;Forbidden: {action}&quot;)
+</code></pre></div>
+<h3 id="example-route-decorator">Example route decorator:<a class="headerlink" href="#example-route-decorator" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>@app.get(&quot;/api/v1/findings&quot;)
+@require_role([&quot;admin&quot;, &quot;analyst&quot;, &quot;viewer&quot;])
+def list_findings():
+    def authorize(self, action: str, user: User, project: Optional[str] = None) -&gt; bool:
+        &quot;&quot;&quot;Check if user is authorized for action.&quot;&quot;&quot;
+        return user.has_permission(action, project)
+</code></pre></div>
+<h2 id="secrets-management">🧱 Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h2>
+<h3 id="secret-types">Secret Types<a class="headerlink" href="#secret-types" title="Permanent link">&para;</a></h3>
+<ul>
+<li>API tokens for external tools (e.g., Shodan, Vulners)</li>
+<li>Private SSH keys for remote scans</li>
+<li>Encrypted credentials for authenticated targets</li>
+</ul>
+<h3 id="storage-backend">Storage Backend<a class="headerlink" href="#storage-backend" title="Permanent link">&para;</a></h3>
+<p>All secrets are stored in the SecFlow Vault, an encrypted JSON database backed by Fernet (AES-256).</p>
+<div class="highlight"><pre><span></span><code>class SecretVault:
+    def __init__(self, keyfile: Path):
+        self.key = load_key(keyfile)
+    def store(self, id: str, data: dict):
+        enc = fernet_encrypt(json.dumps(data), self.key)
+        write_file(f&quot;/vault/{id}.enc&quot;, enc)
+</code></pre></div>
+<h3 id="secrets-cli">Secrets CLI<a class="headerlink" href="#secrets-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SecFlow secrets add nuclei_api --value &quot;TOKEN123&quot;
+SecFlow secrets list
+SecFlow secrets remove nuclei_api
+</code></pre></div>
+<p>All access is scoped by user and project context.</p>
+<h2 id="execution-sandboxing">🔒 Execution Sandboxing<a class="headerlink" href="#execution-sandboxing" title="Permanent link">&para;</a></h2>
+<p>All scanner and PoC executions run inside restricted containers or subprocess jails.</p>
+<h3 id="isolation-techniques">Isolation Techniques<a class="headerlink" href="#isolation-techniques" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Namespaces (PID, NET, MNT)</td>
+<td>Process isolation</td>
+</tr>
+<tr>
+<td>Seccomp Filters</td>
+<td>Syscall restriction</td>
+</tr>
+<tr>
+<td>cgroups v2</td>
+<td>CPU/memory limits</td>
+</tr>
+<tr>
+<td>No-root UID mapping</td>
+<td>Drops privileges</td>
+</tr>
+<tr>
+<td>AppArmor profiles</td>
+<td>File access control</td>
+</tr>
+<tr>
+<td>Read-only FS</td>
+<td>Prevents persistence</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker run --rm --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --read-only -m 512m --cpus=1 \
+  SecFlow-runner:latest nuclei -t /templates
+</code></pre></div>
+<h2 id="network-data-security">🧩 Network &amp; Data Security<a class="headerlink" href="#network-data-security" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Encryption</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API &lt;-&gt; UI</td>
+<td>HTTPS (TLS 1.3)</td>
+<td>Strict transport enforced</td>
+</tr>
+<tr>
+<td>Worker &lt;-&gt; API</td>
+<td>Mutual TLS</td>
+<td>Each worker has its own cert</td>
+</tr>
+<tr>
+<td>File Sync</td>
+<td>AES-256 encrypted</td>
+<td>Optional compression</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>At-rest encryption</td>
+<td>SQLite: SEE, Postgres: TDE</td>
+</tr>
+<tr>
+<td>Audit Logs</td>
+<td>Signed + timestamped</td>
+<td>Prevents tampering</td>
+</tr>
+</tbody>
+</table>
+<h2 id="secure-inter-process-communication">🧠 Secure Inter-Process Communication<a class="headerlink" href="#secure-inter-process-communication" title="Permanent link">&para;</a></h2>
+<p>Internal apps communicate via ZeroMQ or Redis queues over TLS.</p>
+<p>Each message includes a signed envelope:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;msg_id&quot;: &quot;uuid&quot;,
+  &quot;issuer&quot;: &quot;worker-1&quot;,
+  &quot;signature&quot;: &quot;HMAC-SHA256&quot;,
+  &quot;payload&quot;: {&quot;data&quot;: &quot;encrypted_content&quot;}
+}
+</code></pre></div>
+<p>This ensures authenticity and non-repudiation.</p>
+<h2 id="security-hooks-middleware">🧩 Security Hooks &amp; Middleware<a class="headerlink" href="#security-hooks-middleware" title="Permanent link">&para;</a></h2>
+<p>SecFlow injects middleware for:
+- Request validation (pydantic schemas)
+- JWT token expiry verification
+- Role validation (fast-path lookup)
+- Audit log writing after each mutating operation</p>
+<h3 id="example_1">Example:<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>@app.middleware(&quot;http&quot;)
+async def audit_request(request, call_next):
+    response = await call_next(request)
+    if request.method in (&quot;POST&quot;, &quot;DELETE&quot;, &quot;PATCH&quot;):
+        log_audit(request, response)
+    return response
+</code></pre></div>
+<h2 id="audit-trail-tamper-resistance">🔐 Audit Trail &amp; Tamper Resistance<a class="headerlink" href="#audit-trail-tamper-resistance" title="Permanent link">&para;</a></h2>
+<h3 id="log-format">Log Format<a class="headerlink" href="#log-format" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;timestamp&quot;: &quot;2025-10-06T09:40:00Z&quot;,
+  &quot;user&quot;: &quot;hernan&quot;,
+  &quot;action&quot;: &quot;workflow_run&quot;,
+  &quot;project&quot;: &quot;api-audit&quot;,
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;hash&quot;: &quot;sha256:0a3b1c2d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2&quot;
+}
+</code></pre></div>
+<h3 id="storage-verification">Storage &amp; Verification<a class="headerlink" href="#storage-verification" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Logs stored as JSON lines under <code>/audit/</code></li>
+<li>Each file signed with an HMAC chain:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>H_i = HMAC(H_prev + log_i, key)
+</code></pre></div>
+<p>Immutable and verifiable chain-of-trust.</p>
+<h2 id="security-monitoring">🧠 Security Monitoring<a class="headerlink" href="#security-monitoring" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>auth_failures_total</td>
+<td>Failed login attempts</td>
+</tr>
+<tr>
+<td>sandbox_executions_total</td>
+<td>Containers spawned</td>
+</tr>
+<tr>
+<td>policy_violations_total</td>
+<td>Unauthorized actions</td>
+</tr>
+<tr>
+<td>vault_accesses_total</td>
+<td>Secret retrievals</td>
+</tr>
+<tr>
+<td>audit_events_total</td>
+<td>Log entries recorded</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compliance-framework-alignment">⚙️ Compliance Framework Alignment<a class="headerlink" href="#compliance-framework-alignment" title="Permanent link">&para;</a></h2>
+<p>SecFlow's security architecture aligns with:</p>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Compliance Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NIST SP 800-53</strong></td>
+<td>Access control, auditing, system protection</td>
+</tr>
+<tr>
+<td><strong>ISO/IEC 27001</strong></td>
+<td>Information security management</td>
+</tr>
+<tr>
+<td><strong>OWASP SAMM</strong></td>
+<td>Secure software development lifecycle</td>
+</tr>
+<tr>
+<td><strong>MITRE ATT&amp;CK</strong></td>
+<td>Mapping detection behaviors</td>
+</tr>
+<tr>
+<td><strong>GDPR Art. 32</strong></td>
+<td>Data confidentiality and integrity</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-rotation-secrets-expiry">🔒 Key Rotation &amp; Secrets Expiry<a class="headerlink" href="#key-rotation-secrets-expiry" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Secrets have explicit TTLs (default: 180 days).</li>
+<li>Vault rotation command:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>SecFlow vault rotate
+</code></pre></div>
+<p>Rotation regenerates the encryption key and re-encrypts all entries.</p>
+<h2 id="example-access-workflow">🧩 Example Access Workflow<a class="headerlink" href="#example-access-workflow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[Analyst] → [Login via OIDC] → [JWT Issued]
+→ [UI/API Gateway] → [RBAC Policy Check]
+→ [Worker Executes Workflow in Sandbox]
+→ [Findings Logged + Audit Entry Created]
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

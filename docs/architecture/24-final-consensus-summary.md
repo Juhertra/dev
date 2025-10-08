@@ -111,7 +111,7 @@ flowchart TD
 - **MITRE ATT&CK** for attack pattern mapping
 
 ### Risk Formula
-```text
+```
 Risk Score = (Likelihood × Impact) × Contextual_Factor
 Where:
 - Likelihood = CVSS_Exploitability + EPSS_Score

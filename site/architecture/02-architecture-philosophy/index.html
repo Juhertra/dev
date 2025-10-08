@@ -231,6 +231,22 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#design-goals" class="nav-link">🧩 Design Goals</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#why-hexagonal-architecture" class="nav-link">🧩 Why Hexagonal Architecture?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#component-responsibility-map" class="nav-link">🧩 Component Responsibility Map</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#data-flow-model" class="nav-link">🧩 Data Flow Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#architectural-patterns-used" class="nav-link">🧠 Architectural Patterns Used</a>
               <ul class="nav flex-column">
               </ul>
@@ -296,98 +312,170 @@ It is designed for <strong>tool orchestration, data normalization, and future AI
 </table>
 <hr />
 <h2 id="core-architectural-layers">⚙️ Core Architectural Layers<a class="headerlink" href="#core-architectural-layers" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+---------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Applications                               |</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Web-API                                   |</span>
-<span class="l l-Scalar l-Scalar-Plain">+---------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Services Layer                             |</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Workflow Engine                            |</span>
-<span class="l l-Scalar l-Scalar-Plain">+---------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Core-Lib                                  |</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    DTOs                                      |</span>
-<span class="l l-Scalar l-Scalar-Plain">+---------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Infrastructure                             |</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Database                                   |</span>
-<span class="l l-Scalar l-Scalar-Plain">+---------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    External                                  |</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Tools                                     |</span>
-<span class="l l-Scalar l-Scalar-Plain">+---------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">```python</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Each layer exposes **well-defined boundaries**</span><span class="p p-Indicator">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nv">*Applications</span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">depend only on *Services* through **ports**.</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nv">*Services</span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">interact with *Core* logic through **domain interfaces**.</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nv">*Core-Lib</span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defines **pure domain logic** with zero external imports.</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nv">*Infrastructure</span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implements adapters to databases, cache, and external tools.</span>
-
-<span class="nn">---</span>
-
-<span class="c1">## 🧩 Design Goals</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Goal | Implementation Strategy |</span>
-<span class="p p-Indicator">|</span><span class="err">------|---------------------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Maintainability** | Modular mono-repo with strict import boundaries (`import-linter`). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Scalability** | Async task execution (Celery/RQ) and worker-based orchestration. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Observability** | Structured logs, Prometheus metrics, and OpenTelemetry tracing. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Reproducibility** | Deterministic workflows with cached configuration + results. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Security** | Sandboxed subprocesses, limited file system access, and tokenized configuration. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Extensibility** | Plugin registry and manifest-based tool definitions. |</span>
-
-<span class="nn">---</span>
-
-<span class="c1">## 🧩 Why Hexagonal Architecture?</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Aspect | Traditional Architecture | SecFlow Approach |</span>
-<span class="p p-Indicator">|</span><span class="err">--------|--------------------------|------------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Dependencies** | Frameworks import core directly | Core is framework-agnostic |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Testing** | Hard to isolate logic | Core modules unit-tested independently |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Tool Integration** | Ad-hoc scripts | Formal wrappers with contracts |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Maintainability** | Spaghetti imports | Controlled boundaries with Import-Linter |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Extensibility** | Static toolset | Plugin &amp; manifest system |</span>
-
-<span class="nn">---</span>
-
-<span class="c1">## 🧩 Component Responsibility Map</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Component | Responsibility |</span>
-<span class="p p-Indicator">|</span><span class="err">------------|----------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Core-Lib** | Defines domain models (`Finding`, `Project`, `Resource`) and interfaces (`ToolPort`, `StoragePort`). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Findings-Engine** | Normalizes raw scan data into standardized Finding objects. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Wrappers** | Execute external tools (Nuclei, Ferox, etc.) via manifest-driven configs. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Worker** | Executes workflows, manages concurrency, caching, and cleanup. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **API** | Exposes endpoints for managing projects, workflows, and triage. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Triage-UI** | Visual interface for findings review, filtering, and reporting. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Plugins** | Optional modules extending detection or enrichment logic. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Resource Registry** | Central management of wordlists, templates, and payloads. |</span>
-
-<span class="nn">---</span>
-
-<span class="c1">## 🧩 Data Flow Model</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">mermaid</span>
-<span class="l l-Scalar l-Scalar-Plain">%%{init</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;theme&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;neutral&quot;</span><span class="p p-Indicator">}</span><span class="err">}%%</span>
-<span class="l l-Scalar l-Scalar-Plain">flowchart TD</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A[&quot;Project&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">B[&quot;Workflow DAG&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">C[&quot;Tool Wrappers&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">D[&quot;Runs (execution logs)&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">E[&quot;Findings Engine&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">F[&quot;Findings (normalized)&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">G[&quot;Enrichment Layer&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">H[&quot;CVE/CWE/POC metadata&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">I[&quot;Triage / Metrics&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">J[&quot;Analytics, Dashboards&quot;]</span>
-
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A --&gt; B</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">B --&gt; C</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">C --&gt; D</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">C --&gt; E</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">E --&gt; F</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">E --&gt; G</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">G --&gt; H</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">G --&gt; I</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">I --&gt; J</span>
+<div class="highlight"><pre><span></span><code>+---------------------------------------------------------------+
+|                    Applications                               |
+|                    Web-API                                   |
++---------------------------------------------------------------+
+|                    Services Layer                             |
+|                    Workflow Engine                            |
++---------------------------------------------------------------+
+|                    Core-Lib                                  |
+|                    DTOs                                      |
++---------------------------------------------------------------+
+|                    Infrastructure                             |
+|                    Database                                   |
++---------------------------------------------------------------+
+|                    External                                  |
+|                    Tools                                     |
++---------------------------------------------------------------+
 </code></pre></div>
+<p>Each layer exposes <strong>well-defined boundaries</strong>:
+- <em>Applications</em> depend only on <em>Services</em> through <strong>ports</strong>.
+- <em>Services</em> interact with <em>Core</em> logic through <strong>domain interfaces</strong>.
+- <em>Core-Lib</em> defines <strong>pure domain logic</strong> with zero external imports.
+- <em>Infrastructure</em> implements adapters to databases, cache, and external tools.</p>
+<hr />
+<h2 id="design-goals">🧩 Design Goals<a class="headerlink" href="#design-goals" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Implementation Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Maintainability</strong></td>
+<td>Modular mono-repo with strict import boundaries (<code>import-linter</code>).</td>
+</tr>
+<tr>
+<td><strong>Scalability</strong></td>
+<td>Async task execution (Celery/RQ) and worker-based orchestration.</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>Structured logs, Prometheus metrics, and OpenTelemetry tracing.</td>
+</tr>
+<tr>
+<td><strong>Reproducibility</strong></td>
+<td>Deterministic workflows with cached configuration + results.</td>
+</tr>
+<tr>
+<td><strong>Security</strong></td>
+<td>Sandboxed subprocesses, limited file system access, and tokenized configuration.</td>
+</tr>
+<tr>
+<td><strong>Extensibility</strong></td>
+<td>Plugin registry and manifest-based tool definitions.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="why-hexagonal-architecture">🧩 Why Hexagonal Architecture?<a class="headerlink" href="#why-hexagonal-architecture" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Traditional Architecture</th>
+<th>SecFlow Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dependencies</strong></td>
+<td>Frameworks import core directly</td>
+<td>Core is framework-agnostic</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Hard to isolate logic</td>
+<td>Core modules unit-tested independently</td>
+</tr>
+<tr>
+<td><strong>Tool Integration</strong></td>
+<td>Ad-hoc scripts</td>
+<td>Formal wrappers with contracts</td>
+</tr>
+<tr>
+<td><strong>Maintainability</strong></td>
+<td>Spaghetti imports</td>
+<td>Controlled boundaries with Import-Linter</td>
+</tr>
+<tr>
+<td><strong>Extensibility</strong></td>
+<td>Static toolset</td>
+<td>Plugin &amp; manifest system</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="component-responsibility-map">🧩 Component Responsibility Map<a class="headerlink" href="#component-responsibility-map" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core-Lib</strong></td>
+<td>Defines domain models (<code>Finding</code>, <code>Project</code>, <code>Resource</code>) and interfaces (<code>ToolPort</code>, <code>StoragePort</code>).</td>
+</tr>
+<tr>
+<td><strong>Findings-Engine</strong></td>
+<td>Normalizes raw scan data into standardized Finding objects.</td>
+</tr>
+<tr>
+<td><strong>Wrappers</strong></td>
+<td>Execute external tools (Nuclei, Ferox, etc.) via manifest-driven configs.</td>
+</tr>
+<tr>
+<td><strong>Worker</strong></td>
+<td>Executes workflows, manages concurrency, caching, and cleanup.</td>
+</tr>
+<tr>
+<td><strong>API</strong></td>
+<td>Exposes endpoints for managing projects, workflows, and triage.</td>
+</tr>
+<tr>
+<td><strong>Triage-UI</strong></td>
+<td>Visual interface for findings review, filtering, and reporting.</td>
+</tr>
+<tr>
+<td><strong>Plugins</strong></td>
+<td>Optional modules extending detection or enrichment logic.</td>
+</tr>
+<tr>
+<td><strong>Resource Registry</strong></td>
+<td>Central management of wordlists, templates, and payloads.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-flow-model">🧩 Data Flow Model<a class="headerlink" href="#data-flow-model" title="Permanent link">&para;</a></h2>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Project"]
+    B["Workflow DAG"]
+    C["Tool Wrappers"]
+    D["Runs (execution logs)"]
+    E["Findings Engine"]
+    F["Findings (normalized)"]
+    G["Enrichment Layer"]
+    H["CVE/CWE/POC metadata"]
+    I["Triage / Metrics"]
+    J["Analytics, Dashboards"]
+
+    A --&gt; B
+    B --&gt; C
+    C --&gt; D
+    C --&gt; E
+    E --&gt; F
+    E --&gt; G
+    G --&gt; H
+    G --&gt; I
+    I --&gt; J</div>
 <hr />
 <h2 id="architectural-patterns-used">🧠 Architectural Patterns Used<a class="headerlink" href="#architectural-patterns-used" title="Permanent link">&para;</a></h2>
 <table>

@@ -235,6 +235,42 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-plugin-registry" class="nav-link">🧩 Example Plugin Registry</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-lifecycle" class="nav-link">🧠 Plugin Lifecycle</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-manifest-specification" class="nav-link">🧩 Plugin Manifest Specification</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-cve-enricher-plugin" class="nav-link">⚙️ Example — CVE Enricher Plugin</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sandbox-model" class="nav-link">🔐 Sandbox Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-discovery" class="nav-link">🧩 Plugin Discovery</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-telemetry" class="nav-link">🧠 Plugin Telemetry</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#error-handling" class="nav-link">🧩 Error Handling</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-end-to-end-plugin-flow" class="nav-link">🧠 Example End-to-End Plugin Flow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -288,154 +324,156 @@ Plugins operate under a <strong>controlled lifecycle</strong> and interact throu
 </table>
 <hr />
 <h2 id="plugin-architecture-overview">🧱 Plugin Architecture Overview<a class="headerlink" href="#plugin-architecture-overview" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+-------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    Plugin Manager                           |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - Registry                                                  |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - Loader                                                    |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - Validator                                                 |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - Sandbox                                                   |</span>
-<span class="l l-Scalar l-Scalar-Plain">+-------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">```mermaid</span>
-<span class="l l-Scalar l-Scalar-Plain">%%{init</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;theme&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;neutral&quot;</span><span class="p p-Indicator">}</span><span class="err">}%%</span>
-<span class="l l-Scalar l-Scalar-Plain">flowchart TD</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A[&quot;Plugin Registry&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">B[&quot;Detector Plugins&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">C[&quot;Enricher Plugins&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">D[&quot;Analytics Plugins&quot;]</span>
+<p>+-------------------------------------------------------------+
+|                    Plugin Manager                           |
+| - Registry                                                  |
+| - Loader                                                    |
+| - Validator                                                 |
+| - Sandbox                                                   |
++-------------------------------------------------------------+
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Plugin Registry"]
+    B["Detector Plugins"]
+    C["Enricher Plugins"]
+    D["Analytics Plugins"]
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A --&gt; B</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A --&gt; C</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A --&gt; D</span>
-</code></pre></div>
+    A --&gt; B
+    A --&gt; C
+    A --&gt; D</div></p>
 <hr />
 <h2 id="base-interfaces">⚙️ Base Interfaces<a class="headerlink" href="#base-interfaces" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># core-lib/ports/plugin_port.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<div class="highlight"><pre><span></span><code># core-lib/ports/plugin_port.py
+from typing import Protocol, Any, Dict
 
-<span class="k">class</span><span class="w"> </span><span class="nc">PluginPort</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># &quot;detector&quot; | &quot;enricher&quot; | &quot;analytics&quot;</span>
+class PluginPort(Protocol):
+    name: str
+    version: str
+    category: str  # &quot;detector&quot; | &quot;enricher&quot; | &quot;analytics&quot;
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize plugin with execution context.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+    def initialize(self, context: Dict[str, Any]) -&gt; None:
+        &quot;&quot;&quot;Initialize plugin with execution context.&quot;&quot;&quot;
+        pass
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute plugin logic on input data.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+    def execute(self, data: Any) -&gt; Any:
+        &quot;&quot;&quot;Execute plugin logic on input data.&quot;&quot;&quot;
+        pass
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clean up plugin resources.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-<span class="err">```</span><span class="n">python</span>
+    def teardown(self) -&gt; None:
+        &quot;&quot;&quot;Clean up plugin resources.&quot;&quot;&quot;
+        pass
+</code></pre></div>
+<p>All plugins must subclass or conform to <code>PluginPort</code>.</p>
+<h2 id="example-plugin-registry">🧩 Example Plugin Registry<a class="headerlink" href="#example-plugin-registry" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code># plugins/registry.py
+from typing import Dict, Type
+from core_lib.ports.plugin_port import PluginPort
 
-<span class="n">All</span> <span class="n">plugins</span> <span class="n">must</span> <span class="n">subclass</span> <span class="ow">or</span> <span class="n">conform</span> <span class="n">to</span> <span class="err">`</span><span class="n">PluginPort</span><span class="err">`</span><span class="o">.</span>
+class PluginRegistry:
+    _registry: Dict[str, Type[PluginPort]] = {}
 
-<span class="c1">## 🧩 Example Plugin Registry</span>
+    @classmethod
+    def register(cls, name: str, plugin: Type[PluginPort]):
+        cls._registry[name] = plugin
+        print(f&quot;[+] Registered plugin: {name}&quot;)
 
-<span class="err">```</span><span class="n">python</span>
-<span class="c1"># plugins/registry.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.ports.plugin_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginPort</span>
+    @classmethod
+    def get(cls, name: str) -&gt; PluginPort:
+        return cls._registry[name]
 
-<span class="k">class</span><span class="w"> </span><span class="nc">PluginRegistry</span><span class="p">:</span>
-    <span class="n">_registry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">PluginPort</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    @classmethod
+    def list_plugins(cls):
+        return list(cls._registry.keys())
+</code></pre></div>
+<h3 id="registration-via-decorator">Registration via Decorator<a class="headerlink" href="#registration-via-decorator" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>def register_plugin(name: str):
+    def decorator(cls):
+        PluginRegistry.register(name, cls)
+        return cls
+    return decorator
+</code></pre></div>
+<h2 id="plugin-lifecycle">🧠 Plugin Lifecycle<a class="headerlink" href="#plugin-lifecycle" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Registration:</strong> Discovered from manifests or decorators.</li>
+<li><strong>Validation:</strong> Signature &amp; schema verification.</li>
+<li><strong>Initialization:</strong> Context injected (paths, project ID, config).</li>
+<li><strong>Execution:</strong> Process data via <code>execute()</code>.</li>
+<li><strong>Teardown:</strong> Release resources, log metrics.</li>
+</ol>
+<h2 id="plugin-manifest-specification">🧩 Plugin Manifest Specification<a class="headerlink" href="#plugin-manifest-specification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>name: nuclei-enricher
+version: &quot;1.0.0&quot;
+category: &quot;enricher&quot;
+entrypoint: &quot;plugins.nuclei_enricher:Enricher&quot;
+dependencies:
+  - requests
+  - cpe
+config_schema: &quot;schemas/nuclei_enricher.json&quot;
+sandbox: true
+</code></pre></div>
+<p>Each manifest is stored under <code>/plugins/manifests/</code> and validated on startup.</p>
+<h2 id="example-cve-enricher-plugin">⚙️ Example — CVE Enricher Plugin<a class="headerlink" href="#example-cve-enricher-plugin" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code># plugins/nuclei_enricher.py
+import requests
+from core_lib.models.finding import Finding
+from core_lib.ports.plugin_port import PluginPort
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plugin</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">PluginPort</span><span class="p">]):</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Registered plugin: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+@register_plugin(&quot;cve_enricher&quot;)
+class CVEEnricher(PluginPort):
+    name = &quot;cve_enricher&quot;
+    version = &quot;1.0.0&quot;
+    category = &quot;enricher&quot;
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PluginPort</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    def initialize(self, context):
+        self.sources = context.get(&quot;sources&quot;, [&quot;nvd&quot;])
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">list_plugins</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-<span class="err">```</span><span class="n">python</span>
+    def execute(self, finding: Finding) -&gt; Finding:
+        for cve_id in finding.cve_ids:
+            data = self._fetch_cve_data(cve_id)
+            finding.enrichment[&quot;cve&quot;][cve_id] = data
+        return finding
 
-<span class="c1">### Registration via Decorator</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">register_plugin</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">PluginRegistry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span>
-    <span class="k">return</span> <span class="n">decorator</span>
-<span class="err">```</span><span class="n">python</span>
+    def _fetch_cve_data(self, cve_id):
+        return requests.get(f&quot;https://services.nvd.nist.gov/rest/json/cve/1.0/{cve_id}&quot;).json()
 
-<span class="c1">## 🧠 Plugin Lifecycle</span>
-
-<span class="mf">1.</span> <span class="o">**</span><span class="n">Registration</span><span class="p">:</span><span class="o">**</span> <span class="n">Discovered</span> <span class="kn">from</span><span class="w"> </span><span class="nn">manifests</span> <span class="ow">or</span> <span class="n">decorators</span><span class="o">.</span>
-<span class="mf">2.</span> <span class="o">**</span><span class="n">Validation</span><span class="p">:</span><span class="o">**</span> <span class="n">Signature</span> <span class="o">&amp;</span> <span class="n">schema</span> <span class="n">verification</span><span class="o">.</span>
-<span class="mf">3.</span> <span class="o">**</span><span class="n">Initialization</span><span class="p">:</span><span class="o">**</span> <span class="n">Context</span> <span class="n">injected</span> <span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">project</span> <span class="n">ID</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span><span class="o">.</span>
-<span class="mf">4.</span> <span class="o">**</span><span class="n">Execution</span><span class="p">:</span><span class="o">**</span> <span class="n">Process</span> <span class="n">data</span> <span class="n">via</span> <span class="err">`</span><span class="n">execute</span><span class="p">()</span><span class="err">`</span><span class="o">.</span>
-<span class="mf">5.</span> <span class="o">**</span><span class="n">Teardown</span><span class="p">:</span><span class="o">**</span> <span class="n">Release</span> <span class="n">resources</span><span class="p">,</span> <span class="n">log</span> <span class="n">metrics</span><span class="o">.</span>
-
-<span class="c1">## 🧩 Plugin Manifest Specification</span>
-
-<span class="err">```</span><span class="n">yaml</span>
-<span class="n">name</span><span class="p">:</span> <span class="n">nuclei</span><span class="o">-</span><span class="n">enricher</span>
-<span class="n">version</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span>
-<span class="n">category</span><span class="p">:</span> <span class="s2">&quot;enricher&quot;</span>
-<span class="n">entrypoint</span><span class="p">:</span> <span class="s2">&quot;plugins.nuclei_enricher:Enricher&quot;</span>
-<span class="n">dependencies</span><span class="p">:</span>
-  <span class="o">-</span> <span class="n">requests</span>
-  <span class="o">-</span> <span class="n">cpe</span>
-<span class="n">config_schema</span><span class="p">:</span> <span class="s2">&quot;schemas/nuclei_enricher.json&quot;</span>
-<span class="n">sandbox</span><span class="p">:</span> <span class="n">true</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="n">Each</span> <span class="n">manifest</span> <span class="ow">is</span> <span class="n">stored</span> <span class="n">under</span> <span class="err">`</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="n">manifests</span><span class="o">/</span><span class="err">`</span> <span class="ow">and</span> <span class="n">validated</span> <span class="n">on</span> <span class="n">startup</span><span class="o">.</span>
-
-<span class="c1">## ⚙️ Example — CVE Enricher Plugin</span>
-
-<span class="err">```</span><span class="n">python</span>
-<span class="c1"># plugins/nuclei_enricher.py</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.models.finding</span><span class="w"> </span><span class="kn">import</span> <span class="n">Finding</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.ports.plugin_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginPort</span>
-
-<span class="nd">@register_plugin</span><span class="p">(</span><span class="s2">&quot;cve_enricher&quot;</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CVEEnricher</span><span class="p">(</span><span class="n">PluginPort</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;cve_enricher&quot;</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
-    <span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;enricher&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sources</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sources&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;nvd&quot;</span><span class="p">])</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finding</span><span class="p">:</span> <span class="n">Finding</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Finding</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">cve_id</span> <span class="ow">in</span> <span class="n">finding</span><span class="o">.</span><span class="n">cve_ids</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_cve_data</span><span class="p">(</span><span class="n">cve_id</span><span class="p">)</span>
-            <span class="n">finding</span><span class="o">.</span><span class="n">enrichment</span><span class="p">[</span><span class="s2">&quot;cve&quot;</span><span class="p">][</span><span class="n">cve_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
-        <span class="k">return</span> <span class="n">finding</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_cve_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cve_id</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;https://services.nvd.nist.gov/rest/json/cve/1.0/</span><span class="si">{</span><span class="n">cve_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="c1">## 🔐 Sandbox Model</span>
-
-<span class="n">Each</span> <span class="n">plugin</span> <span class="n">executes</span> <span class="n">inside</span> <span class="n">a</span> <span class="n">restricted</span> <span class="n">environment</span><span class="p">:</span>
-
-<span class="o">|</span> <span class="n">Control</span> <span class="o">|</span> <span class="n">Enforcement</span> <span class="o">|</span>
-<span class="o">|---------|-------------|</span>
-<span class="o">|</span> <span class="o">**</span><span class="n">Filesystem</span><span class="o">**</span> <span class="o">|</span> <span class="n">Read</span><span class="o">-</span><span class="n">only</span> <span class="n">mount</span> <span class="ow">or</span> <span class="n">temp</span> <span class="n">directory</span> <span class="o">|</span>
-<span class="o">|</span> <span class="o">**</span><span class="n">Network</span><span class="o">**</span> <span class="o">|</span> <span class="n">Denied</span> <span class="n">by</span> <span class="n">default</span><span class="p">,</span> <span class="n">opt</span><span class="o">-</span><span class="ow">in</span> <span class="n">per</span> <span class="n">manifest</span> <span class="o">|</span>
-<span class="o">|</span> <span class="o">**</span><span class="n">Memory</span> <span class="o">/</span> <span class="n">CPU</span><span class="o">**</span> <span class="o">|</span> <span class="n">Controlled</span> <span class="n">via</span> <span class="n">subprocess</span> <span class="n">resource</span> <span class="n">limits</span> <span class="o">|</span>
-<span class="o">|</span> <span class="o">**</span><span class="n">Timeouts</span><span class="o">**</span> <span class="o">|</span> <span class="n">Enforced</span> <span class="n">via</span> <span class="n">execution</span> <span class="n">wrapper</span> <span class="o">|</span>
-<span class="o">|</span> <span class="o">**</span><span class="n">Audit</span><span class="o">**</span> <span class="o">|</span> <span class="n">Every</span> <span class="n">plugin</span> <span class="n">invocation</span> <span class="n">logged</span> <span class="k">with</span> <span class="n">context</span> <span class="o">|</span>
-
-<span class="c1">## 🧩 Plugin Discovery</span>
-
-<span class="c1">### Directory Layout</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="n">plugins</span><span class="o">/</span>
+    def teardown(self):
+        pass
+</code></pre></div>
+<h2 id="sandbox-model">🔐 Sandbox Model<a class="headerlink" href="#sandbox-model" title="Permanent link">&para;</a></h2>
+<p>Each plugin executes inside a restricted environment:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Filesystem</strong></td>
+<td>Read-only mount or temp directory</td>
+</tr>
+<tr>
+<td><strong>Network</strong></td>
+<td>Denied by default, opt-in per manifest</td>
+</tr>
+<tr>
+<td><strong>Memory / CPU</strong></td>
+<td>Controlled via subprocess resource limits</td>
+</tr>
+<tr>
+<td><strong>Timeouts</strong></td>
+<td>Enforced via execution wrapper</td>
+</tr>
+<tr>
+<td><strong>Audit</strong></td>
+<td>Every plugin invocation logged with context</td>
+</tr>
+</tbody>
+</table>
+<h2 id="plugin-discovery">🧩 Plugin Discovery<a class="headerlink" href="#plugin-discovery" title="Permanent link">&para;</a></h2>
+<h3 id="directory-layout">Directory Layout<a class="headerlink" href="#directory-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>plugins/
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -456,44 +494,54 @@ flowchart TD
     F --&gt; G
     F --&gt; H</div>
 <h3 id="discovery-algorithm">Discovery Algorithm<a class="headerlink" href="#discovery-algorithm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">discover_plugins</span><span class="p">():</span>
-    <span class="k">for</span> <span class="n">manifest</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;plugins/manifests&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.yaml&quot;</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
-        <span class="n">entrypoint</span> <span class="o">=</span> <span class="n">import_string</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;entrypoint&quot;</span><span class="p">])</span>
-        <span class="n">PluginRegistry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">entrypoint</span><span class="p">)</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🧠 Plugin Telemetry</span>
-
-<span class="n">Each</span> <span class="n">plugin</span> <span class="n">emits</span> <span class="n">lifecycle</span> <span class="n">events</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;plugin_executed&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;plugin&quot;</span><span class="p">:</span> <span class="s2">&quot;cve_enricher&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;duration_ms&quot;</span><span class="p">:</span> <span class="mi">342</span><span class="p">,</span>
-  <span class="s2">&quot;memory_mb&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
-  <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">true</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">json</span>
-
-<span class="n">Telemetry</span> <span class="ow">is</span> <span class="n">captured</span> <span class="n">by</span> <span class="n">the</span> <span class="n">Observability</span> <span class="n">subsystem</span> <span class="p">(</span><span class="n">see</span> <span class="p">[</span><span class="n">Observability</span><span class="p">,</span> <span class="n">Logging</span> <span class="o">&amp;</span> <span class="n">Metrics</span><span class="p">](</span><span class="mi">17</span><span class="o">-</span><span class="n">observability</span><span class="o">-</span><span class="n">logging</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">metrics</span><span class="o">.</span><span class="n">md</span><span class="p">))</span><span class="o">.</span>
-
-<span class="c1">## 🧩 Error Handling</span>
-
-<span class="o">|</span> <span class="n">Error</span> <span class="o">|</span> <span class="n">Strategy</span> <span class="o">|</span>
-<span class="o">|-------|----------|</span>
-<span class="o">|</span> <span class="n">Invalid</span> <span class="n">Manifest</span> <span class="o">|</span> <span class="n">Skip</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">log</span> <span class="n">warning</span><span class="o">.</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Dependency</span> <span class="ne">ImportError</span> <span class="o">|</span> <span class="n">Attempt</span> <span class="n">isolated</span> <span class="n">install</span> <span class="k">if</span> <span class="n">allowed</span><span class="o">.</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Execution</span> <span class="n">Timeout</span> <span class="o">|</span> <span class="n">Abort</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">mark</span> <span class="n">node</span> <span class="n">partial</span><span class="o">-</span><span class="n">success</span><span class="o">.</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Sandbox</span> <span class="n">Violation</span> <span class="o">|</span> <span class="n">Terminate</span> <span class="n">process</span><span class="p">,</span> <span class="n">revoke</span> <span class="n">plugin</span> <span class="n">signature</span><span class="o">.</span> <span class="o">|</span>
-
-<span class="c1">## 🧠 Example End-to-End Plugin Flow</span>
-
-<span class="err">```</span><span class="n">text</span>
-<span class="p">[</span><span class="n">Plugin</span> <span class="n">Manifest</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Registry</span> <span class="n">Register</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Initialize</span><span class="p">]</span> 
-      <span class="err">↓</span>                       <span class="err">↓</span>                   <span class="err">↓</span>
- <span class="p">[</span><span class="n">Execute</span> <span class="n">via</span> <span class="n">Port</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Telemetry</span> <span class="o">+</span> <span class="n">Logging</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Teardown</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code>def discover_plugins():
+    for manifest in Path(&quot;plugins/manifests&quot;).glob(&quot;*.yaml&quot;):
+        data = yaml.safe_load(manifest.read_text())
+        entrypoint = import_string(data[&quot;entrypoint&quot;])
+        PluginRegistry.register(data[&quot;name&quot;], entrypoint)
+</code></pre></div>
+<h2 id="plugin-telemetry">🧠 Plugin Telemetry<a class="headerlink" href="#plugin-telemetry" title="Permanent link">&para;</a></h2>
+<p>Each plugin emits lifecycle events:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;event&quot;: &quot;plugin_executed&quot;,
+  &quot;plugin&quot;: &quot;cve_enricher&quot;,
+  &quot;duration_ms&quot;: 342,
+  &quot;memory_mb&quot;: 42,
+  &quot;success&quot;: true
+}
+</code></pre></div>
+<p>Telemetry is captured by the Observability subsystem (see <a href="../17-observability-logging-and-metrics/">Observability, Logging &amp; Metrics</a>).</p>
+<h2 id="error-handling">🧩 Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invalid Manifest</td>
+<td>Skip plugin, log warning.</td>
+</tr>
+<tr>
+<td>Dependency ImportError</td>
+<td>Attempt isolated install if allowed.</td>
+</tr>
+<tr>
+<td>Execution Timeout</td>
+<td>Abort plugin, mark node partial-success.</td>
+</tr>
+<tr>
+<td>Sandbox Violation</td>
+<td>Terminate process, revoke plugin signature.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-end-to-end-plugin-flow">🧠 Example End-to-End Plugin Flow<a class="headerlink" href="#example-end-to-end-plugin-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[Plugin Manifest] → [Registry Register] → [Initialize] 
+      ↓                       ↓                   ↓
+ [Execute via Port] → [Telemetry + Logging] → [Teardown]
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

@@ -43,7 +43,7 @@ flowchart TD
 Every tool integrated into SecFlow must define a **manifest** under `/wrappers/manifests/<tool>.json`.
 
 ### Example: `nuclei.json`
-```json
+```
 {
   "name": "nuclei",
   "version": "3.2.1",
@@ -71,13 +71,13 @@ Every tool integrated into SecFlow must define a **manifest** under `/wrappers/m
     "expect": "Nuclei"
   }
 }
-```python
+```
 
 ## 🧩 Wrapper Interface
 
 All tool wrappers implement the same contract to ensure consistent orchestration.
 
-```python
+```
 # core-lib/ports/tool_port.py
 from typing import Any, Dict, Protocol, List
 from core_lib.models.finding import Finding
@@ -94,11 +94,11 @@ class ToolPort(Protocol):
     def parse_output(self, raw_output: str) -> List[Finding]:
         """Parse raw output into structured findings."""
         pass
-```python
+```
 
 ## 🧠 Example Implementation: Nuclei Wrapper
 
-```python
+```
 # wrappers/nuclei_wrapper.py
 import subprocess, json
 from core_lib.models.finding import Finding
@@ -137,13 +137,13 @@ class NucleiWrapper(ToolPort):
             except Exception:
                 continue
         return findings
-```python
+```
 
 ## 🔐 Sandbox Execution
 
 Tools run through a Sandbox Executor, enforcing CPU, memory, and network constraints.
 
-```python
+```
 # wrappers/executor.py
 import resource, subprocess, signal
 
@@ -160,11 +160,11 @@ class SandboxExecutor:
         proc = subprocess.Popen(args, preexec_fn=set_limits, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate(timeout=300)
         return stdout.decode(), stderr.decode(), proc.returncode
-```python
+```
 
 ## 🧩 Tool Registry
 
-```python
+```
 # wrappers/registry.py
 from typing import Dict, Type
 from core_lib.ports.tool_port import ToolPort
@@ -180,11 +180,11 @@ class ToolRegistry:
     @classmethod
     def get(cls, name: str) -> ToolPort:
         return cls._registry[name]
-```python
+```
 
 Tools register via decorators or discovery:
 
-```python
+```
 from wrappers.registry import ToolRegistry
 
 @ToolRegistry.register("feroxbuster")
@@ -209,11 +209,11 @@ class FeroxWrapper(ToolPort):
                     severity="info"
                 ))
         return findings
-```python
+```
 
 ## 🧠 Example Integration — Feroxbuster
 
-```python
+```
 # wrappers/ferox_wrapper.py
 import subprocess
 from core_lib.models.finding import Finding
@@ -241,7 +241,7 @@ class FeroxWrapper(ToolPort):
                     )
                 )
         return findings
-```text
+```
 
 ## 🧩 Tool Orchestration
 
@@ -250,7 +250,7 @@ The Workflow Engine dynamically chains tool executions:
 - Outputs become inputs for subsequent nodes.
 
 ### Example:
-```yaml
+```
 nodes:
   - id: discovery
     type: discovery.ferox

@@ -79,7 +79,7 @@ flowchart TD
 ```
 
 ### Example `metadata.json`
-```json
+```
 {
   "cve": "CVE-2024-12345",
   "source": "exploit-db",
@@ -92,7 +92,7 @@ flowchart TD
   "license": "GPLv2",
   "date_fetched": "2025-10-06T10:20:00Z"
 }
-```json
+```
 
 ## 🔒 Sandbox Execution Architecture
 
@@ -106,7 +106,7 @@ All PoC executions occur within the SecFlow Sandbox Runtime, implemented as:
 - Time & memory quotas enforced by cgroups.
 
 ### 2. Runtime Diagram
-```yaml
+```
 +-------------------------------------------------------+
 |                SecFlow Sandbox Runtime                |
 |-------------------------------------------------------|
@@ -120,15 +120,15 @@ All PoC executions occur within the SecFlow Sandbox Runtime, implemented as:
          | PoC artifact + parameters
          |
 [SecFlow Worker] → [Sandbox Orchestrator] → [Container Runtime]
-```text
+```
 
 ### 3. Sample Sandbox Invocation
-```bash
+```
 SecFlow sandbox run poc CVE-2024-12345 --target https://staging.example.com
-```yaml
+```
 
 Under the hood:
-```bash
+```
 subprocess.run([
   "docker", "run", "--rm", "--network", "none",
   "--memory", "512m", "--cpus", "1",
@@ -136,7 +136,7 @@ subprocess.run([
   "SecFlow-sandbox:latest",
   "python3", "/poc/exploit.py", "--target", "https://staging.example.com"
 ])
-```yaml
+```
 
 ## ⚙️ PoC Execution Policy
 
@@ -151,7 +151,7 @@ subprocess.run([
 
 ## 🧠 Policy Configuration Example
 
-```yaml
+```
 # ~/.SecFlow/policies/poc.yaml
 sandbox:
   image: SecFlow-sandbox:latest
@@ -165,7 +165,7 @@ compliance:
   require_disclaimer: true
   require_project_authorization: true
   auto_verify_hashes: true
-```python
+```
 
 ## 🧩 Governance Logging
 
@@ -183,7 +183,7 @@ Every PoC-related event is appended to a tamper-resistant audit log:
 | hash | SHA256 of PoC code |
 
 ### Example Log Entry
-```json
+```
 {
   "event_id": "a1f3b7c2-9f11-45d0-bc97-6c9472cbdcb2",
   "user_id": "hernan",
@@ -194,19 +194,19 @@ Every PoC-related event is appended to a tamper-resistant audit log:
   "hash": "b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0",
   "tool": "exploitdb"
 }
-```text
+```
 
 ## 🧠 Legal Notice Enforcement
 
 Before any PoC interaction, users must sign a legal disclaimer:
 
-```python
+```
 Responsible Use Notice:
 You acknowledge that PoC exploitation is to be performed exclusively on systems you own or are explicitly authorized to test. SecFlow is not liable for any misuse or damages resulting from unauthorized use.
-```text
+```
 
 The system stores an acceptance hash:
-```yaml
+```
 ~/.SecFlow/.disclaimer_accepted
 ```
 
@@ -238,14 +238,14 @@ D --> G[Available for Sandbox Run]
 ## 🔒 Quarantine Mechanism
 
 Unknown or tampered PoCs are moved to:
-```text
+```
 ~/.SecFlow/resources/poc/quarantine/
 ```
 
 Each is tagged with a quarantine reason.
 Admins can review and promote back to verified status.
 
-```python
+```
 def quarantine_poc(poc_id: str, reason: str):
     shutil.move(f"/pocstore/{poc_id}", "/pocstore/quarantine/")
     write_log(f"PoC {poc_id} quarantined: {reason}")
@@ -253,7 +253,7 @@ def quarantine_poc(poc_id: str, reason: str):
 
 ## 🧠 Example Execution Trace
 
-```text
+```
 [PoC: CVE-2024-12345] Verified source: ExploitDB
 [Sandbox] Starting container SecFlow-sandbox:latest
 [Sandbox] CPU quota: 1 core, Memory: 512MB
@@ -262,7 +262,7 @@ def quarantine_poc(poc_id: str, reason: str):
     [+] Exploit successful: remote command executed
 [Cleanup]
     PoC container destroyed after 120s
-```text
+```
 
 ## 🔮 Future Enhancements
 

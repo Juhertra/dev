@@ -235,6 +235,50 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#workspace-isolation" class="nav-link">🧩 Workspace Isolation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#data-sharing-configuration" class="nav-link">🧠 Data Sharing Configuration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sharing-policy-engine" class="nav-link">🧩 Sharing Policy Engine</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#isolation-enforcement-mechanisms" class="nav-link">🧩 Isolation Enforcement Mechanisms</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#access-token-scoping" class="nav-link">🧠 Access Token Scoping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resource-linking-between-projects" class="nav-link">🧩 Resource Linking Between Projects</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#output-sharing" class="nav-link">🧱 Output Sharing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#audit-logging" class="nav-link">🧩 Audit Logging</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#isolation-example-scenarios" class="nav-link">🧠 Isolation Example Scenarios</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-considerations" class="nav-link">🔐 Security Considerations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-policy-validation-script" class="nav-link">🧩 Example Policy Validation Script</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -293,236 +337,249 @@ flowchart TD
     A["Project Manager&lt;br/&gt;- Workspace Manager (namespacing, FS isolation)&lt;br/&gt;- Data Access Layer (scope resolution)&lt;br/&gt;- Sharing Policy Engine (group + project-level rules)&lt;br/&gt;- Audit Log (cross-project actions)"]</div>
 <hr />
 <h2 id="project-data-model">🧩 Project Data Model<a class="headerlink" href="#project-data-model" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># core-lib/models/project.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<div class="highlight"><pre><span></span><code># core-lib/models/project.py
+from typing import List, Optional
+from datetime import datetime
+from pydantic import BaseModel
 
-<span class="k">class</span><span class="w"> </span><span class="nc">Project</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">updated_at</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">sharing</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;with&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;resources&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[]</span>
-    <span class="p">}</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🧩 Workspace Isolation</span>
-
-<span class="n">Each</span> <span class="n">project</span> <span class="ow">is</span> <span class="n">backed</span> <span class="n">by</span> <span class="n">its</span> <span class="n">own</span> <span class="n">filesystem</span> <span class="ow">and</span> <span class="n">database</span> <span class="n">schema</span><span class="o">.</span>
-
-<span class="c1">### Example Directory Layout</span>
-<span class="err">```</span><span class="n">mermaid</span>
-<span class="o">%%</span><span class="p">{</span><span class="n">init</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;theme&quot;</span><span class="p">:</span><span class="s2">&quot;neutral&quot;</span><span class="p">}}</span><span class="o">%%</span>
-<span class="n">flowchart</span> <span class="n">TD</span>
-    <span class="n">A</span><span class="p">[</span><span class="s2">&quot;~/.SecFlow/projects/&quot;</span><span class="p">]</span>
-    <span class="n">B</span><span class="p">[</span><span class="s2">&quot;acme-api/&quot;</span><span class="p">]</span>
-    <span class="n">C</span><span class="p">[</span><span class="s2">&quot;config.yaml&quot;</span><span class="p">]</span>
-    <span class="n">D</span><span class="p">[</span><span class="s2">&quot;runs/&quot;</span><span class="p">]</span>
-    <span class="n">E</span><span class="p">[</span><span class="s2">&quot;findings/&quot;</span><span class="p">]</span>
-    <span class="n">F</span><span class="p">[</span><span class="s2">&quot;cache/&quot;</span><span class="p">]</span>
-    <span class="n">G</span><span class="p">[</span><span class="s2">&quot;finance-portal/&quot;</span><span class="p">]</span>
-    <span class="n">H</span><span class="p">[</span><span class="s2">&quot;config.yaml&quot;</span><span class="p">]</span>
-    <span class="n">I</span><span class="p">[</span><span class="s2">&quot;runs/&quot;</span><span class="p">]</span>
-    <span class="n">J</span><span class="p">[</span><span class="s2">&quot;findings/&quot;</span><span class="p">]</span>
-    <span class="n">K</span><span class="p">[</span><span class="s2">&quot;cache/&quot;</span><span class="p">]</span>
-
-    <span class="n">A</span> <span class="o">--&gt;</span> <span class="n">B</span>
-    <span class="n">A</span> <span class="o">--&gt;</span> <span class="n">G</span>
-    <span class="n">B</span> <span class="o">--&gt;</span> <span class="n">C</span>
-    <span class="n">B</span> <span class="o">--&gt;</span> <span class="n">D</span>
-    <span class="n">B</span> <span class="o">--&gt;</span> <span class="n">E</span>
-    <span class="n">B</span> <span class="o">--&gt;</span> <span class="n">F</span>
-    <span class="n">G</span> <span class="o">--&gt;</span> <span class="n">H</span>
-    <span class="n">G</span> <span class="o">--&gt;</span> <span class="n">I</span>
-    <span class="n">G</span> <span class="o">--&gt;</span> <span class="n">J</span>
-    <span class="n">G</span> <span class="o">--&gt;</span> <span class="n">K</span>
+class Project(BaseModel):
+    id: str
+    name: str
+    owner: str
+    group: Optional[str]
+    description: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+    sharing: Optional[dict] = {
+        &quot;enabled&quot;: False,
+        &quot;with&quot;: [],
+        &quot;resources&quot;: [],
+        &quot;outputs&quot;: []
+    }
 </code></pre></div>
+<h2 id="workspace-isolation">🧩 Workspace Isolation<a class="headerlink" href="#workspace-isolation" title="Permanent link">&para;</a></h2>
+<p>Each project is backed by its own filesystem and database schema.</p>
+<h3 id="example-directory-layout">Example Directory Layout<a class="headerlink" href="#example-directory-layout" title="Permanent link">&para;</a></h3>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["~/.SecFlow/projects/"]
+    B["acme-api/"]
+    C["config.yaml"]
+    D["runs/"]
+    E["findings/"]
+    F["cache/"]
+    G["finance-portal/"]
+    H["config.yaml"]
+    I["runs/"]
+    J["findings/"]
+    K["cache/"]
+
+    A --&gt; B
+    A --&gt; G
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E
+    B --&gt; F
+    G --&gt; H
+    G --&gt; I
+    G --&gt; J
+    G --&gt; K</div>
 <h3 id="database-schema-isolation">Database Schema Isolation<a class="headerlink" href="#database-schema-isolation" title="Permanent link">&para;</a></h3>
 <p>Each project gets a dedicated schema:</p>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">public.findings_acme_api</span>
-<span class="l l-Scalar l-Scalar-Plain">public.findings_finance_portal</span>
-<span class="l l-Scalar l-Scalar-Plain">```yaml</span>
-
-<span class="l l-Scalar l-Scalar-Plain">This allows multiple concurrent engagements with strict data boundaries.</span>
-
-<span class="l l-Scalar l-Scalar-Plain">## 🧠 Data Sharing Configuration</span>
-
-<span class="l l-Scalar l-Scalar-Plain">### Example</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Controlled Cross-Project Sharing</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">project</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span>
-<span class="w">  </span><span class="nt">sharing</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;internal-api&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;qa-staging&quot;</span>
-<span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;wordlists&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;templates&quot;</span>
-<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;urls&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;parameters&quot;</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="nt">In this configuration</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The `acme-api` project shares wordlists and templates with two sibling projects.</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The outputs (e.g., discovered URLs) are made available for enrichment or scanning reuse.</span>
-
-<span class="c1">## 🧩 Sharing Policy Engine</span>
-
-<span class="c1">### Logic Flow</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="l l-Scalar l-Scalar-Plain">User Request</span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
-<span class="l l-Scalar l-Scalar-Plain">Policy Check (Project A → Project B)</span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
-<span class="l l-Scalar l-Scalar-Plain">Scope Validation</span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
-<span class="l l-Scalar l-Scalar-Plain">Access Decision (allow | deny)</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">### Policy Structure</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Field | Description |</span>
-<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **resource_type** | What type of data is being shared (wordlist, output, finding). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **scope** | Allowed scope (project, group, global). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **mode** | Access type (read-only, read-write, clone). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **ttl** | Time-to-live for shared access. |</span>
-
-<span class="c1">### Example Policy Definition</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">policies</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resource_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;outputs&quot;</span>
-<span class="w">    </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;group&quot;</span>
-<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;read-only&quot;</span>
-<span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30d</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">## 🧩 Isolation Enforcement Mechanisms</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Layer | Enforcement |</span>
-<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Filesystem** | Each project path is sandboxed under `~/.SecFlow/projects/&lt;id&gt;`. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Database** | Separate schema per project (namespaced tables). |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Cache** | Project-specific cache directories. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Runtime Context** | Workers run with `PROJECT_ID` environment variable. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Authorization** | API tokens include `project_id` scope claim. |</span>
-
-<span class="c1">## 🧠 Access Token Scoping</span>
-
-<span class="nt">API tokens encode the project scope</span><span class="p">:</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="p p-Indicator">{</span>
-<span class="w">  </span><span class="s">&quot;sub&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;hernan.trajtemberg&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;project_id&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;roles&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;analyst&quot;</span><span class="p p-Indicator">],</span>
-<span class="w">  </span><span class="s">&quot;exp&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1759870400</span>
-<span class="p p-Indicator">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Tokens can be project-scoped or group-scoped.</span>
-<span class="l l-Scalar l-Scalar-Plain">The access control middleware rejects out-of-scope operations.</span>
-
-<span class="c1">## 🧩 Resource Linking Between Projects</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Projects can import shared assets from another project&#39;s registry.</span>
-
-<span class="c1">### Example Command</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">SecFlow projects link internal-api --resources wordlists templates</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="c1">### Example Output</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="nt">Linked resources</span><span class="p">:</span>
-<span class="l l-Scalar l-Scalar-Plain">✔ wordlists (3)</span>
-<span class="l l-Scalar l-Scalar-Plain">✔ templates (5)</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="nt">Linked resources are marked in metadata</span><span class="p">:</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">linked_from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;project:internal-api&quot;</span>
-<span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;read-only&quot;</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="c1">## 🧱 Output Sharing</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Outputs (datasets or findings) can also be shared for cross-project correlation or enrichment.</span>
-
-<span class="c1">### Example Workflow:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="l l-Scalar l-Scalar-Plain">Project A → Discovery + Scan</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
-<span class="l l-Scalar l-Scalar-Plain">Shared Outputs (URLs, endpoints)</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">↓</span>
-<span class="l l-Scalar l-Scalar-Plain">Project B → Enrichment / Retesting</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="c1">### Sharing Command</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">SecFlow share outputs acme-api --with finance-portal --types urls parameters</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="l l-Scalar l-Scalar-Plain">The receiving project&#39;s engine imports the shared dataset as a read-only reference.</span>
-
-<span class="c1">## 🧩 Audit Logging</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Every cross-project access event is logged.</span>
-
-<span class="c1">### Example Log Entry</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="p p-Indicator">{</span>
-<span class="w">  </span><span class="s">&quot;event&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;resource_access&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;actor&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;hernan.trajtemberg&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;source_project&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;target_project&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;internal-api&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;resource&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;wordlists&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;timestamp&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;2025-10-06T11:42:21Z&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">  </span><span class="s">&quot;action&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;read&quot;</span>
-<span class="p p-Indicator">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="c1">## 🧠 Isolation Example Scenarios</span>
-
-<span class="c1">### 1. Strict Isolation (Default)</span>
-<span class="l l-Scalar l-Scalar-Plain">Each project operates completely independently.</span>
-<span class="l l-Scalar l-Scalar-Plain">Useful for sensitive pentests or regulated environments.</span>
-
-<span class="c1">### 2. Group-Level Sharing</span>
-<span class="l l-Scalar l-Scalar-Plain">Multiple analysts share discovery data across projects within the same team.</span>
-
-<span class="c1">### 3. Selective Sharing</span>
-<span class="l l-Scalar l-Scalar-Plain">A red-team lead selectively shares Nuclei findings between &quot;internal-api&quot; and &quot;staging-api&quot;.</span>
-
-<span class="c1">## 🔐 Security Considerations</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Risk | Mitigation |</span>
-<span class="p p-Indicator">|</span><span class="err">------|------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> Unauthorized access to shared data | Token-scoped enforcement and audit logging |</span>
-<span class="p p-Indicator">|</span><span class="err"> Resource version drift | Immutable hashes + version pinning |</span>
-<span class="p p-Indicator">|</span><span class="err"> Data leakage across clients | No implicit sharing; explicit only |</span>
-<span class="p p-Indicator">|</span><span class="err"> Lateral movement between project schemas | Database role isolation |</span>
-<span class="p p-Indicator">|</span><span class="err"> Policy misconfiguration | Policy validation + test harness |</span>
-
-<span class="c1">## 🧩 Example Policy Validation Script</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="nt">def validate_policy(policy)</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">assert policy[&quot;mode&quot;] in (&quot;read-only&quot;, &quot;read-write&quot;, &quot;clone&quot;)</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">assert policy[&quot;scope&quot;] in (&quot;project&quot;, &quot;group&quot;, &quot;global&quot;)</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">if policy[&quot;ttl&quot;]</span><span class="p p-Indicator">:</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">assert re.match(r&quot;^\d+[dh]$&quot;, policy[&quot;ttl&quot;])</span>
+<div class="highlight"><pre><span></span><code>public.findings_acme_api
+public.findings_finance_portal
+</code></pre></div>
+<p>This allows multiple concurrent engagements with strict data boundaries.</p>
+<h2 id="data-sharing-configuration">🧠 Data Sharing Configuration<a class="headerlink" href="#data-sharing-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="example-controlled-cross-project-sharing">Example: Controlled Cross-Project Sharing<a class="headerlink" href="#example-controlled-cross-project-sharing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>project:
+  name: &quot;acme-api&quot;
+  sharing:
+    enabled: true
+    with:
+      - &quot;internal-api&quot;
+      - &quot;qa-staging&quot;
+    resources:
+      - &quot;wordlists&quot;
+      - &quot;templates&quot;
+    outputs:
+      - &quot;urls&quot;
+      - &quot;parameters&quot;
+</code></pre></div>
+<p>In this configuration:
+- The <code>acme-api</code> project shares wordlists and templates with two sibling projects.
+- The outputs (e.g., discovered URLs) are made available for enrichment or scanning reuse.</p>
+<h2 id="sharing-policy-engine">🧩 Sharing Policy Engine<a class="headerlink" href="#sharing-policy-engine" title="Permanent link">&para;</a></h2>
+<h3 id="logic-flow">Logic Flow<a class="headerlink" href="#logic-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>User Request
+   ↓
+Policy Check (Project A → Project B)
+   ↓
+Scope Validation
+   ↓
+Access Decision (allow | deny)
+</code></pre></div>
+<h3 id="policy-structure">Policy Structure<a class="headerlink" href="#policy-structure" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>resource_type</strong></td>
+<td>What type of data is being shared (wordlist, output, finding).</td>
+</tr>
+<tr>
+<td><strong>scope</strong></td>
+<td>Allowed scope (project, group, global).</td>
+</tr>
+<tr>
+<td><strong>mode</strong></td>
+<td>Access type (read-only, read-write, clone).</td>
+</tr>
+<tr>
+<td><strong>ttl</strong></td>
+<td>Time-to-live for shared access.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-policy-definition">Example Policy Definition<a class="headerlink" href="#example-policy-definition" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>policies:
+  - resource_type: &quot;outputs&quot;
+    scope: &quot;group&quot;
+    mode: &quot;read-only&quot;
+    ttl: 30d
+</code></pre></div>
+<h2 id="isolation-enforcement-mechanisms">🧩 Isolation Enforcement Mechanisms<a class="headerlink" href="#isolation-enforcement-mechanisms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Filesystem</strong></td>
+<td>Each project path is sandboxed under <code>~/.SecFlow/projects/&lt;id&gt;</code>.</td>
+</tr>
+<tr>
+<td><strong>Database</strong></td>
+<td>Separate schema per project (namespaced tables).</td>
+</tr>
+<tr>
+<td><strong>Cache</strong></td>
+<td>Project-specific cache directories.</td>
+</tr>
+<tr>
+<td><strong>Runtime Context</strong></td>
+<td>Workers run with <code>PROJECT_ID</code> environment variable.</td>
+</tr>
+<tr>
+<td><strong>Authorization</strong></td>
+<td>API tokens include <code>project_id</code> scope claim.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="access-token-scoping">🧠 Access Token Scoping<a class="headerlink" href="#access-token-scoping" title="Permanent link">&para;</a></h2>
+<p>API tokens encode the project scope:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;sub&quot;: &quot;hernan.trajtemberg&quot;,
+  &quot;project_id&quot;: &quot;acme-api&quot;,
+  &quot;roles&quot;: [&quot;analyst&quot;],
+  &quot;exp&quot;: 1759870400
+}
+</code></pre></div>
+<p>Tokens can be project-scoped or group-scoped.
+The access control middleware rejects out-of-scope operations.</p>
+<h2 id="resource-linking-between-projects">🧩 Resource Linking Between Projects<a class="headerlink" href="#resource-linking-between-projects" title="Permanent link">&para;</a></h2>
+<p>Projects can import shared assets from another project's registry.</p>
+<h3 id="example-command">Example Command<a class="headerlink" href="#example-command" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SecFlow projects link internal-api --resources wordlists templates
+</code></pre></div>
+<h3 id="example-output">Example Output<a class="headerlink" href="#example-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Linked resources:
+✔ wordlists (3)
+✔ templates (5)
+</code></pre></div>
+<p>Linked resources are marked in metadata:</p>
+<div class="highlight"><pre><span></span><code>linked_from: &quot;project:internal-api&quot;
+mode: &quot;read-only&quot;
+</code></pre></div>
+<h2 id="output-sharing">🧱 Output Sharing<a class="headerlink" href="#output-sharing" title="Permanent link">&para;</a></h2>
+<p>Outputs (datasets or findings) can also be shared for cross-project correlation or enrichment.</p>
+<h3 id="example-workflow">Example Workflow:<a class="headerlink" href="#example-workflow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Project A → Discovery + Scan
+        ↓
+Shared Outputs (URLs, endpoints)
+        ↓
+Project B → Enrichment / Retesting
+</code></pre></div>
+<h3 id="sharing-command">Sharing Command<a class="headerlink" href="#sharing-command" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SecFlow share outputs acme-api --with finance-portal --types urls parameters
+</code></pre></div>
+<p>The receiving project's engine imports the shared dataset as a read-only reference.</p>
+<h2 id="audit-logging">🧩 Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>Every cross-project access event is logged.</p>
+<h3 id="example-log-entry">Example Log Entry<a class="headerlink" href="#example-log-entry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;event&quot;: &quot;resource_access&quot;,
+  &quot;actor&quot;: &quot;hernan.trajtemberg&quot;,
+  &quot;source_project&quot;: &quot;acme-api&quot;,
+  &quot;target_project&quot;: &quot;internal-api&quot;,
+  &quot;resource&quot;: &quot;wordlists&quot;,
+  &quot;timestamp&quot;: &quot;2025-10-06T11:42:21Z&quot;,
+  &quot;action&quot;: &quot;read&quot;
+}
+</code></pre></div>
+<h2 id="isolation-example-scenarios">🧠 Isolation Example Scenarios<a class="headerlink" href="#isolation-example-scenarios" title="Permanent link">&para;</a></h2>
+<h3 id="1-strict-isolation-default">1. Strict Isolation (Default)<a class="headerlink" href="#1-strict-isolation-default" title="Permanent link">&para;</a></h3>
+<p>Each project operates completely independently.
+Useful for sensitive pentests or regulated environments.</p>
+<h3 id="2-group-level-sharing">2. Group-Level Sharing<a class="headerlink" href="#2-group-level-sharing" title="Permanent link">&para;</a></h3>
+<p>Multiple analysts share discovery data across projects within the same team.</p>
+<h3 id="3-selective-sharing">3. Selective Sharing<a class="headerlink" href="#3-selective-sharing" title="Permanent link">&para;</a></h3>
+<p>A red-team lead selectively shares Nuclei findings between "internal-api" and "staging-api".</p>
+<h2 id="security-considerations">🔐 Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unauthorized access to shared data</td>
+<td>Token-scoped enforcement and audit logging</td>
+</tr>
+<tr>
+<td>Resource version drift</td>
+<td>Immutable hashes + version pinning</td>
+</tr>
+<tr>
+<td>Data leakage across clients</td>
+<td>No implicit sharing; explicit only</td>
+</tr>
+<tr>
+<td>Lateral movement between project schemas</td>
+<td>Database role isolation</td>
+</tr>
+<tr>
+<td>Policy misconfiguration</td>
+<td>Policy validation + test harness</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-policy-validation-script">🧩 Example Policy Validation Script<a class="headerlink" href="#example-policy-validation-script" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>def validate_policy(policy):
+    assert policy[&quot;mode&quot;] in (&quot;read-only&quot;, &quot;read-write&quot;, &quot;clone&quot;)
+    assert policy[&quot;scope&quot;] in (&quot;project&quot;, &quot;group&quot;, &quot;global&quot;)
+    if policy[&quot;ttl&quot;]:
+        assert re.match(r&quot;^\d+[dh]$&quot;, policy[&quot;ttl&quot;])
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

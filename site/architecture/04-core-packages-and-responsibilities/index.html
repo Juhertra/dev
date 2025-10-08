@@ -231,6 +231,34 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#findings-engine" class="nav-link">🧠 Findings-Engine</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#wrappers" class="nav-link">⚙️ Wrappers</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resources" class="nav-link">📦 Resources</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#storage" class="nav-link">🗃️ Storage</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugins" class="nav-link">🔌 Plugins</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#utils" class="nav-link">🧰 Utils</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cross-package-interaction-diagram" class="nav-link">🔗 Cross-Package Interaction Diagram</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#best-practices" class="nav-link">🧠 Best Practices</a>
               <ul class="nav flex-column">
               </ul>
@@ -343,76 +371,66 @@ flowchart TD
     L --&gt; M
     L --&gt; N</div>
 <h3 id="example-model">Example Model<a class="headerlink" href="#example-model" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># core-lib/models/finding.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+<div class="highlight"><pre><span></span><code># core-lib/models/finding.py
+from pydantic import BaseModel
+from datetime import datetime
+from typing import List, Optional, Dict
 
-<span class="k">class</span><span class="w"> </span><span class="nc">Finding</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">detector_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">severity</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">evidence</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">cwe</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="n">owasp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">cve_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">enrichment</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="err">```</span><span class="n">python</span>
+class Finding(BaseModel):
+    id: str
+    project_id: str
+    detector_id: str
+    title: str
+    severity: str
+    path: str
+    evidence: Dict[str, str]
+    created_at: datetime
+    cwe: Optional[int]
+    owasp: Optional[str]
+    cve_ids: List[str] = []
+    enrichment: Dict[str, any] = {}
+</code></pre></div>
+<h3 id="example-port">Example Port<a class="headerlink" href="#example-port" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># core-lib/ports/tool_port.py
+from typing import Protocol, List
+from core_lib.models.finding import Finding
 
-<span class="c1">### Example Port</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="c1"># core-lib/ports/tool_port.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.models.finding</span><span class="w"> </span><span class="kn">import</span> <span class="n">Finding</span>
+class ToolPort(Protocol):
+    def prepare(self, config: dict) -&gt; None:
+        &quot;&quot;&quot;Prepare the tool with given configuration.&quot;&quot;&quot;
+        pass
 
-<span class="k">class</span><span class="w"> </span><span class="nc">ToolPort</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the tool with given configuration.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+    def execute(self) -&gt; List[Finding]:
+        &quot;&quot;&quot;Execute the tool and return findings.&quot;&quot;&quot;
+        pass
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the tool and return findings.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate tool output format.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="n">This</span> <span class="n">abstraction</span> <span class="n">allows</span> <span class="nb">any</span> <span class="n">external</span> <span class="n">tool</span> <span class="n">to</span> <span class="n">be</span> <span class="n">integrated</span> <span class="n">simply</span> <span class="n">by</span> <span class="n">implementing</span> <span class="err">`</span><span class="n">ToolPort</span><span class="err">`</span><span class="o">.</span>
-
-<span class="c1">## 🧠 Findings-Engine</span>
-
-<span class="c1">### Purpose</span>
-<span class="n">Responsible</span> <span class="k">for</span> <span class="n">normalizing</span><span class="p">,</span> <span class="n">deduplicating</span><span class="p">,</span> <span class="ow">and</span> <span class="n">enriching</span> <span class="n">findings</span> <span class="n">produced</span> <span class="n">by</span> <span class="n">wrappers</span><span class="o">.</span>
-
-<span class="c1">### Example Normalization Flow</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">raw_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Finding</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">tool</span> <span class="o">==</span> <span class="s2">&quot;nuclei&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_normalize_nuclei_output</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">tool</span> <span class="o">==</span> <span class="s2">&quot;ferox&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_normalize_ferox_output</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">### Capabilities</span>
-<span class="o">-</span> <span class="n">Parse</span> <span class="n">multiple</span> <span class="n">output</span> <span class="n">formats</span> <span class="p">(</span><span class="n">JSON</span><span class="p">,</span> <span class="n">XML</span><span class="p">,</span> <span class="n">plain</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Deduplicate</span> <span class="n">based</span> <span class="n">on</span> <span class="n">fingerprint</span> <span class="p">(</span><span class="n">host</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="n">vuln_id</span><span class="p">)</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Attach</span> <span class="n">CWE</span><span class="p">,</span> <span class="n">CVSS</span><span class="p">,</span> <span class="ow">and</span> <span class="n">severity</span> <span class="kn">from</span><span class="w"> </span><span class="nn">enrichment</span> <span class="n">sources</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Store</span> <span class="n">normalized</span> <span class="n">data</span> <span class="n">through</span> <span class="err">`</span><span class="n">StoragePort</span><span class="err">`</span><span class="o">.</span>
-
-<span class="c1">## ⚙️ Wrappers</span>
-
-<span class="c1">### Purpose</span>
-<span class="n">Wraps</span> <span class="ow">and</span> <span class="n">executes</span> <span class="n">third</span><span class="o">-</span><span class="n">party</span> <span class="n">tools</span> <span class="n">through</span> <span class="n">a</span> <span class="n">unified</span> <span class="n">interface</span> <span class="n">defined</span> <span class="n">by</span> <span class="err">`</span><span class="n">ToolPort</span><span class="err">`</span><span class="o">.</span>
-
-<span class="c1">### Example Structure</span>
-<span class="err">```</span><span class="n">text</span>
-<span class="n">wrappers</span><span class="o">/</span>
+    def validate_output(self, raw_output: str) -&gt; bool:
+        &quot;&quot;&quot;Validate tool output format.&quot;&quot;&quot;
+        pass
+</code></pre></div>
+<p>This abstraction allows any external tool to be integrated simply by implementing <code>ToolPort</code>.</p>
+<h2 id="findings-engine">🧠 Findings-Engine<a class="headerlink" href="#findings-engine" title="Permanent link">&para;</a></h2>
+<h3 id="purpose_1">Purpose<a class="headerlink" href="#purpose_1" title="Permanent link">&para;</a></h3>
+<p>Responsible for normalizing, deduplicating, and enriching findings produced by wrappers.</p>
+<h3 id="example-normalization-flow">Example Normalization Flow<a class="headerlink" href="#example-normalization-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>def normalize(raw_data: str, tool: str) -&gt; Finding:
+    if tool == &quot;nuclei&quot;:
+        return _normalize_nuclei_output(raw_data)
+    elif tool == &quot;ferox&quot;:
+        return _normalize_ferox_output(raw_data)
+</code></pre></div>
+<h3 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Parse multiple output formats (JSON, XML, plain text).</li>
+<li>Deduplicate based on fingerprint (host + path + vuln_id).</li>
+<li>Attach CWE, CVSS, and severity from enrichment sources.</li>
+<li>Store normalized data through <code>StoragePort</code>.</li>
+</ul>
+<h2 id="wrappers">⚙️ Wrappers<a class="headerlink" href="#wrappers" title="Permanent link">&para;</a></h2>
+<h3 id="purpose_2">Purpose<a class="headerlink" href="#purpose_2" title="Permanent link">&para;</a></h3>
+<p>Wraps and executes third-party tools through a unified interface defined by <code>ToolPort</code>.</p>
+<h3 id="example-structure">Example Structure<a class="headerlink" href="#example-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>wrappers/
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -427,119 +445,101 @@ flowchart TD
     A --&gt; D
     A --&gt; E</div>
 <h3 id="example-base-class">Example Base Class<a class="headerlink" href="#example-base-class" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># wrappers/base_wrapper.py</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.models.finding</span><span class="w"> </span><span class="kn">import</span> <span class="n">Finding</span>
+<div class="highlight"><pre><span></span><code># wrappers/base_wrapper.py
+import subprocess
+from core_lib.models.finding import Finding
 
-<span class="k">class</span><span class="w"> </span><span class="nc">BaseWrapper</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">manifest</span> <span class="o">=</span> <span class="n">manifest</span>
+class BaseWrapper:
+    def __init__(self, manifest: dict):
+        self.manifest = manifest
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;binary&quot;</span><span class="p">],</span> <span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="n">target</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_output</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    def run(self, target: str) -&gt; list[Finding]:
+        cmd = [self.manifest[&quot;binary&quot;], &quot;-u&quot;, target]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        return self.parse_output(result.stdout)
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">parse_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-<span class="err">```</span><span class="n">python</span>
+    def parse_output(self, raw: str) -&gt; list[Finding]:
+        raise NotImplementedError
+</code></pre></div>
+<p>All wrappers inherit from <code>BaseWrapper</code> and override <code>parse_output</code>.</p>
+<h2 id="resources">📦 Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
+<h3 id="purpose_3">Purpose<a class="headerlink" href="#purpose_3" title="Permanent link">&para;</a></h3>
+<p><code>resources</code> manages global and scoped assets:
+- Wordlists (directories, subdomains, parameters)
+- Templates (Nuclei, ZAP)
+- Payload sets
+- Custom configurations</p>
+<h3 id="example-resource-model">Example Resource Model<a class="headerlink" href="#example-resource-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># core-lib/models/resource.py
+class Resource(BaseModel):
+    id: str
+    name: str
+    type: Literal[&quot;wordlist&quot;, &quot;template&quot;, &quot;payload&quot;]
+    scope: Literal[&quot;global&quot;, &quot;group&quot;, &quot;project&quot;]
+    hash: str
+    version: str
+    metadata: dict
+</code></pre></div>
+<h2 id="storage">🗃️ Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
+<h3 id="purpose_4">Purpose<a class="headerlink" href="#purpose_4" title="Permanent link">&para;</a></h3>
+<p>Implements all persistence operations via the <code>StoragePort</code> interface.</p>
+<h3 id="example-interface">Example Interface<a class="headerlink" href="#example-interface" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># core-lib/ports/storage_port.py
+class StoragePort(Protocol):
+    def save_finding(self, finding: Finding) -&gt; None:
+        &quot;&quot;&quot;Save a finding to storage.&quot;&quot;&quot;
+        pass
 
-<span class="n">All</span> <span class="n">wrappers</span> <span class="n">inherit</span> <span class="kn">from</span><span class="w"> </span><span class="err">`</span><span class="n">BaseWrapper</span><span class="err">`</span> <span class="ow">and</span> <span class="n">override</span> <span class="err">`</span><span class="n">parse_output</span><span class="err">`</span><span class="o">.</span>
+    def list_findings(self, project_id: str) -&gt; list[Finding]:
+        &quot;&quot;&quot;List all findings for a project.&quot;&quot;&quot;
+        pass
 
-<span class="c1">## 📦 Resources</span>
+    def delete_project(self, project_id: str) -&gt; None:
+        &quot;&quot;&quot;Delete a project and all its findings.&quot;&quot;&quot;
+        pass
+</code></pre></div>
+<h3 id="implementation-examples">Implementation Examples<a class="headerlink" href="#implementation-examples" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>SQLiteStorageAdapter</code></li>
+<li><code>PostgresStorageAdapter</code></li>
+<li><code>RedisCacheAdapter</code></li>
+</ul>
+<p>All registered in the <code>storage.registry</code>.</p>
+<h2 id="plugins">🔌 Plugins<a class="headerlink" href="#plugins" title="Permanent link">&para;</a></h2>
+<h3 id="purpose_5">Purpose<a class="headerlink" href="#purpose_5" title="Permanent link">&para;</a></h3>
+<p>Extend SecFlow with additional detection or enrichment capabilities.</p>
+<h3 id="example-plugin-registration">Example Plugin Registration<a class="headerlink" href="#example-plugin-registration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># plugins/registry.py
+from typing import Dict, Callable
 
-<span class="c1">### Purpose</span>
-<span class="err">`</span><span class="n">resources</span><span class="err">`</span> <span class="n">manages</span> <span class="k">global</span> <span class="ow">and</span> <span class="n">scoped</span> <span class="n">assets</span><span class="p">:</span>
-<span class="o">-</span> <span class="n">Wordlists</span> <span class="p">(</span><span class="n">directories</span><span class="p">,</span> <span class="n">subdomains</span><span class="p">,</span> <span class="n">parameters</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">Templates</span> <span class="p">(</span><span class="n">Nuclei</span><span class="p">,</span> <span class="n">ZAP</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">Payload</span> <span class="n">sets</span>
-<span class="o">-</span> <span class="n">Custom</span> <span class="n">configurations</span>
+PLUGIN_REGISTRY: Dict[str, Callable] = {}
 
-<span class="c1">### Example Resource Model</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="c1"># core-lib/models/resource.py</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Resource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;wordlist&quot;</span><span class="p">,</span> <span class="s2">&quot;template&quot;</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="p">]</span>
-    <span class="n">scope</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">]</span>
-    <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🗃️ Storage</span>
-
-<span class="c1">### Purpose</span>
-<span class="n">Implements</span> <span class="nb">all</span> <span class="n">persistence</span> <span class="n">operations</span> <span class="n">via</span> <span class="n">the</span> <span class="err">`</span><span class="n">StoragePort</span><span class="err">`</span> <span class="n">interface</span><span class="o">.</span>
-
-<span class="c1">### Example Interface</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="c1"># core-lib/ports/storage_port.py</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">StoragePort</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_finding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finding</span><span class="p">:</span> <span class="n">Finding</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a finding to storage.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">list_findings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all findings for a project.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a project and all its findings.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">### Implementation Examples</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">SQLiteStorageAdapter</span><span class="err">`</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">PostgresStorageAdapter</span><span class="err">`</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">RedisCacheAdapter</span><span class="err">`</span>
-
-<span class="n">All</span> <span class="n">registered</span> <span class="ow">in</span> <span class="n">the</span> <span class="err">`</span><span class="n">storage</span><span class="o">.</span><span class="n">registry</span><span class="err">`</span><span class="o">.</span>
-
-<span class="c1">## 🔌 Plugins</span>
-
-<span class="c1">### Purpose</span>
-<span class="n">Extend</span> <span class="n">SecFlow</span> <span class="k">with</span> <span class="n">additional</span> <span class="n">detection</span> <span class="ow">or</span> <span class="n">enrichment</span> <span class="n">capabilities</span><span class="o">.</span>
-
-<span class="c1">### Example Plugin Registration</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="c1"># plugins/registry.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
-
-<span class="n">PLUGIN_REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">register_plugin</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">PLUGIN_REGISTRY</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
-        <span class="k">return</span> <span class="n">func</span>
-    <span class="k">return</span> <span class="n">decorator</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="n">Plugins</span> <span class="n">can</span> <span class="n">dynamically</span> <span class="n">hook</span> <span class="n">into</span> <span class="n">findings</span> <span class="n">processing</span><span class="p">,</span> <span class="n">orchestration</span><span class="p">,</span> <span class="ow">or</span> <span class="n">resource</span> <span class="n">management</span><span class="o">.</span>
-
-<span class="c1">## 🧰 Utils</span>
-
-<span class="err">`</span><span class="n">utils</span><span class="err">`</span> <span class="n">contains</span> <span class="n">helper</span> <span class="n">modules</span> <span class="n">that</span> <span class="n">are</span> <span class="n">shared</span> <span class="n">across</span> <span class="n">packages</span> <span class="n">but</span> <span class="n">contain</span> <span class="n">no</span> <span class="n">business</span> <span class="n">logic</span><span class="o">.</span>
-
-<span class="c1">### Examples:</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">subprocess_safe</span><span class="err">`</span> <span class="err">–</span> <span class="n">wrapper</span> <span class="k">for</span> <span class="n">secure</span> <span class="n">process</span> <span class="n">spawning</span><span class="o">.</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">hashing</span><span class="err">`</span> <span class="err">–</span> <span class="n">generate</span> <span class="n">resource</span> <span class="n">hashes</span> <span class="p">(</span><span class="n">SHA256</span><span class="p">)</span><span class="o">.</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">validation</span><span class="err">`</span> <span class="err">–</span> <span class="n">reusable</span> <span class="n">Pydantic</span> <span class="n">validators</span><span class="o">.</span>
-<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">config</span><span class="err">`</span> <span class="err">–</span> <span class="n">environment</span><span class="o">-</span><span class="n">aware</span> <span class="n">configuration</span> <span class="n">loader</span><span class="o">.</span>
-
-<span class="c1">## 🔗 Cross-Package Interaction Diagram</span>
-
-<span class="err">```</span><span class="n">text</span>
-<span class="o">+-------------+</span>       <span class="o">+----------------+</span>       <span class="o">+---------------+</span>
-<span class="o">|</span>  <span class="n">Wrappers</span>   <span class="o">|</span> <span class="o">----&gt;</span> <span class="o">|</span> <span class="n">Findings</span><span class="o">-</span><span class="n">Engine</span><span class="o">|</span> <span class="o">----&gt;</span> <span class="o">|</span>   <span class="n">Storage</span>     <span class="o">|</span>
-<span class="o">+-------------+</span>       <span class="o">+----------------+</span>       <span class="o">+---------------+</span>
-       <span class="o">|</span>                       <span class="o">^</span>                       <span class="o">|</span>
-       <span class="o">|</span>                       <span class="o">|</span>                       <span class="o">|</span>
-       <span class="n">v</span>                       <span class="o">|</span>                       <span class="n">v</span>
-   <span class="o">+-----------+</span>        <span class="o">+----------------+</span>        <span class="o">+----------------+</span>
-   <span class="o">|</span> <span class="n">Resources</span> <span class="o">|</span>        <span class="o">|</span>    <span class="n">Core</span><span class="o">-</span><span class="n">Lib</span>    <span class="o">|</span>        <span class="o">|</span>    <span class="n">Plugins</span>     <span class="o">|</span>
-   <span class="o">+-----------+</span>        <span class="o">+----------------+</span>        <span class="o">+----------------+</span>
+def register_plugin(name: str):
+    def decorator(func):
+        PLUGIN_REGISTRY[name] = func
+        return func
+    return decorator
+</code></pre></div>
+<p>Plugins can dynamically hook into findings processing, orchestration, or resource management.</p>
+<h2 id="utils">🧰 Utils<a class="headerlink" href="#utils" title="Permanent link">&para;</a></h2>
+<p><code>utils</code> contains helper modules that are shared across packages but contain no business logic.</p>
+<h3 id="examples">Examples:<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>utils.subprocess_safe</code> – wrapper for secure process spawning.</li>
+<li><code>utils.hashing</code> – generate resource hashes (SHA256).</li>
+<li><code>utils.validation</code> – reusable Pydantic validators.</li>
+<li><code>utils.config</code> – environment-aware configuration loader.</li>
+</ul>
+<h2 id="cross-package-interaction-diagram">🔗 Cross-Package Interaction Diagram<a class="headerlink" href="#cross-package-interaction-diagram" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>+-------------+       +----------------+       +---------------+
+|  Wrappers   | ----&gt; | Findings-Engine| ----&gt; |   Storage     |
++-------------+       +----------------+       +---------------+
+       |                       ^                       |
+       |                       |                       |
+       v                       |                       v
+   +-----------+        +----------------+        +----------------+
+   | Resources |        |    Core-Lib    |        |    Plugins     |
+   +-----------+        +----------------+        +----------------+
 </code></pre></div>
 <p>Arrows represent dependency flow, not import direction (imports always go downward).</p>
 <h2 id="best-practices">🧠 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>

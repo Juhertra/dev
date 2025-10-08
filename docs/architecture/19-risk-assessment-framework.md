@@ -46,7 +46,7 @@ flowchart TD
 
 ## 🧱 Scoring Pipeline
 
-```text
+```
 Finding
    ↓
 CVSS Vector Parsing
@@ -58,7 +58,7 @@ Exploit & Exposure Context
 NIST Risk Matrix Evaluation
    ↓
 Final Risk Score (0–100) + Risk Tier
-```text
+```
 
 ---
 
@@ -67,19 +67,19 @@ Final Risk Score (0–100) + Risk Tier
 SecFlow ingests CVSS vectors either from NVD (via enrichment) or tool metadata.
 
 ### Example:
-```text
+```
 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
-```text
+```
 
 Converted into internal representation:
-```json
+```
 {
   "base_score": 9.8,
   "impact_subscore": 5.9,
   "exploitability_subscore": 3.9,
   "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
 }
-```json
+```
 
 If missing, heuristic fallback is applied based on CWE ID or OWASP category (see [13-cve-cwe-poc-enrichment-layer.md](13-cve-cwe-poc-enrichment-layer.md)).
 
@@ -142,14 +142,14 @@ Likelihood is dynamically computed using multiple context sources:
 | Detection Confidence | Based on finding engine | ±0.2 |
 
 ### Pseudo-code:
-```python
+```
 def likelihood_score(finding):
     score = 0.3 if finding.poc_available else 0
     if finding.exposure == "internet": score += 0.25
     if finding.auth_required: score -= 0.15
     if finding.complexity == "low": score += 0.1
     return min(max(score, 0), 1)
-```python
+```
 
 ## 🧠 Impact Factors
 
@@ -169,9 +169,9 @@ Final impact = weighted sum normalized to 1.0.
 
 Final quantitative risk score (0–100):
 
-```python
+```
 risk_score = ((CVSS_base / 10) * 0.6 + impact_factor * 0.25 + likelihood_factor * 0.15) * 100
-```python
+```
 
 Rounded to nearest integer.
 
@@ -236,11 +236,11 @@ All are harmonized via the risk formula to produce consistent prioritization.
 
 Project-level risk is computed as weighted mean:
 
-```python
+```
 def project_risk(findings):
     weights = [f.cvss_score * f.impact_weight for f in findings]
     return sum(weights) / len(weights)
-```python
+```
 
 Analytics engine stores snapshots in `/analytics/risk_snapshots/`.
 
@@ -254,7 +254,7 @@ Analytics engine stores snapshots in `/analytics/risk_snapshots/`.
 | `/api/v1/risk/heatmap` | GET | Generates OWASP × ATT&CK matrix |
 
 ### Example Response:
-```json
+```
 {
   "finding_id": "abcd-123",
   "score": 89.7,
@@ -266,7 +266,7 @@ Analytics engine stores snapshots in `/analytics/risk_snapshots/`.
   "owasp": "A03: Injection",
   "mitre_tid": "T1505.003"
 }
-```json
+```
 
 ## 🔒 Auditability & Traceability
 
@@ -275,7 +275,7 @@ Every risk computation is versioned and auditable:
 - Recomputed automatically if CVSS source data updates.
 
 ### Log entry example:
-```json
+```
 {
   "event": "risk_recalc",
   "finding_id": "abcd-123",

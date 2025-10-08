@@ -337,22 +337,19 @@
 <li>Integrate MITRE ATT&amp;CK correlation heatmaps</li>
 </ul>
 <h3 id="example-architecture">Example architecture:<a class="headerlink" href="#example-architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+--------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                AI Engine                         |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - LLM-based Triage Assistant                     |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - ML Risk Predictor (EPSS + CVSS Hybrid)        |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - Anomaly Detector (Outlier Findings)            |</span>
-<span class="l l-Scalar l-Scalar-Plain">| - Natural Language Query Interface               |</span>
-<span class="l l-Scalar l-Scalar-Plain">+--------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">```text</span>
-
-<span class="l l-Scalar l-Scalar-Plain">### 4. Conversational Analysis Interface</span>
-<span class="l l-Scalar l-Scalar-Plain">A secure chat layer connected to `core-lib` enabling queries like</span><span class="p p-Indicator">:</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="l l-Scalar l-Scalar-Plain">show me all high-risk CVEs in projects using nginx</span>
-<span class="l l-Scalar l-Scalar-Plain">summarize findings related to broken authentication</span>
-<span class="l l-Scalar l-Scalar-Plain">predict which components will likely fail next pentest</span>
+<div class="highlight"><pre><span></span><code>+--------------------------------------------------+
+|                AI Engine                         |
+| - LLM-based Triage Assistant                     |
+| - ML Risk Predictor (EPSS + CVSS Hybrid)        |
+| - Anomaly Detector (Outlier Findings)            |
+| - Natural Language Query Interface               |
++--------------------------------------------------+
+</code></pre></div>
+<h3 id="4-conversational-analysis-interface">4. Conversational Analysis Interface<a class="headerlink" href="#4-conversational-analysis-interface" title="Permanent link">&para;</a></h3>
+<p>A secure chat layer connected to <code>core-lib</code> enabling queries like:</p>
+<div class="highlight"><pre><span></span><code>show me all high-risk CVEs in projects using nginx
+summarize findings related to broken authentication
+predict which components will likely fail next pentest
 </code></pre></div>
 <hr />
 <h2 id="phase-3-collaboration-multi-tenant-platform">🌐 Phase 3 — Collaboration &amp; Multi-Tenant Platform<a class="headerlink" href="#phase-3-collaboration-multi-tenant-platform" title="Permanent link">&para;</a></h2>

@@ -64,7 +64,7 @@ flowchart TD
 ## 🧠 CLI Experience
 
 ### Example Commands
-```bash
+```
 # List available tools
 SecFlow tools list
 
@@ -79,7 +79,7 @@ SecFlow run workflow.yaml
 
 # Chain tools manually
 SecFlow run feroxbuster --target https://example.com | SecFlow run nuclei
-```text
+```
 
 ### CLI UX Principles
 - YAML/JSON inputs mirror internal manifests.
@@ -89,7 +89,7 @@ SecFlow run feroxbuster --target https://example.com | SecFlow run nuclei
 ## 🧠 Web UI Experience
 
 ### Visual Overview
-```text
+```
 Project: Acme Web API
 ```
 
@@ -118,7 +118,7 @@ flowchart TD
 | **Results Viewer** | Interactive findings dashboard, linked to triage view. |
 
 ### Example Workflow Builder Nodes
-```bash
+```
   (Discovery)          (Crawler)            (Scanner)
 ```
 
@@ -142,12 +142,12 @@ Users can:
 
 Each tool has a persistent JSON/YAML config stored under:
 
-```text
+```
 ~/.SecFlow/config/tools/<tool>.yaml
-```text
+```
 
 ### Example
-```yaml
+```
 version: "1.0"
 defaults:
   threads: 25
@@ -159,7 +159,7 @@ profiles:
   safe:
     rate_limit: 50
     sandbox: true
-```text
+```
 
 Profiles allow contextual configurations (e.g., "aggressive", "safe").
 
@@ -168,22 +168,22 @@ Profiles allow contextual configurations (e.g., "aggressive", "safe").
 Tool chaining uses the Workflow Engine, but users can also trigger ad-hoc sequences.
 Each output dataset is normalized as JSON Lines, allowing flexible piping.
 
-```bash
+```
 SecFlow run feroxbuster --target https://app.local \
 | SecFlow run katana --stdin \
 | SecFlow run nuclei --stdin
-```text
+```
 
 ### Data interoperability:
 Each tool must produce output in a structured JSON format with required fields:
 
-```json
+```
 {
   "url": "https://example.com/login",
   "status": 200,
   "source": "feroxbuster"
 }
-```python
+```
 
 ## 🧩 Default Configurations & Templates
 
@@ -193,9 +193,9 @@ When the user installs SecFlow:
 - The user can immediately run scans without extra setup.
 
 ### Example command:
-```bash
+```
 SecFlow quickscan https://example.com
-```python
+```
 
 Equivalent to:
 - **Workflow:** Ferox → Nuclei (OWASP templates)
@@ -226,10 +226,10 @@ All actions are logged to the Audit Log.
 The Tool Manager automatically pulls shared wordlists, templates, or payloads from the Resource Registry (see [09-resource-registry.md](09-resource-registry.md)).
 
 ### Example:
-```yaml
+```
 wordlist: res://wordlists/dirb:latest
 templates: res://templates/nuclei:latest
-```ini
+```
 
 ## 🧩 Error Recovery UX
 
@@ -241,7 +241,7 @@ If a tool fails:
 
 ## 🧠 Example CLI Session
 
-```bash
+```
 # Add Ferox with a project-local override wordlist
 secflow tools add ferox \
   --version 2.10.0 \
@@ -253,11 +253,11 @@ secflow run \
   --project acme-web \
   --recipe workflows/discovery-to-nuclei.yaml \
   --var target=https://app.acme.com
-```bash
+```
 
 ### API Response Example
 
-```json
+```
 {
   "tool": "feroxbuster",
   "version": "2.10.0",
@@ -270,7 +270,7 @@ secflow run \
   "status": "installed",
   "selftest": { "ok": true, "elapsed_ms": 143 }
 }
-```json
+```
 
 ## 🔮 Future Enhancements
 

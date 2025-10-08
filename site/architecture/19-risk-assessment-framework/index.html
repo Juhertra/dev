@@ -235,11 +235,55 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cvss-normalization" class="nav-link">🧠 CVSS Normalization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cwe-owasp-mapping" class="nav-link">🧩 CWE / OWASP Mapping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#mitre-attck-mapping" class="nav-link">🧠 MITRE ATT&amp;CK Mapping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#nist-55-risk-matrix" class="nav-link">⚙️ NIST 5×5 Risk Matrix</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#likelihood-factors" class="nav-link">🧩 Likelihood Factors</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#impact-factors" class="nav-link">🧠 Impact Factors</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#combined-risk-formula" class="nav-link">⚙️ Combined Risk Formula</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#contextual-adjustments" class="nav-link">🧠 Contextual Adjustments</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#aggregated-risk-dashboard" class="nav-link">🧩 Aggregated Risk Dashboard</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#risk-normalization-across-tools" class="nav-link">⚙️ Risk Normalization Across Tools</a>
               <ul class="nav flex-column">
               </ul>
             </li>
             <li class="nav-item" data-bs-level="2"><a href="#risk-aggregation-reporting" class="nav-link">🧠 Risk Aggregation &amp; Reporting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#risk-api-endpoints" class="nav-link">🧩 Risk API Endpoints</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#auditability-traceability" class="nav-link">🔒 Auditability &amp; Traceability</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -315,166 +359,388 @@ Exploit &amp; Exposure Context
 NIST Risk Matrix Evaluation
    ↓
 Final Risk Score (0–100) + Risk Tier
-```text
-
----
-
-## 🧠 CVSS Normalization
-
-SecFlow ingests CVSS vectors either from NVD (via enrichment) or tool metadata.
-
-### Example:
-```text
-CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
-```text
-
-Converted into internal representation:
-```json
-{
+</code></pre></div>
+<hr />
+<h2 id="cvss-normalization">🧠 CVSS Normalization<a class="headerlink" href="#cvss-normalization" title="Permanent link">&para;</a></h2>
+<p>SecFlow ingests CVSS vectors either from NVD (via enrichment) or tool metadata.</p>
+<h3 id="example">Example:<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+</code></pre></div>
+<p>Converted into internal representation:
+<div class="highlight"><pre><span></span><code>{
   &quot;base_score&quot;: 9.8,
   &quot;impact_subscore&quot;: 5.9,
   &quot;exploitability_subscore&quot;: 3.9,
   &quot;vector&quot;: &quot;CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H&quot;
 }
-```json
-
-If missing, heuristic fallback is applied based on CWE ID or OWASP category (see [13-cve-cwe-poc-enrichment-layer.md](13-cve-cwe-poc-enrichment-layer.md)).
-
-## 🧩 CWE / OWASP Mapping
-
-| CWE ID | OWASP Category | Default Impact | Default Likelihood |
-|--------|----------------|----------------|-------------------|
-| 79 | A03: Injection | High | High |
-| 89 | A03: Injection | Very High | High |
-| 200 | A01: Broken Access Control | High | Medium |
-| 601 | A10: SSRF | Medium | Medium |
-| 787 | A05: Buffer Overflow | Critical | Medium |
-| 352 | A08: CSRF | Medium | High |
-
-Mappings are maintained in `/resources/mappings/cwe_owasp.json`.
-
-## 🧠 MITRE ATT&amp;CK Mapping
-
-Findings enriched with ATT&amp;CK technique IDs (TIDs) during correlation (see [13-cve-cwe-poc-enrichment-layer.md](13-cve-cwe-poc-enrichment-layer.md)) are leveraged to infer attack chain context.
-
-| MITRE Technique ID | Tactic | Effect |
-|-------------------|--------|--------|
-| T1059.007 | Execution | Cross-Site Scripting |
-| T1505.003 | Persistence | SQL Injection |
-| T1071.001 | Command &amp; Control | Web Protocols |
-| T1190 | Initial Access | Exploit Public-Facing App |
-
-This mapping helps classify whether the finding affects initial compromise, lateral movement, or data exfiltration.
-
-## ⚙️ NIST 5×5 Risk Matrix
-
-### Definition
-| Impact ↓ / Likelihood → | Very Low | Low | Medium | High | Very High |
-|------------------------|----------|-----|--------|------|-----------|
-| **Very High** | Medium | High | High | Critical | Critical |
-| **High** | Low | Medium | High | High | Critical |
-| **Medium** | Low | Low | Medium | High | High |
-| **Low** | Low | Low | Low | Medium | High |
-| **Very Low** | Low | Low | Low | Low | Medium |
-
-### Mapping to Severity
-| Result | Score Range | Label |
-|--------|-------------|-------|
-| Critical | 90–100 | 🔥 |
-| High | 70–89 | ⚠️ |
-| Medium | 40–69 | ⚖️ |
-| Low | 20–39 | 🧩 |
-| Informational | 0–19 | ℹ️ |
-
-## 🧩 Likelihood Factors
-
-Likelihood is dynamically computed using multiple context sources:
-
-| Factor | Description | Weight |
-|--------|-------------|--------|
-| Exploit Availability | Known PoC, KEV presence | +0.3 |
-| Network Exposure | Publicly reachable target | +0.25 |
-| Authentication Required | Lowers likelihood if true | -0.15 |
-| Complexity | Tool-derived complexity | ±0.1 |
-| Detection Confidence | Based on finding engine | ±0.2 |
-
-### Pseudo-code:
-```python
-def likelihood_score(finding):
+</code></pre></div></p>
+<p>If missing, heuristic fallback is applied based on CWE ID or OWASP category (see <a href="../13-cve-cwe-poc-enrichment-layer/">13-cve-cwe-poc-enrichment-layer.md</a>).</p>
+<h2 id="cwe-owasp-mapping">🧩 CWE / OWASP Mapping<a class="headerlink" href="#cwe-owasp-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>CWE ID</th>
+<th>OWASP Category</th>
+<th>Default Impact</th>
+<th>Default Likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>79</td>
+<td>A03: Injection</td>
+<td>High</td>
+<td>High</td>
+</tr>
+<tr>
+<td>89</td>
+<td>A03: Injection</td>
+<td>Very High</td>
+<td>High</td>
+</tr>
+<tr>
+<td>200</td>
+<td>A01: Broken Access Control</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>601</td>
+<td>A10: SSRF</td>
+<td>Medium</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>787</td>
+<td>A05: Buffer Overflow</td>
+<td>Critical</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>352</td>
+<td>A08: CSRF</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<p>Mappings are maintained in <code>/resources/mappings/cwe_owasp.json</code>.</p>
+<h2 id="mitre-attck-mapping">🧠 MITRE ATT&amp;CK Mapping<a class="headerlink" href="#mitre-attck-mapping" title="Permanent link">&para;</a></h2>
+<p>Findings enriched with ATT&amp;CK technique IDs (TIDs) during correlation (see <a href="../13-cve-cwe-poc-enrichment-layer/">13-cve-cwe-poc-enrichment-layer.md</a>) are leveraged to infer attack chain context.</p>
+<table>
+<thead>
+<tr>
+<th>MITRE Technique ID</th>
+<th>Tactic</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1059.007</td>
+<td>Execution</td>
+<td>Cross-Site Scripting</td>
+</tr>
+<tr>
+<td>T1505.003</td>
+<td>Persistence</td>
+<td>SQL Injection</td>
+</tr>
+<tr>
+<td>T1071.001</td>
+<td>Command &amp; Control</td>
+<td>Web Protocols</td>
+</tr>
+<tr>
+<td>T1190</td>
+<td>Initial Access</td>
+<td>Exploit Public-Facing App</td>
+</tr>
+</tbody>
+</table>
+<p>This mapping helps classify whether the finding affects initial compromise, lateral movement, or data exfiltration.</p>
+<h2 id="nist-55-risk-matrix">⚙️ NIST 5×5 Risk Matrix<a class="headerlink" href="#nist-55-risk-matrix" title="Permanent link">&para;</a></h2>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Impact ↓ / Likelihood →</th>
+<th>Very Low</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+<th>Very High</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Very High</strong></td>
+<td>Medium</td>
+<td>High</td>
+<td>High</td>
+<td>Critical</td>
+<td>Critical</td>
+</tr>
+<tr>
+<td><strong>High</strong></td>
+<td>Low</td>
+<td>Medium</td>
+<td>High</td>
+<td>High</td>
+<td>Critical</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td>Low</td>
+<td>Low</td>
+<td>Medium</td>
+<td>High</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Low</strong></td>
+<td>Low</td>
+<td>Low</td>
+<td>Low</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Very Low</strong></td>
+<td>Low</td>
+<td>Low</td>
+<td>Low</td>
+<td>Low</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mapping-to-severity">Mapping to Severity<a class="headerlink" href="#mapping-to-severity" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Score Range</th>
+<th>Label</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>90–100</td>
+<td>🔥</td>
+</tr>
+<tr>
+<td>High</td>
+<td>70–89</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>40–69</td>
+<td>⚖️</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>20–39</td>
+<td>🧩</td>
+</tr>
+<tr>
+<td>Informational</td>
+<td>0–19</td>
+<td>ℹ️</td>
+</tr>
+</tbody>
+</table>
+<h2 id="likelihood-factors">🧩 Likelihood Factors<a class="headerlink" href="#likelihood-factors" title="Permanent link">&para;</a></h2>
+<p>Likelihood is dynamically computed using multiple context sources:</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Description</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exploit Availability</td>
+<td>Known PoC, KEV presence</td>
+<td>+0.3</td>
+</tr>
+<tr>
+<td>Network Exposure</td>
+<td>Publicly reachable target</td>
+<td>+0.25</td>
+</tr>
+<tr>
+<td>Authentication Required</td>
+<td>Lowers likelihood if true</td>
+<td>-0.15</td>
+</tr>
+<tr>
+<td>Complexity</td>
+<td>Tool-derived complexity</td>
+<td>±0.1</td>
+</tr>
+<tr>
+<td>Detection Confidence</td>
+<td>Based on finding engine</td>
+<td>±0.2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pseudo-code">Pseudo-code:<a class="headerlink" href="#pseudo-code" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>def likelihood_score(finding):
     score = 0.3 if finding.poc_available else 0
     if finding.exposure == &quot;internet&quot;: score += 0.25
     if finding.auth_required: score -= 0.15
     if finding.complexity == &quot;low&quot;: score += 0.1
     return min(max(score, 0), 1)
-```python
-
-## 🧠 Impact Factors
-
-Impact combines technical and business context:
-
-| Factor | Example | Weight |
-|--------|---------|--------|
-| Confidentiality | Data exposure | +0.3 |
-| Integrity | Tampering possible | +0.3 |
-| Availability | Service crash, DoS | +0.2 |
-| Privilege Escalation | Root/system access | +0.2 |
-| Asset Criticality | System importance | +0.4 |
-
-Final impact = weighted sum normalized to 1.0.
-
-## ⚙️ Combined Risk Formula
-
-Final quantitative risk score (0–100):
-
-```python
-risk_score = ((CVSS_base / 10) * 0.6 + impact_factor * 0.25 + likelihood_factor * 0.15) * 100
-```python
-
-Rounded to nearest integer.
-
-### Example
-| Metric | Value |
-|--------|-------|
-| CVSS Base | 9.8 |
-| Impact Factor | 0.8 |
-| Likelihood Factor | 0.7 |
-| Final Score | `((0.98*0.6)+(0.8*0.25)+(0.7*0.15))*100 = 89.7` → **High** |
-
-## 🧠 Contextual Adjustments
-
-Certain contexts modify final risk score:
-
-| Context | Adjustment |
-|---------|------------|
-| Active exploit in wild (CISA KEV) | +10 |
-| Proof-of-concept verified | +5 |
-| Patched version available | -5 |
-| Internal-only system | -10 |
-| Compensating controls present | -15 |
-
-Scores are capped at 100 and floored at 0.
-
-## 🧩 Aggregated Risk Dashboard
-
-Each project&#39;s analytics tab visualizes:
-
-| Metric | Description |
-|--------|-------------|
-| Average CVSS per project | |
-| Top 10 findings by risk score | |
-| Risk evolution over time | |
-| Distribution by OWASP category | |
-| ATT&amp;CK tactics heatmap | |
-
-### Example chart:
-```mermaid
-%%{init: {&quot;theme&quot;:&quot;neutral&quot;}}%%
-xychart-beta
-    title &quot;Risk Trend (Score over Time)&quot;
-    x-axis [&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;]
-    y-axis &quot;Risk Score&quot; 0 --&gt; 100
-    bar [85, 70, 45, 60, 80]
 </code></pre></div>
+<h2 id="impact-factors">🧠 Impact Factors<a class="headerlink" href="#impact-factors" title="Permanent link">&para;</a></h2>
+<p>Impact combines technical and business context:</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Example</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confidentiality</td>
+<td>Data exposure</td>
+<td>+0.3</td>
+</tr>
+<tr>
+<td>Integrity</td>
+<td>Tampering possible</td>
+<td>+0.3</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>Service crash, DoS</td>
+<td>+0.2</td>
+</tr>
+<tr>
+<td>Privilege Escalation</td>
+<td>Root/system access</td>
+<td>+0.2</td>
+</tr>
+<tr>
+<td>Asset Criticality</td>
+<td>System importance</td>
+<td>+0.4</td>
+</tr>
+</tbody>
+</table>
+<p>Final impact = weighted sum normalized to 1.0.</p>
+<h2 id="combined-risk-formula">⚙️ Combined Risk Formula<a class="headerlink" href="#combined-risk-formula" title="Permanent link">&para;</a></h2>
+<p>Final quantitative risk score (0–100):</p>
+<div class="highlight"><pre><span></span><code>risk_score = ((CVSS_base / 10) * 0.6 + impact_factor * 0.25 + likelihood_factor * 0.15) * 100
+</code></pre></div>
+<p>Rounded to nearest integer.</p>
+<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CVSS Base</td>
+<td>9.8</td>
+</tr>
+<tr>
+<td>Impact Factor</td>
+<td>0.8</td>
+</tr>
+<tr>
+<td>Likelihood Factor</td>
+<td>0.7</td>
+</tr>
+<tr>
+<td>Final Score</td>
+<td><code>((0.98*0.6)+(0.8*0.25)+(0.7*0.15))*100 = 89.7</code> → <strong>High</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="contextual-adjustments">🧠 Contextual Adjustments<a class="headerlink" href="#contextual-adjustments" title="Permanent link">&para;</a></h2>
+<p>Certain contexts modify final risk score:</p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Adjustment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active exploit in wild (CISA KEV)</td>
+<td>+10</td>
+</tr>
+<tr>
+<td>Proof-of-concept verified</td>
+<td>+5</td>
+</tr>
+<tr>
+<td>Patched version available</td>
+<td>-5</td>
+</tr>
+<tr>
+<td>Internal-only system</td>
+<td>-10</td>
+</tr>
+<tr>
+<td>Compensating controls present</td>
+<td>-15</td>
+</tr>
+</tbody>
+</table>
+<p>Scores are capped at 100 and floored at 0.</p>
+<h2 id="aggregated-risk-dashboard">🧩 Aggregated Risk Dashboard<a class="headerlink" href="#aggregated-risk-dashboard" title="Permanent link">&para;</a></h2>
+<p>Each project's analytics tab visualizes:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Average CVSS per project</td>
+<td></td>
+</tr>
+<tr>
+<td>Top 10 findings by risk score</td>
+<td></td>
+</tr>
+<tr>
+<td>Risk evolution over time</td>
+<td></td>
+</tr>
+<tr>
+<td>Distribution by OWASP category</td>
+<td></td>
+</tr>
+<tr>
+<td>ATT&amp;CK tactics heatmap</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-chart">Example chart:<a class="headerlink" href="#example-chart" title="Permanent link">&para;</a></h3>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+xychart-beta
+    title "Risk Trend (Score over Time)"
+    x-axis ["Jan", "Feb", "Mar", "Apr", "May"]
+    y-axis "Risk Score" 0 --&gt; 100
+    bar [85, 70, 45, 60, 80]</div>
 <h2 id="risk-normalization-across-tools">⚙️ Risk Normalization Across Tools<a class="headerlink" href="#risk-normalization-across-tools" title="Permanent link">&para;</a></h2>
 <p>Different tools report different severity models (e.g., "Critical", "High", "Medium").
 SecFlow converts all to internal numeric ranges:</p>
@@ -515,52 +781,68 @@ SecFlow converts all to internal numeric ranges:</p>
 <p>All are harmonized via the risk formula to produce consistent prioritization.</p>
 <h2 id="risk-aggregation-reporting">🧠 Risk Aggregation &amp; Reporting<a class="headerlink" href="#risk-aggregation-reporting" title="Permanent link">&para;</a></h2>
 <p>Project-level risk is computed as weighted mean:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">project_risk</span><span class="p">(</span><span class="n">findings</span><span class="p">):</span>
-    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">cvss_score</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">impact_weight</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="n">Analytics</span> <span class="n">engine</span> <span class="n">stores</span> <span class="n">snapshots</span> <span class="ow">in</span> <span class="err">`</span><span class="o">/</span><span class="n">analytics</span><span class="o">/</span><span class="n">risk_snapshots</span><span class="o">/</span><span class="err">`</span><span class="o">.</span>
-
-<span class="c1">## 🧩 Risk API Endpoints</span>
-
-<span class="o">|</span> <span class="n">Endpoint</span> <span class="o">|</span> <span class="n">Method</span> <span class="o">|</span> <span class="n">Description</span> <span class="o">|</span>
-<span class="o">|----------|--------|-------------|</span>
-<span class="o">|</span> <span class="err">`</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">risk</span><span class="o">/</span><span class="n">score</span><span class="o">/</span><span class="p">{</span><span class="n">finding_id</span><span class="p">}</span><span class="err">`</span> <span class="o">|</span> <span class="n">GET</span> <span class="o">|</span> <span class="n">Returns</span> <span class="n">risk</span> <span class="n">vector</span> <span class="ow">and</span> <span class="n">classification</span> <span class="o">|</span>
-<span class="o">|</span> <span class="err">`</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">risk</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="p">{</span><span class="nb">id</span><span class="p">}</span><span class="err">`</span> <span class="o">|</span> <span class="n">GET</span> <span class="o">|</span> <span class="n">Aggregated</span> <span class="n">project</span> <span class="n">risk</span> <span class="n">summary</span> <span class="o">|</span>
-<span class="o">|</span> <span class="err">`</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">risk</span><span class="o">/</span><span class="n">export</span><span class="err">`</span> <span class="o">|</span> <span class="n">POST</span> <span class="o">|</span> <span class="n">Export</span> <span class="n">risk</span> <span class="n">data</span> <span class="n">to</span> <span class="n">JSON</span><span class="o">/</span><span class="n">CSV</span> <span class="o">|</span>
-<span class="o">|</span> <span class="err">`</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">risk</span><span class="o">/</span><span class="n">heatmap</span><span class="err">`</span> <span class="o">|</span> <span class="n">GET</span> <span class="o">|</span> <span class="n">Generates</span> <span class="n">OWASP</span> <span class="err">×</span> <span class="n">ATT</span><span class="o">&amp;</span><span class="n">CK</span> <span class="n">matrix</span> <span class="o">|</span>
-
-<span class="c1">### Example Response:</span>
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;finding_id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd-123&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mf">89.7</span><span class="p">,</span>
-  <span class="s2">&quot;severity&quot;</span><span class="p">:</span> <span class="s2">&quot;High&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;CVSS&quot;</span><span class="p">:</span> <span class="mf">9.8</span><span class="p">,</span>
-  <span class="s2">&quot;impact_factor&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
-  <span class="s2">&quot;likelihood_factor&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
-  <span class="s2">&quot;nist_matrix&quot;</span><span class="p">:</span> <span class="s2">&quot;High/High → Critical&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;owasp&quot;</span><span class="p">:</span> <span class="s2">&quot;A03: Injection&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;mitre_tid&quot;</span><span class="p">:</span> <span class="s2">&quot;T1505.003&quot;</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">json</span>
-
-<span class="c1">## 🔒 Auditability &amp; Traceability</span>
-
-<span class="n">Every</span> <span class="n">risk</span> <span class="n">computation</span> <span class="ow">is</span> <span class="n">versioned</span> <span class="ow">and</span> <span class="n">auditable</span><span class="p">:</span>
-<span class="o">-</span> <span class="n">Stored</span> <span class="k">with</span> <span class="n">enrichment</span> <span class="n">metadata</span> <span class="nb">hash</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Recomputed</span> <span class="n">automatically</span> <span class="k">if</span> <span class="n">CVSS</span> <span class="n">source</span> <span class="n">data</span> <span class="n">updates</span><span class="o">.</span>
-
-<span class="c1">### Log entry example:</span>
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;risk_recalc&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;finding_id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd-123&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;old_score&quot;</span><span class="p">:</span> <span class="mi">78</span><span class="p">,</span>
-  <span class="s2">&quot;new_score&quot;</span><span class="p">:</span> <span class="mf">89.7</span><span class="p">,</span>
-  <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;CISA KEV inclusion&quot;</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code>def project_risk(findings):
+    weights = [f.cvss_score * f.impact_weight for f in findings]
+    return sum(weights) / len(weights)
+</code></pre></div>
+<p>Analytics engine stores snapshots in <code>/analytics/risk_snapshots/</code>.</p>
+<h2 id="risk-api-endpoints">🧩 Risk API Endpoints<a class="headerlink" href="#risk-api-endpoints" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/risk/score/{finding_id}</code></td>
+<td>GET</td>
+<td>Returns risk vector and classification</td>
+</tr>
+<tr>
+<td><code>/api/v1/risk/project/{id}</code></td>
+<td>GET</td>
+<td>Aggregated project risk summary</td>
+</tr>
+<tr>
+<td><code>/api/v1/risk/export</code></td>
+<td>POST</td>
+<td>Export risk data to JSON/CSV</td>
+</tr>
+<tr>
+<td><code>/api/v1/risk/heatmap</code></td>
+<td>GET</td>
+<td>Generates OWASP × ATT&amp;CK matrix</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-response">Example Response:<a class="headerlink" href="#example-response" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;finding_id&quot;: &quot;abcd-123&quot;,
+  &quot;score&quot;: 89.7,
+  &quot;severity&quot;: &quot;High&quot;,
+  &quot;CVSS&quot;: 9.8,
+  &quot;impact_factor&quot;: 0.8,
+  &quot;likelihood_factor&quot;: 0.7,
+  &quot;nist_matrix&quot;: &quot;High/High → Critical&quot;,
+  &quot;owasp&quot;: &quot;A03: Injection&quot;,
+  &quot;mitre_tid&quot;: &quot;T1505.003&quot;
+}
+</code></pre></div>
+<h2 id="auditability-traceability">🔒 Auditability &amp; Traceability<a class="headerlink" href="#auditability-traceability" title="Permanent link">&para;</a></h2>
+<p>Every risk computation is versioned and auditable:
+- Stored with enrichment metadata hash.
+- Recomputed automatically if CVSS source data updates.</p>
+<h3 id="log-entry-example">Log entry example:<a class="headerlink" href="#log-entry-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;event&quot;: &quot;risk_recalc&quot;,
+  &quot;finding_id&quot;: &quot;abcd-123&quot;,
+  &quot;old_score&quot;: 78,
+  &quot;new_score&quot;: 89.7,
+  &quot;reason&quot;: &quot;CISA KEV inclusion&quot;
+}
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

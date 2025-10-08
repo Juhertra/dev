@@ -37,7 +37,7 @@ Use this initialization block at the start of every Mermaid diagram for consiste
 
 ### Custom Classes
 Define custom styling classes sparingly:
-```text
+```
 classDef box stroke:#0ea5e9,stroke-width:2px,fill:#f8fafc,color:#0b1220;
 classDef tool fill:#eef,stroke:#88f,stroke-width:1px;
 classDef role fill:#e2e8f0,stroke:#0ea5e9,stroke-width:2px;

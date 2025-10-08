@@ -50,7 +50,7 @@ flowchart TD
 
 Each project defines its **retention profile** in `~/.SecFlow/projects/<id>/config.yaml`:
 
-```yaml
+```
 retention:
   findings_ttl_days: 180
   runs_ttl_days: 90
@@ -58,7 +58,7 @@ retention:
   artifacts_ttl_days: 180
   soft_delete_ttl_days: 14
   auto_cleanup: true
-```yaml
+```
 
 ## 🧱 Data Lifecycle
 
@@ -71,38 +71,38 @@ retention:
 
 ## 🧠 Database-Level Soft Delete
 
-```python
+```
 class BaseModel(SQLModel):
     id: UUID
     created_at: datetime
     updated_at: datetime
     deleted: bool = False
     deleted_at: Optional[datetime] = None
-```python
+```
 
 When a record is soft-deleted:
 
-```python
+```
 def soft_delete(obj):
     obj.deleted = True
     obj.deleted_at = datetime.utcnow()
     session.add(obj)
     session.commit()
-```python
+```
 
 Recovery:
 
-```python
+```
 def restore(obj):
     obj.deleted = False
     obj.deleted_at = None
     session.commit()
-```text
+```
 
 ## 🧩 File System Garbage Collector
 
 ### Directory Structure
-```text
+```
 /data/
 ```
 
@@ -131,39 +131,39 @@ flowchart TD
 
 The GC worker traverses these trees periodically:
 
-```python
+```
 def sweep_directory(base_path: Path, older_than: timedelta):
     now = datetime.utcnow()
     for p in base_path.rglob("*"):
         if p.is_file() and (now - datetime.fromtimestamp(p.stat().st_mtime)) > older_than:
             p.unlink()
-```python
+```
 
 ## 🧠 GC Task Scheduling
 
 ### Celery Task Definition
-```python
+```
 @app.task(name="gc.cleanup_expired")
 def cleanup_expired():
     sweep_projects()
     sweep_cache()
     sweep_artifacts()
-```text
+```
 
 ### Scheduler Configuration
-```python
+```
 CELERY_BEAT_SCHEDULE = {
     "cleanup-every-6h": {
         "task": "gc.cleanup_expired",
         "schedule": crontab(hour="*/6"),
     },
 }
-```text
+```
 
 GC tasks can be triggered manually:
-```bash
+```
 SecFlow gc run --project acme-api
-```python
+```
 
 ## 🧩 Retention Policy Evaluation
 
@@ -176,19 +176,19 @@ SecFlow gc run --project acme-api
 | Unused Artifacts | Artifact not accessed for 180 days | Archive or delete |
 
 ### Policy Engine Snippet
-```python
+```
 def evaluate_retention(entity, policy):
     if entity.deleted and expired(entity.deleted_at, policy.soft_delete_ttl_days):
         hard_delete(entity)
     elif expired(entity.updated_at, policy.findings_ttl_days):
         soft_delete(entity)
-```text
+```
 
 ## 🧩 Audit Logging for GC
 
 Each GC operation generates an audit record:
 
-```json
+```
 {
   "event": "gc_delete",
   "type": "finding",
@@ -198,22 +198,22 @@ Each GC operation generates an audit record:
   "user": "system",
   "ttl_rule": "soft_delete_ttl_days=14"
 }
-```text
+```
 
 Stored in:
-```text
+```
 ~/.SecFlow/audit/gc.log
-```python
+```
 
 ## 🧱 Orphan Detection
 
 ### SQL Example
-```sql
+```
 SELECT f.id
 FROM findings f
 LEFT JOIN runs r ON f.run_id = r.id
 WHERE r.id IS NULL;
-```python
+```
 
 Any orphaned findings or artifacts (without associated runs/projects) are purged automatically.
 
@@ -221,7 +221,7 @@ Any orphaned findings or artifacts (without associated runs/projects) are purged
 
 Caches (e.g., CVE data, scan results, tool logs) use a standardized interface:
 
-```python
+```
 class CacheEntry(BaseModel):
     key: str
     value: bytes
@@ -229,13 +229,13 @@ class CacheEntry(BaseModel):
 
 def purge_expired():
     session.query(CacheEntry).filter(CacheEntry.expires_at < datetime.utcnow()).delete()
-```text
+```
 
 ## 🧠 Manual Cleanup Command
 
 Users can trigger GC manually via CLI:
 
-```bash
+```
 # Run full cleanup (all projects)
 SecFlow gc run
 
@@ -244,13 +244,13 @@ SecFlow gc run --project acme-api
 
 # Preview what will be deleted
 SecFlow gc dry-run
-```text
+```
 
 ### Example output:
-```text
+```
 [GC] Found 12 expired runs, 4 orphaned findings, 6 stale cache entries
 [GC] Total reclaimed: 1.2 GB
-```text
+```
 
 ## 🔐 Security Considerations
 
@@ -273,7 +273,7 @@ Exposed via Prometheus at `/metrics`.
 
 ## 🧠 Example GC Cycle Log
 
-```text
+```
 [GC] Cycle started at 2025-10-06T09:00:00Z
 [GC] Processed 3 projects
 [GC] Deleted 15 findings (soft)

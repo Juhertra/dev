@@ -235,6 +235,46 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#multi-scope-selection-logic" class="nav-link">🧠 Multi-Scope Selection Logic</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tool-specific-overrides" class="nav-link">🧠 Tool-Specific Overrides</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#output-standardization" class="nav-link">🧩 Output Standardization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#chained-data-exchange" class="nav-link">🧠 Chained Data Exchange</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cross-tool-resource-sharing-rules" class="nav-link">🧩 Cross-Tool Resource Sharing Rules</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-shared-output-dataset" class="nav-link">🧠 Example — Shared Output Dataset</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#shared-dataset-metadata" class="nav-link">🧩 Shared Dataset Metadata</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#data-isolation-sharing-between-projects" class="nav-link">🔐 Data Isolation &amp; Sharing Between Projects</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cache-deduplication" class="nav-link">🧩 Cache &amp; Deduplication</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-end-to-end-flow" class="nav-link">🧠 Example End-to-End Flow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#validation-conflict-resolution" class="nav-link">🧩 Validation &amp; Conflict Resolution</a>
               <ul class="nav flex-column">
               </ul>
@@ -313,207 +353,194 @@ flowchart TD
 <p>Each execution context resolves wordlists from the <strong>Resource Registry</strong>, fetching them locally if needed.</p>
 <hr />
 <h2 id="shared-wordlist-schema">🧩 Shared Wordlist Schema<a class="headerlink" href="#shared-wordlist-schema" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">res://wordlists/dirb:1.2.0</span>
-<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wordlist</span>
-<span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">global</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Common</span><span class="nv"> </span><span class="s">web</span><span class="nv"> </span><span class="s">directory</span><span class="nv"> </span><span class="s">wordlist&quot;</span>
-<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;text&quot;</span>
-<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24312</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">### Usage Example</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">tools</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">feroxbuster</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">wordlist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">res://wordlists/dirb:latest</span>
-<span class="w">  </span><span class="nt">nuclei</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">templates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">res://templates/owasp-top10:latest</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="l l-Scalar l-Scalar-Plain">At runtime, SecFlow resolves these resources to absolute paths and injects them into each wrapper.</span>
-
-<span class="c1">## 🧠 Multi-Scope Selection Logic</span>
-
-<span class="c1">### 1. Run-Level Override</span>
-<span class="l l-Scalar l-Scalar-Plain">Supplied directly in the workflow recipe or CLI argument.</span>
-
-<span class="err">*</span><span class="nv">*Example</span><span class="l l-Scalar l-Scalar-Plain">:**</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">SecFlow run feroxbuster --wordlist ./private.txt</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-
-<span class="c1">### 2. Node-Level Configuration</span>
-<span class="l l-Scalar l-Scalar-Plain">Declared inside workflow YAML.</span>
-
-<span class="err">*</span><span class="nv">*Example</span><span class="l l-Scalar l-Scalar-Plain">:**</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">nodes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ferox</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery.ferox</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">wordlist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">res://wordlists/dirb:1.0</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">### 3. Project Default</span>
-<span class="l l-Scalar l-Scalar-Plain">Stored under `~/.SecFlow/projects/&lt;id&gt;/config.yaml`.</span>
-
-<span class="c1">### 4. Group Default</span>
-<span class="l l-Scalar l-Scalar-Plain">Shared among organizational units or red-team groups.</span>
-
-<span class="c1">### 5. Global Default</span>
-<span class="l l-Scalar l-Scalar-Plain">Fallback resource available for all users.</span>
-
-<span class="c1">## 🧠 Tool-Specific Overrides</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Each wrapper can define preferred wordlists and formats in its manifest.</span>
-
-<span class="c1">### Example (feroxbuster.json):</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="p p-Indicator">{</span>
-<span class="w">  </span><span class="s">&quot;defaults&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
-<span class="w">    </span><span class="s">&quot;wordlist&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;res://wordlists/dirb:latest&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">},</span>
-<span class="w">  </span><span class="s">&quot;accepted_formats&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;txt&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;lst&quot;</span><span class="p p-Indicator">]</span>
-<span class="p p-Indicator">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-
-<span class="c1">### Nuclei Example:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="p p-Indicator">{</span>
-<span class="w">  </span><span class="s">&quot;defaults&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
-<span class="w">    </span><span class="s">&quot;templates&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;res://templates/nuclei:latest&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">},</span>
-<span class="w">  </span><span class="s">&quot;accepted_formats&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;yaml&quot;</span><span class="p p-Indicator">]</span>
-<span class="p p-Indicator">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-
-<span class="l l-Scalar l-Scalar-Plain">The Tool Manager dynamically validates that the provided wordlist matches the expected format before execution.</span>
-
-<span class="c1">## 🧩 Output Standardization</span>
-
-<span class="l l-Scalar l-Scalar-Plain">All tools output to a shared JSON Lines dataset (`.jsonl`).</span>
-
-<span class="c1">### Example — Ferox Output</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="p p-Indicator">{</span><span class="s">&quot;url&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;https://target.com/login&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;status&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">200</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;feroxbuster&quot;</span><span class="p p-Indicator">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-
-<span class="c1">### Example — Nuclei Output</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="p p-Indicator">{</span><span class="s">&quot;id&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;CVE-2024-12345&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;template&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;sql-injection&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;severity&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;high&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;matched-at&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;https://target.com/login&quot;</span><span class="p p-Indicator">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-
-<span class="l l-Scalar l-Scalar-Plain">These outputs are normalized into the Finding schema by the Findings Engine.</span>
-
-<span class="c1">## 🧠 Chained Data Exchange</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">mermaid</span>
-<span class="err">%%</span><span class="p p-Indicator">{</span><span class="nt">init</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;theme&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;neutral&quot;</span><span class="p p-Indicator">}}</span><span class="err">%%</span>
-<span class="l l-Scalar l-Scalar-Plain">flowchart LR</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A[&quot;Feroxbuster&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">B[&quot;Output (urls.jsonl)&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">C[&quot;Katana&quot;]</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">D[&quot;Nuclei&quot;]</span>
-
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">A --&gt; B</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">C --&gt; B</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">B --&gt; D</span>
+<div class="highlight"><pre><span></span><code>id: res://wordlists/dirb:1.2.0
+type: wordlist
+scope: global
+metadata:
+  description: &quot;Common web directory wordlist&quot;
+  format: &quot;text&quot;
+  size: 24312
 </code></pre></div>
+<h3 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>tools:
+  feroxbuster:
+    wordlist: res://wordlists/dirb:latest
+  nuclei:
+    templates: res://templates/owasp-top10:latest
+</code></pre></div>
+<p>At runtime, SecFlow resolves these resources to absolute paths and injects them into each wrapper.</p>
+<h2 id="multi-scope-selection-logic">🧠 Multi-Scope Selection Logic<a class="headerlink" href="#multi-scope-selection-logic" title="Permanent link">&para;</a></h2>
+<h3 id="1-run-level-override">1. Run-Level Override<a class="headerlink" href="#1-run-level-override" title="Permanent link">&para;</a></h3>
+<p>Supplied directly in the workflow recipe or CLI argument.</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code>SecFlow run feroxbuster --wordlist ./private.txt
+</code></pre></div></p>
+<h3 id="2-node-level-configuration">2. Node-Level Configuration<a class="headerlink" href="#2-node-level-configuration" title="Permanent link">&para;</a></h3>
+<p>Declared inside workflow YAML.</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code>nodes:
+  - id: ferox
+    type: discovery.ferox
+    config:
+      wordlist: res://wordlists/dirb:1.0
+</code></pre></div></p>
+<h3 id="3-project-default">3. Project Default<a class="headerlink" href="#3-project-default" title="Permanent link">&para;</a></h3>
+<p>Stored under <code>~/.SecFlow/projects/&lt;id&gt;/config.yaml</code>.</p>
+<h3 id="4-group-default">4. Group Default<a class="headerlink" href="#4-group-default" title="Permanent link">&para;</a></h3>
+<p>Shared among organizational units or red-team groups.</p>
+<h3 id="5-global-default">5. Global Default<a class="headerlink" href="#5-global-default" title="Permanent link">&para;</a></h3>
+<p>Fallback resource available for all users.</p>
+<h2 id="tool-specific-overrides">🧠 Tool-Specific Overrides<a class="headerlink" href="#tool-specific-overrides" title="Permanent link">&para;</a></h2>
+<p>Each wrapper can define preferred wordlists and formats in its manifest.</p>
+<h3 id="example-feroxbusterjson">Example (feroxbuster.json):<a class="headerlink" href="#example-feroxbusterjson" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;defaults&quot;: {
+    &quot;wordlist&quot;: &quot;res://wordlists/dirb:latest&quot;
+  },
+  &quot;accepted_formats&quot;: [&quot;txt&quot;, &quot;lst&quot;]
+}
+</code></pre></div>
+<h3 id="nuclei-example">Nuclei Example:<a class="headerlink" href="#nuclei-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;defaults&quot;: {
+    &quot;templates&quot;: &quot;res://templates/nuclei:latest&quot;
+  },
+  &quot;accepted_formats&quot;: [&quot;yaml&quot;]
+}
+</code></pre></div>
+<p>The Tool Manager dynamically validates that the provided wordlist matches the expected format before execution.</p>
+<h2 id="output-standardization">🧩 Output Standardization<a class="headerlink" href="#output-standardization" title="Permanent link">&para;</a></h2>
+<p>All tools output to a shared JSON Lines dataset (<code>.jsonl</code>).</p>
+<h3 id="example-ferox-output">Example — Ferox Output<a class="headerlink" href="#example-ferox-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{&quot;url&quot;: &quot;https://target.com/login&quot;, &quot;status&quot;: 200, &quot;source&quot;: &quot;feroxbuster&quot;}
+</code></pre></div>
+<h3 id="example-nuclei-output">Example — Nuclei Output<a class="headerlink" href="#example-nuclei-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{&quot;id&quot;: &quot;CVE-2024-12345&quot;, &quot;template&quot;: &quot;sql-injection&quot;, &quot;severity&quot;: &quot;high&quot;, &quot;matched-at&quot;: &quot;https://target.com/login&quot;}
+</code></pre></div>
+<p>These outputs are normalized into the Finding schema by the Findings Engine.</p>
+<h2 id="chained-data-exchange">🧠 Chained Data Exchange<a class="headerlink" href="#chained-data-exchange" title="Permanent link">&para;</a></h2>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart LR
+    A["Feroxbuster"]
+    B["Output (urls.jsonl)"]
+    C["Katana"]
+    D["Nuclei"]
+
+    A --&gt; B
+    C --&gt; B
+    B --&gt; D</div>
 <p>Each wrapper declares output channels (urls, parameters, endpoints, etc.).</p>
 <p>The Workflow Engine automatically maps compatible output types to input fields of the next node.</p>
 <h3 id="example-workflow-excerpt">Example Workflow Excerpt<a class="headerlink" href="#example-workflow-excerpt" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">nodes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ferox</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery.ferox</span>
-<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code>nodes:
+  - id: ferox
+    type: discovery.ferox
+    outputs: [&quot;urls&quot;]
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">katana</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crawler.katana</span>
-<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;params&quot;</span><span class="p p-Indicator">]</span>
+  - id: katana
+    type: crawler.katana
+    inputs: [&quot;urls&quot;]
+    outputs: [&quot;urls&quot;, &quot;params&quot;]
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nuclei</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scanner.nuclei</span>
-<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;params&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">]</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">## 🧩 Cross-Tool Resource Sharing Rules</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Rule | Description |</span>
-<span class="p p-Indicator">|</span><span class="err">------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Wordlists** | All tools can access any registered wordlist; wrappers define which formats they accept. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Templates** | Shared globally between Nuclei, ZAP, or other scanners. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Headers** | Reusable header sets (e.g., API tokens) can be applied per project. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Payloads** | Payload libraries are versioned and accessible to all fuzzers. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Findings Outputs** | Findings may be exported or reused as seed data for enrichment tools. |</span>
-
-<span class="c1">## 🧠 Example — Shared Output Dataset</span>
-
-<span class="c1">### Scenario:</span>
-<span class="l l-Scalar l-Scalar-Plain">A user runs Ferox → Nuclei chain.</span>
-<span class="l l-Scalar l-Scalar-Plain">Nuclei reuses the output from Ferox as its input dataset.</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">SecFlow run feroxbuster --target https://api.company.com \</span>
-<span class="p p-Indicator">|</span><span class="err"> SecFlow run nuclei --stdin</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-
-<span class="c1">### Result:</span>
-<span class="l l-Scalar l-Scalar-Plain">1. Ferox writes discovered URLs to `/runs/&lt;uuid&gt;/ferox/urls.jsonl`</span>
-<span class="l l-Scalar l-Scalar-Plain">2. The Workflow Engine pipes this dataset to the Nuclei node.</span>
-<span class="l l-Scalar l-Scalar-Plain">3. Nuclei scans each URL using selected templates.</span>
-<span class="l l-Scalar l-Scalar-Plain">4. Normalized findings are saved under `/runs/&lt;uuid&gt;/nuclei/findings.jsonl`</span>
-
-<span class="c1">## 🧩 Shared Dataset Metadata</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">dataset</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;runs/2025-10-06T12:31Z-ferox-urls&quot;</span>
-<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;urls&quot;</span>
-<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;feroxbuster&quot;</span>
-<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">243</span>
-<span class="w">  </span><span class="nt">created_at</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2025-10-06T12:31Z&quot;</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="l l-Scalar l-Scalar-Plain">This metadata is referenced by downstream nodes to ensure deterministic workflows.</span>
-
-<span class="c1">## 🔐 Data Isolation &amp; Sharing Between Projects</span>
-
-<span class="nt">SecFlow supports granular sharing control for multi-project setups</span><span class="p">:</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Mode | Description |</span>
-<span class="p p-Indicator">|</span><span class="err">------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Isolated** | Each project keeps separate resources and findings. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Shared Group** | Projects under the same group share wordlists and results. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Selective** | User manually links resources or outputs between projects. |</span>
-
-<span class="c1">### Example:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="nt">project</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acme-api</span>
-<span class="w">  </span><span class="nt">sharing</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">with</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;internal-api&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;dev-api&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;wordlists&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;templates&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;parameters&quot;</span><span class="p p-Indicator">]</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">## 🧩 Cache &amp; Deduplication</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Wordlists and tool outputs are hash-indexed and cached for reuse.</span>
-
-<span class="c1">### Cache Key Formula</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="l l-Scalar l-Scalar-Plain">cache_key = sha256(resource_id + version + scope)</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
-
-<span class="l l-Scalar l-Scalar-Plain">This guarantees consistent retrieval and avoids redundant downloads.</span>
-
-<span class="c1">## 🧠 Example End-to-End Flow</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="nt">Project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acme-api</span>
+  - id: nuclei
+    type: scanner.nuclei
+    inputs: [&quot;urls&quot;, &quot;params&quot;]
+    outputs: [&quot;findings&quot;]
+</code></pre></div>
+<h2 id="cross-tool-resource-sharing-rules">🧩 Cross-Tool Resource Sharing Rules<a class="headerlink" href="#cross-tool-resource-sharing-rules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Wordlists</strong></td>
+<td>All tools can access any registered wordlist; wrappers define which formats they accept.</td>
+</tr>
+<tr>
+<td><strong>Templates</strong></td>
+<td>Shared globally between Nuclei, ZAP, or other scanners.</td>
+</tr>
+<tr>
+<td><strong>Headers</strong></td>
+<td>Reusable header sets (e.g., API tokens) can be applied per project.</td>
+</tr>
+<tr>
+<td><strong>Payloads</strong></td>
+<td>Payload libraries are versioned and accessible to all fuzzers.</td>
+</tr>
+<tr>
+<td><strong>Findings Outputs</strong></td>
+<td>Findings may be exported or reused as seed data for enrichment tools.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-shared-output-dataset">🧠 Example — Shared Output Dataset<a class="headerlink" href="#example-shared-output-dataset" title="Permanent link">&para;</a></h2>
+<h3 id="scenario">Scenario:<a class="headerlink" href="#scenario" title="Permanent link">&para;</a></h3>
+<p>A user runs Ferox → Nuclei chain.
+Nuclei reuses the output from Ferox as its input dataset.</p>
+<div class="highlight"><pre><span></span><code>SecFlow run feroxbuster --target https://api.company.com \
+| SecFlow run nuclei --stdin
+</code></pre></div>
+<h3 id="result">Result:<a class="headerlink" href="#result" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ferox writes discovered URLs to <code>/runs/&lt;uuid&gt;/ferox/urls.jsonl</code></li>
+<li>The Workflow Engine pipes this dataset to the Nuclei node.</li>
+<li>Nuclei scans each URL using selected templates.</li>
+<li>Normalized findings are saved under <code>/runs/&lt;uuid&gt;/nuclei/findings.jsonl</code></li>
+</ol>
+<h2 id="shared-dataset-metadata">🧩 Shared Dataset Metadata<a class="headerlink" href="#shared-dataset-metadata" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>dataset:
+  id: &quot;runs/2025-10-06T12:31Z-ferox-urls&quot;
+  type: &quot;urls&quot;
+  source: &quot;feroxbuster&quot;
+  size: 243
+  created_at: &quot;2025-10-06T12:31Z&quot;
+</code></pre></div>
+<p>This metadata is referenced by downstream nodes to ensure deterministic workflows.</p>
+<h2 id="data-isolation-sharing-between-projects">🔐 Data Isolation &amp; Sharing Between Projects<a class="headerlink" href="#data-isolation-sharing-between-projects" title="Permanent link">&para;</a></h2>
+<p>SecFlow supports granular sharing control for multi-project setups:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Isolated</strong></td>
+<td>Each project keeps separate resources and findings.</td>
+</tr>
+<tr>
+<td><strong>Shared Group</strong></td>
+<td>Projects under the same group share wordlists and results.</td>
+</tr>
+<tr>
+<td><strong>Selective</strong></td>
+<td>User manually links resources or outputs between projects.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example:<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>project:
+  name: acme-api
+  sharing:
+    with: [&quot;internal-api&quot;, &quot;dev-api&quot;]
+    resources: [&quot;wordlists&quot;, &quot;templates&quot;]
+    outputs: [&quot;urls&quot;, &quot;parameters&quot;]
+</code></pre></div>
+<h2 id="cache-deduplication">🧩 Cache &amp; Deduplication<a class="headerlink" href="#cache-deduplication" title="Permanent link">&para;</a></h2>
+<p>Wordlists and tool outputs are hash-indexed and cached for reuse.</p>
+<h3 id="cache-key-formula">Cache Key Formula<a class="headerlink" href="#cache-key-formula" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>cache_key = sha256(resource_id + version + scope)
+</code></pre></div>
+<p>This guarantees consistent retrieval and avoids redundant downloads.</p>
+<h2 id="example-end-to-end-flow">🧠 Example End-to-End Flow<a class="headerlink" href="#example-end-to-end-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Project: acme-api
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD

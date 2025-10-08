@@ -59,7 +59,7 @@ flowchart TD
 
 All SecFlow components use a unified exception hierarchy:
 
-```python
+```
 class SecFlowError(Exception):
     """Base class for all SecFlow exceptions."""
 
@@ -71,7 +71,7 @@ class PermanentError(SecFlowError):
 
 class SecurityError(SecFlowError):
     """Unauthorized or unsafe action detected."""
-```python
+```
 
 Every operation that might fail is wrapped in a retry-safe decorator.
 
@@ -79,7 +79,7 @@ Every operation that might fail is wrapped in a retry-safe decorator.
 
 SecFlow uses the Tenacity library for intelligent retries.
 
-```python
+```
 from tenacity import retry, wait_exponential, stop_after_attempt
 
 @retry(
@@ -89,7 +89,7 @@ from tenacity import retry, wait_exponential, stop_after_attempt
 )
 def run_tool(tool_name, args):
     return subprocess.run(args, check=True)
-```python
+```
 
 ### Retry Rules
 | Context | Max Retries | Delay Type |
@@ -105,7 +105,7 @@ def run_tool(tool_name, args):
 SecFlow prevents repeated failures from overloading systems via circuit breakers.
 
 ### Implementation Example
-```python
+```
 class CircuitBreaker:
     def __init__(self, threshold=5, timeout=60):
         self.failures = 0
@@ -122,7 +122,7 @@ class CircuitBreaker:
         if not self.opened_at:
             return True
         return (datetime.utcnow() - self.opened_at).seconds > self.timeout
-```python
+```
 
 Used for:
 - Remote API (NVD, OSV, Exploit-DB)
@@ -133,7 +133,7 @@ Used for:
 
 Failed tasks that exceed retry limits are pushed into the DLQ for manual review.
 
-```python
+```
 @app.task(bind=True, max_retries=3)
 def run_scan(self, task_id):
     try:
@@ -142,7 +142,7 @@ def run_scan(self, task_id):
         if self.request.retries == self.max_retries:
             enqueue_dlq(task_id, str(e))
         raise self.retry(exc=e)
-```text
+```
 
 ### DLQ entries include:
 - Task ID
@@ -152,14 +152,14 @@ def run_scan(self, task_id):
 - Timestamp
 
 ### Example DLQ record:
-```json
+```
 {
   "task": "wf-1234-node-nuclei",
   "error": "Connection timeout to target",
   "retries": 3,
   "timestamp": "2025-10-06T10:22:00Z"
 }
-```text
+```
 
 ## 🧠 Self-Healing Workflows
 
@@ -172,15 +172,15 @@ SecFlow supports automatic node rehydration — failed steps in a workflow can b
 4. Merge results into workflow graph.
 
 ### CLI example:
-```bash
+```
 SecFlow workflow resume --node nuclei --project acme-api
-```python
+```
 
 ## 🧩 Transactional Integrity
 
 Database operations are wrapped in ACID transactions using SQLModel context managers:
 
-```python
+```
 from sqlmodel import Session
 
 def save_finding(finding):
@@ -191,7 +191,7 @@ def save_finding(finding):
         except Exception:
             session.rollback()
             raise
-```text
+```
 
 All cross-project mutations (findings, triage, cache) are transactional.
 
@@ -199,7 +199,7 @@ All cross-project mutations (findings, triage, cache) are transactional.
 
 Each exception generates an audit entry:
 
-```json
+```
 {
   "event": "error",
   "component": "worker",
@@ -209,7 +209,7 @@ Each exception generates an audit entry:
   "message": "Feroxbuster timeout",
   "retries": 3
 }
-```yaml
+```
 
 Errors are correlated with:
 - Workflow Trace ID
@@ -225,9 +225,9 @@ If a subsystem fails (e.g., enrichment API offline):
 - Missing data marked as `"partial": true`.
 - Users notified in the triage panel:
 
-```text
+```
 ⚠ CVE enrichment service temporarily unavailable — retry later.
-```python
+```
 
 ## 🧩 Alerting & Notification Hooks
 
@@ -236,7 +236,7 @@ If a subsystem fails (e.g., enrichment API offline):
 - Rate-limited notifications to avoid alert fatigue.
 
 ### Example alert webhook payload:
-```json
+```
 {
   "severity": "critical",
   "component": "sandbox",
@@ -244,7 +244,7 @@ If a subsystem fails (e.g., enrichment API offline):
   "project": "api-audit",
   "trace_id": "a2c134b5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8"
 }
-```python
+```
 
 ## 🧱 Recovery Strategies
 
@@ -260,10 +260,10 @@ If a subsystem fails (e.g., enrichment API offline):
 
 ## 🧠 Example Error Lifecycle
 
-```text
+```
 [Error Detected] → [Retry 1/3] → [Retry 2/3] → [DLQ]
 → [Alert sent to Slack] → [Analyst re-runs workflow node] → [Recovered]
-```text
+```
 
 ## 🔒 Security Implications
 
@@ -271,7 +271,7 @@ If a subsystem fails (e.g., enrichment API offline):
 - Error details logged internally only.
 - External responses use generic safe messages:
 
-```json
+```
 {"error": "Internal processing issue, please retry later."}
 ```
 

@@ -239,7 +239,43 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#web-ui-experience" class="nav-link">🧠 Web UI Experience</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#configuration-persistence" class="nav-link">🧩 Configuration Persistence</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tool-chaining-runtime" class="nav-link">🔗 Tool Chaining (Runtime)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#default-configurations-templates" class="nav-link">🧩 Default Configurations &amp; Templates</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#advanced-features" class="nav-link">🧠 Advanced Features</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#user-permissions" class="nav-link">🔐 User Permissions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#integration-with-resource-registry" class="nav-link">🧱 Integration with Resource Registry</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#error-recovery-ux" class="nav-link">🧩 Error Recovery UX</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-cli-session" class="nav-link">🧠 Example CLI Session</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -337,32 +373,30 @@ flowchart TD
 <hr />
 <h2 id="cli-experience">🧠 CLI Experience<a class="headerlink" href="#cli-experience" title="Permanent link">&para;</a></h2>
 <h3 id="example-commands">Example Commands<a class="headerlink" href="#example-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># List available tools</span>
-SecFlow<span class="w"> </span>tools<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code># List available tools
+SecFlow tools list
 
-<span class="c1"># Enable Feroxbuster &amp; Nuclei</span>
-SecFlow<span class="w"> </span>tools<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>feroxbuster<span class="w"> </span>nuclei
+# Enable Feroxbuster &amp; Nuclei
+SecFlow tools enable feroxbuster nuclei
 
-<span class="c1"># Configure a tool</span>
-SecFlow<span class="w"> </span>tools<span class="w"> </span>config<span class="w"> </span>nuclei<span class="w"> </span>--threads<span class="w"> </span><span class="m">50</span><span class="w"> </span>--templates<span class="w"> </span>owasp-top10
+# Configure a tool
+SecFlow tools config nuclei --threads 50 --templates owasp-top10
 
-<span class="c1"># Run workflow interactively</span>
-SecFlow<span class="w"> </span>run<span class="w"> </span>workflow.yaml
+# Run workflow interactively
+SecFlow run workflow.yaml
 
-<span class="c1"># Chain tools manually</span>
-SecFlow<span class="w"> </span>run<span class="w"> </span>feroxbuster<span class="w"> </span>--target<span class="w"> </span>https://example.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>SecFlow<span class="w"> </span>run<span class="w"> </span>nuclei
-<span class="sb">```</span>text
-
-<span class="c1">### CLI UX Principles</span>
--<span class="w"> </span>YAML/JSON<span class="w"> </span>inputs<span class="w"> </span>mirror<span class="w"> </span>internal<span class="w"> </span>manifests.
--<span class="w"> </span>All<span class="w"> </span>commands<span class="w"> </span>are<span class="w"> </span>idempotent<span class="w"> </span>—<span class="w"> </span>re-runs<span class="w"> </span>use<span class="w"> </span>cached<span class="w"> </span>configurations.
--<span class="w"> </span>CLI<span class="w"> </span>supports<span class="w"> </span>both<span class="w"> </span>single-tool<span class="w"> </span>and<span class="w"> </span>multi-node<span class="w"> </span>workflow<span class="w"> </span>modes.
-
-<span class="c1">## 🧠 Web UI Experience</span>
-
-<span class="c1">### Visual Overview</span>
-<span class="sb">```</span>text
-Project:<span class="w"> </span>Acme<span class="w"> </span>Web<span class="w"> </span>API
+# Chain tools manually
+SecFlow run feroxbuster --target https://example.com | SecFlow run nuclei
+</code></pre></div>
+<h3 id="cli-ux-principles">CLI UX Principles<a class="headerlink" href="#cli-ux-principles" title="Permanent link">&para;</a></h3>
+<ul>
+<li>YAML/JSON inputs mirror internal manifests.</li>
+<li>All commands are idempotent — re-runs use cached configurations.</li>
+<li>CLI supports both single-tool and multi-node workflow modes.</li>
+</ul>
+<h2 id="web-ui-experience">🧠 Web UI Experience<a class="headerlink" href="#web-ui-experience" title="Permanent link">&para;</a></h2>
+<h3 id="visual-overview">Visual Overview<a class="headerlink" href="#visual-overview" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Project: Acme Web API
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -404,7 +438,7 @@ flowchart TD
 </tbody>
 </table>
 <h3 id="example-workflow-builder-nodes">Example Workflow Builder Nodes<a class="headerlink" href="#example-workflow-builder-nodes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="o">(</span>Discovery<span class="o">)</span><span class="w">          </span><span class="o">(</span>Crawler<span class="o">)</span><span class="w">            </span><span class="o">(</span>Scanner<span class="o">)</span>
+<div class="highlight"><pre><span></span><code>  (Discovery)          (Crawler)            (Scanner)
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart LR
@@ -420,12 +454,10 @@ flowchart LR
 - Re-run saved workflows directly or modify them visually.</p>
 <h2 id="configuration-persistence">🧩 Configuration Persistence<a class="headerlink" href="#configuration-persistence" title="Permanent link">&para;</a></h2>
 <p>Each tool has a persistent JSON/YAML config stored under:</p>
-<p><div class="highlight"><pre><span></span><code>~/.SecFlow/config/tools/&lt;tool&gt;.yaml
-```text
-
-### Example
-```yaml
-version: &quot;1.0&quot;
+<div class="highlight"><pre><span></span><code>~/.SecFlow/config/tools/&lt;tool&gt;.yaml
+</code></pre></div>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>version: &quot;1.0&quot;
 defaults:
   threads: 25
   rate_limit: 150
@@ -436,90 +468,99 @@ profiles:
   safe:
     rate_limit: 50
     sandbox: true
-```text
-
-Profiles allow contextual configurations (e.g., &quot;aggressive&quot;, &quot;safe&quot;).
-
-## 🔗 Tool Chaining (Runtime)
-
-Tool chaining uses the Workflow Engine, but users can also trigger ad-hoc sequences.
-Each output dataset is normalized as JSON Lines, allowing flexible piping.
-
-```bash
-SecFlow run feroxbuster --target https://app.local \
+</code></pre></div>
+<p>Profiles allow contextual configurations (e.g., "aggressive", "safe").</p>
+<h2 id="tool-chaining-runtime">🔗 Tool Chaining (Runtime)<a class="headerlink" href="#tool-chaining-runtime" title="Permanent link">&para;</a></h2>
+<p>Tool chaining uses the Workflow Engine, but users can also trigger ad-hoc sequences.
+Each output dataset is normalized as JSON Lines, allowing flexible piping.</p>
+<div class="highlight"><pre><span></span><code>SecFlow run feroxbuster --target https://app.local \
 | SecFlow run katana --stdin \
 | SecFlow run nuclei --stdin
-```text
-
-### Data interoperability:
-Each tool must produce output in a structured JSON format with required fields:
-
-```json
-{
+</code></pre></div>
+<h3 id="data-interoperability">Data interoperability:<a class="headerlink" href="#data-interoperability" title="Permanent link">&para;</a></h3>
+<p>Each tool must produce output in a structured JSON format with required fields:</p>
+<div class="highlight"><pre><span></span><code>{
   &quot;url&quot;: &quot;https://example.com/login&quot;,
   &quot;status&quot;: 200,
   &quot;source&quot;: &quot;feroxbuster&quot;
 }
-```python
-
-## 🧩 Default Configurations &amp; Templates
-
-When the user installs SecFlow:
-- Default manifests are loaded from `/resources/defaults/`
+</code></pre></div>
+<h2 id="default-configurations-templates">🧩 Default Configurations &amp; Templates<a class="headerlink" href="#default-configurations-templates" title="Permanent link">&para;</a></h2>
+<p>When the user installs SecFlow:
+- Default manifests are loaded from <code>/resources/defaults/</code>
 - All core tools (Nuclei, Ferox, Katana) have pre-configured templates.
-- The user can immediately run scans without extra setup.
-
-### Example command:
-```bash
-SecFlow quickscan https://example.com
-```python
-
-Equivalent to:
-- **Workflow:** Ferox → Nuclei (OWASP templates)
-
-## 🧠 Advanced Features
-
-| Feature | Description |
-|---------|-------------|
-| **Auto-Discovery** | Detects installed binaries and populates manifest registry automatically. |
-| **Tool Self-Test** | Validates binary presence and functionality via manifest-defined tests. |
-| **Runtime Profiles** | Switch between safe/aggressive scanning modes. |
-| **Execution History** | Stores past runs and parameters for reproducibility. |
-
-## 🔐 User Permissions
-
-Tool Manager respects project and role isolation:
-
-| Role | Capabilities |
-|------|-------------|
-| **Admin** | Install, configure, delete tools. |
-| **Analyst** | Execute workflows, view logs, triage findings. |
-| **Viewer** | Read-only access to results. |
-
-All actions are logged to the Audit Log.
-
-## 🧱 Integration with Resource Registry
-
-The Tool Manager automatically pulls shared wordlists, templates, or payloads from the Resource Registry (see [09-resource-registry.md](09-resource-registry.md)).
-
-### Example:
-```yaml
-wordlist: res://wordlists/dirb:latest
+- The user can immediately run scans without extra setup.</p>
+<h3 id="example-command">Example command:<a class="headerlink" href="#example-command" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SecFlow quickscan https://example.com
+</code></pre></div>
+<p>Equivalent to:
+- <strong>Workflow:</strong> Ferox → Nuclei (OWASP templates)</p>
+<h2 id="advanced-features">🧠 Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto-Discovery</strong></td>
+<td>Detects installed binaries and populates manifest registry automatically.</td>
+</tr>
+<tr>
+<td><strong>Tool Self-Test</strong></td>
+<td>Validates binary presence and functionality via manifest-defined tests.</td>
+</tr>
+<tr>
+<td><strong>Runtime Profiles</strong></td>
+<td>Switch between safe/aggressive scanning modes.</td>
+</tr>
+<tr>
+<td><strong>Execution History</strong></td>
+<td>Stores past runs and parameters for reproducibility.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="user-permissions">🔐 User Permissions<a class="headerlink" href="#user-permissions" title="Permanent link">&para;</a></h2>
+<p>Tool Manager respects project and role isolation:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Install, configure, delete tools.</td>
+</tr>
+<tr>
+<td><strong>Analyst</strong></td>
+<td>Execute workflows, view logs, triage findings.</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Read-only access to results.</td>
+</tr>
+</tbody>
+</table>
+<p>All actions are logged to the Audit Log.</p>
+<h2 id="integration-with-resource-registry">🧱 Integration with Resource Registry<a class="headerlink" href="#integration-with-resource-registry" title="Permanent link">&para;</a></h2>
+<p>The Tool Manager automatically pulls shared wordlists, templates, or payloads from the Resource Registry (see <a href="../09-resource-registry/">09-resource-registry.md</a>).</p>
+<h3 id="example_1">Example:<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>wordlist: res://wordlists/dirb:latest
 templates: res://templates/nuclei:latest
-```ini
-
-## 🧩 Error Recovery UX
-
-If a tool fails:
+</code></pre></div>
+<h2 id="error-recovery-ux">🧩 Error Recovery UX<a class="headerlink" href="#error-recovery-ux" title="Permanent link">&para;</a></h2>
+<p>If a tool fails:
 - The UI highlights failed nodes in red.
 - Logs show stderr output inline.
 - Users can retry individual nodes.
-- Failures generate a triage entry (finding type = &quot;tool error&quot;).
-
-## 🧠 Example CLI Session
-
-```bash
-# Add Ferox with a project-local override wordlist
+- Failures generate a triage entry (finding type = "tool error").</p>
+<h2 id="example-cli-session">🧠 Example CLI Session<a class="headerlink" href="#example-cli-session" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code># Add Ferox with a project-local override wordlist
 secflow tools add ferox \
   --version 2.10.0 \
   --scope project \
@@ -530,12 +571,9 @@ secflow run \
   --project acme-web \
   --recipe workflows/discovery-to-nuclei.yaml \
   --var target=https://app.acme.com
-```bash
-
-### API Response Example
-
-```json
-{
+</code></pre></div>
+<h3 id="api-response-example">API Response Example<a class="headerlink" href="#api-response-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
   &quot;tool&quot;: &quot;feroxbuster&quot;,
   &quot;version&quot;: &quot;2.10.0&quot;,
   &quot;scope&quot;: &quot;project&quot;,
@@ -547,19 +585,16 @@ secflow run \
   &quot;status&quot;: &quot;installed&quot;,
   &quot;selftest&quot;: { &quot;ok&quot;: true, &quot;elapsed_ms&quot;: 143 }
 }
-```json
-
-## 🔮 Future Enhancements
-
-- UI-based &quot;Workflow Marketplace&quot; for community templates.
-- AI-assisted tool parameter tuning based on context.
-- Live terminal dashboard with interactive progress visualization.
-- Integration with Burp/OWASP ZAP APIs for direct import.
-
----
-
-**Next:** [Resource Registry](09-resource-registry.md)
 </code></pre></div>
+<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>UI-based "Workflow Marketplace" for community templates.</li>
+<li>AI-assisted tool parameter tuning based on context.</li>
+<li>Live terminal dashboard with interactive progress visualization.</li>
+<li>Integration with Burp/OWASP ZAP APIs for direct import.</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../09-resource-registry/">Resource Registry</a>
 <div class="highlight"><pre><span></span><code>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>
@@ -582,7 +617,8 @@ secflow run \
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>
 </code></pre></div>
-```</p></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div></p></div>
             </div>
         </div>
 

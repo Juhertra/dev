@@ -227,6 +227,42 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#logging-subsystem" class="nav-link">🧩 Logging Subsystem</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#log-levels-policies" class="nav-link">⚙️ Log Levels &amp; Policies</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#trace-propagation-distributed-context" class="nav-link">🧠 Trace Propagation &amp; Distributed Context</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#metrics-system" class="nav-link">📊 Metrics System</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-grafana-dashboard-panels" class="nav-link">🔍 Example Grafana Dashboard Panels</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#error-correlation-incident-debugging" class="nav-link">🧩 Error Correlation &amp; Incident Debugging</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#alerting-health-checks" class="nav-link">🧠 Alerting &amp; Health Checks</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-of-observability-data" class="nav-link">🔒 Security of Observability Data</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#correlation-example-end-to-end-trace" class="nav-link">🧱 Correlation Example: End-to-End Trace</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#integration-with-cicd-and-testing" class="nav-link">🧩 Integration with CI/CD and Testing</a>
               <ul class="nav flex-column">
               </ul>
@@ -257,82 +293,111 @@ It enables developers, analysts, and operators to:
 - <strong>Grafana dashboards</strong> for visualization.</p>
 <hr />
 <h2 id="observability-architecture-overview">🧱 Observability Architecture Overview<a class="headerlink" href="#observability-architecture-overview" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+--------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">|                    SecFlow Stack                             |</span>
-<span class="l l-Scalar l-Scalar-Plain">| API Layer → Structured Logging, Metrics, Tracing            |</span>
-<span class="l l-Scalar l-Scalar-Plain">| Worker → Task Metrics, Workflow Spans, Sandbox Logs         |</span>
-<span class="l l-Scalar l-Scalar-Plain">| Sandbox → Runtime Metrics, Security Telemetry                |</span>
-<span class="l l-Scalar l-Scalar-Plain">| Database → Query Timing, Connection Pool Stats              |</span>
-<span class="l l-Scalar l-Scalar-Plain">--------------------------------------------------------------</span>
-<span class="l l-Scalar l-Scalar-Plain">| Exporters → Prometheus (Metrics), OTLP (Traces), Loki (Logs)|</span>
-<span class="l l-Scalar l-Scalar-Plain">+--------------------------------------------------------------+</span>
-<span class="l l-Scalar l-Scalar-Plain">```yaml</span>
-
-<span class="nn">---</span>
-
-<span class="c1">## 🧩 Logging Subsystem</span>
-
-<span class="c1">### Logging Design Goals</span>
-<span class="p p-Indicator">|</span><span class="err"> Goal | Implementation |</span>
-<span class="p p-Indicator">|</span><span class="err">-------|----------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **Machine-readable** | JSON structured format with standard fields |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Correlated across systems** | `trace_id` and `span_id` included |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Context-aware** | User, project, workflow metadata embedded |</span>
-<span class="p p-Indicator">|</span><span class="err"> **Immutable** | Append-only, timestamped, HMAC-signed if required |</span>
-
-<span class="c1">### Log Record Example</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="l l-Scalar l-Scalar-Plain">{</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&quot;timestamp&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;2025-10-06T09:45:32Z&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;level&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;INFO&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;service&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;worker&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;trace_id&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;cbd82b67-4a2b-4db6-9a90-1c3ed1b7e203&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;span_id&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;4f7c2b91&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;project&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;acme-api&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;workflow_id&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;wf-abc123&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;message&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Nuclei</span><span class="nv"> </span><span class="s">scan</span><span class="nv"> </span><span class="s">completed</span><span class="nv"> </span><span class="s">successfully&quot;</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;duration_ms&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">34215</span>
-<span class="err">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="c1">### Logging Stack</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*Python</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Logging + Structlog** — base structured logs.</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*OpenTelemetry</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoggingHandler** — trace context propagation.</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*Loki</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Exporter** — for central log aggregation (optional).</span>
-
-<span class="c1">### Configuration snippet:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-<span class="l l-Scalar l-Scalar-Plain">LOGGING = {</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&quot;version&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1,</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&quot;formatters&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;json&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;()&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;pythonjsonlogger.jsonlogger.JsonFormatter&quot;</span><span class="p p-Indicator">}}</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;handlers&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
-<span class="w">    </span><span class="s">&quot;console&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;class&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;logging.StreamHandler&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;formatter&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;json&quot;</span><span class="p p-Indicator">},</span>
-<span class="w">  </span><span class="p p-Indicator">}</span><span class="err">,</span>
-<span class="w">  </span><span class="s">&quot;root&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&quot;level&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;INFO&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;handlers&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;console&quot;</span><span class="p p-Indicator">]}</span><span class="err">,</span>
-<span class="err">}</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">json</span>
-
-<span class="c1">## ⚙️ Log Levels &amp; Policies</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Level | Description |</span>
-<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> **DEBUG** | Developer-only context, disabled by default in production. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **INFO** | System lifecycle and status messages. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **WARNING** | Recoverable issues, retryable errors. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **ERROR** | Failures in user-triggered operations. |</span>
-<span class="p p-Indicator">|</span><span class="err"> **CRITICAL** | Irrecoverable errors (sandbox isolation breach, DB corruption). |</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Retention policy for logs follows the GC subsystem (see [15-garbage-collection-and-retention.md](15-garbage-collection-and-retention.md)).</span>
-
-<span class="c1">## 🧠 Trace Propagation &amp; Distributed Context</span>
-
-<span class="l l-Scalar l-Scalar-Plain">SecFlow uses OpenTelemetry (OTel) for distributed tracing.</span>
-<span class="l l-Scalar l-Scalar-Plain">Every API request, task dispatch, and plugin call generates spans linked under one root trace.</span>
-
-<span class="c1">### Example Trace Structure</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="nt">TraceID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5b2e4f21c9a344f9</span>
+<div class="highlight"><pre><span></span><code>+--------------------------------------------------------------+
+|                    SecFlow Stack                             |
+| API Layer → Structured Logging, Metrics, Tracing            |
+| Worker → Task Metrics, Workflow Spans, Sandbox Logs         |
+| Sandbox → Runtime Metrics, Security Telemetry                |
+| Database → Query Timing, Connection Pool Stats              |
+--------------------------------------------------------------
+| Exporters → Prometheus (Metrics), OTLP (Traces), Loki (Logs)|
++--------------------------------------------------------------+
+</code></pre></div>
+<hr />
+<h2 id="logging-subsystem">🧩 Logging Subsystem<a class="headerlink" href="#logging-subsystem" title="Permanent link">&para;</a></h2>
+<h3 id="logging-design-goals">Logging Design Goals<a class="headerlink" href="#logging-design-goals" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Machine-readable</strong></td>
+<td>JSON structured format with standard fields</td>
+</tr>
+<tr>
+<td><strong>Correlated across systems</strong></td>
+<td><code>trace_id</code> and <code>span_id</code> included</td>
+</tr>
+<tr>
+<td><strong>Context-aware</strong></td>
+<td>User, project, workflow metadata embedded</td>
+</tr>
+<tr>
+<td><strong>Immutable</strong></td>
+<td>Append-only, timestamped, HMAC-signed if required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="log-record-example">Log Record Example<a class="headerlink" href="#log-record-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;timestamp&quot;: &quot;2025-10-06T09:45:32Z&quot;,
+  &quot;level&quot;: &quot;INFO&quot;,
+  &quot;service&quot;: &quot;worker&quot;,
+  &quot;trace_id&quot;: &quot;cbd82b67-4a2b-4db6-9a90-1c3ed1b7e203&quot;,
+  &quot;span_id&quot;: &quot;4f7c2b91&quot;,
+  &quot;project&quot;: &quot;acme-api&quot;,
+  &quot;workflow_id&quot;: &quot;wf-abc123&quot;,
+  &quot;message&quot;: &quot;Nuclei scan completed successfully&quot;,
+  &quot;duration_ms&quot;: 34215
+}
+</code></pre></div>
+<h3 id="logging-stack">Logging Stack<a class="headerlink" href="#logging-stack" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Python Logging + Structlog</strong> — base structured logs.</li>
+<li><strong>OpenTelemetry LoggingHandler</strong> — trace context propagation.</li>
+<li><strong>Loki Exporter</strong> — for central log aggregation (optional).</li>
+</ul>
+<h3 id="configuration-snippet">Configuration snippet:<a class="headerlink" href="#configuration-snippet" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>LOGGING = {
+  &quot;version&quot;: 1,
+  &quot;formatters&quot;: {&quot;json&quot;: {&quot;()&quot;: &quot;pythonjsonlogger.jsonlogger.JsonFormatter&quot;}},
+  &quot;handlers&quot;: {
+    &quot;console&quot;: {&quot;class&quot;: &quot;logging.StreamHandler&quot;, &quot;formatter&quot;: &quot;json&quot;},
+  },
+  &quot;root&quot;: {&quot;level&quot;: &quot;INFO&quot;, &quot;handlers&quot;: [&quot;console&quot;]},
+}
+</code></pre></div>
+<h2 id="log-levels-policies">⚙️ Log Levels &amp; Policies<a class="headerlink" href="#log-levels-policies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DEBUG</strong></td>
+<td>Developer-only context, disabled by default in production.</td>
+</tr>
+<tr>
+<td><strong>INFO</strong></td>
+<td>System lifecycle and status messages.</td>
+</tr>
+<tr>
+<td><strong>WARNING</strong></td>
+<td>Recoverable issues, retryable errors.</td>
+</tr>
+<tr>
+<td><strong>ERROR</strong></td>
+<td>Failures in user-triggered operations.</td>
+</tr>
+<tr>
+<td><strong>CRITICAL</strong></td>
+<td>Irrecoverable errors (sandbox isolation breach, DB corruption).</td>
+</tr>
+</tbody>
+</table>
+<p>Retention policy for logs follows the GC subsystem (see <a href="../15-garbage-collection-and-retention/">15-garbage-collection-and-retention.md</a>).</p>
+<h2 id="trace-propagation-distributed-context">🧠 Trace Propagation &amp; Distributed Context<a class="headerlink" href="#trace-propagation-distributed-context" title="Permanent link">&para;</a></h2>
+<p>SecFlow uses OpenTelemetry (OTel) for distributed tracing.
+Every API request, task dispatch, and plugin call generates spans linked under one root trace.</p>
+<h3 id="example-trace-structure">Example Trace Structure<a class="headerlink" href="#example-trace-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>TraceID: 5b2e4f21c9a344f9
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -353,126 +418,206 @@ flowchart TD
     C --&gt; D
     C --&gt; E</div>
 <h3 id="code-example">Code Example<a class="headerlink" href="#code-example" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
+<div class="highlight"><pre><span></span><code>from opentelemetry import trace
 
-<span class="n">tracer</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_tracer</span><span class="p">(</span><span class="s2">&quot;SecFlow.worker&quot;</span><span class="p">)</span>
+tracer = trace.get_tracer(&quot;SecFlow.worker&quot;)
 
-<span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">&quot;workflow.execute&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">span</span><span class="p">:</span>
-    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;workflow.id&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="n">run_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
-<span class="err">```</span><span class="n">text</span>
+with tracer.start_as_current_span(&quot;workflow.execute&quot;) as span:
+    span.set_attribute(&quot;workflow.id&quot;, workflow.id)
+    run_workflow(workflow)
+</code></pre></div>
+<p>All traces are exported through OTLP gRPC to the observability backend (e.g., Tempo, Jaeger).</p>
+<h2 id="metrics-system">📊 Metrics System<a class="headerlink" href="#metrics-system" title="Permanent link">&para;</a></h2>
+<p>SecFlow exposes runtime metrics through Prometheus-compatible endpoints.</p>
+<h3 id="default-endpoint">Default Endpoint<a class="headerlink" href="#default-endpoint" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>/metrics
+</code></pre></div>
+<h3 id="example-metrics">Example Metrics<a class="headerlink" href="#example-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>secflow_requests_total</td>
+<td>Counter</td>
+<td>Total API requests handled</td>
+</tr>
+<tr>
+<td>secflow_active_workflows</td>
+<td>Gauge</td>
+<td>Currently running workflows</td>
+</tr>
+<tr>
+<td>secflow_findings_generated_total</td>
+<td>Counter</td>
+<td>Findings created</td>
+</tr>
+<tr>
+<td>secflow_task_duration_seconds</td>
+<td>Histogram</td>
+<td>Time taken by async tasks</td>
+</tr>
+<tr>
+<td>secflow_gc_bytes_reclaimed_total</td>
+<td>Counter</td>
+<td>GC reclaimed bytes</td>
+</tr>
+<tr>
+<td>secflow_sandbox_executions_total</td>
+<td>Counter</td>
+<td>Number of sandbox runs</td>
+</tr>
+<tr>
+<td>secflow_tool_failures_total</td>
+<td>Counter</td>
+<td>Failed tool executions</td>
+</tr>
+<tr>
+<td>secflow_worker_queue_depth</td>
+<td>Gauge</td>
+<td>Pending Celery tasks</td>
+</tr>
+<tr>
+<td>secflow_cve_enrichment_latency_seconds</td>
+<td>Histogram</td>
+<td>Time per CVE query</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prometheus-export-example">Prometheus Export Example<a class="headerlink" href="#prometheus-export-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>from prometheus_client import Counter, Gauge
 
-<span class="n">All</span> <span class="n">traces</span> <span class="n">are</span> <span class="n">exported</span> <span class="n">through</span> <span class="n">OTLP</span> <span class="n">gRPC</span> <span class="n">to</span> <span class="n">the</span> <span class="n">observability</span> <span class="n">backend</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">Tempo</span><span class="p">,</span> <span class="n">Jaeger</span><span class="p">)</span><span class="o">.</span>
-
-<span class="c1">## 📊 Metrics System</span>
-
-<span class="n">SecFlow</span> <span class="n">exposes</span> <span class="n">runtime</span> <span class="n">metrics</span> <span class="n">through</span> <span class="n">Prometheus</span><span class="o">-</span><span class="n">compatible</span> <span class="n">endpoints</span><span class="o">.</span>
-
-<span class="c1">### Default Endpoint</span>
-<span class="err">```</span><span class="n">text</span>
-<span class="o">/</span><span class="n">metrics</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">### Example Metrics</span>
-<span class="o">|</span> <span class="n">Metric</span> <span class="o">|</span> <span class="n">Type</span> <span class="o">|</span> <span class="n">Description</span> <span class="o">|</span>
-<span class="o">|--------|------|-------------|</span>
-<span class="o">|</span> <span class="n">secflow_requests_total</span> <span class="o">|</span> <span class="n">Counter</span> <span class="o">|</span> <span class="n">Total</span> <span class="n">API</span> <span class="n">requests</span> <span class="n">handled</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_active_workflows</span> <span class="o">|</span> <span class="n">Gauge</span> <span class="o">|</span> <span class="n">Currently</span> <span class="n">running</span> <span class="n">workflows</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_findings_generated_total</span> <span class="o">|</span> <span class="n">Counter</span> <span class="o">|</span> <span class="n">Findings</span> <span class="n">created</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_task_duration_seconds</span> <span class="o">|</span> <span class="n">Histogram</span> <span class="o">|</span> <span class="n">Time</span> <span class="n">taken</span> <span class="n">by</span> <span class="k">async</span> <span class="n">tasks</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_gc_bytes_reclaimed_total</span> <span class="o">|</span> <span class="n">Counter</span> <span class="o">|</span> <span class="n">GC</span> <span class="n">reclaimed</span> <span class="nb">bytes</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_sandbox_executions_total</span> <span class="o">|</span> <span class="n">Counter</span> <span class="o">|</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">sandbox</span> <span class="n">runs</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_tool_failures_total</span> <span class="o">|</span> <span class="n">Counter</span> <span class="o">|</span> <span class="n">Failed</span> <span class="n">tool</span> <span class="n">executions</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_worker_queue_depth</span> <span class="o">|</span> <span class="n">Gauge</span> <span class="o">|</span> <span class="n">Pending</span> <span class="n">Celery</span> <span class="n">tasks</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">secflow_cve_enrichment_latency_seconds</span> <span class="o">|</span> <span class="n">Histogram</span> <span class="o">|</span> <span class="n">Time</span> <span class="n">per</span> <span class="n">CVE</span> <span class="n">query</span> <span class="o">|</span>
-
-<span class="c1">### Prometheus Export Example</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Gauge</span>
-
-<span class="n">findings_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">&quot;secflow_findings_generated_total&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of findings created&quot;</span><span class="p">)</span>
-<span class="n">active_workflows</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s2">&quot;secflow_active_workflows&quot;</span><span class="p">,</span> <span class="s2">&quot;Currently running workflows&quot;</span><span class="p">)</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="c1">## 🔍 Example Grafana Dashboard Panels</span>
-
-<span class="o">|</span> <span class="n">Panel</span> <span class="o">|</span> <span class="n">Visualization</span> <span class="o">|</span> <span class="n">Query</span> <span class="o">|</span>
-<span class="o">|-------|---------------|-------|</span>
-<span class="o">|</span> <span class="n">Workflow</span> <span class="n">Throughput</span> <span class="o">|</span> <span class="n">Time</span> <span class="n">series</span> <span class="o">|</span> <span class="err">`</span><span class="n">rate</span><span class="p">(</span><span class="n">secflow_requests_total</span><span class="p">[</span><span class="mi">5</span><span class="n">m</span><span class="p">])</span><span class="err">`</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Average</span> <span class="n">Scan</span> <span class="n">Duration</span> <span class="o">|</span> <span class="n">Histogram</span> <span class="o">|</span> <span class="err">`</span><span class="n">histogram_quantile</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">rate</span><span class="p">(</span><span class="n">secflow_task_duration_seconds_bucket</span><span class="p">[</span><span class="mi">5</span><span class="n">m</span><span class="p">]))</span><span class="err">`</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Findings</span> <span class="n">per</span> <span class="n">Project</span> <span class="o">|</span> <span class="n">Bar</span> <span class="n">chart</span> <span class="o">|</span> <span class="err">`</span><span class="nb">sum</span> <span class="n">by</span> <span class="p">(</span><span class="n">project</span><span class="p">)(</span><span class="n">secflow_findings_generated_total</span><span class="p">)</span><span class="err">`</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">GC</span> <span class="n">Efficiency</span> <span class="o">|</span> <span class="n">SingleStat</span> <span class="o">|</span> <span class="err">`</span><span class="n">rate</span><span class="p">(</span><span class="n">secflow_gc_bytes_reclaimed_total</span><span class="p">[</span><span class="mi">1</span><span class="n">h</span><span class="p">])</span><span class="err">`</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Sandbox</span> <span class="n">Failures</span> <span class="o">|</span> <span class="n">Table</span> <span class="o">|</span> <span class="err">`</span><span class="n">secflow_tool_failures_total</span><span class="err">`</span> <span class="o">|</span>
-
-<span class="c1">## 🧩 Error Correlation &amp; Incident Debugging</span>
-
-<span class="n">Every</span> <span class="n">finding</span><span class="p">,</span> <span class="n">workflow</span><span class="p">,</span> <span class="ow">and</span> <span class="n">audit</span> <span class="n">entry</span> <span class="n">includes</span> <span class="n">a</span> <span class="n">trace</span> <span class="n">ID</span><span class="o">.</span>
-<span class="n">Errors</span> <span class="n">can</span> <span class="n">be</span> <span class="n">traced</span> <span class="n">back</span> <span class="n">to</span> <span class="n">exact</span> <span class="n">processes</span> <span class="ow">and</span> <span class="n">spans</span><span class="o">.</span>
-
-<span class="c1">### Example correlation:</span>
-<span class="err">```</span><span class="n">text</span>
-<span class="n">Finding</span> <span class="err">→</span> <span class="n">Workflow</span> <span class="n">ID</span><span class="p">:</span> <span class="n">wf</span><span class="o">-</span><span class="n">abc123</span> <span class="err">→</span> <span class="n">Trace</span> <span class="n">ID</span><span class="p">:</span> <span class="n">cbd82b67a1e4f9d2c8b5e6f7a3d4c9e2b1f8a5c6d7e9f2a3b4c5d6e7f8a9b2c3d4e5f6</span>
-<span class="err">→</span> <span class="n">Logs</span><span class="p">:</span> <span class="n">worker</span><span class="o">.</span><span class="n">log</span>
-<span class="err">→</span> <span class="n">Span</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">nuclei</span><span class="o">.</span><span class="n">run</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="n">This</span> <span class="n">guarantees</span> <span class="n">reproducibility</span> <span class="ow">and</span> <span class="n">fast</span> <span class="n">RCA</span> <span class="p">(</span><span class="n">root</span> <span class="n">cause</span> <span class="n">analysis</span><span class="p">)</span><span class="o">.</span>
-
-<span class="c1">## 🧠 Alerting &amp; Health Checks</span>
-
-<span class="c1">### Health Endpoints</span>
-<span class="o">|</span> <span class="n">Endpoint</span> <span class="o">|</span> <span class="n">Description</span> <span class="o">|</span>
-<span class="o">|----------|-------------|</span>
-<span class="o">|</span> <span class="err">`</span><span class="o">/</span><span class="n">healthz</span><span class="err">`</span> <span class="o">|</span> <span class="n">Liveness</span> <span class="n">probe</span> <span class="p">(</span><span class="n">basic</span> <span class="n">app</span> <span class="n">status</span><span class="p">)</span> <span class="o">|</span>
-<span class="o">|</span> <span class="err">`</span><span class="o">/</span><span class="n">readyz</span><span class="err">`</span> <span class="o">|</span> <span class="n">Readiness</span> <span class="n">probe</span> <span class="p">(</span><span class="n">DB</span> <span class="o">+</span> <span class="n">cache</span> <span class="o">+</span> <span class="n">queue</span> <span class="n">connectivity</span><span class="p">)</span> <span class="o">|</span>
-
-<span class="c1">### Example Output</span>
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;up&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cache&quot;</span><span class="p">:</span> <span class="s2">&quot;up&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;worker&quot;</span><span class="p">:</span> <span class="s2">&quot;idle&quot;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="c1">### Alerts (Prometheus Rules)</span>
-<span class="err">```</span><span class="n">yaml</span>
-<span class="n">groups</span><span class="p">:</span>
-  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">secflow_alerts</span>
-    <span class="n">rules</span><span class="p">:</span>
-      <span class="o">-</span> <span class="n">alert</span><span class="p">:</span> <span class="n">HighErrorRate</span>
-        <span class="n">expr</span><span class="p">:</span> <span class="n">rate</span><span class="p">(</span><span class="n">secflow_tool_failures_total</span><span class="p">[</span><span class="mi">5</span><span class="n">m</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">5</span>
-        <span class="k">for</span><span class="p">:</span> <span class="mi">10</span><span class="n">m</span>
-        <span class="n">labels</span><span class="p">:</span> <span class="p">{</span> <span class="n">severity</span><span class="p">:</span> <span class="n">warning</span> <span class="p">}</span>
-        <span class="n">annotations</span><span class="p">:</span>
-          <span class="n">summary</span><span class="p">:</span> <span class="s2">&quot;Tool failure rate too high&quot;</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🔒 Security of Observability Data</span>
-
-<span class="o">|</span> <span class="n">Concern</span> <span class="o">|</span> <span class="n">Mitigation</span> <span class="o">|</span>
-<span class="o">|---------|------------|</span>
-<span class="o">|</span> <span class="n">Sensitive</span> <span class="n">logs</span> <span class="o">|</span> <span class="n">Field</span> <span class="n">redaction</span> <span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Trace</span> <span class="n">integrity</span> <span class="o">|</span> <span class="n">HMAC</span> <span class="n">signing</span> <span class="n">of</span> <span class="n">exported</span> <span class="n">spans</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Log</span> <span class="n">tampering</span> <span class="o">|</span> <span class="n">Append</span><span class="o">-</span><span class="n">only</span> <span class="n">JSONL</span> <span class="o">+</span> <span class="n">rotation</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Metrics</span> <span class="n">abuse</span> <span class="o">|</span> <span class="n">Authenticated</span> <span class="err">`</span><span class="o">/</span><span class="n">metrics</span><span class="err">`</span> <span class="n">endpoint</span> <span class="p">(</span><span class="n">basic</span> <span class="n">token</span> <span class="ow">or</span> <span class="n">mutual</span> <span class="n">TLS</span><span class="p">)</span> <span class="o">|</span>
-
-<span class="c1">### Example redaction middleware:</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sanitize</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">if</span> <span class="s2">&quot;token&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;[REDACTED]&quot;</span>
-    <span class="k">return</span> <span class="n">data</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🧱 Correlation Example: End-to-End Trace</span>
-
-<span class="err">```</span><span class="n">bash</span>
-<span class="p">[</span><span class="n">TRACE</span> <span class="mi">5</span><span class="n">b2e4f21c9a344f9</span><span class="p">]</span>
+findings_total = Counter(&quot;secflow_findings_generated_total&quot;, &quot;Number of findings created&quot;)
+active_workflows = Gauge(&quot;secflow_active_workflows&quot;, &quot;Currently running workflows&quot;)
+</code></pre></div>
+<h2 id="example-grafana-dashboard-panels">🔍 Example Grafana Dashboard Panels<a class="headerlink" href="#example-grafana-dashboard-panels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Panel</th>
+<th>Visualization</th>
+<th>Query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workflow Throughput</td>
+<td>Time series</td>
+<td><code>rate(secflow_requests_total[5m])</code></td>
+</tr>
+<tr>
+<td>Average Scan Duration</td>
+<td>Histogram</td>
+<td><code>histogram_quantile(0.9, rate(secflow_task_duration_seconds_bucket[5m]))</code></td>
+</tr>
+<tr>
+<td>Findings per Project</td>
+<td>Bar chart</td>
+<td><code>sum by (project)(secflow_findings_generated_total)</code></td>
+</tr>
+<tr>
+<td>GC Efficiency</td>
+<td>SingleStat</td>
+<td><code>rate(secflow_gc_bytes_reclaimed_total[1h])</code></td>
+</tr>
+<tr>
+<td>Sandbox Failures</td>
+<td>Table</td>
+<td><code>secflow_tool_failures_total</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-correlation-incident-debugging">🧩 Error Correlation &amp; Incident Debugging<a class="headerlink" href="#error-correlation-incident-debugging" title="Permanent link">&para;</a></h2>
+<p>Every finding, workflow, and audit entry includes a trace ID.
+Errors can be traced back to exact processes and spans.</p>
+<h3 id="example-correlation">Example correlation:<a class="headerlink" href="#example-correlation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Finding → Workflow ID: wf-abc123 → Trace ID: cbd82b67a1e4f9d2c8b5e6f7a3d4c9e2b1f8a5c6d7e9f2a3b4c5d6e7f8a9b2c3d4e5f6
+→ Logs: worker.log
+→ Span: tool.nuclei.run
+</code></pre></div>
+<p>This guarantees reproducibility and fast RCA (root cause analysis).</p>
+<h2 id="alerting-health-checks">🧠 Alerting &amp; Health Checks<a class="headerlink" href="#alerting-health-checks" title="Permanent link">&para;</a></h2>
+<h3 id="health-endpoints">Health Endpoints<a class="headerlink" href="#health-endpoints" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/healthz</code></td>
+<td>Liveness probe (basic app status)</td>
+</tr>
+<tr>
+<td><code>/readyz</code></td>
+<td>Readiness probe (DB + cache + queue connectivity)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-output">Example Output<a class="headerlink" href="#example-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;services&quot;: {
+    &quot;database&quot;: &quot;up&quot;,
+    &quot;cache&quot;: &quot;up&quot;,
+    &quot;worker&quot;: &quot;idle&quot;
+  }
+}
+</code></pre></div>
+<h3 id="alerts-prometheus-rules">Alerts (Prometheus Rules)<a class="headerlink" href="#alerts-prometheus-rules" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>groups:
+  - name: secflow_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(secflow_tool_failures_total[5m]) &gt; 5
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: &quot;Tool failure rate too high&quot;
+</code></pre></div>
+<h2 id="security-of-observability-data">🔒 Security of Observability Data<a class="headerlink" href="#security-of-observability-data" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sensitive logs</td>
+<td>Field redaction (password, token, secret)</td>
+</tr>
+<tr>
+<td>Trace integrity</td>
+<td>HMAC signing of exported spans</td>
+</tr>
+<tr>
+<td>Log tampering</td>
+<td>Append-only JSONL + rotation</td>
+</tr>
+<tr>
+<td>Metrics abuse</td>
+<td>Authenticated <code>/metrics</code> endpoint (basic token or mutual TLS)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-redaction-middleware">Example redaction middleware:<a class="headerlink" href="#example-redaction-middleware" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>def sanitize(data: dict) -&gt; dict:
+    for key in data.keys():
+        if &quot;token&quot; in key.lower() or &quot;password&quot; in key.lower():
+            data[key] = &quot;[REDACTED]&quot;
+    return data
+</code></pre></div>
+<h2 id="correlation-example-end-to-end-trace">🧱 Correlation Example: End-to-End Trace<a class="headerlink" href="#correlation-example-end-to-end-trace" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[TRACE 5b2e4f21c9a344f9]
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -495,9 +640,9 @@ flowchart TD
 - Unit and integration tests export OTel traces for regression analysis.
 - Performance tests measure task durations and error rates.</p>
 <h3 id="example-ci-configuration">Example CI configuration:<a class="headerlink" href="#example-ci-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://otel-collector:4317&quot;</span>
-<span class="w">  </span><span class="nt">PROMETHEUS_MULTIPROC_DIR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/metrics&quot;</span>
+<div class="highlight"><pre><span></span><code>env:
+  OTEL_EXPORTER_OTLP_ENDPOINT: &quot;http://otel-collector:4317&quot;
+  PROMETHEUS_MULTIPROC_DIR: &quot;/tmp/metrics&quot;
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

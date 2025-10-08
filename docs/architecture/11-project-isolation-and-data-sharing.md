@@ -44,7 +44,7 @@ flowchart TD
 
 ## 🧩 Project Data Model
 
-```python
+```
 # core-lib/models/project.py
 from typing import List, Optional
 from datetime import datetime
@@ -64,7 +64,7 @@ class Project(BaseModel):
         "resources": [],
         "outputs": []
     }
-```text
+```
 
 ## 🧩 Workspace Isolation
 
@@ -102,17 +102,17 @@ flowchart TD
 
 Each project gets a dedicated schema:
 
-```yaml
+```
 public.findings_acme_api
 public.findings_finance_portal
-```yaml
+```
 
 This allows multiple concurrent engagements with strict data boundaries.
 
 ## 🧠 Data Sharing Configuration
 
 ### Example: Controlled Cross-Project Sharing
-```yaml
+```
 project:
   name: "acme-api"
   sharing:
@@ -126,7 +126,7 @@ project:
     outputs:
       - "urls"
       - "parameters"
-```python
+```
 
 In this configuration:
 - The `acme-api` project shares wordlists and templates with two sibling projects.
@@ -135,7 +135,7 @@ In this configuration:
 ## 🧩 Sharing Policy Engine
 
 ### Logic Flow
-```text
+```
 User Request
    ↓
 Policy Check (Project A → Project B)
@@ -143,7 +143,7 @@ Policy Check (Project A → Project B)
 Scope Validation
    ↓
 Access Decision (allow | deny)
-```yaml
+```
 
 ### Policy Structure
 
@@ -155,13 +155,13 @@ Access Decision (allow | deny)
 | **ttl** | Time-to-live for shared access. |
 
 ### Example Policy Definition
-```yaml
+```
 policies:
   - resource_type: "outputs"
     scope: "group"
     mode: "read-only"
     ttl: 30d
-```yaml
+```
 
 ## 🧩 Isolation Enforcement Mechanisms
 
@@ -177,14 +177,14 @@ policies:
 
 API tokens encode the project scope:
 
-```json
+```
 {
   "sub": "hernan.trajtemberg",
   "project_id": "acme-api",
   "roles": ["analyst"],
   "exp": 1759870400
 }
-```python
+```
 
 Tokens can be project-scoped or group-scoped.
 The access control middleware rejects out-of-scope operations.
@@ -194,41 +194,41 @@ The access control middleware rejects out-of-scope operations.
 Projects can import shared assets from another project's registry.
 
 ### Example Command
-```bash
+```
 SecFlow projects link internal-api --resources wordlists templates
-```text
+```
 
 ### Example Output
-```text
+```
 Linked resources:
 ✔ wordlists (3)
 ✔ templates (5)
-```text
+```
 
 Linked resources are marked in metadata:
 
-```yaml
+```
 linked_from: "project:internal-api"
 mode: "read-only"
-```python
+```
 
 ## 🧱 Output Sharing
 
 Outputs (datasets or findings) can also be shared for cross-project correlation or enrichment.
 
 ### Example Workflow:
-```text
+```
 Project A → Discovery + Scan
         ↓
 Shared Outputs (URLs, endpoints)
         ↓
 Project B → Enrichment / Retesting
-```text
+```
 
 ### Sharing Command
-```bash
+```
 SecFlow share outputs acme-api --with finance-portal --types urls parameters
-```text
+```
 
 The receiving project's engine imports the shared dataset as a read-only reference.
 
@@ -237,7 +237,7 @@ The receiving project's engine imports the shared dataset as a read-only referen
 Every cross-project access event is logged.
 
 ### Example Log Entry
-```json
+```
 {
   "event": "resource_access",
   "actor": "hernan.trajtemberg",
@@ -247,7 +247,7 @@ Every cross-project access event is logged.
   "timestamp": "2025-10-06T11:42:21Z",
   "action": "read"
 }
-```python
+```
 
 ## 🧠 Isolation Example Scenarios
 
@@ -273,7 +273,7 @@ A red-team lead selectively shares Nuclei findings between "internal-api" and "s
 
 ## 🧩 Example Policy Validation Script
 
-```python
+```
 def validate_policy(policy):
     assert policy["mode"] in ("read-only", "read-write", "clone")
     assert policy["scope"] in ("project", "group", "global")

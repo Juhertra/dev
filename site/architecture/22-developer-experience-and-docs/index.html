@@ -231,7 +231,43 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-makefile-commands" class="nav-link">🧱 Developer Makefile Commands</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-cli-secflowctl" class="nav-link">🧰 Developer CLI — secflowctl</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#development-workflow" class="nav-link">🧭 Development Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#documentation-system-mkdocs" class="nav-link">📘 Documentation System (MkDocs)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#architecture-visualization" class="nav-link">🧠 Architecture Visualization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-onboarding-flow" class="nav-link">🧩 Developer Onboarding Flow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tooling-summary" class="nav-link">🧰 Tooling Summary</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-guidelines" class="nav-link">🧩 Developer Guidelines</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#local-testing-shortcuts" class="nav-link">🧠 Local Testing Shortcuts</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-documentation-contributions" class="nav-link">📘 Developer Documentation Contributions</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -292,76 +328,96 @@ This section outlines the local environment setup, development workflow, CLI too
 <li>Node.js ≥18 (for triage-ui builds)</li>
 </ul>
 <h3 id="setup-commands">Setup Commands<a class="headerlink" href="#setup-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SecFlow/security-toolkit.git
-<span class="nb">cd</span><span class="w"> </span>security-toolkit
-make<span class="w"> </span>init
-make<span class="w"> </span>up
-<span class="sb">```</span>yaml
-
-<span class="sb">`</span>make<span class="w"> </span>init<span class="sb">`</span><span class="w"> </span>performs:
--<span class="w"> </span>Poetry<span class="w"> </span>virtualenv<span class="w"> </span>setup
--<span class="w"> </span>Dependency<span class="w"> </span>installation
--<span class="w"> </span>Database<span class="w"> </span>migration<span class="w"> </span><span class="o">(</span>SQLite<span class="w"> </span>dev<span class="w"> </span>DB<span class="o">)</span>
--<span class="w"> </span>Git<span class="w"> </span>pre-commit<span class="w"> </span>hooks<span class="w"> </span><span class="o">(</span>ruff,<span class="w"> </span>pyright,<span class="w"> </span>pytest<span class="o">)</span>
--<span class="w"> </span>Environment<span class="w"> </span>validation<span class="w"> </span><span class="o">(</span><span class="sb">`</span>make<span class="w"> </span>check<span class="sb">`</span><span class="o">)</span>
-
-<span class="c1">## 🧱 Developer Makefile Commands</span>
-
-<span class="p">|</span><span class="w"> </span>Command<span class="w"> </span><span class="p">|</span><span class="w"> </span>Description<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span>---------<span class="p">|</span>-------------<span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>up<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start<span class="w"> </span><span class="nb">local</span><span class="w"> </span>stack<span class="w"> </span><span class="o">(</span>API,<span class="w"> </span>worker,<span class="w"> </span>UI<span class="o">)</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>down<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop<span class="w"> </span>containers<span class="w"> </span>and<span class="w"> </span>cleanup<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>dev<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Launch<span class="w"> </span>dev<span class="w"> </span>server<span class="w"> </span>with<span class="w"> </span>autoreload<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span><span class="nb">test</span><span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Run<span class="w"> </span>all<span class="w"> </span>tests<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>lint<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Run<span class="w"> </span>lint<span class="w"> </span>+<span class="w"> </span><span class="nb">type</span><span class="w"> </span>check<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>docs<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Build<span class="w"> </span>MkDocs<span class="w"> </span>documentation<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>check<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Validate<span class="w"> </span>dependencies<span class="w"> </span>and<span class="w"> </span>environment<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>clean<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Remove<span class="w"> </span>caches<span class="w"> </span>and<span class="w"> </span>build<span class="w"> </span>artifacts<span class="w"> </span><span class="p">|</span>
-
-<span class="c1">### Example:</span>
-<span class="sb">```</span>bash
-make<span class="w"> </span>dev
-<span class="c1"># http://localhost:8080</span>
-<span class="sb">```</span>text
-
-<span class="c1">## 🧰 Developer CLI — secflowctl</span>
-
-SecFlow<span class="w"> </span>provides<span class="w"> </span>an<span class="w"> </span>integrated<span class="w"> </span>command-line<span class="w"> </span>interface<span class="w"> </span><span class="k">for</span><span class="w"> </span>developers<span class="w"> </span>and<span class="w"> </span>operators.
-
-<span class="c1">### Example Commands</span>
-<span class="sb">```</span>bash
-secflowctl<span class="w"> </span>project<span class="w"> </span>list
-secflowctl<span class="w"> </span>scan<span class="w"> </span>start<span class="w"> </span>nuclei<span class="w"> </span>--project<span class="w"> </span>mytest
-secflowctl<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>owasp-top10.yaml
-secflowctl<span class="w"> </span>plugin<span class="w"> </span>list
-secflowctl<span class="w"> </span>risk<span class="w"> </span>report<span class="w"> </span>--format<span class="w"> </span>table
-<span class="sb">```</span>text
-
-<span class="c1">### CLI Structure</span>
-<span class="sb">```</span>mermaid
-%%<span class="o">{</span>init:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;theme&quot;</span>:<span class="s2">&quot;neutral&quot;</span><span class="o">}}</span>%%
-flowchart<span class="w"> </span>TD
-<span class="w">    </span>A<span class="o">[</span><span class="s2">&quot;secflowctl/&quot;</span><span class="o">]</span>
-<span class="w">    </span>B<span class="o">[</span><span class="s2">&quot;__main__.py&quot;</span><span class="o">]</span>
-<span class="w">    </span>C<span class="o">[</span><span class="s2">&quot;commands/&quot;</span><span class="o">]</span>
-<span class="w">    </span>D<span class="o">[</span><span class="s2">&quot;project.py&quot;</span><span class="o">]</span>
-<span class="w">    </span>E<span class="o">[</span><span class="s2">&quot;scan.py&quot;</span><span class="o">]</span>
-<span class="w">    </span>F<span class="o">[</span><span class="s2">&quot;workflow.py&quot;</span><span class="o">]</span>
-<span class="w">    </span>G<span class="o">[</span><span class="s2">&quot;plugin.py&quot;</span><span class="o">]</span>
-<span class="w">    </span>H<span class="o">[</span><span class="s2">&quot;risk.py&quot;</span><span class="o">]</span>
-<span class="w">    </span>I<span class="o">[</span><span class="s2">&quot;utils/&quot;</span><span class="o">]</span>
-<span class="w">    </span>J<span class="o">[</span><span class="s2">&quot;formatting.py&quot;</span><span class="o">]</span>
-
-<span class="w">    </span>A<span class="w"> </span>--&gt;<span class="w"> </span>B
-<span class="w">    </span>A<span class="w"> </span>--&gt;<span class="w"> </span>C
-<span class="w">    </span>A<span class="w"> </span>--&gt;<span class="w"> </span>I
-<span class="w">    </span>C<span class="w"> </span>--&gt;<span class="w"> </span>D
-<span class="w">    </span>C<span class="w"> </span>--&gt;<span class="w"> </span>E
-<span class="w">    </span>C<span class="w"> </span>--&gt;<span class="w"> </span>F
-<span class="w">    </span>C<span class="w"> </span>--&gt;<span class="w"> </span>G
-<span class="w">    </span>C<span class="w"> </span>--&gt;<span class="w"> </span>H
-<span class="w">    </span>I<span class="w"> </span>--&gt;<span class="w"> </span>J
+<div class="highlight"><pre><span></span><code>git clone https://github.com/SecFlow/security-toolkit.git
+cd security-toolkit
+make init
+make up
 </code></pre></div>
+<p><code>make init</code> performs:
+- Poetry virtualenv setup
+- Dependency installation
+- Database migration (SQLite dev DB)
+- Git pre-commit hooks (ruff, pyright, pytest)
+- Environment validation (<code>make check</code>)</p>
+<h2 id="developer-makefile-commands">🧱 Developer Makefile Commands<a class="headerlink" href="#developer-makefile-commands" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make up</code></td>
+<td>Start local stack (API, worker, UI)</td>
+</tr>
+<tr>
+<td><code>make down</code></td>
+<td>Stop containers and cleanup</td>
+</tr>
+<tr>
+<td><code>make dev</code></td>
+<td>Launch dev server with autoreload</td>
+</tr>
+<tr>
+<td><code>make test</code></td>
+<td>Run all tests</td>
+</tr>
+<tr>
+<td><code>make lint</code></td>
+<td>Run lint + type check</td>
+</tr>
+<tr>
+<td><code>make docs</code></td>
+<td>Build MkDocs documentation</td>
+</tr>
+<tr>
+<td><code>make check</code></td>
+<td>Validate dependencies and environment</td>
+</tr>
+<tr>
+<td><code>make clean</code></td>
+<td>Remove caches and build artifacts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example:<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make dev
+# http://localhost:8080
+</code></pre></div>
+<h2 id="developer-cli-secflowctl">🧰 Developer CLI — secflowctl<a class="headerlink" href="#developer-cli-secflowctl" title="Permanent link">&para;</a></h2>
+<p>SecFlow provides an integrated command-line interface for developers and operators.</p>
+<h3 id="example-commands">Example Commands<a class="headerlink" href="#example-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>secflowctl project list
+secflowctl scan start nuclei --project mytest
+secflowctl workflow run owasp-top10.yaml
+secflowctl plugin list
+secflowctl risk report --format table
+</code></pre></div>
+<h3 id="cli-structure">CLI Structure<a class="headerlink" href="#cli-structure" title="Permanent link">&para;</a></h3>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["secflowctl/"]
+    B["__main__.py"]
+    C["commands/"]
+    D["project.py"]
+    E["scan.py"]
+    F["workflow.py"]
+    G["plugin.py"]
+    H["risk.py"]
+    I["utils/"]
+    J["formatting.py"]
+
+    A --&gt; B
+    A --&gt; C
+    A --&gt; I
+    C --&gt; D
+    C --&gt; E
+    C --&gt; F
+    C --&gt; G
+    C --&gt; H
+    I --&gt; J</div>
 <h3 id="cli-design-features">CLI Design Features<a class="headerlink" href="#cli-design-features" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Rich TUI (Textual) output for interactive sessions</li>
@@ -376,26 +432,22 @@ develop     → integration branch
 feature/*   → new features or refactors
 fix/*       → bug fixes
 release/*   → versioned release candidates
-```text
-
-### Pull Request Requirements
-- 1 approving review
-- All CI checks passed (lint, test, type, security scan)
-- Linked issue ID
-- Updated changelog entry
-
-### Commit Style (Conventional Commits)
-```text
-feat(workflow): add nuclei plugin support
+</code></pre></div>
+<h3 id="pull-request-requirements">Pull Request Requirements<a class="headerlink" href="#pull-request-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>1 approving review</li>
+<li>All CI checks passed (lint, test, type, security scan)</li>
+<li>Linked issue ID</li>
+<li>Updated changelog entry</li>
+</ul>
+<h3 id="commit-style-conventional-commits">Commit Style (Conventional Commits)<a class="headerlink" href="#commit-style-conventional-commits" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>feat(workflow): add nuclei plugin support
 fix(storage): handle null resource hash
 docs(readme): update setup instructions
-```text
-
-## 📘 Documentation System (MkDocs)
-
-### MkDocs Project Layout
-```bash
-docs/
+</code></pre></div>
+<h2 id="documentation-system-mkdocs">📘 Documentation System (MkDocs)<a class="headerlink" href="#documentation-system-mkdocs" title="Permanent link">&para;</a></h2>
+<h3 id="mkdocs-project-layout">MkDocs Project Layout<a class="headerlink" href="#mkdocs-project-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docs/
 </code></pre></div>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
@@ -414,132 +466,208 @@ flowchart TD
     A --&gt; F
     A --&gt; G</div>
 <h3 id="build-command">Build Command<a class="headerlink" href="#build-command" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>docs
-<span class="c1"># Builds into site/</span>
-<span class="sb">```</span>bash
-
-<span class="c1">### Features</span>
--<span class="w"> </span>Material<span class="w"> </span><span class="k">for</span><span class="w"> </span>MkDocs<span class="w"> </span>theme
--<span class="w"> </span>Auto-generated<span class="w"> </span>architecture<span class="w"> </span>diagrams<span class="w"> </span>via<span class="w"> </span>Mermaid
--<span class="w"> </span>Built-in<span class="w"> </span>search<span class="w"> </span>and<span class="w"> </span>code<span class="w"> </span>highlighting
--<span class="w"> </span>Versioned<span class="w"> </span>docs<span class="w"> </span><span class="o">(</span>via<span class="w"> </span>mike<span class="o">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>each<span class="w"> </span>release
--<span class="w"> </span>Plugin-based<span class="w"> </span>navigation<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s2">&quot;core&quot;</span>,<span class="w"> </span><span class="s2">&quot;apps&quot;</span>,<span class="w"> </span><span class="s2">&quot;plugins&quot;</span>,<span class="w"> </span><span class="s2">&quot;API&quot;</span>
-
-<span class="c1">### Example mkdocs.yml:</span>
-<span class="sb">```</span>yaml
-site_name:<span class="w"> </span><span class="s2">&quot;SecFlow Developer Docs&quot;</span>
+<div class="highlight"><pre><span></span><code>make docs
+# Builds into site/
+</code></pre></div>
+<h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Material for MkDocs theme</li>
+<li>Auto-generated architecture diagrams via Mermaid</li>
+<li>Built-in search and code highlighting</li>
+<li>Versioned docs (via mike) for each release</li>
+<li>Plugin-based navigation for "core", "apps", "plugins", "API"</li>
+</ul>
+<h3 id="example-mkdocsyml">Example mkdocs.yml:<a class="headerlink" href="#example-mkdocsyml" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>site_name: &quot;SecFlow Developer Docs&quot;
 theme:
-<span class="w">  </span>name:<span class="w"> </span>material
-<span class="w">  </span>features:
-<span class="w">    </span>-<span class="w"> </span>navigation.sections
-<span class="w">    </span>-<span class="w"> </span>navigation.instant
+  name: material
+  features:
+    - navigation.sections
+    - navigation.instant
 markdown_extensions:
-<span class="w">  </span>-<span class="w"> </span>toc:
-<span class="w">      </span>permalink:<span class="w"> </span><span class="nb">true</span>
-<span class="w">  </span>-<span class="w"> </span>admonition
-<span class="w">  </span>-<span class="w"> </span>pymdownx.superfences
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.superfences
 plugins:
-<span class="w">  </span>-<span class="w"> </span>search
-<span class="w">  </span>-<span class="w"> </span>mermaid2
-<span class="w">  </span>-<span class="w"> </span>awesome-pages
-<span class="sb">```</span>yaml
-
-<span class="c1">## 🧠 Architecture Visualization</span>
-
-Architecture<span class="w"> </span>diagrams<span class="w"> </span>are<span class="w"> </span>auto-generated<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>codebase<span class="w"> </span>using<span class="w"> </span>diagrams<span class="w"> </span>+<span class="w"> </span>pydeps.
-
-<span class="c1">### Example script:</span>
-<span class="sb">```</span>bash
-make<span class="w"> </span>diagram
-<span class="sb">```</span>yaml
-
-Output:<span class="w"> </span><span class="sb">`</span>/docs/architecture/assets/architecture.svg<span class="sb">`</span>
-
-<span class="c1">### Example generated image (ASCII simplified):</span>
-<span class="sb">```</span>yaml
-<span class="w">        </span>+-------------+
-<span class="w">        </span><span class="p">|</span><span class="w">  </span>web-api<span class="w">    </span><span class="p">|</span>
-<span class="w">        </span>+------+------+----+
-<span class="w">               </span><span class="p">|</span><span class="w">           </span><span class="p">|</span>
-<span class="w">       </span>+-------v--+<span class="w">   </span>+----v--------+
-<span class="w">       </span><span class="p">|</span><span class="w"> </span>worker<span class="w">   </span><span class="p">|</span><span class="w">   </span><span class="p">|</span><span class="w"> </span>triage-ui<span class="w">   </span><span class="p">|</span>
-<span class="w">       </span>+----------+<span class="w">   </span>+-------------+
-<span class="w">               </span><span class="p">|</span><span class="w">         </span><span class="p">|</span>
-<span class="w">          </span>+----v---------v----+
-<span class="w">          </span><span class="p">|</span><span class="w">  </span>core-lib<span class="w"> </span>/<span class="w"> </span>engine<span class="w"> </span><span class="p">|</span>
-<span class="w">          </span>+--------------------+
-<span class="sb">```</span>yaml
-
-<span class="c1">## 🧩 Developer Onboarding Flow</span>
-
-<span class="p">|</span><span class="w"> </span>Step<span class="w"> </span><span class="p">|</span><span class="w"> </span>Description<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span>------<span class="p">|</span>-------------<span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">1</span>.<span class="w"> </span>Clone<span class="w"> </span>Repository<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>git<span class="w"> </span>clone<span class="sb">`</span><span class="w"> </span>and<span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>init<span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">2</span>.<span class="w"> </span>Run<span class="w"> </span>Local<span class="w"> </span>Stack<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>up<span class="sb">`</span><span class="w"> </span>→<span class="w"> </span>visit<span class="w"> </span>localhost:8080<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">3</span>.<span class="w"> </span>Explore<span class="w"> </span>CLI<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>secflowctl<span class="w"> </span><span class="nb">help</span><span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">4</span>.<span class="w"> </span>Read<span class="w"> </span>Docs<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>make<span class="w"> </span>docs<span class="sb">`</span><span class="w"> </span>→<span class="w"> </span>open<span class="w"> </span>site/index.html<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">5</span>.<span class="w"> </span>Add<span class="w"> </span>Feature<span class="w"> </span><span class="p">|</span><span class="w"> </span>Create<span class="w"> </span><span class="sb">`</span>feature/my-feature<span class="sb">`</span><span class="w"> </span>branch<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">6</span>.<span class="w"> </span>Submit<span class="w"> </span>PR<span class="w"> </span><span class="p">|</span><span class="w"> </span>Push<span class="w"> </span>to<span class="w"> </span>GitHub,<span class="w"> </span>run<span class="w"> </span>CI,<span class="w"> </span>get<span class="w"> </span>review<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span><span class="m">7</span>.<span class="w"> </span>Merge<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Deploy<span class="w"> </span><span class="p">|</span><span class="w"> </span>Auto-deployed<span class="w"> </span>to<span class="w"> </span>staging<span class="w"> </span><span class="p">|</span>
-
-<span class="c1">## 🧰 Tooling Summary</span>
-
-<span class="p">|</span><span class="w"> </span>Category<span class="w"> </span><span class="p">|</span><span class="w"> </span>Tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>Purpose<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span>----------<span class="p">|</span>------<span class="p">|</span>---------<span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Package<span class="w"> </span>Management<span class="w"> </span><span class="p">|</span><span class="w"> </span>Poetry<span class="w"> </span><span class="p">|</span><span class="w"> </span>Dependency<span class="w"> </span>control<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Linting<span class="w"> </span><span class="p">|</span><span class="w"> </span>Ruff<span class="w"> </span><span class="p">|</span><span class="w"> </span>Code<span class="w"> </span>style<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>hygiene<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Typing<span class="w"> </span><span class="p">|</span><span class="w"> </span>Pyright<span class="w"> </span><span class="p">|</span><span class="w"> </span>Static<span class="w"> </span><span class="nb">type</span><span class="w"> </span>enforcement<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Testing<span class="w"> </span><span class="p">|</span><span class="w"> </span>Pytest<span class="w"> </span><span class="p">|</span><span class="w"> </span>Unit<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>integration<span class="w"> </span>tests<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Docs<span class="w"> </span><span class="p">|</span><span class="w"> </span>MkDocs<span class="w"> </span><span class="p">|</span><span class="w"> </span>Documentation<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Visualization<span class="w"> </span><span class="p">|</span><span class="w"> </span>Diagrams<span class="w"> </span><span class="p">|</span><span class="w"> </span>Auto-generate<span class="w"> </span>architecture<span class="w"> </span>maps<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Security<span class="w"> </span><span class="p">|</span><span class="w"> </span>Gitleaks,<span class="w"> </span>Safety<span class="w"> </span><span class="p">|</span><span class="w"> </span>Prevent<span class="w"> </span>secrets<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>vulns<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Formatting<span class="w"> </span><span class="p">|</span><span class="w"> </span>Black<span class="w"> </span><span class="p">|</span><span class="w"> </span>Consistent<span class="w"> </span>code<span class="w"> </span>format<span class="w"> </span><span class="p">|</span>
-
-<span class="c1">## 🧩 Developer Guidelines</span>
-
-<span class="c1">### Code Style</span>
--<span class="w"> </span>Follow<span class="w"> </span>PEP8<span class="w"> </span>+<span class="w"> </span>Ruff<span class="w"> </span>config
--<span class="w"> </span>Enforce<span class="w"> </span>docstrings<span class="w"> </span><span class="k">for</span><span class="w"> </span>public<span class="w"> </span>classes/functions
--<span class="w"> </span>Avoid<span class="w"> </span>circular<span class="w"> </span>imports<span class="w"> </span><span class="o">(</span>use<span class="w"> </span>ports<span class="o">)</span>
--<span class="w"> </span>Use<span class="w"> </span>dependency<span class="w"> </span>injection<span class="w"> </span>where<span class="w"> </span>possible
-
-<span class="c1">### Commit Rules</span>
--<span class="w"> </span>Keep<span class="w"> </span>commits<span class="w"> </span>atomic<span class="w"> </span><span class="o">(</span><span class="m">1</span><span class="w"> </span>logical<span class="w"> </span>change<span class="o">)</span>
--<span class="w"> </span>Use<span class="w"> </span>descriptive<span class="w"> </span>messages
--<span class="w"> </span>Reference<span class="w"> </span>related<span class="w"> </span>issue<span class="w"> </span><span class="o">(</span><span class="c1">#123)</span>
-
-<span class="c1">### Code Review Expectations</span>
--<span class="w"> </span>Small<span class="w"> </span>PRs<span class="w"> </span><span class="o">(</span>&lt;<span class="m">500</span><span class="w"> </span>LOC<span class="w"> </span>preferred<span class="o">)</span>
--<span class="w"> </span>Include<span class="w"> </span>before/after<span class="w"> </span>screenshots<span class="w"> </span><span class="k">for</span><span class="w"> </span>UI<span class="w"> </span>changes
--<span class="w"> </span>Add<span class="w"> </span>unit<span class="w"> </span>tests<span class="w"> </span><span class="k">for</span><span class="w"> </span>every<span class="w"> </span>new<span class="w"> </span>feature
-
-<span class="c1">## 🧠 Local Testing Shortcuts</span>
-
-<span class="p">|</span><span class="w"> </span>Scenario<span class="w"> </span><span class="p">|</span><span class="w"> </span>Command<span class="w"> </span><span class="p">|</span>
-<span class="p">|</span>----------<span class="p">|</span>---------<span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Run<span class="w"> </span>single<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>pytest<span class="w"> </span>tests/core/test_models.py::test_project_model<span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Run<span class="w"> </span>tests<span class="w"> </span>with<span class="w"> </span>coverage<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>html<span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Run<span class="w"> </span>async<span class="w"> </span>API<span class="w"> </span>tests<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>pytest<span class="w"> </span>tests/api<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;async&quot;</span><span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Skip<span class="w"> </span>slow<span class="w"> </span>tests<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;not slow&quot;</span><span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-<span class="p">|</span><span class="w"> </span>Lint<span class="w"> </span>before<span class="w"> </span>commit<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="sb">`</span><span class="w"> </span><span class="p">|</span>
-
-<span class="c1">## 📘 Developer Documentation Contributions</span>
-
-Docs<span class="w"> </span>are<span class="w"> </span>written<span class="w"> </span><span class="k">in</span><span class="w"> </span>Markdown<span class="w"> </span>under<span class="w"> </span><span class="sb">`</span>docs/<span class="sb">`</span>
-
-<span class="c1">### Always include:</span>
--<span class="w"> </span>Code<span class="w"> </span>examples
--<span class="w"> </span>Usage<span class="w"> </span>samples
--<span class="w"> </span>Config<span class="w"> </span>references
-
-<span class="c1">### Build locally via:</span>
-<span class="sb">```</span>bash
-mkdocs<span class="w"> </span>serve
-<span class="sb">```</span>bash
-
-<span class="c1">### For architecture updates:</span>
-<span class="sb">```</span>bash
-make<span class="w"> </span>diagram<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>docs
+  - search
+  - mermaid2
+  - awesome-pages
+</code></pre></div>
+<h2 id="architecture-visualization">🧠 Architecture Visualization<a class="headerlink" href="#architecture-visualization" title="Permanent link">&para;</a></h2>
+<p>Architecture diagrams are auto-generated from the codebase using diagrams + pydeps.</p>
+<h3 id="example-script">Example script:<a class="headerlink" href="#example-script" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make diagram
+</code></pre></div>
+<p>Output: <code>/docs/architecture/assets/architecture.svg</code></p>
+<h3 id="example-generated-image-ascii-simplified">Example generated image (ASCII simplified):<a class="headerlink" href="#example-generated-image-ascii-simplified" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>        +-------------+
+        |  web-api    |
+        +------+------+----+
+               |           |
+       +-------v--+   +----v--------+
+       | worker   |   | triage-ui   |
+       +----------+   +-------------+
+               |         |
+          +----v---------v----+
+          |  core-lib / engine |
+          +--------------------+
+</code></pre></div>
+<h2 id="developer-onboarding-flow">🧩 Developer Onboarding Flow<a class="headerlink" href="#developer-onboarding-flow" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Clone Repository</td>
+<td><code>git clone</code> and <code>make init</code></td>
+</tr>
+<tr>
+<td>2. Run Local Stack</td>
+<td><code>make up</code> → visit localhost:8080</td>
+</tr>
+<tr>
+<td>3. Explore CLI</td>
+<td><code>secflowctl help</code></td>
+</tr>
+<tr>
+<td>4. Read Docs</td>
+<td><code>make docs</code> → open site/index.html</td>
+</tr>
+<tr>
+<td>5. Add Feature</td>
+<td>Create <code>feature/my-feature</code> branch</td>
+</tr>
+<tr>
+<td>6. Submit PR</td>
+<td>Push to GitHub, run CI, get review</td>
+</tr>
+<tr>
+<td>7. Merge &amp; Deploy</td>
+<td>Auto-deployed to staging</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tooling-summary">🧰 Tooling Summary<a class="headerlink" href="#tooling-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Package Management</td>
+<td>Poetry</td>
+<td>Dependency control</td>
+</tr>
+<tr>
+<td>Linting</td>
+<td>Ruff</td>
+<td>Code style &amp; hygiene</td>
+</tr>
+<tr>
+<td>Typing</td>
+<td>Pyright</td>
+<td>Static type enforcement</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>Pytest</td>
+<td>Unit &amp; integration tests</td>
+</tr>
+<tr>
+<td>Docs</td>
+<td>MkDocs</td>
+<td>Documentation</td>
+</tr>
+<tr>
+<td>Visualization</td>
+<td>Diagrams</td>
+<td>Auto-generate architecture maps</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Gitleaks, Safety</td>
+<td>Prevent secrets &amp; vulns</td>
+</tr>
+<tr>
+<td>Formatting</td>
+<td>Black</td>
+<td>Consistent code format</td>
+</tr>
+</tbody>
+</table>
+<h2 id="developer-guidelines">🧩 Developer Guidelines<a class="headerlink" href="#developer-guidelines" title="Permanent link">&para;</a></h2>
+<h3 id="code-style">Code Style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Follow PEP8 + Ruff config</li>
+<li>Enforce docstrings for public classes/functions</li>
+<li>Avoid circular imports (use ports)</li>
+<li>Use dependency injection where possible</li>
+</ul>
+<h3 id="commit-rules">Commit Rules<a class="headerlink" href="#commit-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Keep commits atomic (1 logical change)</li>
+<li>Use descriptive messages</li>
+<li>Reference related issue (#123)</li>
+</ul>
+<h3 id="code-review-expectations">Code Review Expectations<a class="headerlink" href="#code-review-expectations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Small PRs (&lt;500 LOC preferred)</li>
+<li>Include before/after screenshots for UI changes</li>
+<li>Add unit tests for every new feature</li>
+</ul>
+<h2 id="local-testing-shortcuts">🧠 Local Testing Shortcuts<a class="headerlink" href="#local-testing-shortcuts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run single test</td>
+<td><code>pytest tests/core/test_models.py::test_project_model</code></td>
+</tr>
+<tr>
+<td>Run tests with coverage</td>
+<td><code>pytest --cov=src --cov-report=html</code></td>
+</tr>
+<tr>
+<td>Run async API tests</td>
+<td><code>pytest tests/api -k "async"</code></td>
+</tr>
+<tr>
+<td>Skip slow tests</td>
+<td><code>pytest -m "not slow"</code></td>
+</tr>
+<tr>
+<td>Lint before commit</td>
+<td><code>pre-commit run --all-files</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="developer-documentation-contributions">📘 Developer Documentation Contributions<a class="headerlink" href="#developer-documentation-contributions" title="Permanent link">&para;</a></h2>
+<p>Docs are written in Markdown under <code>docs/</code></p>
+<h3 id="always-include">Always include:<a class="headerlink" href="#always-include" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Code examples</li>
+<li>Usage samples</li>
+<li>Config references</li>
+</ul>
+<h3 id="build-locally-via">Build locally via:<a class="headerlink" href="#build-locally-via" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>mkdocs serve
+</code></pre></div>
+<h3 id="for-architecture-updates">For architecture updates:<a class="headerlink" href="#for-architecture-updates" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>make diagram &amp;&amp; make docs
 </code></pre></div>
 <h2 id="future-dx-enhancements">🔮 Future DX Enhancements<a class="headerlink" href="#future-dx-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

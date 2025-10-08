@@ -36,12 +36,12 @@ This section outlines the local environment setup, development workflow, CLI too
 - Node.js ≥18 (for triage-ui builds)
 
 ### Setup Commands
-```bash
+```
 git clone https://github.com/SecFlow/security-toolkit.git
 cd security-toolkit
 make init
 make up
-```yaml
+```
 
 `make init` performs:
 - Poetry virtualenv setup
@@ -64,23 +64,23 @@ make up
 | `make clean` | Remove caches and build artifacts |
 
 ### Example:
-```bash
+```
 make dev
 # http://localhost:8080
-```text
+```
 
 ## 🧰 Developer CLI — secflowctl
 
 SecFlow provides an integrated command-line interface for developers and operators.
 
 ### Example Commands
-```bash
+```
 secflowctl project list
 secflowctl scan start nuclei --project mytest
 secflowctl workflow run owasp-top10.yaml
 secflowctl plugin list
 secflowctl risk report --format table
-```text
+```
 
 ### CLI Structure
 ```mermaid
@@ -117,13 +117,13 @@ flowchart TD
 ## 🧭 Development Workflow
 
 ### Branching Model
-```text
+```
 main        → stable production branch
 develop     → integration branch
 feature/*   → new features or refactors
 fix/*       → bug fixes
 release/*   → versioned release candidates
-```text
+```
 
 ### Pull Request Requirements
 - 1 approving review
@@ -132,16 +132,16 @@ release/*   → versioned release candidates
 - Updated changelog entry
 
 ### Commit Style (Conventional Commits)
-```text
+```
 feat(workflow): add nuclei plugin support
 fix(storage): handle null resource hash
 docs(readme): update setup instructions
-```text
+```
 
 ## 📘 Documentation System (MkDocs)
 
 ### MkDocs Project Layout
-```bash
+```
 docs/
 ```
 
@@ -165,10 +165,10 @@ flowchart TD
 ```
 
 ### Build Command
-```bash
+```
 make docs
 # Builds into site/
-```bash
+```
 
 ### Features
 - Material for MkDocs theme
@@ -178,7 +178,7 @@ make docs
 - Plugin-based navigation for "core", "apps", "plugins", "API"
 
 ### Example mkdocs.yml:
-```yaml
+```
 site_name: "SecFlow Developer Docs"
 theme:
   name: material
@@ -194,21 +194,21 @@ plugins:
   - search
   - mermaid2
   - awesome-pages
-```yaml
+```
 
 ## 🧠 Architecture Visualization
 
 Architecture diagrams are auto-generated from the codebase using diagrams + pydeps.
 
 ### Example script:
-```bash
+```
 make diagram
-```yaml
+```
 
 Output: `/docs/architecture/assets/architecture.svg`
 
 ### Example generated image (ASCII simplified):
-```yaml
+```
         +-------------+
         |  web-api    |
         +------+------+----+
@@ -220,7 +220,7 @@ Output: `/docs/architecture/assets/architecture.svg`
           +----v---------v----+
           |  core-lib / engine |
           +--------------------+
-```yaml
+```
 
 ## 🧩 Developer Onboarding Flow
 
@@ -285,12 +285,12 @@ Docs are written in Markdown under `docs/`
 - Config references
 
 ### Build locally via:
-```bash
+```
 mkdocs serve
-```bash
+```
 
 ### For architecture updates:
-```bash
+```
 make diagram && make docs
 ```
 

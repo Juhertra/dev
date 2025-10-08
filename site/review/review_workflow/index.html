@@ -231,6 +231,18 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#review-metrics-and-kpis" class="nav-link">📊 Review Metrics and KPIs</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#escalation-procedures" class="nav-link">🚨 Escalation Procedures</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#review-templates-and-tools" class="nav-link">📝 Review Templates and Tools</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#success-criteria" class="nav-link">🎯 Success Criteria</a>
               <ul class="nav flex-column">
               </ul>
@@ -449,69 +461,109 @@
     D --&gt; J[Critical Issues?]
     J --&gt;|Yes| K[Emergency Review]
     K --&gt; H
-    J --&gt;|No| E
-```text
-
-## 📊 Review Metrics and KPIs
-
-### Quality Metrics
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Review Coverage** | 100% | All documents reviewed by assigned roles |
-| **Issue Resolution** | 95% | Critical issues resolved before approval |
-| **Consistency Score** | ≥ 90% | Cross-document consistency rating |
-| **Technical Accuracy** | 100% | All code examples and diagrams validated |
-| **Security Compliance** | 100% | All security requirements met |
-
-### Process Metrics
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Review Completion** | 100% | All assigned reviews completed on time |
-| **Stakeholder Approval** | 100% | All stakeholders approve their sections |
-| **Issue Response Time** | &lt; 24 hours | Time to respond to critical issues |
-| **Document Update Time** | &lt; 48 hours | Time to update documents after feedback |
-
-## 🚨 Escalation Procedures
-
-### Critical Issues
-**Definition:** Issues that could prevent implementation or compromise security
-
-**Examples:**
+    J --&gt;|No| E</div>
+<h2 id="review-metrics-and-kpis">📊 Review Metrics and KPIs<a class="headerlink" href="#review-metrics-and-kpis" title="Permanent link">&para;</a></h2>
+<h3 id="quality-metrics">Quality Metrics<a class="headerlink" href="#quality-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Measurement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Review Coverage</strong></td>
+<td>100%</td>
+<td>All documents reviewed by assigned roles</td>
+</tr>
+<tr>
+<td><strong>Issue Resolution</strong></td>
+<td>95%</td>
+<td>Critical issues resolved before approval</td>
+</tr>
+<tr>
+<td><strong>Consistency Score</strong></td>
+<td>≥ 90%</td>
+<td>Cross-document consistency rating</td>
+</tr>
+<tr>
+<td><strong>Technical Accuracy</strong></td>
+<td>100%</td>
+<td>All code examples and diagrams validated</td>
+</tr>
+<tr>
+<td><strong>Security Compliance</strong></td>
+<td>100%</td>
+<td>All security requirements met</td>
+</tr>
+</tbody>
+</table>
+<h3 id="process-metrics">Process Metrics<a class="headerlink" href="#process-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Measurement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Review Completion</strong></td>
+<td>100%</td>
+<td>All assigned reviews completed on time</td>
+</tr>
+<tr>
+<td><strong>Stakeholder Approval</strong></td>
+<td>100%</td>
+<td>All stakeholders approve their sections</td>
+</tr>
+<tr>
+<td><strong>Issue Response Time</strong></td>
+<td>&lt; 24 hours</td>
+<td>Time to respond to critical issues</td>
+</tr>
+<tr>
+<td><strong>Document Update Time</strong></td>
+<td>&lt; 48 hours</td>
+<td>Time to update documents after feedback</td>
+</tr>
+</tbody>
+</table>
+<h2 id="escalation-procedures">🚨 Escalation Procedures<a class="headerlink" href="#escalation-procedures" title="Permanent link">&para;</a></h2>
+<h3 id="critical-issues">Critical Issues<a class="headerlink" href="#critical-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Definition:</strong> Issues that could prevent implementation or compromise security</p>
+<p><strong>Examples:</strong>
 - Security vulnerabilities in design
 - Infeasible technical requirements
 - Major architectural inconsistencies
 - Compliance violations
-- Timeline conflicts
-
-**Escalation Process:**
-1. **Identify** critical issue during review
-2. **Document** issue with evidence and impact
-3. **Notify** Lead Architect immediately
-4. **Schedule** emergency review session within 4 hours
-5. **Resolve** with all stakeholders present
-6. **Update** review assignments if needed
-
-### Non-Critical Issues
-**Definition:** Issues that should be addressed but don't block implementation
-
-**Examples:**
+- Timeline conflicts</p>
+<p><strong>Escalation Process:</strong>
+1. <strong>Identify</strong> critical issue during review
+2. <strong>Document</strong> issue with evidence and impact
+3. <strong>Notify</strong> Lead Architect immediately
+4. <strong>Schedule</strong> emergency review session within 4 hours
+5. <strong>Resolve</strong> with all stakeholders present
+6. <strong>Update</strong> review assignments if needed</p>
+<h3 id="non-critical-issues">Non-Critical Issues<a class="headerlink" href="#non-critical-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Definition:</strong> Issues that should be addressed but don't block implementation</p>
+<p><strong>Examples:</strong>
 - Minor formatting inconsistencies
 - Documentation improvements
 - Code style suggestions
-- Performance optimizations
-
-**Resolution Process:**
-1. **Document** issue in review report
-2. **Assign** resolution responsibility
-3. **Set** timeline for resolution
-4. **Track** progress in issue tracking system
-5. **Validate** resolution before final approval
-
-## 📝 Review Templates and Tools
-
-### Individual Review Template
-```markdown
-## Document Review: [Document Name]
+- Performance optimizations</p>
+<p><strong>Resolution Process:</strong>
+1. <strong>Document</strong> issue in review report
+2. <strong>Assign</strong> resolution responsibility
+3. <strong>Set</strong> timeline for resolution
+4. <strong>Track</strong> progress in issue tracking system
+5. <strong>Validate</strong> resolution before final approval</p>
+<h2 id="review-templates-and-tools">📝 Review Templates and Tools<a class="headerlink" href="#review-templates-and-tools" title="Permanent link">&para;</a></h2>
+<h3 id="individual-review-template">Individual Review Template<a class="headerlink" href="#individual-review-template" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>## Document Review: [Document Name]
 **Reviewer:** [Name]  
 **Date:** [Date]  
 **Review Type:** [Individual/Cross/Group]
@@ -535,28 +587,29 @@
 - **Strengths:** [What works well]
 - **Critical Issues:** [Must-fix problems]
 - **Enhancement Opportunities:** [Nice-to-have improvements]
-- **Recommendation:** [Approve/Revise/Reject]</div>
+- **Recommendation:** [Approve/Revise/Reject]
+</code></pre></div>
 <h3 id="group-review-session-template">Group Review Session Template<a class="headerlink" href="#group-review-session-template" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="gu">## Group Review Session: [Category]</span>
-<span class="gs">**Date:**</span> [Date]  
-<span class="gs">**Participants:**</span> [List participants]
+<div class="highlight"><pre><span></span><code>## Group Review Session: [Category]
+**Date:** [Date]  
+**Participants:** [List participants]
 
-<span class="gu">### Documents Reviewed</span>
-<span class="k">-</span><span class="w"> </span>[List documents reviewed]
+### Documents Reviewed
+- [List documents reviewed]
 
-<span class="gu">### Key Issues Identified</span>
-<span class="k">-</span><span class="w"> </span>[List critical issues]
-<span class="k">-</span><span class="w"> </span>[List non-critical issues]
+### Key Issues Identified
+- [List critical issues]
+- [List non-critical issues]
 
-<span class="gu">### Resolutions Agreed</span>
-<span class="k">-</span><span class="w"> </span>[List agreed resolutions]
-<span class="k">-</span><span class="w"> </span>[Assign responsibilities]
-<span class="k">-</span><span class="w"> </span>[Set timelines]
+### Resolutions Agreed
+- [List agreed resolutions]
+- [Assign responsibilities]
+- [Set timelines]
 
-<span class="gu">### Approval Status</span>
-<span class="k">-</span><span class="w"> </span>[Document approval status]
-<span class="k">-</span><span class="w"> </span>[Stakeholder confirmations]
-<span class="k">-</span><span class="w"> </span>[Next steps]
+### Approval Status
+- [Document approval status]
+- [Stakeholder confirmations]
+- [Next steps]
 </code></pre></div>
 <h2 id="success-criteria">🎯 Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h2>
 <p>The review workflow is considered successful when:</p>

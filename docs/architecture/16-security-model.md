@@ -40,24 +40,24 @@ SecFlow supports two auth models:
 2. **Federated Auth (optional):** OAuth2/OpenID Connect integration (GitHub, Google, Azure AD).
 
 ### Token Model
-```json
+```
 {
   "sub": "hernan",
   "role": "admin",
   "exp": 1738783200,
   "projects": ["proj-01", "proj-02"]
 }
-```json
+```
 
 ### Token Flow Diagram
-```text
+```
 [User Login] → [Auth Provider] → [JWT Issued] → [API Gateway] → [SecFlow Web/API]
-```text
+```
 
 Each request to `/api/*` must include:
-```text
+```
 Authorization: Bearer <token>
-```text
+```
 
 Tokens are verified by the API middleware using RS256 signature validation.
 
@@ -87,21 +87,21 @@ Roles define the scope of capabilities across the platform.
 
 Every endpoint and command passes through an Access Policy Filter:
 
-```python
+```
 def authorize(action: str, user: User, project: Optional[str] = None):
     if not user.has_permission(action, project):
         raise HTTPException(403, detail=f"Forbidden: {action}")
-```python
+```
 
 ### Example route decorator:
-```python
+```
 @app.get("/api/v1/findings")
 @require_role(["admin", "analyst", "viewer"])
 def list_findings():
     def authorize(self, action: str, user: User, project: Optional[str] = None) -> bool:
         """Check if user is authorized for action."""
         return user.has_permission(action, project)
-```python
+```
 
 ## 🧱 Secrets Management
 
@@ -113,21 +113,21 @@ def list_findings():
 ### Storage Backend
 All secrets are stored in the SecFlow Vault, an encrypted JSON database backed by Fernet (AES-256).
 
-```python
+```
 class SecretVault:
     def __init__(self, keyfile: Path):
         self.key = load_key(keyfile)
     def store(self, id: str, data: dict):
         enc = fernet_encrypt(json.dumps(data), self.key)
         write_file(f"/vault/{id}.enc", enc)
-```python
+```
 
 ### Secrets CLI
-```bash
+```
 SecFlow secrets add nuclei_api --value "TOKEN123"
 SecFlow secrets list
 SecFlow secrets remove nuclei_api
-```yaml
+```
 
 All access is scoped by user and project context.
 
@@ -146,12 +146,12 @@ All scanner and PoC executions run inside restricted containers or subprocess ja
 | Read-only FS | Prevents persistence |
 
 ### Example
-```bash
+```
 docker run --rm --cap-drop=ALL \
   --security-opt=no-new-privileges \
   --read-only -m 512m --cpus=1 \
   SecFlow-runner:latest nuclei -t /templates
-```python
+```
 
 ## 🧩 Network & Data Security
 
@@ -169,14 +169,14 @@ Internal apps communicate via ZeroMQ or Redis queues over TLS.
 
 Each message includes a signed envelope:
 
-```json
+```
 {
   "msg_id": "uuid",
   "issuer": "worker-1",
   "signature": "HMAC-SHA256",
   "payload": {"data": "encrypted_content"}
 }
-```json
+```
 
 This ensures authenticity and non-repudiation.
 
@@ -189,19 +189,19 @@ SecFlow injects middleware for:
 - Audit log writing after each mutating operation
 
 ### Example:
-```python
+```
 @app.middleware("http")
 async def audit_request(request, call_next):
     response = await call_next(request)
     if request.method in ("POST", "DELETE", "PATCH"):
         log_audit(request, response)
     return response
-```yaml
+```
 
 ## 🔐 Audit Trail & Tamper Resistance
 
 ### Log Format
-```json
+```
 {
   "timestamp": "2025-10-06T09:40:00Z",
   "user": "hernan",
@@ -210,15 +210,15 @@ async def audit_request(request, call_next):
   "status": "success",
   "hash": "sha256:0a3b1c2d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
 }
-```json
+```
 
 ### Storage & Verification
 - Logs stored as JSON lines under `/audit/`
 - Each file signed with an HMAC chain:
 
-```python
+```
 H_i = HMAC(H_prev + log_i, key)
-```yaml
+```
 
 Immutable and verifiable chain-of-trust.
 
@@ -249,15 +249,15 @@ SecFlow's security architecture aligns with:
 - Secrets have explicit TTLs (default: 180 days).
 - Vault rotation command:
 
-```bash
+```
 SecFlow vault rotate
-```text
+```
 
 Rotation regenerates the encryption key and re-encrypts all entries.
 
 ## 🧩 Example Access Workflow
 
-```text
+```
 [Analyst] → [Login via OIDC] → [JWT Issued]
 → [UI/API Gateway] → [RBAC Policy Check]
 → [Worker Executes Workflow in Sandbox]

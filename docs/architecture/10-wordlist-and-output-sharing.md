@@ -65,7 +65,7 @@ Each execution context resolves wordlists from the **Resource Registry**, fetchi
 
 ## 🧩 Shared Wordlist Schema
 
-```yaml
+```
 id: res://wordlists/dirb:1.2.0
 type: wordlist
 scope: global
@@ -73,16 +73,16 @@ metadata:
   description: "Common web directory wordlist"
   format: "text"
   size: 24312
-```yaml
+```
 
 ### Usage Example
-```yaml
+```
 tools:
   feroxbuster:
     wordlist: res://wordlists/dirb:latest
   nuclei:
     templates: res://templates/owasp-top10:latest
-```yaml
+```
 
 At runtime, SecFlow resolves these resources to absolute paths and injects them into each wrapper.
 
@@ -92,21 +92,21 @@ At runtime, SecFlow resolves these resources to absolute paths and injects them 
 Supplied directly in the workflow recipe or CLI argument.
 
 **Example:**
-```bash
+```
 SecFlow run feroxbuster --wordlist ./private.txt
-```bash
+```
 
 ### 2. Node-Level Configuration
 Declared inside workflow YAML.
 
 **Example:**
-```yaml
+```
 nodes:
   - id: ferox
     type: discovery.ferox
     config:
       wordlist: res://wordlists/dirb:1.0
-```yaml
+```
 
 ### 3. Project Default
 Stored under `~/.SecFlow/projects/<id>/config.yaml`.
@@ -122,24 +122,24 @@ Fallback resource available for all users.
 Each wrapper can define preferred wordlists and formats in its manifest.
 
 ### Example (feroxbuster.json):
-```json
+```
 {
   "defaults": {
     "wordlist": "res://wordlists/dirb:latest"
   },
   "accepted_formats": ["txt", "lst"]
 }
-```json
+```
 
 ### Nuclei Example:
-```json
+```
 {
   "defaults": {
     "templates": "res://templates/nuclei:latest"
   },
   "accepted_formats": ["yaml"]
 }
-```json
+```
 
 The Tool Manager dynamically validates that the provided wordlist matches the expected format before execution.
 
@@ -148,14 +148,14 @@ The Tool Manager dynamically validates that the provided wordlist matches the ex
 All tools output to a shared JSON Lines dataset (`.jsonl`).
 
 ### Example — Ferox Output
-```json
+```
 {"url": "https://target.com/login", "status": 200, "source": "feroxbuster"}
-```json
+```
 
 ### Example — Nuclei Output
-```json
+```
 {"id": "CVE-2024-12345", "template": "sql-injection", "severity": "high", "matched-at": "https://target.com/login"}
-```json
+```
 
 These outputs are normalized into the Finding schema by the Findings Engine.
 
@@ -179,7 +179,7 @@ Each wrapper declares output channels (urls, parameters, endpoints, etc.).
 The Workflow Engine automatically maps compatible output types to input fields of the next node.
 
 ### Example Workflow Excerpt
-```yaml
+```
 nodes:
   - id: ferox
     type: discovery.ferox
@@ -194,7 +194,7 @@ nodes:
     type: scanner.nuclei
     inputs: ["urls", "params"]
     outputs: ["findings"]
-```yaml
+```
 
 ## 🧩 Cross-Tool Resource Sharing Rules
 
@@ -212,10 +212,10 @@ nodes:
 A user runs Ferox → Nuclei chain.
 Nuclei reuses the output from Ferox as its input dataset.
 
-```bash
+```
 SecFlow run feroxbuster --target https://api.company.com \
 | SecFlow run nuclei --stdin
-```bash
+```
 
 ### Result:
 1. Ferox writes discovered URLs to `/runs/<uuid>/ferox/urls.jsonl`
@@ -225,14 +225,14 @@ SecFlow run feroxbuster --target https://api.company.com \
 
 ## 🧩 Shared Dataset Metadata
 
-```yaml
+```
 dataset:
   id: "runs/2025-10-06T12:31Z-ferox-urls"
   type: "urls"
   source: "feroxbuster"
   size: 243
   created_at: "2025-10-06T12:31Z"
-```yaml
+```
 
 This metadata is referenced by downstream nodes to ensure deterministic workflows.
 
@@ -247,29 +247,29 @@ SecFlow supports granular sharing control for multi-project setups:
 | **Selective** | User manually links resources or outputs between projects. |
 
 ### Example:
-```yaml
+```
 project:
   name: acme-api
   sharing:
     with: ["internal-api", "dev-api"]
     resources: ["wordlists", "templates"]
     outputs: ["urls", "parameters"]
-```yaml
+```
 
 ## 🧩 Cache & Deduplication
 
 Wordlists and tool outputs are hash-indexed and cached for reuse.
 
 ### Cache Key Formula
-```python
+```
 cache_key = sha256(resource_id + version + scope)
-```python
+```
 
 This guarantees consistent retrieval and avoids redundant downloads.
 
 ## 🧠 Example End-to-End Flow
 
-```text
+```
 Project: acme-api
 ```
 

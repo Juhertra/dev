@@ -247,6 +247,38 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#deployment-pipeline" class="nav-link">🧠 Deployment Pipeline</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#build-artifacts-packages" class="nav-link">🧰 Build Artifacts &amp; Packages</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#quality-gates" class="nav-link">🧠 Quality Gates</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#continuous-security-testing" class="nav-link">🧪 Continuous Security Testing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#regression-replay-testing" class="nav-link">🔄 Regression &amp; Replay Testing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#local-developer-testing" class="nav-link">🧰 Local Developer Testing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#metrics-reporting" class="nav-link">📊 Metrics &amp; Reporting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#disaster-recovery-rollback" class="nav-link">🧱 Disaster Recovery &amp; Rollback</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -433,137 +465,164 @@ flowchart TD
     Q --&gt; R</div>
 <hr />
 <h2 id="ci-matrix-configuration-example">🧮 CI Matrix Configuration Example<a class="headerlink" href="#ci-matrix-configuration-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/ci.yml</span>
-<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
-<span class="nt">on</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code># .github/workflows/ci.yml
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-<span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">build-test</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;3.10&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.12&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;sqlite&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;postgres&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
-<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install poetry</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry install</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make lint</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make test DB=${{ matrix.database }}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest --cov=src --cov-report=xml</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">## 🧠 Deployment Pipeline</span>
-
-<span class="c1">### Staging Pipeline (Continuous Deployment)</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Triggered on merge to main</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploys to staging environment automatically</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Runs post-deploy smoke tests</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="err">`</span><span class="l l-Scalar l-Scalar-Plain">/healthz` endpoint</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Workflow execution sanity test</span>
-
-<span class="c1">### Production Pipeline</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Requires manual approval (`workflow_dispatch`)</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Signs Docker images before publishing</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploys to Kubernetes or Docker Swarm cluster</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monitors deployment via Prometheus metrics</span>
-
-<span class="c1">### Example job snippet:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to Staging</span>
-<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">docker-compose -f docker-compose.staging.yml up -d</span>
-<span class="w">    </span><span class="no">pytest tests/e2e/ --maxfail=1</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-<span class="c1">## 🧰 Build Artifacts &amp; Packages</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Type | Output | Destination |</span>
-<span class="p p-Indicator">|</span><span class="err">------|--------|-------------|</span>
-<span class="p p-Indicator">|</span><span class="err"> Python Wheels | `dist/*.whl` | PyPI private index |</span>
-<span class="p p-Indicator">|</span><span class="err"> Docker Images | `SecFlow-api`, `SecFlow-worker` | Container registry |</span>
-<span class="p p-Indicator">|</span><span class="err"> Reports | `coverage.xml`, `lint.txt`, `typecheck.json` | GitHub artifacts |</span>
-<span class="p p-Indicator">|</span><span class="err"> Documentation | mkdocs `site/` | GitHub Pages |</span>
-
-<span class="c1">## 🧠 Quality Gates</span>
-
-<span class="p p-Indicator">|</span><span class="err"> Check | Tool | Threshold |</span>
-<span class="p p-Indicator">|</span><span class="err">-------|------|-----------|</span>
-<span class="p p-Indicator">|</span><span class="err"> Linting | Ruff | No errors |</span>
-<span class="p p-Indicator">|</span><span class="err"> Type Checking | Pyright | 100% coverage |</span>
-<span class="p p-Indicator">|</span><span class="err"> Test Coverage | Pytest + Coverage | &gt; 90% |</span>
-<span class="p p-Indicator">|</span><span class="err"> Dependency Scan | Pip-audit / Trivy | 0 Critical |</span>
-<span class="p p-Indicator">|</span><span class="err"> Build Size | Docker | &lt; 400 MB per image |</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Failed gates block merges automatically.</span>
-
-<span class="c1">## 🧪 Continuous Security Testing</span>
-
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*Dependency</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Auditing:** via pip-audit and Safety</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*Container</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scanning:** via Trivy in CI</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*Secrets</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detection:** via gitleaks pre-commit hook</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="err">*</span><span class="nv">*Infrastructure</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scan:** via tfsec (for IaC configs)</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">pip install pip-audit safety gitleaks trivy</span>
-<span class="l l-Scalar l-Scalar-Plain">make security-scan</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="c1">## 🔄 Regression &amp; Replay Testing</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Each workflow run can be recorded and replayed for regression tests.</span>
-<span class="l l-Scalar l-Scalar-Plain">This ensures stability across version upgrades.</span>
-
-<span class="c1">### Example:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">pytest tests/e2e/test_workflow_dag_execution.py --record</span>
-<span class="l l-Scalar l-Scalar-Plain">pytest --replay last-run</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-
-<span class="l l-Scalar l-Scalar-Plain">Replay data is stored under `/tests/artifacts/replays/`.</span>
-
-<span class="c1">## 🧰 Local Developer Testing</span>
-
-<span class="nt">Developers can run lightweight tests locally</span><span class="p">:</span>
-
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">make test</span>
-<span class="l l-Scalar l-Scalar-Plain">pytest -k &quot;not e2e&quot;</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-
-<span class="nt">With Docker-enabled integration tests</span><span class="p">:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<span class="l l-Scalar l-Scalar-Plain">make test-docker</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-
-<span class="c1">## 📊 Metrics &amp; Reporting</span>
-
-<span class="nt">After each CI build</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coverage report published to Codecov</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint/type results annotated in GitHub PR</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Performance metrics logged to Prometheus</span>
-
-<span class="c1">### Example coverage badge:</span>
-<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
-<span class="p p-Indicator">[</span><span class="kt">![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)](https://codecov.io/gh/SecFlow)</span>
-<span class="err">```</span><span class="nv">text</span>
-
-<span class="nv">## 🧱 Disaster Recovery &amp; Rollback</span>
-
-<span class="nv">Every deployment is versioned</span><span class="p p-Indicator">:</span>
-<span class="nv">- Docker image tags = `vX.Y.Z-buildhash`</span>
-
-<span class="nv">### Rollback command</span><span class="p p-Indicator">:</span>
-<span class="err">```</span><span class="nv">bash</span>
-<span class="nv">docker pull SecFlow-api</span><span class="p p-Indicator">:</span><span class="nv">v1.3.2</span>
-<span class="nv">docker compose up -d --no-build</span>
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ &quot;3.10&quot;, &quot;3.11&quot;, &quot;3.12&quot; ]
+        database: [ &quot;sqlite&quot;, &quot;postgres&quot; ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install poetry
+      - run: poetry install
+      - run: make lint
+      - run: make test DB=${{ matrix.database }}
+      - run: pytest --cov=src --cov-report=xml
+</code></pre></div>
+<h2 id="deployment-pipeline">🧠 Deployment Pipeline<a class="headerlink" href="#deployment-pipeline" title="Permanent link">&para;</a></h2>
+<h3 id="staging-pipeline-continuous-deployment">Staging Pipeline (Continuous Deployment)<a class="headerlink" href="#staging-pipeline-continuous-deployment" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Triggered on merge to main</li>
+<li>Deploys to staging environment automatically</li>
+<li>Runs post-deploy smoke tests:</li>
+<li><code>/healthz</code> endpoint</li>
+<li>Workflow execution sanity test</li>
+</ul>
+<h3 id="production-pipeline">Production Pipeline<a class="headerlink" href="#production-pipeline" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Requires manual approval (<code>workflow_dispatch</code>)</li>
+<li>Signs Docker images before publishing</li>
+<li>Deploys to Kubernetes or Docker Swarm cluster</li>
+<li>Monitors deployment via Prometheus metrics</li>
+</ul>
+<h3 id="example-job-snippet">Example job snippet:<a class="headerlink" href="#example-job-snippet" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>- name: Deploy to Staging
+  run: |
+    docker-compose -f docker-compose.staging.yml up -d
+    pytest tests/e2e/ --maxfail=1
+</code></pre></div>
+<h2 id="build-artifacts-packages">🧰 Build Artifacts &amp; Packages<a class="headerlink" href="#build-artifacts-packages" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Output</th>
+<th>Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python Wheels</td>
+<td><code>dist/*.whl</code></td>
+<td>PyPI private index</td>
+</tr>
+<tr>
+<td>Docker Images</td>
+<td><code>SecFlow-api</code>, <code>SecFlow-worker</code></td>
+<td>Container registry</td>
+</tr>
+<tr>
+<td>Reports</td>
+<td><code>coverage.xml</code>, <code>lint.txt</code>, <code>typecheck.json</code></td>
+<td>GitHub artifacts</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>mkdocs <code>site/</code></td>
+<td>GitHub Pages</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quality-gates">🧠 Quality Gates<a class="headerlink" href="#quality-gates" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Tool</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linting</td>
+<td>Ruff</td>
+<td>No errors</td>
+</tr>
+<tr>
+<td>Type Checking</td>
+<td>Pyright</td>
+<td>100% coverage</td>
+</tr>
+<tr>
+<td>Test Coverage</td>
+<td>Pytest + Coverage</td>
+<td>&gt; 90%</td>
+</tr>
+<tr>
+<td>Dependency Scan</td>
+<td>Pip-audit / Trivy</td>
+<td>0 Critical</td>
+</tr>
+<tr>
+<td>Build Size</td>
+<td>Docker</td>
+<td>&lt; 400 MB per image</td>
+</tr>
+</tbody>
+</table>
+<p>Failed gates block merges automatically.</p>
+<h2 id="continuous-security-testing">🧪 Continuous Security Testing<a class="headerlink" href="#continuous-security-testing" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Dependency Auditing:</strong> via pip-audit and Safety</li>
+<li><strong>Container Scanning:</strong> via Trivy in CI</li>
+<li><strong>Secrets Detection:</strong> via gitleaks pre-commit hook</li>
+<li><strong>Infrastructure Scan:</strong> via tfsec (for IaC configs)</li>
+</ul>
+<div class="highlight"><pre><span></span><code>pip install pip-audit safety gitleaks trivy
+make security-scan
+</code></pre></div>
+<h2 id="regression-replay-testing">🔄 Regression &amp; Replay Testing<a class="headerlink" href="#regression-replay-testing" title="Permanent link">&para;</a></h2>
+<p>Each workflow run can be recorded and replayed for regression tests.
+This ensures stability across version upgrades.</p>
+<h3 id="example">Example:<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pytest tests/e2e/test_workflow_dag_execution.py --record
+pytest --replay last-run
+</code></pre></div>
+<p>Replay data is stored under <code>/tests/artifacts/replays/</code>.</p>
+<h2 id="local-developer-testing">🧰 Local Developer Testing<a class="headerlink" href="#local-developer-testing" title="Permanent link">&para;</a></h2>
+<p>Developers can run lightweight tests locally:</p>
+<div class="highlight"><pre><span></span><code>make test
+pytest -k &quot;not e2e&quot;
+</code></pre></div>
+<p>With Docker-enabled integration tests:
+<div class="highlight"><pre><span></span><code>make test-docker
+</code></pre></div></p>
+<h2 id="metrics-reporting">📊 Metrics &amp; Reporting<a class="headerlink" href="#metrics-reporting" title="Permanent link">&para;</a></h2>
+<p>After each CI build:
+- Coverage report published to Codecov
+- Lint/type results annotated in GitHub PR
+- Performance metrics logged to Prometheus</p>
+<h3 id="example-coverage-badge">Example coverage badge:<a class="headerlink" href="#example-coverage-badge" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>[![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)](https://codecov.io/gh/SecFlow)
+</code></pre></div>
+<h2 id="disaster-recovery-rollback">🧱 Disaster Recovery &amp; Rollback<a class="headerlink" href="#disaster-recovery-rollback" title="Permanent link">&para;</a></h2>
+<p>Every deployment is versioned:
+- Docker image tags = <code>vX.Y.Z-buildhash</code></p>
+<h3 id="rollback-command">Rollback command:<a class="headerlink" href="#rollback-command" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker pull SecFlow-api:v1.3.2
+docker compose up -d --no-build
 </code></pre></div>
 <ul>
 <li>Database snapshots every 6h during staging deployment</li>

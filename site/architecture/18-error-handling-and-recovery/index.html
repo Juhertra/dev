@@ -239,6 +239,50 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#retry-logic-tenacity-integration" class="nav-link">🔁 Retry Logic &amp; Tenacity Integration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#circuit-breaker-pattern" class="nav-link">🧱 Circuit Breaker Pattern</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#dead-letter-queue-dlq" class="nav-link">🧩 Dead Letter Queue (DLQ)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#self-healing-workflows" class="nav-link">🧠 Self-Healing Workflows</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#transactional-integrity" class="nav-link">🧩 Transactional Integrity</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#error-event-logging-correlation" class="nav-link">🧠 Error Event Logging &amp; Correlation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#graceful-degradation" class="nav-link">⚙️ Graceful Degradation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#alerting-notification-hooks" class="nav-link">🧩 Alerting &amp; Notification Hooks</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#recovery-strategies" class="nav-link">🧱 Recovery Strategies</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-error-lifecycle" class="nav-link">🧠 Example Error Lifecycle</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-implications" class="nav-link">🔒 Security Implications</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
               <ul class="nav flex-column">
               </ul>
@@ -341,219 +385,234 @@ flowchart TD
 <hr />
 <h2 id="exception-handling-model">🧠 Exception Handling Model<a class="headerlink" href="#exception-handling-model" title="Permanent link">&para;</a></h2>
 <p>All SecFlow components use a unified exception hierarchy:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SecFlowError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all SecFlow exceptions.&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code>class SecFlowError(Exception):
+    &quot;&quot;&quot;Base class for all SecFlow exceptions.&quot;&quot;&quot;
 
-<span class="k">class</span><span class="w"> </span><span class="nc">TransientError</span><span class="p">(</span><span class="n">SecFlowError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recoverable error, eligible for retry.&quot;&quot;&quot;</span>
+class TransientError(SecFlowError):
+    &quot;&quot;&quot;Recoverable error, eligible for retry.&quot;&quot;&quot;
 
-<span class="k">class</span><span class="w"> </span><span class="nc">PermanentError</span><span class="p">(</span><span class="n">SecFlowError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Non-recoverable error, must be logged and halted.&quot;&quot;&quot;</span>
+class PermanentError(SecFlowError):
+    &quot;&quot;&quot;Non-recoverable error, must be logged and halted.&quot;&quot;&quot;
 
-<span class="k">class</span><span class="w"> </span><span class="nc">SecurityError</span><span class="p">(</span><span class="n">SecFlowError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unauthorized or unsafe action detected.&quot;&quot;&quot;</span>
-<span class="err">```</span><span class="n">python</span>
+class SecurityError(SecFlowError):
+    &quot;&quot;&quot;Unauthorized or unsafe action detected.&quot;&quot;&quot;
+</code></pre></div>
+<p>Every operation that might fail is wrapped in a retry-safe decorator.</p>
+<h2 id="retry-logic-tenacity-integration">🔁 Retry Logic &amp; Tenacity Integration<a class="headerlink" href="#retry-logic-tenacity-integration" title="Permanent link">&para;</a></h2>
+<p>SecFlow uses the Tenacity library for intelligent retries.</p>
+<div class="highlight"><pre><span></span><code>from tenacity import retry, wait_exponential, stop_after_attempt
 
-<span class="n">Every</span> <span class="n">operation</span> <span class="n">that</span> <span class="n">might</span> <span class="n">fail</span> <span class="ow">is</span> <span class="n">wrapped</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">retry</span><span class="o">-</span><span class="n">safe</span> <span class="n">decorator</span><span class="o">.</span>
+@retry(
+    wait=wait_exponential(multiplier=1, min=2, max=30),
+    stop=stop_after_attempt(5),
+    retry_error_callback=lambda r: log_error(r)
+)
+def run_tool(tool_name, args):
+    return subprocess.run(args, check=True)
+</code></pre></div>
+<h3 id="retry-rules">Retry Rules<a class="headerlink" href="#retry-rules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Max Retries</th>
+<th>Delay Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API HTTP Requests</td>
+<td>5</td>
+<td>Exponential</td>
+</tr>
+<tr>
+<td>CVE Enrichment Queries</td>
+<td>3</td>
+<td>Linear</td>
+</tr>
+<tr>
+<td>Worker Tasks</td>
+<td>3</td>
+<td>Exponential</td>
+</tr>
+<tr>
+<td>File System Operations</td>
+<td>2</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td>PoC Sandbox Launch</td>
+<td>1</td>
+<td>No retry (for safety)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="circuit-breaker-pattern">🧱 Circuit Breaker Pattern<a class="headerlink" href="#circuit-breaker-pattern" title="Permanent link">&para;</a></h2>
+<p>SecFlow prevents repeated failures from overloading systems via circuit breakers.</p>
+<h3 id="implementation-example">Implementation Example<a class="headerlink" href="#implementation-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>class CircuitBreaker:
+    def __init__(self, threshold=5, timeout=60):
+        self.failures = 0
+        self.opened_at = None
+        self.threshold = threshold
+        self.timeout = timeout
 
-<span class="c1">## 🔁 Retry Logic &amp; Tenacity Integration</span>
+    def record_failure(self):
+        self.failures += 1
+        if self.failures &gt;= self.threshold:
+            self.opened_at = datetime.utcnow()
 
-<span class="n">SecFlow</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">Tenacity</span> <span class="n">library</span> <span class="k">for</span> <span class="n">intelligent</span> <span class="n">retries</span><span class="o">.</span>
+    def can_execute(self):
+        if not self.opened_at:
+            return True
+        return (datetime.utcnow() - self.opened_at).seconds &gt; self.timeout
+</code></pre></div>
+<p>Used for:
+- Remote API (NVD, OSV, Exploit-DB)
+- File I/O saturation
+- Tool wrappers under repeated crashes</p>
+<h2 id="dead-letter-queue-dlq">🧩 Dead Letter Queue (DLQ)<a class="headerlink" href="#dead-letter-queue-dlq" title="Permanent link">&para;</a></h2>
+<p>Failed tasks that exceed retry limits are pushed into the DLQ for manual review.</p>
+<div class="highlight"><pre><span></span><code>@app.task(bind=True, max_retries=3)
+def run_scan(self, task_id):
+    try:
+        run_workflow(task_id)
+    except Exception as e:
+        if self.request.retries == self.max_retries:
+            enqueue_dlq(task_id, str(e))
+        raise self.retry(exc=e)
+</code></pre></div>
+<h3 id="dlq-entries-include">DLQ entries include:<a class="headerlink" href="#dlq-entries-include" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Task ID</li>
+<li>Workflow ID</li>
+<li>Exception message</li>
+<li>Retry count</li>
+<li>Timestamp</li>
+</ul>
+<h3 id="example-dlq-record">Example DLQ record:<a class="headerlink" href="#example-dlq-record" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;task&quot;: &quot;wf-1234-node-nuclei&quot;,
+  &quot;error&quot;: &quot;Connection timeout to target&quot;,
+  &quot;retries&quot;: 3,
+  &quot;timestamp&quot;: &quot;2025-10-06T10:22:00Z&quot;
+}
+</code></pre></div>
+<h2 id="self-healing-workflows">🧠 Self-Healing Workflows<a class="headerlink" href="#self-healing-workflows" title="Permanent link">&para;</a></h2>
+<p>SecFlow supports automatic node rehydration — failed steps in a workflow can be restarted independently without restarting the entire pipeline.</p>
+<h3 id="rehydration-process">Rehydration Process<a class="headerlink" href="#rehydration-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Detect failed node.</li>
+<li>Mark upstream outputs as valid.</li>
+<li>Restart failed node only.</li>
+<li>Merge results into workflow graph.</li>
+</ol>
+<h3 id="cli-example">CLI example:<a class="headerlink" href="#cli-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SecFlow workflow resume --node nuclei --project acme-api
+</code></pre></div>
+<h2 id="transactional-integrity">🧩 Transactional Integrity<a class="headerlink" href="#transactional-integrity" title="Permanent link">&para;</a></h2>
+<p>Database operations are wrapped in ACID transactions using SQLModel context managers:</p>
+<div class="highlight"><pre><span></span><code>from sqlmodel import Session
 
-<span class="err">```</span><span class="n">python</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="n">retry</span><span class="p">,</span> <span class="n">wait_exponential</span><span class="p">,</span> <span class="n">stop_after_attempt</span>
-
-<span class="nd">@retry</span><span class="p">(</span>
-    <span class="n">wait</span><span class="o">=</span><span class="n">wait_exponential</span><span class="p">(</span><span class="n">multiplier</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
-    <span class="n">stop</span><span class="o">=</span><span class="n">stop_after_attempt</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-    <span class="n">retry_error_callback</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">log_error</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">run_tool</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">### Retry Rules</span>
-<span class="o">|</span> <span class="n">Context</span> <span class="o">|</span> <span class="n">Max</span> <span class="n">Retries</span> <span class="o">|</span> <span class="n">Delay</span> <span class="n">Type</span> <span class="o">|</span>
-<span class="o">|---------|-------------|------------|</span>
-<span class="o">|</span> <span class="n">API</span> <span class="n">HTTP</span> <span class="n">Requests</span> <span class="o">|</span> <span class="mi">5</span> <span class="o">|</span> <span class="n">Exponential</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">CVE</span> <span class="n">Enrichment</span> <span class="n">Queries</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="n">Linear</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Worker</span> <span class="n">Tasks</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="n">Exponential</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">File</span> <span class="n">System</span> <span class="n">Operations</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="n">Immediate</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">PoC</span> <span class="n">Sandbox</span> <span class="n">Launch</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="n">No</span> <span class="n">retry</span> <span class="p">(</span><span class="k">for</span> <span class="n">safety</span><span class="p">)</span> <span class="o">|</span>
-
-<span class="c1">## 🧱 Circuit Breaker Pattern</span>
-
-<span class="n">SecFlow</span> <span class="n">prevents</span> <span class="n">repeated</span> <span class="n">failures</span> <span class="kn">from</span><span class="w"> </span><span class="nn">overloading</span> <span class="n">systems</span> <span class="n">via</span> <span class="n">circuit</span> <span class="n">breakers</span><span class="o">.</span>
-
-<span class="c1">### Implementation Example</span>
-<span class="err">```</span><span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CircuitBreaker</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opened_at</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">record_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">failures</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">opened_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">can_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">opened_at</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">opened_at</span><span class="p">)</span><span class="o">.</span><span class="n">seconds</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="n">Used</span> <span class="k">for</span><span class="p">:</span>
-<span class="o">-</span> <span class="n">Remote</span> <span class="n">API</span> <span class="p">(</span><span class="n">NVD</span><span class="p">,</span> <span class="n">OSV</span><span class="p">,</span> <span class="n">Exploit</span><span class="o">-</span><span class="n">DB</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">File</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">saturation</span>
-<span class="o">-</span> <span class="n">Tool</span> <span class="n">wrappers</span> <span class="n">under</span> <span class="n">repeated</span> <span class="n">crashes</span>
-
-<span class="c1">## 🧩 Dead Letter Queue (DLQ)</span>
-
-<span class="n">Failed</span> <span class="n">tasks</span> <span class="n">that</span> <span class="n">exceed</span> <span class="n">retry</span> <span class="n">limits</span> <span class="n">are</span> <span class="n">pushed</span> <span class="n">into</span> <span class="n">the</span> <span class="n">DLQ</span> <span class="k">for</span> <span class="n">manual</span> <span class="n">review</span><span class="o">.</span>
-
-<span class="err">```</span><span class="n">python</span>
-<span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">run_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">run_workflow</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">retries</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_retries</span><span class="p">:</span>
-            <span class="n">enqueue_dlq</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-        <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">exc</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">### DLQ entries include:</span>
-<span class="o">-</span> <span class="n">Task</span> <span class="n">ID</span>
-<span class="o">-</span> <span class="n">Workflow</span> <span class="n">ID</span>
-<span class="o">-</span> <span class="ne">Exception</span> <span class="n">message</span>
-<span class="o">-</span> <span class="n">Retry</span> <span class="n">count</span>
-<span class="o">-</span> <span class="n">Timestamp</span>
-
-<span class="c1">### Example DLQ record:</span>
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;wf-1234-node-nuclei&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Connection timeout to target&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;retries&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-  <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-10-06T10:22:00Z&quot;</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🧠 Self-Healing Workflows</span>
-
-<span class="n">SecFlow</span> <span class="n">supports</span> <span class="n">automatic</span> <span class="n">node</span> <span class="n">rehydration</span> <span class="err">—</span> <span class="n">failed</span> <span class="n">steps</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">workflow</span> <span class="n">can</span> <span class="n">be</span> <span class="n">restarted</span> <span class="n">independently</span> <span class="n">without</span> <span class="n">restarting</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">pipeline</span><span class="o">.</span>
-
-<span class="c1">### Rehydration Process</span>
-<span class="mf">1.</span> <span class="n">Detect</span> <span class="n">failed</span> <span class="n">node</span><span class="o">.</span>
-<span class="mf">2.</span> <span class="n">Mark</span> <span class="n">upstream</span> <span class="n">outputs</span> <span class="k">as</span> <span class="n">valid</span><span class="o">.</span>
-<span class="mf">3.</span> <span class="n">Restart</span> <span class="n">failed</span> <span class="n">node</span> <span class="n">only</span><span class="o">.</span>
-<span class="mf">4.</span> <span class="n">Merge</span> <span class="n">results</span> <span class="n">into</span> <span class="n">workflow</span> <span class="n">graph</span><span class="o">.</span>
-
-<span class="c1">### CLI example:</span>
-<span class="err">```</span><span class="n">bash</span>
-<span class="n">SecFlow</span> <span class="n">workflow</span> <span class="n">resume</span> <span class="o">--</span><span class="n">node</span> <span class="n">nuclei</span> <span class="o">--</span><span class="n">project</span> <span class="n">acme</span><span class="o">-</span><span class="n">api</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🧩 Transactional Integrity</span>
-
-<span class="n">Database</span> <span class="n">operations</span> <span class="n">are</span> <span class="n">wrapped</span> <span class="ow">in</span> <span class="n">ACID</span> <span class="n">transactions</span> <span class="n">using</span> <span class="n">SQLModel</span> <span class="n">context</span> <span class="n">managers</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">python</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sqlmodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">save_finding</span><span class="p">(</span><span class="n">finding</span><span class="p">):</span>
-    <span class="k">with</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">finding</span><span class="p">)</span>
-            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">raise</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="n">All</span> <span class="n">cross</span><span class="o">-</span><span class="n">project</span> <span class="n">mutations</span> <span class="p">(</span><span class="n">findings</span><span class="p">,</span> <span class="n">triage</span><span class="p">,</span> <span class="n">cache</span><span class="p">)</span> <span class="n">are</span> <span class="n">transactional</span><span class="o">.</span>
-
-<span class="c1">## 🧠 Error Event Logging &amp; Correlation</span>
-
-<span class="n">Each</span> <span class="n">exception</span> <span class="n">generates</span> <span class="n">an</span> <span class="n">audit</span> <span class="n">entry</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;worker&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TransientError&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;workflow_id&quot;</span><span class="p">:</span> <span class="s2">&quot;wf-abc123&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;trace_id&quot;</span><span class="p">:</span> <span class="s2">&quot;b73f0b7c-47f9-4bb3-9b9c-ffacbd1d6a67&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Feroxbuster timeout&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;retries&quot;</span><span class="p">:</span> <span class="mi">3</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">yaml</span>
-
-<span class="n">Errors</span> <span class="n">are</span> <span class="n">correlated</span> <span class="k">with</span><span class="p">:</span>
-<span class="o">-</span> <span class="n">Workflow</span> <span class="n">Trace</span> <span class="n">ID</span>
-<span class="o">-</span> <span class="n">Finding</span> <span class="n">UUID</span> <span class="p">(</span><span class="k">if</span> <span class="n">relevant</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">User</span> <span class="ow">and</span> <span class="n">project</span> <span class="n">context</span>
-
-<span class="n">This</span> <span class="n">allows</span> <span class="n">full</span> <span class="n">replay</span> <span class="ow">and</span> <span class="n">debugging</span> <span class="n">via</span> <span class="n">observability</span> <span class="n">dashboards</span><span class="o">.</span>
-
-<span class="c1">## ⚙️ Graceful Degradation</span>
-
-<span class="n">If</span> <span class="n">a</span> <span class="n">subsystem</span> <span class="n">fails</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">enrichment</span> <span class="n">API</span> <span class="n">offline</span><span class="p">):</span>
-<span class="o">-</span> <span class="n">Workflows</span> <span class="k">continue</span> <span class="k">with</span> <span class="n">reduced</span> <span class="n">functionality</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Missing</span> <span class="n">data</span> <span class="n">marked</span> <span class="k">as</span> <span class="err">`</span><span class="s2">&quot;partial&quot;</span><span class="p">:</span> <span class="n">true</span><span class="err">`</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Users</span> <span class="n">notified</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">triage</span> <span class="n">panel</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">text</span>
-<span class="err">⚠</span> <span class="n">CVE</span> <span class="n">enrichment</span> <span class="n">service</span> <span class="n">temporarily</span> <span class="n">unavailable</span> <span class="err">—</span> <span class="n">retry</span> <span class="n">later</span><span class="o">.</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🧩 Alerting &amp; Notification Hooks</span>
-
-<span class="o">-</span> <span class="n">Integration</span> <span class="k">with</span> <span class="n">Prometheus</span> <span class="n">Alertmanager</span> <span class="k">for</span> <span class="n">system</span> <span class="n">errors</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Optional</span> <span class="n">Slack</span> <span class="o">/</span> <span class="n">Email</span> <span class="n">webhook</span> <span class="k">for</span> <span class="n">high</span><span class="o">-</span><span class="n">severity</span> <span class="n">failures</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Rate</span><span class="o">-</span><span class="n">limited</span> <span class="n">notifications</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">alert</span> <span class="n">fatigue</span><span class="o">.</span>
-
-<span class="c1">### Example alert webhook payload:</span>
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span>
-  <span class="s2">&quot;severity&quot;</span><span class="p">:</span> <span class="s2">&quot;critical&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;sandbox&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;PoC execution timeout&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;api-audit&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;trace_id&quot;</span><span class="p">:</span> <span class="s2">&quot;a2c134b5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8&quot;</span>
-<span class="p">}</span>
-<span class="err">```</span><span class="n">python</span>
-
-<span class="c1">## 🧱 Recovery Strategies</span>
-
-<span class="o">|</span> <span class="n">Context</span> <span class="o">|</span> <span class="n">Recovery</span> <span class="n">Action</span> <span class="o">|</span>
-<span class="o">|---------|-----------------|</span>
-<span class="o">|</span> <span class="n">Sandbox</span> <span class="n">crash</span> <span class="o">|</span> <span class="n">Auto</span><span class="o">-</span><span class="n">restart</span> <span class="k">with</span> <span class="n">clean</span> <span class="n">container</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">API</span> <span class="n">outage</span> <span class="o">|</span> <span class="n">Retry</span> <span class="k">with</span> <span class="n">backoff</span> <span class="o">+</span> <span class="n">circuit</span> <span class="n">breaker</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Tool</span> <span class="n">misconfiguration</span> <span class="o">|</span> <span class="n">Disable</span> <span class="n">tool</span> <span class="n">temporarily</span><span class="p">,</span> <span class="n">notify</span> <span class="n">user</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Cache</span> <span class="n">corruption</span> <span class="o">|</span> <span class="n">Rebuild</span> <span class="kn">from</span><span class="w"> </span><span class="nn">source</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Disk</span> <span class="n">full</span> <span class="o">|</span> <span class="n">Trigger</span> <span class="n">GC</span> <span class="ow">and</span> <span class="n">alert</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">Worker</span> <span class="n">crash</span> <span class="o">|</span> <span class="n">Celery</span> <span class="n">task</span> <span class="n">re</span><span class="o">-</span><span class="n">queued</span> <span class="o">|</span>
-<span class="o">|</span> <span class="n">DB</span> <span class="n">lock</span> <span class="n">contention</span> <span class="o">|</span> <span class="n">Exponential</span> <span class="n">backoff</span> <span class="n">retry</span> <span class="o">|</span>
-
-<span class="c1">## 🧠 Example Error Lifecycle</span>
-
-<span class="err">```</span><span class="n">text</span>
-<span class="p">[</span><span class="n">Error</span> <span class="n">Detected</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Retry</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Retry</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">DLQ</span><span class="p">]</span>
-<span class="err">→</span> <span class="p">[</span><span class="n">Alert</span> <span class="n">sent</span> <span class="n">to</span> <span class="n">Slack</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Analyst</span> <span class="n">re</span><span class="o">-</span><span class="n">runs</span> <span class="n">workflow</span> <span class="n">node</span><span class="p">]</span> <span class="err">→</span> <span class="p">[</span><span class="n">Recovered</span><span class="p">]</span>
-<span class="err">```</span><span class="n">text</span>
-
-<span class="c1">## 🔒 Security Implications</span>
-
-<span class="o">-</span> <span class="n">Sensitive</span> <span class="n">stack</span> <span class="n">traces</span> <span class="n">are</span> <span class="n">redacted</span> <span class="n">before</span> <span class="n">exposure</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Error</span> <span class="n">details</span> <span class="n">logged</span> <span class="n">internally</span> <span class="n">only</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">External</span> <span class="n">responses</span> <span class="n">use</span> <span class="n">generic</span> <span class="n">safe</span> <span class="n">messages</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">json</span>
-<span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Internal processing issue, please retry later.&quot;</span><span class="p">}</span>
+def save_finding(finding):
+    with Session(engine) as session:
+        try:
+            session.add(finding)
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
+</code></pre></div>
+<p>All cross-project mutations (findings, triage, cache) are transactional.</p>
+<h2 id="error-event-logging-correlation">🧠 Error Event Logging &amp; Correlation<a class="headerlink" href="#error-event-logging-correlation" title="Permanent link">&para;</a></h2>
+<p>Each exception generates an audit entry:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;event&quot;: &quot;error&quot;,
+  &quot;component&quot;: &quot;worker&quot;,
+  &quot;type&quot;: &quot;TransientError&quot;,
+  &quot;workflow_id&quot;: &quot;wf-abc123&quot;,
+  &quot;trace_id&quot;: &quot;b73f0b7c-47f9-4bb3-9b9c-ffacbd1d6a67&quot;,
+  &quot;message&quot;: &quot;Feroxbuster timeout&quot;,
+  &quot;retries&quot;: 3
+}
+</code></pre></div>
+<p>Errors are correlated with:
+- Workflow Trace ID
+- Finding UUID (if relevant)
+- User and project context</p>
+<p>This allows full replay and debugging via observability dashboards.</p>
+<h2 id="graceful-degradation">⚙️ Graceful Degradation<a class="headerlink" href="#graceful-degradation" title="Permanent link">&para;</a></h2>
+<p>If a subsystem fails (e.g., enrichment API offline):
+- Workflows continue with reduced functionality.
+- Missing data marked as <code>"partial": true</code>.
+- Users notified in the triage panel:</p>
+<div class="highlight"><pre><span></span><code>⚠ CVE enrichment service temporarily unavailable — retry later.
+</code></pre></div>
+<h2 id="alerting-notification-hooks">🧩 Alerting &amp; Notification Hooks<a class="headerlink" href="#alerting-notification-hooks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Integration with Prometheus Alertmanager for system errors.</li>
+<li>Optional Slack / Email webhook for high-severity failures.</li>
+<li>Rate-limited notifications to avoid alert fatigue.</li>
+</ul>
+<h3 id="example-alert-webhook-payload">Example alert webhook payload:<a class="headerlink" href="#example-alert-webhook-payload" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;severity&quot;: &quot;critical&quot;,
+  &quot;component&quot;: &quot;sandbox&quot;,
+  &quot;message&quot;: &quot;PoC execution timeout&quot;,
+  &quot;project&quot;: &quot;api-audit&quot;,
+  &quot;trace_id&quot;: &quot;a2c134b5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8&quot;
+}
+</code></pre></div>
+<h2 id="recovery-strategies">🧱 Recovery Strategies<a class="headerlink" href="#recovery-strategies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Recovery Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sandbox crash</td>
+<td>Auto-restart with clean container</td>
+</tr>
+<tr>
+<td>API outage</td>
+<td>Retry with backoff + circuit breaker</td>
+</tr>
+<tr>
+<td>Tool misconfiguration</td>
+<td>Disable tool temporarily, notify user</td>
+</tr>
+<tr>
+<td>Cache corruption</td>
+<td>Rebuild from source</td>
+</tr>
+<tr>
+<td>Disk full</td>
+<td>Trigger GC and alert</td>
+</tr>
+<tr>
+<td>Worker crash</td>
+<td>Celery task re-queued</td>
+</tr>
+<tr>
+<td>DB lock contention</td>
+<td>Exponential backoff retry</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-error-lifecycle">🧠 Example Error Lifecycle<a class="headerlink" href="#example-error-lifecycle" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[Error Detected] → [Retry 1/3] → [Retry 2/3] → [DLQ]
+→ [Alert sent to Slack] → [Analyst re-runs workflow node] → [Recovered]
+</code></pre></div>
+<h2 id="security-implications">🔒 Security Implications<a class="headerlink" href="#security-implications" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Sensitive stack traces are redacted before exposure.</li>
+<li>Error details logged internally only.</li>
+<li>External responses use generic safe messages:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>{&quot;error&quot;: &quot;Internal processing issue, please retry later.&quot;}
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>

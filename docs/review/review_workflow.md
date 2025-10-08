@@ -169,7 +169,7 @@ graph TD
     J -->|Yes| K[Emergency Review]
     K --> H
     J -->|No| E
-```text
+```
 
 ## 📊 Review Metrics and KPIs
 
@@ -229,7 +229,7 @@ graph TD
 ## 📝 Review Templates and Tools
 
 ### Individual Review Template
-```markdown
+```
 ## Document Review: [Document Name]
 **Reviewer:** [Name]  
 **Date:** [Date]  
@@ -258,7 +258,7 @@ graph TD
 ```
 
 ### Group Review Session Template
-```markdown
+```
 ## Group Review Session: [Category]
 **Date:** [Date]  
 **Participants:** [List participants]

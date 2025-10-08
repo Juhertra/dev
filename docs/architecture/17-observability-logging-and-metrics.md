@@ -27,7 +27,7 @@ The observability system is **standards-based**, built upon:
 
 ## 🧱 Observability Architecture Overview
 
-```yaml
+```
 +--------------------------------------------------------------+
 |                    SecFlow Stack                             |
 | API Layer → Structured Logging, Metrics, Tracing            |
@@ -37,7 +37,7 @@ The observability system is **standards-based**, built upon:
 --------------------------------------------------------------
 | Exporters → Prometheus (Metrics), OTLP (Traces), Loki (Logs)|
 +--------------------------------------------------------------+
-```yaml
+```
 
 ---
 
@@ -53,7 +53,7 @@ The observability system is **standards-based**, built upon:
 
 ### Log Record Example
 
-```json
+```
 {
   "timestamp": "2025-10-06T09:45:32Z",
   "level": "INFO",
@@ -65,7 +65,7 @@ The observability system is **standards-based**, built upon:
   "message": "Nuclei scan completed successfully",
   "duration_ms": 34215
 }
-```text
+```
 
 ### Logging Stack
 - **Python Logging + Structlog** — base structured logs.
@@ -73,7 +73,7 @@ The observability system is **standards-based**, built upon:
 - **Loki Exporter** — for central log aggregation (optional).
 
 ### Configuration snippet:
-```json
+```
 LOGGING = {
   "version": 1,
   "formatters": {"json": {"()": "pythonjsonlogger.jsonlogger.JsonFormatter"}},
@@ -82,7 +82,7 @@ LOGGING = {
   },
   "root": {"level": "INFO", "handlers": ["console"]},
 }
-```json
+```
 
 ## ⚙️ Log Levels & Policies
 
@@ -102,7 +102,7 @@ SecFlow uses OpenTelemetry (OTel) for distributed tracing.
 Every API request, task dispatch, and plugin call generates spans linked under one root trace.
 
 ### Example Trace Structure
-```text
+```
 TraceID: 5b2e4f21c9a344f9
 ```
 
@@ -128,7 +128,7 @@ flowchart TD
 ```
 
 ### Code Example
-```python
+```
 from opentelemetry import trace
 
 tracer = trace.get_tracer("SecFlow.worker")
@@ -136,7 +136,7 @@ tracer = trace.get_tracer("SecFlow.worker")
 with tracer.start_as_current_span("workflow.execute") as span:
     span.set_attribute("workflow.id", workflow.id)
     run_workflow(workflow)
-```text
+```
 
 All traces are exported through OTLP gRPC to the observability backend (e.g., Tempo, Jaeger).
 
@@ -145,9 +145,9 @@ All traces are exported through OTLP gRPC to the observability backend (e.g., Te
 SecFlow exposes runtime metrics through Prometheus-compatible endpoints.
 
 ### Default Endpoint
-```text
+```
 /metrics
-```text
+```
 
 ### Example Metrics
 | Metric | Type | Description |
@@ -163,12 +163,12 @@ SecFlow exposes runtime metrics through Prometheus-compatible endpoints.
 | secflow_cve_enrichment_latency_seconds | Histogram | Time per CVE query |
 
 ### Prometheus Export Example
-```python
+```
 from prometheus_client import Counter, Gauge
 
 findings_total = Counter("secflow_findings_generated_total", "Number of findings created")
 active_workflows = Gauge("secflow_active_workflows", "Currently running workflows")
-```yaml
+```
 
 ## 🔍 Example Grafana Dashboard Panels
 
@@ -186,11 +186,11 @@ Every finding, workflow, and audit entry includes a trace ID.
 Errors can be traced back to exact processes and spans.
 
 ### Example correlation:
-```text
+```
 Finding → Workflow ID: wf-abc123 → Trace ID: cbd82b67a1e4f9d2c8b5e6f7a3d4c9e2b1f8a5c6d7e9f2a3b4c5d6e7f8a9b2c3d4e5f6
 → Logs: worker.log
 → Span: tool.nuclei.run
-```python
+```
 
 This guarantees reproducibility and fast RCA (root cause analysis).
 
@@ -203,7 +203,7 @@ This guarantees reproducibility and fast RCA (root cause analysis).
 | `/readyz` | Readiness probe (DB + cache + queue connectivity) |
 
 ### Example Output
-```json
+```
 {
   "status": "ok",
   "services": {
@@ -212,10 +212,10 @@ This guarantees reproducibility and fast RCA (root cause analysis).
     "worker": "idle"
   }
 }
-```yaml
+```
 
 ### Alerts (Prometheus Rules)
-```yaml
+```
 groups:
   - name: secflow_alerts
     rules:
@@ -225,7 +225,7 @@ groups:
         labels: { severity: warning }
         annotations:
           summary: "Tool failure rate too high"
-```python
+```
 
 ## 🔒 Security of Observability Data
 
@@ -237,17 +237,17 @@ groups:
 | Metrics abuse | Authenticated `/metrics` endpoint (basic token or mutual TLS) |
 
 ### Example redaction middleware:
-```python
+```
 def sanitize(data: dict) -> dict:
     for key in data.keys():
         if "token" in key.lower() or "password" in key.lower():
             data[key] = "[REDACTED]"
     return data
-```text
+```
 
 ## 🧱 Correlation Example: End-to-End Trace
 
-```bash
+```
 [TRACE 5b2e4f21c9a344f9]
 ```
 
@@ -277,7 +277,7 @@ During CI runs:
 - Performance tests measure task durations and error rates.
 
 ### Example CI configuration:
-```yaml
+```
 env:
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
   PROMETHEUS_MULTIPROC_DIR: "/tmp/metrics"
