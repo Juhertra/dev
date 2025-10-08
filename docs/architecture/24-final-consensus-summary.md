@@ -51,25 +51,42 @@ It serves as the **canonical closure** of the initial R&D phase and provides a c
 ## 🧱 Key Technical Agreements
 
 ### 1. **Core Packages Structure**
-```text
-packages/
-├── core-lib/          # Business logic, ports, DTOs
-├── findings-engine/   # Normalization, enrichment, deduplication
-├── wrappers/          # Tool integration adapters
-├── resources/         # Resource registry and management
-├── storage/           # Database and file system adapters
-├── plugins/           # Plugin system and registry
-└── utils/             # Shared utilities and helpers
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["packages/"]
+    B["core-lib/<br/>(Business logic, ports, DTOs)"]
+    C["findings-engine/<br/>(Normalization, enrichment, deduplication)"]
+    D["wrappers/<br/>(Tool integration adapters)"]
+    E["resources/<br/>(Resource registry and management)"]
+    F["storage/<br/>(Database and file system adapters)"]
+    G["plugins/<br/>(Plugin system and registry)"]
+    H["utils/<br/>(Shared utilities and helpers)"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+    A --> H
+```
 
 ### 2. **Applications Structure**
-```text
-apps/
-├── cli/               # Command-line interface
-├── web/               # Web dashboard and API
-├── worker/            # Background task processor
-└── admin/             # Administrative tools
-```yaml
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["apps/"]
+    B["cli/<br/>(Command-line interface)"]
+    C["web/<br/>(Web dashboard and API)"]
+    D["worker/<br/>(Background task processor)"]
+    E["admin/<br/>(Administrative tools)"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+```
 
 ### 3. **Workflow Orchestration**
 - **YAML-based DAG definitions** for tool chaining
@@ -228,3 +245,7 @@ The project is now ready to proceed to **Phase 0: Foundation & Guardrails** impl
 
 **Previous:** [Future Roadmap](23-future-roadmap.md)  
 **Back to:** [Architecture Index](00-index.md)
+```
+```
+```
+```

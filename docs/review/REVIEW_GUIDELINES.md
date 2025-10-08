@@ -178,3 +178,4 @@ The architecture review is considered successful when:
 ---
 
 **Next Steps:** Begin individual reviews using the provided checklist and template.
+```

@@ -19,23 +19,20 @@ SecFlow's architecture enables modular CI pipelines for **packages** (core-lib, 
 
 ## ⚙️ CI/CD Architecture Diagram
 
-```text
-┌─────────────────────────────────────────────┐
-|                Developer                    |
-|─────────────────────────────────────────────│
-| Commit / PR → GitHub Repository             |
-| ↓                                           |
-| GitHub Actions CI Workflow                 |
-| - Lint (Ruff)                               |
-| - Type Check (Pyright)                      |
-| - Test (Pytest Matrix)                     |
-| - Build (Poetry / Docker)                   |
-| ↓                                           |
-| Artifacts Published → Container Registry    |
-| ↓                                           |
-| CD Pipeline (Staging → Production)         |
-└─────────────────────────────────────────────┘
-```yaml
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Developer"]
+    B["Commit / PR → GitHub Repository"]
+    C["GitHub Actions CI Workflow<br/>- Lint (Ruff)<br/>- Type Check (Pyright)<br/>- Test (Pytest Matrix)<br/>- Build (Poetry / Docker)"]
+    D["Artifacts Published → Container Registry"]
+    E["CD Pipeline (Staging → Production)"]
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+```
 
 ---
 
@@ -44,13 +41,24 @@ SecFlow's architecture enables modular CI pipelines for **packages** (core-lib, 
 ### Files
 ```text
 .github/
-├── workflows/
-│   ├── ci.yml           # Main build & test pipeline
-│   ├── lint.yml         # Fast linting PR checks
-│   ├── deploy.yml       # CD pipeline to staging/prod
-│   ├── nightly.yml      # Nightly validation builds
-│   └── security-scan.yml # Dependency & container scanning
-```yaml
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["workflows/"]
+    B["ci.yml<br/>(Main build & test pipeline)"]
+    C["lint.yml<br/>(Fast linting PR checks)"]
+    D["deploy.yml<br/>(CD pipeline to staging/prod)"]
+    E["nightly.yml<br/>(Nightly validation builds)"]
+    F["security-scan.yml<br/>(Dependency & container scanning)"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+```
 
 ### Environments
 - **dev** → local or containerized build  
@@ -91,24 +99,48 @@ SecFlow's architecture enables modular CI pipelines for **packages** (core-lib, 
 
 ```text
 tests/
-├── core/
-│   ├── test_models.py
-│   ├── test_utils.py
-│   └── test_ports.py
-├── wrappers/
-│   ├── test_nuclei_wrapper.py
-│   ├── test_ferox_wrapper.py
-│   └── test_zap_wrapper.py
-├── plugins/
-│   ├── test_cve_enrichment.py
-│   └── test_risk_scoring.py
-├── api/
-│   ├── test_projects_api.py
-│   ├── test_findings_api.py
-│   └── test_workflow_api.py
-└── e2e/
-    └── test_workflow_dag_execution.py
-```yaml
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["tests/"]
+    B["core/"]
+    C["test_models.py"]
+    D["test_utils.py"]
+    E["test_ports.py"]
+    F["wrappers/"]
+    G["test_nuclei_wrapper.py"]
+    H["test_ferox_wrapper.py"]
+    I["test_zap_wrapper.py"]
+    J["plugins/"]
+    K["test_cve_enrichment.py"]
+    L["test_risk_scoring.py"]
+    M["api/"]
+    N["test_projects_api.py"]
+    O["test_findings_api.py"]
+    P["test_workflow_api.py"]
+    Q["e2e/"]
+    R["test_workflow_dag_execution.py"]
+    
+    A --> B
+    A --> F
+    A --> J
+    A --> M
+    A --> Q
+    B --> C
+    B --> D
+    B --> E
+    F --> G
+    F --> H
+    F --> I
+    J --> K
+    J --> L
+    M --> N
+    M --> O
+    M --> P
+    Q --> R
+```
 
 ---
 
@@ -260,3 +292,23 @@ docker compose up -d --no-build
 ---
 
 **Next:** [Developer Experience & Documentation Plan](22-developer-experience-and-docs.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

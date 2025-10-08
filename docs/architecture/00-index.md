@@ -68,35 +68,64 @@ While each document is standalone, recommended order for new contributors:
 
 ## 🧱 Example Structure Diagram
 
-```text
-docs/
-└── architecture/
-    ├── 00-index.md
-    ├── 01-title-and-executive-summary.md
-    ├── 02-architecture-philosophy.md
-    ├── 03-repository-layout.md
-    ├── 04-core-packages-and-responsibilities.md
-    ├── 05-orchestration-and-workflow-engine.md
-    ├── 06-plugin-system.md
-    ├── 07-tools-integration-model.md
-    ├── 08-tool-manager-and-ux-design.md
-    ├── 09-resource-registry.md
-    ├── 10-wordlist-and-output-sharing.md
-    ├── 11-project-isolation-and-data-sharing.md
-    ├── 12-findings-model-and-schema.md
-    ├── 13-cve-cwe-poc-enrichment-layer.md
-    ├── 14-poc-sources-and-legal-guidelines.md
-    ├── 15-garbage-collection-and-retention.md
-    ├── 16-security-model.md
-    ├── 17-observability-logging-and-metrics.md
-    ├── 18-error-handling-and-recovery.md
-    ├── 19-risk-assessment-framework.md
-    ├── 20-migration-and-implementation-phases.md
-    ├── 21-ci-cd-and-testing-strategy.md
-    ├── 22-developer-experience-and-docs.md
-    └── 23-future-roadmap.md
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["docs/"]
+    B["architecture/"]
+    C["00-index.md"]
+    D["01-title-and-executive-summary.md"]
+    E["02-architecture-philosophy.md"]
+    F["03-repository-layout.md"]
+    G["04-core-packages-and-responsibilities.md"]
+    H["05-orchestration-and-workflow-engine.md"]
+    I["06-plugin-system.md"]
+    J["07-tools-integration-model.md"]
+    K["08-tool-manager-and-ux-design.md"]
+    L["09-resource-registry.md"]
+    M["10-wordlist-and-output-sharing.md"]
+    N["11-project-isolation-and-data-sharing.md"]
+    O["12-findings-model-and-schema.md"]
+    P["13-cve-cwe-poc-enrichment-layer.md"]
+    Q["14-poc-sources-and-legal-guidelines.md"]
+    R["15-garbage-collection-and-retention.md"]
+    S["16-security-model.md"]
+    T["17-observability-logging-and-metrics.md"]
+    U["18-error-handling-and-recovery.md"]
+    V["19-risk-assessment-framework.md"]
+    W["20-migration-and-implementation-phases.md"]
+    X["21-ci-cd-and-testing-strategy.md"]
+    Y["22-developer-experience-and-docs.md"]
+    Z["23-future-roadmap.md"]
+    
+    A --> B
+    B --> C
+    B --> D
+    B --> E
+    B --> F
+    B --> G
+    B --> H
+    B --> I
+    B --> J
+    B --> K
+    B --> L
+    B --> M
+    B --> N
+    B --> O
+    B --> P
+    B --> Q
+    B --> R
+    B --> S
+    B --> T
+    B --> U
+    B --> V
+    B --> W
+    B --> X
+    B --> Y
+    B --> Z
 ```
 
 ---
 
 **Next:** [Title & Executive Summary](01-title-and-executive-summary.md)
+```

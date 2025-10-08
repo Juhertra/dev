@@ -1,536 +1,292 @@
-
 <!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>PoC Sources & Legal - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
 
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="Hexagonal architecture, workflows, plugins, and validation portal" name="description"/>
-<meta content="Hernan Trajtemberg, Lead Security Engineer" name="author"/>
-<link href="../13-cve-cwe-poc-enrichment-layer/" rel="prev"/>
-<link href="../15-garbage-collection-and-retention/" rel="next"/>
-<link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.6.21" name="generator"/>
-<title>SecFlow — PoC Governance, Safety, and Legal Framework - SecFlow Architecture &amp; Validation</title>
-<link href="../../assets/stylesheets/main.2a3383ac.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
-<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-</head>
-<body dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#14-poc-governance-safety-and-legal-framework">
-          Skip to content
-        </a>
-</div>
-<div data-md-component="announce">
-</div>
-<header class="md-header md-header--shadow" data-md-component="header">
-<nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="SecFlow Architecture &amp; Validation">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
-</a>
-<label class="md-header__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
-</label>
-<div class="md-header__title" data-md-component="header-title">
-<div class="md-header__ellipsis">
-<div class="md-header__topic">
-<span class="md-ellipsis">
-            SecFlow Architecture &amp; Validation
-          </span>
-</div>
-<div class="md-header__topic" data-md-component="header-topic">
-<span class="md-ellipsis">
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../13-cve-cwe-poc-enrichment-layer/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../15-garbage-collection-and-retention/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
             
-              SecFlow — PoC Governance, Safety, and Legal Framework
-            
-          </span>
-</div>
-</div>
-</div>
-<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-<label class="md-header__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
-</label>
-<div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
-</label>
-<nav aria-label="Search" class="md-search__options">
-<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
-</button>
-</nav>
-<div class="md-search__suggest" data-md-component="search-suggest"></div>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
-            Initializing search
-          </div>
-<ol class="md-search-result__list" role="presentation"></ol>
-</div>
-</div>
-</div>
-</div>
-</div>
-</nav>
-</header>
-<div class="md-container" data-md-component="container">
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--integrated" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="SecFlow Architecture &amp; Validation">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
-</a>
-    SecFlow Architecture &amp; Validation
-  </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-<span class="md-ellipsis">
-    Overview
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_1">
-<span class="md-nav__icon md-icon"></span>
-            Overview
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../00-index/">
-<span class="md-ellipsis">
-    Home
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../01-title-and-executive-summary/">
-<span class="md-ellipsis">
-    Executive Summary
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-<span class="md-ellipsis">
-    Architecture
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_2">
-<span class="md-nav__icon md-icon"></span>
-            Architecture
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../02-architecture-philosophy/">
-<span class="md-ellipsis">
-    Philosophy
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../03-repository-layout/">
-<span class="md-ellipsis">
-    Repository Layout
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../04-core-packages-and-responsibilities/">
-<span class="md-ellipsis">
-    Core Packages
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../05-orchestration-and-workflow-engine/">
-<span class="md-ellipsis">
-    Orchestration Engine
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../06-plugin-system/">
-<span class="md-ellipsis">
-    Plugin System
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../07-tools-integration-model/">
-<span class="md-ellipsis">
-    Tools Integration
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../08-tool-manager-and-ux-design/">
-<span class="md-ellipsis">
-    Tool Manager &amp; UX
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../09-resource-registry/">
-<span class="md-ellipsis">
-    Resource Registry
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../10-wordlist-and-output-sharing/">
-<span class="md-ellipsis">
-    Wordlists &amp; Sharing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../11-project-isolation-and-data-sharing/">
-<span class="md-ellipsis">
-    Project Isolation &amp; Sharing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../12-findings-model-and-schema/">
-<span class="md-ellipsis">
-    Findings Schema
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../13-cve-cwe-poc-enrichment-layer/">
-<span class="md-ellipsis">
-    Enrichment Layer
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    PoC Sources &amp; Legal
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    PoC Sources &amp; Legal
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#overview">
-<span class="md-ellipsis">
-      🧭 Overview
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#legal-ethical-framework">
-<span class="md-ellipsis">
-      ⚖️ Legal &amp; Ethical Framework
-    </span>
-</a>
-<nav aria-label="⚖️ Legal &amp; Ethical Framework" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#1-authorized-testing-only">
-<span class="md-ellipsis">
-      1. Authorized Testing Only
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#2-compliance-with-international-norms">
-<span class="md-ellipsis">
-      2. Compliance with International Norms
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#3-researcher-agreement">
-<span class="md-ellipsis">
-      3. Researcher Agreement
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#poc-lifecycle-management">
-<span class="md-ellipsis">
-      🧱 PoC Lifecycle Management
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#storage-metadata">
-<span class="md-ellipsis">
-      🧩 Storage &amp; Metadata
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#future-enhancements">
-<span class="md-ellipsis">
-      🔮 Future Enhancements
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../15-garbage-collection-and-retention/">
-<span class="md-ellipsis">
-    Garbage Collection
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../16-security-model/">
-<span class="md-ellipsis">
-    Security Model
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../17-observability-logging-and-metrics/">
-<span class="md-ellipsis">
-    Observability
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../18-error-handling-and-recovery/">
-<span class="md-ellipsis">
-    Error Handling
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../19-risk-assessment-framework/">
-<span class="md-ellipsis">
-    Risk Assessment
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../20-migration-and-implementation-phases/">
-<span class="md-ellipsis">
-    Migration Plan
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../21-ci-cd-and-testing-strategy/">
-<span class="md-ellipsis">
-    CI/CD &amp; Testing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../22-developer-experience-and-docs/">
-<span class="md-ellipsis">
-    Dev Experience &amp; Docs
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../23-future-roadmap/">
-<span class="md-ellipsis">
-    Future Roadmap
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../24-final-consensus-summary/">
-<span class="md-ellipsis">
-    Final Consensus
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-<span class="md-ellipsis">
-    Review &amp; Validation
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
-<span class="md-nav__icon md-icon"></span>
-            Review &amp; Validation
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/REVIEW_GUIDELINES/">
-<span class="md-ellipsis">
-    Guidelines
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/review_workflow/">
-<span class="md-ellipsis">
-    Workflow
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/review_assignments/">
-<span class="md-ellipsis">
-    Assignments
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/validation_checklist/">
-<span class="md-ellipsis">
-    Checklist
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/REVIEW_STATUS/">
-<span class="md-ellipsis">
-    Status
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/validation_report/">
-<span class="md-ellipsis">
-    Report
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/VALIDATION_SUMMARY/">
-<span class="md-ellipsis">
-    AI Summary
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../review/glossary.yml">
-<span class="md-ellipsis">
-    Glossary
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-content" data-md-component="content">
-<article class="md-content__inner md-typeset">
-<h1 id="14-poc-governance-safety-and-legal-framework">14 — PoC Governance, Safety, and Legal Framework<a class="headerlink" href="#14-poc-governance-safety-and-legal-framework" title="Permanent link">¶</a></h1>
-<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
-<p>Proof-of-Concept (PoC) execution is the most sensitive aspect of the SecFlow platform.<br/>
+            <li class="nav-item" data-bs-level="1"><a href="#14-poc-governance-safety-and-legal-framework" class="nav-link">14 — PoC Governance, Safety, and Legal Framework</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">🧭 Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#legal-ethical-framework" class="nav-link">⚖️ Legal &amp; Ethical Framework</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#poc-lifecycle-management" class="nav-link">🧱 PoC Lifecycle Management</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#storage-metadata" class="nav-link">🧩 Storage &amp; Metadata</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cross-project-poc-access" class="nav-link">🧩 Cross-Project PoC Access</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#poc-verification-workflow" class="nav-link">🧱 PoC Verification Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#quarantine-mechanism" class="nav-link">🔒 Quarantine Mechanism</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#example-execution-trace" class="nav-link">🧠 Example Execution Trace</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="14-poc-governance-safety-and-legal-framework">14 — PoC Governance, Safety, and Legal Framework<a class="headerlink" href="#14-poc-governance-safety-and-legal-framework" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Proof-of-Concept (PoC) execution is the most sensitive aspect of the SecFlow platform.<br />
 While enrichment and discovery involve data collection, PoC modules may <strong>trigger actual exploits</strong> — often on controlled test targets or lab environments.</p>
 <p>This section defines:
 - The <strong>security model</strong> for PoC management and execution.
 - <strong>Legal and ethical boundaries</strong> for researchers.
 - <strong>Technical enforcement</strong> of sandbox isolation.
 - <strong>Policy hierarchy</strong> for PoC lifecycle, provenance, and deletion.</p>
-<hr/>
-<h2 id="legal-ethical-framework">⚖️ Legal &amp; Ethical Framework<a class="headerlink" href="#legal-ethical-framework" title="Permanent link">¶</a></h2>
-<h3 id="1-authorized-testing-only">1. Authorized Testing Only<a class="headerlink" href="#1-authorized-testing-only" title="Permanent link">¶</a></h3>
+<hr />
+<h2 id="legal-ethical-framework">⚖️ Legal &amp; Ethical Framework<a class="headerlink" href="#legal-ethical-framework" title="Permanent link">&para;</a></h2>
+<h3 id="1-authorized-testing-only">1. Authorized Testing Only<a class="headerlink" href="#1-authorized-testing-only" title="Permanent link">&para;</a></h3>
 <p>PoC execution is <strong>strictly limited</strong> to:
 - Assets owned or explicitly authorized by the user.
 - Lab or offline sandbox targets.
 - Non-production systems unless a signed authorization exists.</p>
-<h3 id="2-compliance-with-international-norms">2. Compliance with International Norms<a class="headerlink" href="#2-compliance-with-international-norms" title="Permanent link">¶</a></h3>
+<h3 id="2-compliance-with-international-norms">2. Compliance with International Norms<a class="headerlink" href="#2-compliance-with-international-norms" title="Permanent link">&para;</a></h3>
 <p>SecFlow aligns with:
 - <strong>ISO/IEC 29147</strong> — Vulnerability Disclosure.
 - <strong>ISO/IEC 30111</strong> — Vulnerability Handling.
 - <strong>NIST SP 800-115</strong> — Technical Guide to Information Security Testing.
 - <strong>CISA KEV</strong> and <strong>CVE® Program</strong> standards.</p>
-<h3 id="3-researcher-agreement">3. Researcher Agreement<a class="headerlink" href="#3-researcher-agreement" title="Permanent link">¶</a></h3>
+<h3 id="3-researcher-agreement">3. Researcher Agreement<a class="headerlink" href="#3-researcher-agreement" title="Permanent link">&para;</a></h3>
 <p>Before using any exploit-related features:
 - Users must accept the <strong>Responsible Use Agreement (RUA)</strong>.
 - Every PoC download or execution is logged.
 - No redistribution of PoC code outside permitted licensing (e.g., GPL, BSD).</p>
-<hr/>
-<h2 id="poc-lifecycle-management">🧱 PoC Lifecycle Management<a class="headerlink" href="#poc-lifecycle-management" title="Permanent link">¶</a></h2>
+<hr />
+<h2 id="poc-lifecycle-management">🧱 PoC Lifecycle Management<a class="headerlink" href="#poc-lifecycle-management" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -565,194 +321,200 @@ While enrichment and discovery involve data collection, PoC modules may <strong>
 </tr>
 </tbody>
 </table>
-<hr/>
-<h2 id="storage-metadata">🧩 Storage &amp; Metadata<a class="headerlink" href="#storage-metadata" title="Permanent link">¶</a></h2>
+<hr />
+<h2 id="storage-metadata">🧩 Storage &amp; Metadata<a class="headerlink" href="#storage-metadata" title="Permanent link">&para;</a></h2>
 <p>PoCs are stored as <strong>immutable artifacts</strong> under the internal resource store:</p>
-<div class="highlight"><pre><span></span><code>~/.SecFlow/resources/poc/
-├── CVE-2024-12345/
-│   ├── exploit.py
-│   ├── metadata.json
-│   └── README.md
-└── CVE-2023-98765/
-```text
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["~/.SecFlow/resources/poc/"]
+    B["CVE-2024-12345/"]
+    C["exploit.py"]
+    D["metadata.json"]
+    E["README.md"]
+    F["CVE-2023-98765/"]
 
-### Example `metadata.json`
-```json
-{
-  "cve": "CVE-2024-12345",
-  "source": "exploit-db",
-  "url": "https://www.exploit-db.com/exploits/52341",
-  "verified": true,
-  "language": "python",
-  "type": "rce",
-  "hash": "b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0",
-  "sandbox_only": true,
-  "license": "GPLv2",
-  "date_fetched": "2025-10-06T10:20:00Z"
-}
-```json
+    A --&gt; B
+    A --&gt; F
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E</div>
+<h3 id="example-metadatajson">Example <code>metadata.json</code><a class="headerlink" href="#example-metadatajson" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cve&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CVE-2024-12345&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exploit-db&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://www.exploit-db.com/exploits/52341&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rce&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sandbox_only&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GPLv2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;date_fetched&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-06T10:20:00Z&quot;</span>
+<span class="p">}</span>
+<span class="err">```jso</span><span class="kc">n</span>
 
-## 🔒 Sandbox Execution Architecture
+<span class="err">##</span><span class="w"> </span><span class="err">🔒</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Archi</span><span class="kc">te</span><span class="err">c</span><span class="kc">ture</span>
 
-### 1. Isolation Model
+<span class="err">###</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="err">Isola</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Model</span>
 
-All PoC executions occur within the SecFlow Sandbox Runtime, implemented as:
+<span class="err">All</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="w"> </span><span class="err">occur</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">hi</span><span class="kc">n</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="p">,</span><span class="w"> </span><span class="err">impleme</span><span class="kc">nte</span><span class="err">d</span><span class="w"> </span><span class="err">as</span><span class="p">:</span>
 
-- Docker container with restricted capabilities (`--cap-drop=ALL`).
-- Read-only mount of PoC files.
-- No network egress unless explicitly allowed.
-- Time &amp; memory quotas enforced by cgroups.
+<span class="mi">-</span><span class="w"> </span><span class="err">Docker</span><span class="w"> </span><span class="err">co</span><span class="kc">nta</span><span class="err">i</span><span class="kc">ner</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">res</span><span class="kc">tr</span><span class="err">ic</span><span class="kc">te</span><span class="err">d</span><span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">ies</span><span class="w"> </span><span class="err">(`</span><span class="mi">--</span><span class="err">cap</span><span class="mi">-</span><span class="err">drop=ALL`).</span>
+<span class="mi">-</span><span class="w"> </span><span class="err">Read</span><span class="mi">-</span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">mou</span><span class="kc">nt</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="kc">f</span><span class="err">iles.</span>
+<span class="mi">-</span><span class="w"> </span><span class="err">No</span><span class="w"> </span><span class="kc">net</span><span class="err">work</span><span class="w"> </span><span class="err">egress</span><span class="w"> </span><span class="err">u</span><span class="kc">nless</span><span class="w"> </span><span class="err">explici</span><span class="kc">tl</span><span class="err">y</span><span class="w"> </span><span class="err">allowed.</span>
+<span class="mi">-</span><span class="w"> </span><span class="err">Time</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="err">memory</span><span class="w"> </span><span class="err">quo</span><span class="kc">tas</span><span class="w"> </span><span class="err">e</span><span class="kc">nf</span><span class="err">orced</span><span class="w"> </span><span class="err">by</span><span class="w"> </span><span class="err">cgroups.</span>
 
-### 2. Runtime Diagram
-```yaml
-+-------------------------------------------------------+
-|                SecFlow Sandbox Runtime                |
-|-------------------------------------------------------|
-|  - Namespace Isolation (PID, NET, MNT)                |
-|  - Read-only FS for /poc                              |
-|  - IPC + SYS_ADMIN disabled                           |
-|  - AppArmor / SELinux profiles                        |
-|  - Seccomp filters (deny dangerous syscalls)          |
-+-------------------------------------------------------+
-         ↑
-         | PoC artifact + parameters
-         |
-[SecFlow Worker] → [Sandbox Orchestrator] → [Container Runtime]
-```text
+<span class="err">###</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="w"> </span><span class="err">Diagram</span>
+<span class="err">```yaml</span>
+<span class="err">+</span><span class="mf">-------------------------------------------------------+</span>
+<span class="err">|</span><span class="w">                </span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="w">                </span><span class="err">|</span>
+<span class="err">|</span><span class="mi">-------------------------------------------------------</span><span class="err">|</span>
+<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">Namespace</span><span class="w"> </span><span class="err">Isola</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">(PID</span><span class="p">,</span><span class="w"> </span><span class="err">NET</span><span class="p">,</span><span class="w"> </span><span class="err">MNT)</span><span class="w">                </span><span class="err">|</span>
+<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">Read</span><span class="mi">-</span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">FS</span><span class="w"> </span><span class="kc">f</span><span class="err">or</span><span class="w"> </span><span class="err">/poc</span><span class="w">                              </span><span class="err">|</span>
+<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">IPC</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">SYS_ADMIN</span><span class="w"> </span><span class="err">disabled</span><span class="w">                           </span><span class="err">|</span>
+<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">AppArmor</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">SELi</span><span class="kc">nu</span><span class="err">x</span><span class="w"> </span><span class="err">pro</span><span class="kc">f</span><span class="err">iles</span><span class="w">                        </span><span class="err">|</span>
+<span class="err">|</span><span class="w">  </span><span class="mi">-</span><span class="w"> </span><span class="err">Seccomp</span><span class="w"> </span><span class="kc">f</span><span class="err">il</span><span class="kc">ters</span><span class="w"> </span><span class="err">(de</span><span class="kc">n</span><span class="err">y</span><span class="w"> </span><span class="err">da</span><span class="kc">n</span><span class="err">gerous</span><span class="w"> </span><span class="err">syscalls)</span><span class="w">          </span><span class="err">|</span>
+<span class="err">+</span><span class="mf">-------------------------------------------------------+</span>
+<span class="w">         </span><span class="err">↑</span>
+<span class="w">         </span><span class="err">|</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">ar</span><span class="kc">t</span><span class="err">i</span><span class="kc">fa</span><span class="err">c</span><span class="kc">t</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">parame</span><span class="kc">ters</span>
+<span class="w">         </span><span class="err">|</span>
+<span class="p">[</span><span class="err">SecFlow</span><span class="w"> </span><span class="err">Worker</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">Orches</span><span class="kc">trat</span><span class="err">or</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="err">Co</span><span class="kc">nta</span><span class="err">i</span><span class="kc">ner</span><span class="w"> </span><span class="err">Ru</span><span class="kc">nt</span><span class="err">ime</span><span class="p">]</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
 
-### 3. Sample Sandbox Invocation
-```bash
-SecFlow sandbox run poc CVE-2024-12345 --target https://staging.example.com
-```yaml
+<span class="err">###</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="err">Sample</span><span class="w"> </span><span class="err">Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">I</span><span class="kc">n</span><span class="err">voca</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span>
+<span class="err">```bash</span>
+<span class="err">SecFlow</span><span class="w"> </span><span class="err">sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">ru</span><span class="kc">n</span><span class="w"> </span><span class="err">poc</span><span class="w"> </span><span class="err">CVE</span><span class="mi">-2024-12345</span><span class="w"> </span><span class="mi">--</span><span class="kc">tar</span><span class="err">ge</span><span class="kc">t</span><span class="w"> </span><span class="err">h</span><span class="kc">tt</span><span class="err">ps</span><span class="p">:</span><span class="c1">//staging.example.com</span>
+<span class="err">```yaml</span>
 
-Under the hood:
-```bash
-subprocess.run([
-  "docker", "run", "--rm", "--network", "none",
-  "--memory", "512m", "--cpus", "1",
-  "-v", "/pocstore/CVE-2024-12345:/poc:ro",
-  "SecFlow-sandbox:latest",
-  "python3", "/poc/exploit.py", "--target", "https://staging.example.com"
-])
-```yaml
+<span class="err">U</span><span class="kc">n</span><span class="err">der</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">hood</span><span class="p">:</span>
+<span class="err">```bash</span>
+<span class="err">subprocess.ru</span><span class="kc">n</span><span class="err">(</span><span class="p">[</span>
+<span class="w">  </span><span class="s2">&quot;docker&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--rm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--network&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;--memory&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;512m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--cpus&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;-v&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/pocstore/CVE-2024-12345:/poc:ro&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;SecFlow-sandbox:latest&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;python3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/poc/exploit.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--target&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;https://staging.example.com&quot;</span>
+<span class="p">]</span><span class="err">)</span>
+<span class="err">```yaml</span>
 
-## ⚙️ PoC Execution Policy
+<span class="err">##</span><span class="w"> </span><span class="err">⚙️</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Policy</span>
 
-| Policy | Enforcement |
-|--------|-------------|
-| **Sandbox Only** | No PoC runs on host system. |
-| **Read-only Filesystem** | Prevents code modification or persistence. |
-| **No Network by Default** | All outbound connections blocked. |
-| **User Authorization** | Each run signed with user identity &amp; timestamp. |
-| **Logging &amp; Replay** | Stdout/stderr captured in audit logs. |
-| **Time-Bound Execution** | Hard kill if runtime exceeds `timeout_seconds`. |
+<span class="err">|</span><span class="w"> </span><span class="err">Policy</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">E</span><span class="kc">nf</span><span class="err">orceme</span><span class="kc">nt</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="mi">--------</span><span class="err">|</span><span class="mi">-------------</span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">**Sa</span><span class="kc">n</span><span class="err">dbox</span><span class="w"> </span><span class="err">O</span><span class="kc">nl</span><span class="err">y**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">No</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">ru</span><span class="kc">ns</span><span class="w"> </span><span class="err">o</span><span class="kc">n</span><span class="w"> </span><span class="err">hos</span><span class="kc">t</span><span class="w"> </span><span class="err">sys</span><span class="kc">te</span><span class="err">m.</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">**Read</span><span class="mi">-</span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">Filesys</span><span class="kc">te</span><span class="err">m**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Preve</span><span class="kc">nts</span><span class="w"> </span><span class="err">code</span><span class="w"> </span><span class="err">modi</span><span class="kc">f</span><span class="err">ica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">persis</span><span class="kc">ten</span><span class="err">ce.</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">**No</span><span class="w"> </span><span class="err">Ne</span><span class="kc">t</span><span class="err">work</span><span class="w"> </span><span class="err">by</span><span class="w"> </span><span class="err">De</span><span class="kc">fault</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">All</span><span class="w"> </span><span class="err">ou</span><span class="kc">t</span><span class="err">bou</span><span class="kc">n</span><span class="err">d</span><span class="w"> </span><span class="err">co</span><span class="kc">nne</span><span class="err">c</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="w"> </span><span class="err">blocked.</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">**User</span><span class="w"> </span><span class="err">Au</span><span class="kc">t</span><span class="err">horiza</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Each</span><span class="w"> </span><span class="err">ru</span><span class="kc">n</span><span class="w"> </span><span class="err">sig</span><span class="kc">ne</span><span class="err">d</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">user</span><span class="w"> </span><span class="err">ide</span><span class="kc">nt</span><span class="err">i</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp.</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">**Loggi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="err">Replay**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">S</span><span class="kc">t</span><span class="err">dou</span><span class="kc">t</span><span class="err">/s</span><span class="kc">t</span><span class="err">derr</span><span class="w"> </span><span class="err">cap</span><span class="kc">ture</span><span class="err">d</span><span class="w"> </span><span class="err">i</span><span class="kc">n</span><span class="w"> </span><span class="err">audi</span><span class="kc">t</span><span class="w"> </span><span class="err">logs.</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">**Time</span><span class="mi">-</span><span class="err">Bou</span><span class="kc">n</span><span class="err">d</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">**</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Hard</span><span class="w"> </span><span class="err">kill</span><span class="w"> </span><span class="err">i</span><span class="kc">f</span><span class="w"> </span><span class="err">ru</span><span class="kc">nt</span><span class="err">ime</span><span class="w"> </span><span class="err">exceeds</span><span class="w"> </span><span class="err">`</span><span class="kc">t</span><span class="err">imeou</span><span class="kc">t</span><span class="err">_seco</span><span class="kc">n</span><span class="err">ds`.</span><span class="w"> </span><span class="err">|</span>
 
-## 🧠 Policy Configuration Example
+<span class="err">##</span><span class="w"> </span><span class="err">🧠</span><span class="w"> </span><span class="err">Policy</span><span class="w"> </span><span class="err">Co</span><span class="kc">nf</span><span class="err">igura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">Example</span>
 
-```yaml
-# ~/.SecFlow/policies/poc.yaml
-sandbox:
-  image: SecFlow-sandbox:latest
-  max_cpu: 1
-  max_memory_mb: 512
-  timeout_seconds: 300
-  allow_network: false
-  allow_filesystem_write: false
+<span class="err">```yaml</span>
+<span class="err">#</span><span class="w"> </span><span class="err">~/.SecFlow/policies/poc.yaml</span>
+<span class="err">sa</span><span class="kc">n</span><span class="err">dbox</span><span class="p">:</span>
+<span class="w">  </span><span class="err">image</span><span class="p">:</span><span class="w"> </span><span class="err">SecFlow</span><span class="mi">-</span><span class="err">sa</span><span class="kc">n</span><span class="err">dbox</span><span class="p">:</span><span class="err">la</span><span class="kc">test</span>
+<span class="w">  </span><span class="err">max_cpu</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="err">max_memory_mb</span><span class="p">:</span><span class="w"> </span><span class="mi">512</span>
+<span class="w">  </span><span class="kc">t</span><span class="err">imeou</span><span class="kc">t</span><span class="err">_seco</span><span class="kc">n</span><span class="err">ds</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span>
+<span class="w">  </span><span class="err">allow_</span><span class="kc">net</span><span class="err">work</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="err">allow_</span><span class="kc">f</span><span class="err">ilesys</span><span class="kc">te</span><span class="err">m_wri</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 
-compliance:
-  require_disclaimer: true
-  require_project_authorization: true
-  auto_verify_hashes: true
-```python
+<span class="err">complia</span><span class="kc">n</span><span class="err">ce</span><span class="p">:</span>
+<span class="w">  </span><span class="err">require_disclaimer</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="err">require_projec</span><span class="kc">t</span><span class="err">_au</span><span class="kc">t</span><span class="err">horiza</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="err">au</span><span class="kc">t</span><span class="err">o_veri</span><span class="kc">f</span><span class="err">y_hashes</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="err">```py</span><span class="kc">t</span><span class="err">ho</span><span class="kc">n</span>
 
-## 🧩 Governance Logging
+<span class="err">##</span><span class="w"> </span><span class="err">🧩</span><span class="w"> </span><span class="err">Gover</span><span class="kc">nan</span><span class="err">ce</span><span class="w"> </span><span class="err">Loggi</span><span class="kc">n</span><span class="err">g</span>
 
-Every PoC-related event is appended to a tamper-resistant audit log:
+<span class="err">Every</span><span class="w"> </span><span class="err">PoC</span><span class="mi">-</span><span class="err">rela</span><span class="kc">te</span><span class="err">d</span><span class="w"> </span><span class="err">eve</span><span class="kc">nt</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">appe</span><span class="kc">n</span><span class="err">ded</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="kc">ta</span><span class="err">mper</span><span class="mi">-</span><span class="err">resis</span><span class="kc">tant</span><span class="w"> </span><span class="err">audi</span><span class="kc">t</span><span class="w"> </span><span class="err">log</span><span class="p">:</span>
 
-| Field | Description |
-|-------|-------------|
-| event_id | UUID of the audit entry |
-| user_id | Executing user |
-| timestamp | UTC ISO-8601 time |
-| action | e.g., "sandbox_run", "download", "verify" |
-| cve_id | Related CVE |
-| tool | Source or wrapper (e.g., "exploitdb") |
-| sandbox_id | Container identifier |
-| hash | SHA256 of PoC code |
+<span class="err">|</span><span class="w"> </span><span class="err">Field</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Descrip</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="mi">-------</span><span class="err">|</span><span class="mi">-------------</span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">eve</span><span class="kc">nt</span><span class="err">_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">UUID</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">audi</span><span class="kc">t</span><span class="w"> </span><span class="err">e</span><span class="kc">ntr</span><span class="err">y</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">user_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Execu</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">user</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">UTC</span><span class="w"> </span><span class="err">ISO</span><span class="mi">-8601</span><span class="w"> </span><span class="kc">t</span><span class="err">ime</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">e.g.</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sandbox_run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;download&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;verify&quot;</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">cve_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Rela</span><span class="kc">te</span><span class="err">d</span><span class="w"> </span><span class="err">CVE</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="kc">t</span><span class="err">ool</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Source</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">wrapper</span><span class="w"> </span><span class="err">(e.g.</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;exploitdb&quot;</span><span class="err">)</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">sa</span><span class="kc">n</span><span class="err">dbox_id</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">Co</span><span class="kc">nta</span><span class="err">i</span><span class="kc">ner</span><span class="w"> </span><span class="err">ide</span><span class="kc">nt</span><span class="err">i</span><span class="kc">f</span><span class="err">ier</span><span class="w"> </span><span class="err">|</span>
+<span class="err">|</span><span class="w"> </span><span class="err">hash</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="err">SHA</span><span class="mi">256</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">code</span><span class="w"> </span><span class="err">|</span>
 
-### Example Log Entry
-```json
-{
-  "event_id": "a1f3b7c2-9f11-45d0-bc97-6c9472cbdcb2",
-  "user_id": "hernan",
-  "action": "sandbox_run",
-  "cve_id": "CVE-2024-12345",
-  "timestamp": "2025-10-06T10:43:00Z",
-  "sandbox_id": "sandbox-83214",
-  "hash": "b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0",
-  "tool": "exploitdb"
-}
-```text
+<span class="err">###</span><span class="w"> </span><span class="err">Example</span><span class="w"> </span><span class="err">Log</span><span class="w"> </span><span class="err">E</span><span class="kc">ntr</span><span class="err">y</span>
+<span class="err">```jso</span><span class="kc">n</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1f3b7c2-9f11-45d0-bc97-6c9472cbdcb2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hernan&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sandbox_run&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cve_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CVE-2024-12345&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-06T10:43:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sandbox_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sandbox-83214&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b3f9f74e89e2a1b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;exploitdb&quot;</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
 
-## 🧠 Legal Notice Enforcement
+<span class="err">##</span><span class="w"> </span><span class="err">🧠</span><span class="w"> </span><span class="err">Legal</span><span class="w"> </span><span class="err">No</span><span class="kc">t</span><span class="err">ice</span><span class="w"> </span><span class="err">E</span><span class="kc">nf</span><span class="err">orceme</span><span class="kc">nt</span>
 
-Before any PoC interaction, users must sign a legal disclaimer:
+<span class="err">Be</span><span class="kc">f</span><span class="err">ore</span><span class="w"> </span><span class="err">a</span><span class="kc">n</span><span class="err">y</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">i</span><span class="kc">ntera</span><span class="err">c</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="err">users</span><span class="w"> </span><span class="err">mus</span><span class="kc">t</span><span class="w"> </span><span class="err">sig</span><span class="kc">n</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">legal</span><span class="w"> </span><span class="err">disclaimer</span><span class="p">:</span>
 
-```python
-Responsible Use Notice:
-You acknowledge that PoC exploitation is to be performed exclusively on systems you own or are explicitly authorized to test. SecFlow is not liable for any misuse or damages resulting from unauthorized use.
-```text
+<span class="err">```py</span><span class="kc">t</span><span class="err">ho</span><span class="kc">n</span>
+<span class="err">Respo</span><span class="kc">ns</span><span class="err">ible</span><span class="w"> </span><span class="err">Use</span><span class="w"> </span><span class="err">No</span><span class="kc">t</span><span class="err">ice</span><span class="p">:</span>
+<span class="err">You</span><span class="w"> </span><span class="err">ack</span><span class="kc">n</span><span class="err">owledge</span><span class="w"> </span><span class="kc">t</span><span class="err">ha</span><span class="kc">t</span><span class="w"> </span><span class="err">PoC</span><span class="w"> </span><span class="err">exploi</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">per</span><span class="kc">f</span><span class="err">ormed</span><span class="w"> </span><span class="err">exclusively</span><span class="w"> </span><span class="err">o</span><span class="kc">n</span><span class="w"> </span><span class="err">sys</span><span class="kc">te</span><span class="err">ms</span><span class="w"> </span><span class="err">you</span><span class="w"> </span><span class="err">ow</span><span class="kc">n</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">explici</span><span class="kc">tl</span><span class="err">y</span><span class="w"> </span><span class="err">au</span><span class="kc">t</span><span class="err">horized</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="kc">test</span><span class="err">.</span><span class="w"> </span><span class="err">SecFlow</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="kc">n</span><span class="err">o</span><span class="kc">t</span><span class="w"> </span><span class="err">liable</span><span class="w"> </span><span class="kc">f</span><span class="err">or</span><span class="w"> </span><span class="err">a</span><span class="kc">n</span><span class="err">y</span><span class="w"> </span><span class="err">misuse</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">damages</span><span class="w"> </span><span class="err">resul</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="kc">fr</span><span class="err">om</span><span class="w"> </span><span class="err">u</span><span class="kc">naut</span><span class="err">horized</span><span class="w"> </span><span class="err">use.</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
 
-The system stores an acceptance hash:
-```yaml
-~/.SecFlow/.disclaimer_accepted
-```yaml
-
-## 🧩 Cross-Project PoC Access
-
-To prevent accidental disclosure:
+<span class="err">The</span><span class="w"> </span><span class="err">sys</span><span class="kc">te</span><span class="err">m</span><span class="w"> </span><span class="err">s</span><span class="kc">t</span><span class="err">ores</span><span class="w"> </span><span class="err">a</span><span class="kc">n</span><span class="w"> </span><span class="err">accep</span><span class="kc">tan</span><span class="err">ce</span><span class="w"> </span><span class="err">hash</span><span class="p">:</span>
+<span class="err">```yaml</span>
+<span class="err">~/.SecFlow/.disclaimer_accep</span><span class="kc">te</span><span class="err">d</span>
+</code></pre></div>
+<h2 id="cross-project-poc-access">🧩 Cross-Project PoC Access<a class="headerlink" href="#cross-project-poc-access" title="Permanent link">&para;</a></h2>
+<p>To prevent accidental disclosure:
 - PoC artifacts are scoped per project by default.
 - Shared PoCs require explicit admin approval.
-- Access controlled via role-based permissions (RBAC).
-
-| Role | Access |
-|------|--------|
-| **Admin** | Global &amp; project PoCs |
-| **Analyst** | Project PoCs only |
-| **Viewer** | Read-only (metadata only) |
-
-## 🧱 PoC Verification Workflow
-
-```mermaid
-graph TD
+- Access controlled via role-based permissions (RBAC).</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Global &amp; project PoCs</td>
+</tr>
+<tr>
+<td><strong>Analyst</strong></td>
+<td>Project PoCs only</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Read-only (metadata only)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="poc-verification-workflow">🧱 PoC Verification Workflow<a class="headerlink" href="#poc-verification-workflow" title="Permanent link">&para;</a></h2>
+<div class="mermaid">graph TD
 A[Download PoC] --&gt; B[Verify Hash &amp; Signature]
 B --&gt; C{Trusted Source?}
 C --&gt;|Yes| D[Mark Verified]
 C --&gt;|No| E[Quarantine]
 E --&gt; F[Manual Review Required]
-D --&gt; G[Available for Sandbox Run]
-```text
-
-## 🔒 Quarantine Mechanism
-
-Unknown or tampered PoCs are moved to:
-```text
-~/.SecFlow/resources/poc/quarantine/
-```python
-
-Each is tagged with a quarantine reason.
-Admins can review and promote back to verified status.
-
-```python
-def quarantine_poc(poc_id: str, reason: str):
-    shutil.move(f"/pocstore/{poc_id}", "/pocstore/quarantine/")
-    write_log(f"PoC {poc_id} quarantined: {reason}")
-```text
-
-## 🧠 Example Execution Trace
-
-```text
-[PoC: CVE-2024-12345] Verified source: ExploitDB
+D --&gt; G[Available for Sandbox Run]</div>
+<h2 id="quarantine-mechanism">🔒 Quarantine Mechanism<a class="headerlink" href="#quarantine-mechanism" title="Permanent link">&para;</a></h2>
+<p>Unknown or tampered PoCs are moved to:
+<div class="highlight"><pre><span></span><code>~/.SecFlow/resources/poc/quarantine/
+</code></pre></div></p>
+<p>Each is tagged with a quarantine reason.
+Admins can review and promote back to verified status.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">quarantine_poc</span><span class="p">(</span><span class="n">poc_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/pocstore/</span><span class="si">{</span><span class="n">poc_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/pocstore/quarantine/&quot;</span><span class="p">)</span>
+    <span class="n">write_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PoC </span><span class="si">{</span><span class="n">poc_id</span><span class="si">}</span><span class="s2"> quarantined: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="example-execution-trace">🧠 Example Execution Trace<a class="headerlink" href="#example-execution-trace" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>[PoC: CVE-2024-12345] Verified source: ExploitDB
 [Sandbox] Starting container SecFlow-sandbox:latest
 [Sandbox] CPU quota: 1 core, Memory: 512MB
 [Sandbox] Network: disabled
@@ -760,41 +522,120 @@ def quarantine_poc(poc_id: str, reason: str):
     [+] Exploit successful: remote command executed
 [Cleanup]
     PoC container destroyed after 120s
+```text
+
+## 🔮 Future Enhancements
+
+- AppArmor enforcement policies with dynamic runtime profiling.
+- PoC provenance blockchain for cryptographic integrity.
+- AI-assisted PoC safety classification (RCE, DoS, PrivEsc).
+- Multi-tenant isolation for collaborative workspaces.
+- Live replay of PoC runs for training and documentation.
+
+---
+
+**Next:** [Garbage Collection &amp; Data Retention Policy](15-garbage-collection-and-retention.md)
 </code></pre></div>
-<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">¶</a></h2>
-<ul>
-<li>AppArmor enforcement policies with dynamic runtime profiling.</li>
-<li>PoC provenance blockchain for cryptographic integrity.</li>
-<li>AI-assisted PoC safety classification (RCE, DoS, PrivEsc).</li>
-<li>Multi-tenant isolation for collaborative workspaces.</li>
-<li>Live replay of PoC runs for training and documentation.</li>
-</ul>
-<hr/>
-<p><strong>Next:</strong> <a href="../15-garbage-collection-and-retention/">Garbage Collection &amp; Data Retention Policy</a></p>
-</article>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+```</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-</div>
-</main>
-<footer class="md-footer">
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
-      Material for MkDocs
-    </a>
-</div>
-</div>
-</div>
-</footer>
-</div>
-<div class="md-dialog" data-md-component="dialog">
-<div class="md-dialog__inner md-typeset"></div>
-</div>
-<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
-</body>
+
+    </body>
 </html>

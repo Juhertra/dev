@@ -1,0 +1,19 @@
+name: Docs validation
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'scripts/**'
+      - 'requirements.txt'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: python -m pip install -U -r requirements.txt
+      - run: mkdocs build -q
+      - run: python scripts/mermaid_parity_gate.py
+      - run: python scripts/ascii_html_blocker_gate.py

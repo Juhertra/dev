@@ -307,3 +307,25 @@ The metrics system (see [06-plugin-system.md](06-plugin-system.md) & [17-observa
 ---
 
 **Next:** [CVE/CWE/POC Enrichment Layer](13-cve-cwe-poc-enrichment-layer.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

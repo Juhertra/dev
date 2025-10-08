@@ -1,1307 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Core Packages - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
-      
-      
-        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
-      
-      
-      
-        <link rel="prev" href="../03-repository-layout/">
-      
-      
-        <link rel="next" href="../05-orchestration-and-workflow-engine/">
-      
-      
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
-    
-    
-      
-        <title>SecFlow — Core Packages & Responsibilities - SecFlow Architecture & Validation</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
-      
-      
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#04-core-packages-responsibilities" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            SecFlow Architecture & Validation
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              SecFlow — Core Packages & Responsibilities
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    SecFlow Architecture & Validation
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            Overview
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../00-index/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Home
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../01-title-and-executive-summary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Executive Summary
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Architecture
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            Architecture
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../02-architecture-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Philosophy
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-repository-layout/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Repository Layout
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Core Packages
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    Core Packages
-    
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧭 Overview
-    </span>
-  </a>
-  
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../00-index/" class="dropdown-item">Home</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#package-overview-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧩 Package Overview Table
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#core-lib" class="md-nav__link">
-    <span class="md-ellipsis">
-      ⚙️ Core-Lib
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="⚙️ Core-Lib">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
-    <span class="md-ellipsis">
-      Purpose
-    </span>
-  </a>
-  
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Structure
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../03-repository-layout/" class="dropdown-item">Repository Layout</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Core Packages</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧠 Best Practices
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧩 Testing Guidelines
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../06-plugin-system/" class="dropdown-item">Plugin System</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#future-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧠 Future Enhancements
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
 </li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
+                                    
+<li>
+    <a href="../08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
 
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Orchestration Engine
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-plugin-system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Plugin System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-tools-integration-model/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tools Integration
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tool Manager & UX
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-resource-registry/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Resource Registry
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Wordlists & Sharing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-project-isolation-and-data-sharing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Project Isolation & Sharing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../12-findings-model-and-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Findings Schema
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Enrichment Layer
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    PoC Sources & Legal
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../15-garbage-collection-and-retention/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Garbage Collection
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../16-security-model/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Security Model
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Observability
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Error Handling
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../19-risk-assessment-framework/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Risk Assessment
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Migration Plan
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    CI/CD & Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Dev Experience & Docs
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../23-future-roadmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Future Roadmap
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../24-final-consensus-summary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Final Consensus
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Review & Validation
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Review & Validation
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Guidelines
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/review_workflow/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Workflow
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/review_assignments/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Assignments
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/validation_checklist/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Checklist
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Status
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/validation_report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Report
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    AI Summary
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/glossary.yml" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Glossary
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../03-repository-layout/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../05-orchestration-and-workflow-engine/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
                 </div>
-              </div>
-            
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
+            </div>
+        </div>
 
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
 
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#04-core-packages-responsibilities" class="nav-link">04 — Core Packages &amp; Responsibilities</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">🧭 Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#package-overview-table" class="nav-link">🧩 Package Overview Table</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#core-lib" class="nav-link">⚙️ Core-Lib</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#best-practices" class="nav-link">🧠 Best Practices</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#testing-guidelines" class="nav-link">🧩 Testing Guidelines</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🧠 Future Enhancements</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
 
 <h1 id="04-core-packages-responsibilities">04 — Core Packages &amp; Responsibilities<a class="headerlink" href="#04-core-packages-responsibilities" title="Permanent link">&para;</a></h1>
 <h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
@@ -1363,216 +310,236 @@
 <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
 <p><code>core-lib</code> is the <strong>foundation</strong> of SecFlow. It defines all domain entities, type contracts, and abstract interfaces (ports) used throughout the system.</p>
 <h3 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>core-lib/
-├── models/
-│   ├── finding.py
-│   ├── project.py
-│   ├── resource.py
-│   └── run.py
-├── ports/
-│   ├── storage_port.py
-│   ├── tool_port.py
-│   ├── resource_port.py
-│   └── findings_port.py
-├── services/
-│   ├── workflow_service.py
-│   └── triage_service.py
-└── exceptions.py
-```python
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["core-lib/"]
+    B["models/"]
+    C["finding.py"]
+    D["project.py"]
+    E["resource.py"]
+    F["run.py"]
+    G["ports/"]
+    H["storage_port.py"]
+    I["tool_port.py"]
+    J["resource_port.py"]
+    K["findings_port.py"]
+    L["services/"]
+    M["workflow_service.py"]
+    N["triage_service.py"]
+    O["exceptions.py"]
 
-### Example Model
-```python
-# core-lib/models/finding.py
-from pydantic import BaseModel
-from datetime import datetime
-from typing import List, Optional, Dict
+    A --&gt; B
+    A --&gt; G
+    A --&gt; L
+    A --&gt; O
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E
+    B --&gt; F
+    G --&gt; H
+    G --&gt; I
+    G --&gt; J
+    G --&gt; K
+    L --&gt; M
+    L --&gt; N</div>
+<h3 id="example-model">Example Model<a class="headerlink" href="#example-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># core-lib/models/finding.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
 
-class Finding(BaseModel):
-    id: str
-    project_id: str
-    detector_id: str
-    title: str
-    severity: str
-    path: str
-    evidence: Dict[str, str]
-    created_at: datetime
-    cwe: Optional[int]
-    owasp: Optional[str]
-    cve_ids: List[str] = []
-    enrichment: Dict[str, any] = {}
-```python
+<span class="k">class</span><span class="w"> </span><span class="nc">Finding</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">detector_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">severity</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">evidence</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">cwe</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">owasp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cve_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">enrichment</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="err">```</span><span class="n">python</span>
 
-### Example Port
-```python
-# core-lib/ports/tool_port.py
-from typing import Protocol, List
-from core_lib.models.finding import Finding
+<span class="c1">### Example Port</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="c1"># core-lib/ports/tool_port.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.models.finding</span><span class="w"> </span><span class="kn">import</span> <span class="n">Finding</span>
 
-class ToolPort(Protocol):
-    def prepare(self, config: dict) -&gt; None:
-        &quot;&quot;&quot;Prepare the tool with given configuration.&quot;&quot;&quot;
-        pass
+<span class="k">class</span><span class="w"> </span><span class="nc">ToolPort</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the tool with given configuration.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 
-    def execute(self) -&gt; List[Finding]:
-        &quot;&quot;&quot;Execute the tool and return findings.&quot;&quot;&quot;
-        pass
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the tool and return findings.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 
-    def validate_output(self, raw_output: str) -&gt; bool:
-        &quot;&quot;&quot;Validate tool output format.&quot;&quot;&quot;
-        pass
-```python
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate tool output format.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+<span class="err">```</span><span class="n">python</span>
 
-This abstraction allows any external tool to be integrated simply by implementing `ToolPort`.
+<span class="n">This</span> <span class="n">abstraction</span> <span class="n">allows</span> <span class="nb">any</span> <span class="n">external</span> <span class="n">tool</span> <span class="n">to</span> <span class="n">be</span> <span class="n">integrated</span> <span class="n">simply</span> <span class="n">by</span> <span class="n">implementing</span> <span class="err">`</span><span class="n">ToolPort</span><span class="err">`</span><span class="o">.</span>
 
-## 🧠 Findings-Engine
+<span class="c1">## 🧠 Findings-Engine</span>
 
-### Purpose
-Responsible for normalizing, deduplicating, and enriching findings produced by wrappers.
+<span class="c1">### Purpose</span>
+<span class="n">Responsible</span> <span class="k">for</span> <span class="n">normalizing</span><span class="p">,</span> <span class="n">deduplicating</span><span class="p">,</span> <span class="ow">and</span> <span class="n">enriching</span> <span class="n">findings</span> <span class="n">produced</span> <span class="n">by</span> <span class="n">wrappers</span><span class="o">.</span>
 
-### Example Normalization Flow
-```python
-def normalize(raw_data: str, tool: str) -&gt; Finding:
-    if tool == &quot;nuclei&quot;:
-        return _normalize_nuclei_output(raw_data)
-    elif tool == &quot;ferox&quot;:
-        return _normalize_ferox_output(raw_data)
-```python
+<span class="c1">### Example Normalization Flow</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">raw_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Finding</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">tool</span> <span class="o">==</span> <span class="s2">&quot;nuclei&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_normalize_nuclei_output</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">tool</span> <span class="o">==</span> <span class="s2">&quot;ferox&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_normalize_ferox_output</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+<span class="err">```</span><span class="n">python</span>
 
-### Capabilities
-- Parse multiple output formats (JSON, XML, plain text).
-- Deduplicate based on fingerprint (host + path + vuln_id).
-- Attach CWE, CVSS, and severity from enrichment sources.
-- Store normalized data through `StoragePort`.
+<span class="c1">### Capabilities</span>
+<span class="o">-</span> <span class="n">Parse</span> <span class="n">multiple</span> <span class="n">output</span> <span class="n">formats</span> <span class="p">(</span><span class="n">JSON</span><span class="p">,</span> <span class="n">XML</span><span class="p">,</span> <span class="n">plain</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span>
+<span class="o">-</span> <span class="n">Deduplicate</span> <span class="n">based</span> <span class="n">on</span> <span class="n">fingerprint</span> <span class="p">(</span><span class="n">host</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="n">vuln_id</span><span class="p">)</span><span class="o">.</span>
+<span class="o">-</span> <span class="n">Attach</span> <span class="n">CWE</span><span class="p">,</span> <span class="n">CVSS</span><span class="p">,</span> <span class="ow">and</span> <span class="n">severity</span> <span class="kn">from</span><span class="w"> </span><span class="nn">enrichment</span> <span class="n">sources</span><span class="o">.</span>
+<span class="o">-</span> <span class="n">Store</span> <span class="n">normalized</span> <span class="n">data</span> <span class="n">through</span> <span class="err">`</span><span class="n">StoragePort</span><span class="err">`</span><span class="o">.</span>
 
-## ⚙️ Wrappers
+<span class="c1">## ⚙️ Wrappers</span>
 
-### Purpose
-Wraps and executes third-party tools through a unified interface defined by `ToolPort`.
+<span class="c1">### Purpose</span>
+<span class="n">Wraps</span> <span class="ow">and</span> <span class="n">executes</span> <span class="n">third</span><span class="o">-</span><span class="n">party</span> <span class="n">tools</span> <span class="n">through</span> <span class="n">a</span> <span class="n">unified</span> <span class="n">interface</span> <span class="n">defined</span> <span class="n">by</span> <span class="err">`</span><span class="n">ToolPort</span><span class="err">`</span><span class="o">.</span>
 
-### Example Structure
-```text
-wrappers/
-├── nuclei_wrapper.py
-├── ferox_wrapper.py
-├── zap_wrapper.py
-└── base_wrapper.py
-```python
+<span class="c1">### Example Structure</span>
+<span class="err">```</span><span class="n">text</span>
+<span class="n">wrappers</span><span class="o">/</span>
+</code></pre></div>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["wrappers/"]
+    B["nuclei_wrapper.py"]
+    C["ferox_wrapper.py"]
+    D["zap_wrapper.py"]
+    E["base_wrapper.py"]
 
-### Example Base Class
-```python
-# wrappers/base_wrapper.py
-import subprocess
-from core_lib.models.finding import Finding
+    A --&gt; B
+    A --&gt; C
+    A --&gt; D
+    A --&gt; E</div>
+<h3 id="example-base-class">Example Base Class<a class="headerlink" href="#example-base-class" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># wrappers/base_wrapper.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core_lib.models.finding</span><span class="w"> </span><span class="kn">import</span> <span class="n">Finding</span>
 
-class BaseWrapper:
-    def __init__(self, manifest: dict):
-        self.manifest = manifest
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseWrapper</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manifest</span> <span class="o">=</span> <span class="n">manifest</span>
 
-    def run(self, target: str) -&gt; list[Finding]:
-        cmd = [self.manifest[&quot;binary&quot;], &quot;-u&quot;, target]
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        return self.parse_output(result.stdout)
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;binary&quot;</span><span class="p">],</span> <span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="n">target</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_output</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 
-    def parse_output(self, raw: str) -&gt; list[Finding]:
-        raise NotImplementedError
-```python
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<span class="err">```</span><span class="n">python</span>
 
-All wrappers inherit from `BaseWrapper` and override `parse_output`.
+<span class="n">All</span> <span class="n">wrappers</span> <span class="n">inherit</span> <span class="kn">from</span><span class="w"> </span><span class="err">`</span><span class="n">BaseWrapper</span><span class="err">`</span> <span class="ow">and</span> <span class="n">override</span> <span class="err">`</span><span class="n">parse_output</span><span class="err">`</span><span class="o">.</span>
 
-## 📦 Resources
+<span class="c1">## 📦 Resources</span>
 
-### Purpose
-`resources` manages global and scoped assets:
-- Wordlists (directories, subdomains, parameters)
-- Templates (Nuclei, ZAP)
-- Payload sets
-- Custom configurations
+<span class="c1">### Purpose</span>
+<span class="err">`</span><span class="n">resources</span><span class="err">`</span> <span class="n">manages</span> <span class="k">global</span> <span class="ow">and</span> <span class="n">scoped</span> <span class="n">assets</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">Wordlists</span> <span class="p">(</span><span class="n">directories</span><span class="p">,</span> <span class="n">subdomains</span><span class="p">,</span> <span class="n">parameters</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Templates</span> <span class="p">(</span><span class="n">Nuclei</span><span class="p">,</span> <span class="n">ZAP</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Payload</span> <span class="n">sets</span>
+<span class="o">-</span> <span class="n">Custom</span> <span class="n">configurations</span>
 
-### Example Resource Model
-```python
-# core-lib/models/resource.py
-class Resource(BaseModel):
-    id: str
-    name: str
-    type: Literal[&quot;wordlist&quot;, &quot;template&quot;, &quot;payload&quot;]
-    scope: Literal[&quot;global&quot;, &quot;group&quot;, &quot;project&quot;]
-    hash: str
-    version: str
-    metadata: dict
-```python
+<span class="c1">### Example Resource Model</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="c1"># core-lib/models/resource.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Resource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;wordlist&quot;</span><span class="p">,</span> <span class="s2">&quot;template&quot;</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="p">]</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">]</span>
+    <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span>
+<span class="err">```</span><span class="n">python</span>
 
-## 🗃️ Storage
+<span class="c1">## 🗃️ Storage</span>
 
-### Purpose
-Implements all persistence operations via the `StoragePort` interface.
+<span class="c1">### Purpose</span>
+<span class="n">Implements</span> <span class="nb">all</span> <span class="n">persistence</span> <span class="n">operations</span> <span class="n">via</span> <span class="n">the</span> <span class="err">`</span><span class="n">StoragePort</span><span class="err">`</span> <span class="n">interface</span><span class="o">.</span>
 
-### Example Interface
-```python
-# core-lib/ports/storage_port.py
-class StoragePort(Protocol):
-    def save_finding(self, finding: Finding) -&gt; None:
-        &quot;&quot;&quot;Save a finding to storage.&quot;&quot;&quot;
-        pass
+<span class="c1">### Example Interface</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="c1"># core-lib/ports/storage_port.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StoragePort</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_finding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finding</span><span class="p">:</span> <span class="n">Finding</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a finding to storage.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 
-    def list_findings(self, project_id: str) -&gt; list[Finding]:
-        &quot;&quot;&quot;List all findings for a project.&quot;&quot;&quot;
-        pass
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_findings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Finding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all findings for a project.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 
-    def delete_project(self, project_id: str) -&gt; None:
-        &quot;&quot;&quot;Delete a project and all its findings.&quot;&quot;&quot;
-        pass
-```python
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a project and all its findings.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+<span class="err">```</span><span class="n">python</span>
 
-### Implementation Examples
-- `SQLiteStorageAdapter`
-- `PostgresStorageAdapter`
-- `RedisCacheAdapter`
+<span class="c1">### Implementation Examples</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">SQLiteStorageAdapter</span><span class="err">`</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">PostgresStorageAdapter</span><span class="err">`</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">RedisCacheAdapter</span><span class="err">`</span>
 
-All registered in the `storage.registry`.
+<span class="n">All</span> <span class="n">registered</span> <span class="ow">in</span> <span class="n">the</span> <span class="err">`</span><span class="n">storage</span><span class="o">.</span><span class="n">registry</span><span class="err">`</span><span class="o">.</span>
 
-## 🔌 Plugins
+<span class="c1">## 🔌 Plugins</span>
 
-### Purpose
-Extend SecFlow with additional detection or enrichment capabilities.
+<span class="c1">### Purpose</span>
+<span class="n">Extend</span> <span class="n">SecFlow</span> <span class="k">with</span> <span class="n">additional</span> <span class="n">detection</span> <span class="ow">or</span> <span class="n">enrichment</span> <span class="n">capabilities</span><span class="o">.</span>
 
-### Example Plugin Registration
-```python
-# plugins/registry.py
-from typing import Dict, Callable
+<span class="c1">### Example Plugin Registration</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="c1"># plugins/registry.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
 
-PLUGIN_REGISTRY: Dict[str, Callable] = {}
+<span class="n">PLUGIN_REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
-def register_plugin(name: str):
-    def decorator(func):
-        PLUGIN_REGISTRY[name] = func
-        return func
-    return decorator
-```yaml
+<span class="k">def</span><span class="w"> </span><span class="nf">register_plugin</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">PLUGIN_REGISTRY</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span>
+    <span class="k">return</span> <span class="n">decorator</span>
+<span class="err">```</span><span class="n">yaml</span>
 
-Plugins can dynamically hook into findings processing, orchestration, or resource management.
+<span class="n">Plugins</span> <span class="n">can</span> <span class="n">dynamically</span> <span class="n">hook</span> <span class="n">into</span> <span class="n">findings</span> <span class="n">processing</span><span class="p">,</span> <span class="n">orchestration</span><span class="p">,</span> <span class="ow">or</span> <span class="n">resource</span> <span class="n">management</span><span class="o">.</span>
 
-## 🧰 Utils
+<span class="c1">## 🧰 Utils</span>
 
-`utils` contains helper modules that are shared across packages but contain no business logic.
+<span class="err">`</span><span class="n">utils</span><span class="err">`</span> <span class="n">contains</span> <span class="n">helper</span> <span class="n">modules</span> <span class="n">that</span> <span class="n">are</span> <span class="n">shared</span> <span class="n">across</span> <span class="n">packages</span> <span class="n">but</span> <span class="n">contain</span> <span class="n">no</span> <span class="n">business</span> <span class="n">logic</span><span class="o">.</span>
 
-### Examples:
-- `utils.subprocess_safe` – wrapper for secure process spawning.
-- `utils.hashing` – generate resource hashes (SHA256).
-- `utils.validation` – reusable Pydantic validators.
-- `utils.config` – environment-aware configuration loader.
+<span class="c1">### Examples:</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">subprocess_safe</span><span class="err">`</span> <span class="err">–</span> <span class="n">wrapper</span> <span class="k">for</span> <span class="n">secure</span> <span class="n">process</span> <span class="n">spawning</span><span class="o">.</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">hashing</span><span class="err">`</span> <span class="err">–</span> <span class="n">generate</span> <span class="n">resource</span> <span class="n">hashes</span> <span class="p">(</span><span class="n">SHA256</span><span class="p">)</span><span class="o">.</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">validation</span><span class="err">`</span> <span class="err">–</span> <span class="n">reusable</span> <span class="n">Pydantic</span> <span class="n">validators</span><span class="o">.</span>
+<span class="o">-</span> <span class="err">`</span><span class="n">utils</span><span class="o">.</span><span class="n">config</span><span class="err">`</span> <span class="err">–</span> <span class="n">environment</span><span class="o">-</span><span class="n">aware</span> <span class="n">configuration</span> <span class="n">loader</span><span class="o">.</span>
 
-## 🔗 Cross-Package Interaction Diagram
+<span class="c1">## 🔗 Cross-Package Interaction Diagram</span>
 
-```text
-+-------------+       +----------------+       +---------------+
-|  Wrappers   | ----&gt; | Findings-Engine| ----&gt; |   Storage     |
-+-------------+       +----------------+       +---------------+
-       |                       ^                       |
-       |                       |                       |
-       v                       |                       v
-   +-----------+        +----------------+        +----------------+
-   | Resources |        |    Core-Lib    |        |    Plugins     |
-   +-----------+        +----------------+        +----------------+
+<span class="err">```</span><span class="n">text</span>
+<span class="o">+-------------+</span>       <span class="o">+----------------+</span>       <span class="o">+---------------+</span>
+<span class="o">|</span>  <span class="n">Wrappers</span>   <span class="o">|</span> <span class="o">----&gt;</span> <span class="o">|</span> <span class="n">Findings</span><span class="o">-</span><span class="n">Engine</span><span class="o">|</span> <span class="o">----&gt;</span> <span class="o">|</span>   <span class="n">Storage</span>     <span class="o">|</span>
+<span class="o">+-------------+</span>       <span class="o">+----------------+</span>       <span class="o">+---------------+</span>
+       <span class="o">|</span>                       <span class="o">^</span>                       <span class="o">|</span>
+       <span class="o">|</span>                       <span class="o">|</span>                       <span class="o">|</span>
+       <span class="n">v</span>                       <span class="o">|</span>                       <span class="n">v</span>
+   <span class="o">+-----------+</span>        <span class="o">+----------------+</span>        <span class="o">+----------------+</span>
+   <span class="o">|</span> <span class="n">Resources</span> <span class="o">|</span>        <span class="o">|</span>    <span class="n">Core</span><span class="o">-</span><span class="n">Lib</span>    <span class="o">|</span>        <span class="o">|</span>    <span class="n">Plugins</span>     <span class="o">|</span>
+   <span class="o">+-----------+</span>        <span class="o">+----------------+</span>        <span class="o">+----------------+</span>
 </code></pre></div>
 <p>Arrows represent dependency flow, not import direction (imports always go downward).</p>
 <h2 id="best-practices">🧠 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
@@ -1628,63 +595,102 @@ Plugins can dynamically hook into findings processing, orchestration, or resourc
 <li>Build auto-generated docs from port signatures (<code>mkdocs-gen-files</code>).</li>
 </ul>
 <hr />
-<p><strong>Next:</strong> <a href="../05-orchestration-and-workflow-engine/">Orchestration &amp; Workflow Engine</a></p>
-
-
-
-
-
-
-
-  
-  
-
-
-
-
-
-
-                
-              </article>
+<p><strong>Next:</strong> <a href="../05-orchestration-and-workflow-engine/">Orchestration &amp; Workflow Engine</a>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div></p></div>
             </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
-      
-    </div>
-  </div>
-</footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
-      
-    
-  </body>
+
+    </body>
 </html>

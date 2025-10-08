@@ -37,25 +37,16 @@ This registry provides unified access to all resources, manages versioning and s
 
 ## 🧩 Architecture Overview
 
-```yaml
-+----------------------------------------------------+
-|                Resource API                        |
-| - Resource Manager                                  |
-| - Indexer / Search Engine                          |
-| - Version Resolver                                 |
-| - Storage Adapter (File, DB, Remote)               |
-+---------------------------┬------------------------+
-                            |
-                            ▼
-                +---------------+
-                | Resource Blob |
-                +---------------+
-                            |
-                            ▼
-                +---------------+
-                | Local Cache   |
-                +---------------+
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Resource API<br/>- Resource Manager<br/>- Indexer / Search Engine<br/>- Version Resolver<br/>- Storage Adapter (File, DB, Remote)"]
+    B["Resource Blob"]
+    C["Local Cache"]
+    
+    A --> B
+    B --> C
+```
 
 ---
 
@@ -275,3 +266,19 @@ Each tool can still override with its own wordlist if required.
 ---
 
 **Next:** [Wordlist & Output Sharing Rules](10-wordlist-and-output-sharing.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

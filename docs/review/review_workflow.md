@@ -169,7 +169,7 @@ graph TD
     J -->|Yes| K[Emergency Review]
     K --> H
     J -->|No| E
-```
+```text
 
 ## 📊 Review Metrics and KPIs
 
@@ -337,3 +337,5 @@ The review workflow is considered successful when:
 ---
 
 **Next Steps:** Begin Phase 1 - Pre-Review Setup
+```
+```

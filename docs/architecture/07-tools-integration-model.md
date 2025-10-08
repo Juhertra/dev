@@ -23,31 +23,18 @@ Each integrated tool is represented as:
 
 ## 🧱 Architectural Overview
 
-```yaml
-+--------------------------+
-|     Tool Manager          |
-| - Tool Registry           |
-| - Manifest Validator      |
-| - Sandbox Executor        |
-| - Output Parser           |
-+-----------┬---------------+
-            |
-            ▼
-+---------------------+
-| Tool Wrapper        |
-| (e.g., Nuclei)      |
-+---------------------+
-            |
-            ▼
-+---------------------+
-| Tool Output Parser  |
-+---------------------+
-            |
-            ▼
-+---------------------+
-| Findings Engine     |
-+---------------------+
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Tool Manager<br/>- Tool Registry<br/>- Manifest Validator<br/>- Sandbox Executor<br/>- Output Parser"]
+    B["Tool Wrapper<br/>(e.g., Nuclei)"]
+    C["Tool Output Parser"]
+    D["Findings Engine"]
+    
+    A --> B
+    B --> C
+    C --> D
+```
 
 ---
 
@@ -312,3 +299,19 @@ All tool outputs are normalized into the Finding schema before storage.
 ---
 
 **Next:** [Tool Manager & User Experience Design](08-tool-manager-and-ux-design.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

@@ -83,18 +83,30 @@ secflowctl risk report --format table
 ```text
 
 ### CLI Structure
-```text
-secflowctl/
- ├── __main__.py
- ├── commands/
- │   ├── project.py
- │   ├── scan.py
- │   ├── workflow.py
- │   ├── plugin.py
- │   └── risk.py
- └── utils/
-     └── formatting.py
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["secflowctl/"]
+    B["__main__.py"]
+    C["commands/"]
+    D["project.py"]
+    E["scan.py"]
+    F["workflow.py"]
+    G["plugin.py"]
+    H["risk.py"]
+    I["utils/"]
+    J["formatting.py"]
+    
+    A --> B
+    A --> C
+    A --> I
+    C --> D
+    C --> E
+    C --> F
+    C --> G
+    C --> H
+    I --> J
+```
 
 ### CLI Design Features
 - Rich TUI (Textual) output for interactive sessions
@@ -131,13 +143,26 @@ docs(readme): update setup instructions
 ### MkDocs Project Layout
 ```bash
 docs/
- ├── architecture/      # Deep technical docs
- ├── api/               # OpenAPI spec & usage
- ├── dev/               # Developer onboarding
- ├── operations/        # Deployment & monitoring
- ├── plugins/           # Plugin development guide
- └── index.md           # Landing page
-```bash
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["docs/"]
+    B["architecture/<br/>(Deep technical docs)"]
+    C["api/<br/>(OpenAPI spec & usage)"]
+    D["dev/<br/>(Developer onboarding)"]
+    E["operations/<br/>(Deployment & monitoring)"]
+    F["plugins/<br/>(Plugin development guide)"]
+    G["index.md<br/>(Landing page)"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+```
 
 ### Build Command
 ```bash
@@ -280,3 +305,27 @@ make diagram && make docs
 ---
 
 **Next:** [Future Roadmap](23-future-roadmap.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

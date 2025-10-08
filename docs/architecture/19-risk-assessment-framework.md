@@ -24,16 +24,11 @@ This layered model supports both **quantitative** (numeric scores) and **qualita
 
 ## 🧱 Architecture Overview
 
-```text
-+-------------------------------------------------------------+
-|                SecFlow Risk Engine                          |
-| - CVSS Normalizer (from findings or enrichment)            |
-| - NIST 5×5 Contextual Matrix                               |
-| - MITRE ATT&CK Mapper                                      |
-| - Risk Aggregator & Scorer                                 |
-| - Project Risk Dashboard                                   |
-+-------------------------------------------------------------+
-```yaml
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["SecFlow Risk Engine<br/>- CVSS Normalizer (from findings or enrichment)<br/>- NIST 5×5 Contextual Matrix<br/>- MITRE ATT&CK Mapper<br/>- Risk Aggregator & Scorer<br/>- Project Risk Dashboard"]
+```
 
 ---
 
@@ -215,14 +210,14 @@ Each project's analytics tab visualizes:
 | ATT&CK tactics heatmap | |
 
 ### Example chart:
-```text
-Risk Trend (Score over Time)
-│        ████████ High
-│   ████ Medium
-│  ██
-└────────────────────────────
-   Jan  Feb  Mar  Apr  May
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+xychart-beta
+    title "Risk Trend (Score over Time)"
+    x-axis ["Jan", "Feb", "Mar", "Apr", "May"]
+    y-axis "Risk Score" 0 --> 100
+    bar [85, 70, 45, 60, 80]
+```
 
 ## ⚙️ Risk Normalization Across Tools
 
@@ -301,3 +296,21 @@ Every risk computation is versioned and auditable:
 ---
 
 **Next:** [Migration & Implementation Phases](20-migration-and-implementation-phases.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

@@ -20,45 +20,35 @@ This allows us to:
 
 ## 🧱 Directory Structure
 
-```text
-SecFlow/
-├── apps/
-│   ├── web-api/          # FastAPI service exposing REST & WS endpoints
-│   ├── worker/           # Background task engine executing workflows
-│   ├── orchestrator-cli/ # CLI for project operations and tool orchestration
-│   ├── triage-ui/        # Web dashboard (HTMX/React)
-│   └── integrations/     # Optional integrations (CI/CD, Bug bounty, etc.)
-│
-├── packages/
-│   ├── core-lib/         # Domain models, ports, repository contracts
-│   ├── findings-engine/  # Normalization & enrichment logic
-│   ├── wrappers/         # Tool wrappers (Nuclei, Ferox, Katana, etc.)
-│   ├── resources/        # Wordlists, templates, payload registries
-│   ├── storage/          # Database, cache, and persistence adapters
-│   ├── plugins/          # Extensible modules for detection/enrichment
-│   ├── utils/            # Helpers (parsers, validators, caching)
-│   └── schemas/          # JSONSchema definitions for validation
-│
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   ├── workflows/
-│   └── data/
-│
-├── docs/
-│   └── architecture/     # This documentation suite
-│
-├── scripts/
-│   ├── bootstrap.sh
-│   ├── db_migrate.py
-│   └── run_tests.sh
-│
-├── pyproject.toml        # Poetry configuration
-├── tox.ini               # Multi-environment testing
-├── importlinter.ini      # Import rules enforcement
-├── .github/workflows/ci.yml # CI/CD pipeline
-└── README.md
-```yaml
+```mermaid
+flowchart TD
+  root["SecFlow/"]
+
+  root --> pkgs["packages/"]
+  pkgs --> core["core-lib/"]
+  pkgs --> wf["workflow-engine/"]
+  pkgs --> tm["tool-manager/"]
+  pkgs --> rr["resource-registry/"]
+  pkgs --> obs["observability/"]
+  pkgs --> sec["security/"]
+
+  root --> apps["apps/"]
+  apps --> cli["cli/"]
+  apps --> api["api-server/"]
+  apps --> web["web-ui/"]
+
+  root --> docs["docs/"]
+  docs --> arch["architecture/"]
+  docs --> review["review/"]
+  docs --> diagrams["diagrams/"]
+
+  root --> tools["tools/"]
+  tools --> scripts["scripts/"]
+  tools --> linters["linters/"]
+
+  root --> github[".github/"]
+  github --> workflows["workflows/"]
+```
 
 ---
 
@@ -223,3 +213,15 @@ jobs:
 ---
 
 **Next:** [Core Packages & Responsibilities](04-core-packages-and-responsibilities.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

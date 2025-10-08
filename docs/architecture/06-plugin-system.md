@@ -42,14 +42,18 @@ SecFlow supports three primary plugin categories:
 | - Validator                                                 |
 | - Sandbox                                                   |
 +-------------------------------------------------------------+
-     |                |                  |
-     |                |                  |
-     ▼                ▼                  ▼
-+----------+    +-------------+    +-------------+
-|Detector  |    | Enricher    |    | Analytics   |
-|Plugins   |    | Plugins     |    | Plugins     |
-+----------+    +-------------+    +-------------+
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Plugin Registry"]
+    B["Detector Plugins"]
+    C["Enricher Plugins"]
+    D["Analytics Plugins"]
+    
+    A --> B
+    A --> C
+    A --> D
+```
 
 ---
 
@@ -183,14 +187,28 @@ Each plugin executes inside a restricted environment:
 ### Directory Layout
 ```python
 plugins/
-├── registry.py
-├── manifests/
-│   ├── cve_enricher.yaml
-│   └── nuclei_detector.yaml
-└── detectors/
-    ├── nuclei_detector.py
-    └── zap_detector.py
-```python
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["plugins/"]
+    B["registry.py"]
+    C["manifests/"]
+    D["cve_enricher.yaml"]
+    E["nuclei_detector.yaml"]
+    F["detectors/"]
+    G["nuclei_detector.py"]
+    H["zap_detector.py"]
+    
+    A --> B
+    A --> C
+    A --> F
+    C --> D
+    C --> E
+    F --> G
+    F --> H
+```
 
 ### Discovery Algorithm
 ```python
@@ -244,3 +262,21 @@ Telemetry is captured by the Observability subsystem (see [Observability, Loggin
 ---
 
 **Next:** [Tools Integration Model](07-tools-integration-model.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

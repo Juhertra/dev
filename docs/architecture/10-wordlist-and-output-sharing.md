@@ -15,13 +15,16 @@ allowing different scanners and discovery tools to reuse **wordlists**, **templa
 
 This enables workflows like:
 
-```text
-Feroxbuster (directory discovery)
-        ↓
-Katana (crawler + parameter discovery)
-        ↓
-Nuclei (template-driven vulnerability scan)
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+    A["Feroxbuster<br/>(directory discovery)"]
+    B["Katana<br/>(crawler + parameter discovery)"]
+    C["Nuclei<br/>(template-driven vulnerability scan)"]
+    
+    A --> B
+    B --> C
+```
 
 Each step consumes outputs and produces standardized findings that can be reused in subsequent stages — without manual conversions or reconfiguration.
 
@@ -41,18 +44,20 @@ Each step consumes outputs and produces standardized findings that can be reused
 
 ## ⚙️ Wordlist Management Flow
 
-```text
-[ Resource Registry ]
-        │
-        ▼
-[ Wordlist Resolver ]──► Global Cache
-        │
-        ▼
-[ Tool Wrapper Config ]
-        │
-        ▼
-[ Execution Context ]
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Resource Registry"]
+    B["Wordlist Resolver"]
+    C["Global Cache"]
+    D["Tool Wrapper Config"]
+    E["Execution Context"]
+    
+    A --> B
+    B --> C
+    B --> D
+    D --> E
+```
 
 Each execution context resolves wordlists from the **Resource Registry**, fetching them locally if needed.
 
@@ -156,13 +161,18 @@ These outputs are normalized into the Finding schema by the Findings Engine.
 
 ## 🧠 Chained Data Exchange
 
-```text
-Feroxbuster ─┐
-              ├──► Output (urls.jsonl)
-Katana ───────┘
-        ↓
-     Nuclei
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+    A["Feroxbuster"]
+    B["Output (urls.jsonl)"]
+    C["Katana"]
+    D["Nuclei"]
+    
+    A --> B
+    C --> B
+    B --> D
+```
 
 Each wrapper declares output channels (urls, parameters, endpoints, etc.).
 
@@ -261,13 +271,25 @@ This guarantees consistent retrieval and avoids redundant downloads.
 
 ```text
 Project: acme-api
- ├── Shared wordlists (global)
- ├── Custom payloads (project)
- ├── Workflow: Ferox → Katana → Nuclei
- │     ├── URLs discovered → shared dataset
- │     ├── Parameters extracted → temp dataset
- │     └── Findings enriched → persisted
- └── Cached resources → reused in next run
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Shared wordlists (global)"]
+    B["Custom payloads (project)"]
+    C["Workflow: Ferox → Katana → Nuclei"]
+    D["URLs discovered → shared dataset"]
+    E["Parameters extracted → temp dataset"]
+    F["Findings enriched → persisted"]
+    G["Cached resources → reused in next run"]
+    
+    A --> C
+    B --> C
+    C --> D
+    C --> E
+    C --> F
+    C --> G
 ```
 
 ## 🧩 Validation & Conflict Resolution
@@ -290,3 +312,35 @@ Project: acme-api
 ---
 
 **Next:** [Project Isolation & Data Sharing Controls](11-project-isolation-and-data-sharing.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

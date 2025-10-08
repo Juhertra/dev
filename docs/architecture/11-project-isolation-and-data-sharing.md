@@ -34,27 +34,11 @@ SecFlow's isolation model is designed to:
 
 ## ⚙️ Architectural Overview
 
-```yaml
-+-----------------------------------------------------------+
-|                Project Manager                            |
-| - Workspace Manager (namespacing, FS isolation)           |
-| - Data Access Layer (scope resolution)                   |
-| - Sharing Policy Engine (group + project-level rules)     |
-| - Audit Log (cross-project actions)                      |
-+------------------------┬----------------------------------+
-                         |
-                         ▼
-+-----------------------------------------------------------+
-|              Project Storage Structure                    |
-+-----------------------------------------------------------+
-| ~/.SecFlow/projects/<project_id>/                        |
-| ├── config.yaml                                          |
-| ├── findings/                                             |
-| ├── runs/                                                 |
-| ├── reports/                                              |
-| └── cache/                                                |
-+-----------------------------------------------------------+
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Project Manager<br/>- Workspace Manager (namespacing, FS isolation)<br/>- Data Access Layer (scope resolution)<br/>- Sharing Policy Engine (group + project-level rules)<br/>- Audit Log (cross-project actions)"]
+```
 
 ---
 
@@ -87,19 +71,32 @@ class Project(BaseModel):
 Each project is backed by its own filesystem and database schema.
 
 ### Example Directory Layout
-```yaml
-~/.SecFlow/projects/
-├── acme-api/
-│   ├── config.yaml
-│   ├── runs/
-│   ├── findings/
-│   └── cache/
-├── finance-portal/
-│   ├── config.yaml
-│   ├── runs/
-│   ├── findings/
-│   └── cache/
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["~/.SecFlow/projects/"]
+    B["acme-api/"]
+    C["config.yaml"]
+    D["runs/"]
+    E["findings/"]
+    F["cache/"]
+    G["finance-portal/"]
+    H["config.yaml"]
+    I["runs/"]
+    J["findings/"]
+    K["cache/"]
+    
+    A --> B
+    A --> G
+    B --> C
+    B --> D
+    B --> E
+    B --> F
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+```
 
 ### Database Schema Isolation
 
@@ -295,3 +292,31 @@ def validate_policy(policy):
 ---
 
 **Next:** [Findings Model & Schema Normalization](12-findings-model-and-schema.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

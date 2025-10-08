@@ -44,20 +44,14 @@ Errors are classified to determine handling strategy:
 
 ## 🧩 Error Handling Architecture
 
-```yaml
-+------------------------------------------+
-|              Workflow Engine             |
-| - Retry Controller                       |
-| - Error Propagation Manager              |
-| - Compensation Handlers                  |
-| - Dead Letter Queue                      |
-+------------------------------------------+
-      │
-      ▼
-+------------------------------------------+
-|     Observability & Audit Log            |
-+------------------------------------------+
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Workflow Engine<br/>- Retry Controller<br/>- Error Propagation Manager<br/>- Compensation Handlers<br/>- Dead Letter Queue"]
+    B["Observability & Audit Log"]
+    
+    A --> B
+```
 
 ---
 
@@ -291,3 +285,27 @@ If a subsystem fails (e.g., enrichment API offline):
 ---
 
 **Next:** [Risk Assessment & Scoring Framework](19-risk-assessment-framework.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

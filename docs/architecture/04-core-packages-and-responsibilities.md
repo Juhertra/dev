@@ -39,23 +39,40 @@ The architecture is intentionally **hexagonal**:
 `core-lib` is the **foundation** of SecFlow. It defines all domain entities, type contracts, and abstract interfaces (ports) used throughout the system.
 
 ### Structure
-```text
-core-lib/
-├── models/
-│   ├── finding.py
-│   ├── project.py
-│   ├── resource.py
-│   └── run.py
-├── ports/
-│   ├── storage_port.py
-│   ├── tool_port.py
-│   ├── resource_port.py
-│   └── findings_port.py
-├── services/
-│   ├── workflow_service.py
-│   └── triage_service.py
-└── exceptions.py
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["core-lib/"]
+    B["models/"]
+    C["finding.py"]
+    D["project.py"]
+    E["resource.py"]
+    F["run.py"]
+    G["ports/"]
+    H["storage_port.py"]
+    I["tool_port.py"]
+    J["resource_port.py"]
+    K["findings_port.py"]
+    L["services/"]
+    M["workflow_service.py"]
+    N["triage_service.py"]
+    O["exceptions.py"]
+    
+    A --> B
+    A --> G
+    A --> L
+    A --> O
+    B --> C
+    B --> D
+    B --> E
+    B --> F
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+    L --> M
+    L --> N
+```
 
 ### Example Model
 ```python
@@ -129,11 +146,22 @@ Wraps and executes third-party tools through a unified interface defined by `Too
 ### Example Structure
 ```text
 wrappers/
-├── nuclei_wrapper.py
-├── ferox_wrapper.py
-├── zap_wrapper.py
-└── base_wrapper.py
-```python
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["wrappers/"]
+    B["nuclei_wrapper.py"]
+    C["ferox_wrapper.py"]
+    D["zap_wrapper.py"]
+    E["base_wrapper.py"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+```
 
 ### Example Base Class
 ```python
@@ -282,3 +310,21 @@ Arrows represent dependency flow, not import direction (imports always go downwa
 ---
 
 **Next:** [Orchestration & Workflow Engine](05-orchestration-and-workflow-engine.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

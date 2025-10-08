@@ -1,1265 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Garbage Collection - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Hexagonal architecture, workflows, plugins, and validation portal">
-      
-      
-        <meta name="author" content="Hernan Trajtemberg, Lead Security Engineer">
-      
-      
-      
-        <link rel="prev" href="../14-poc-sources-and-legal-guidelines/">
-      
-      
-        <link rel="next" href="../16-security-model/">
-      
-      
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
-    
-    
-      
-        <title>SecFlow — Garbage Collection & Data Retention Policy - SecFlow Architecture & Validation</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
-      
-      
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#15-garbage-collection-data-retention-policy" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-header__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            SecFlow Architecture & Validation
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              SecFlow — Garbage Collection & Data Retention Policy
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SecFlow Architecture &amp; Validation" class="md-nav__button md-logo" aria-label="SecFlow Architecture & Validation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    SecFlow Architecture & Validation
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            Overview
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../00-index/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Home
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../01-title-and-executive-summary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Executive Summary
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Architecture
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            Architecture
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../02-architecture-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Philosophy
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-repository-layout/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Repository Layout
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../04-core-packages-and-responsibilities/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Core Packages
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-orchestration-and-workflow-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Orchestration Engine
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-plugin-system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Plugin System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-tools-integration-model/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tools Integration
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-tool-manager-and-ux-design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tool Manager & UX
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-resource-registry/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Resource Registry
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-wordlist-and-output-sharing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Wordlists & Sharing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-project-isolation-and-data-sharing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Project Isolation & Sharing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../12-findings-model-and-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Findings Schema
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../13-cve-cwe-poc-enrichment-layer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Enrichment Layer
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../14-poc-sources-and-legal-guidelines/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    PoC Sources & Legal
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Garbage Collection
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    Garbage Collection
-    
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧭 Overview
-    </span>
-  </a>
-  
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../00-index/" class="dropdown-item">Home</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#core-objectives" class="md-nav__link">
-    <span class="md-ellipsis">
-      ⚙️ Core Objectives
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧩 Architecture Diagram
-    </span>
-  </a>
-  
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#future-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔮 Future Enhancements
-    </span>
-  </a>
-  
+                                    
+<li>
+    <a href="../03-repository-layout/" class="dropdown-item">Repository Layout</a>
 </li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
+                                    
+<li>
+    <a href="../04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
 
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../16-security-model/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Security Model
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../17-observability-logging-and-metrics/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Observability
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../18-error-handling-and-recovery/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Error Handling
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../19-risk-assessment-framework/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Risk Assessment
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../20-migration-and-implementation-phases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Migration Plan
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../21-ci-cd-and-testing-strategy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    CI/CD & Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../22-developer-experience-and-docs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Dev Experience & Docs
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../23-future-roadmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Future Roadmap
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../24-final-consensus-summary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Final Consensus
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Review & Validation
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Review & Validation
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/REVIEW_GUIDELINES/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Guidelines
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/review_workflow/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Workflow
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/review_assignments/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Assignments
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/validation_checklist/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Checklist
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/REVIEW_STATUS/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Status
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/validation_report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Report
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/VALIDATION_SUMMARY/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    AI Summary
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../review/glossary.yml" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Glossary
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../14-poc-sources-and-legal-guidelines/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../16-security-model/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
                 </div>
-              </div>
-            
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
+            </div>
+        </div>
 
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
 
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#15-garbage-collection-data-retention-policy" class="nav-link">15 — Garbage Collection &amp; Data Retention Policy</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">🧭 Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#core-objectives" class="nav-link">⚙️ Core Objectives</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#architecture-diagram" class="nav-link">🧩 Architecture Diagram</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#retention-model" class="nav-link">🧩 Retention Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
 
 <h1 id="15-garbage-collection-data-retention-policy">15 — Garbage Collection &amp; Data Retention Policy<a class="headerlink" href="#15-garbage-collection-data-retention-policy" title="Permanent link">&para;</a></h1>
 <h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
@@ -1304,243 +289,238 @@ It automates the cleanup of:
 </table>
 <hr />
 <h2 id="architecture-diagram">🧩 Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>+---------------------------------------------+
-|                Worker App                   |
-| - GC Scheduler (Celery Beat)               |
-| - GC Worker (Async Cleanup Tasks)          |
-| - Retention Policy Manager                  |
-| - Audit Trail Logger                        |
-+---------------------------------------------+
-        │
-        ▼
-+---------------------------------------------+
-|         Persistent Storage Layer            |
-| - DB Tables: projects, runs, findings, logs |
-| - FS Paths: /resources, /cache, /artifacts  |
-+---------------------------------------------+
-```python
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Worker App&lt;br/&gt;- GC Scheduler (Celery Beat)&lt;br/&gt;- GC Worker (Async Cleanup Tasks)&lt;br/&gt;- Retention Policy Manager&lt;br/&gt;- Audit Trail Logger"]
+    B["Persistent Storage Layer&lt;br/&gt;- DB Tables: projects, runs, findings, logs&lt;br/&gt;- FS Paths: /resources, /cache, /artifacts"]
 
----
+    A --&gt; B</div>
+<hr />
+<h2 id="retention-model">🧩 Retention Model<a class="headerlink" href="#retention-model" title="Permanent link">&para;</a></h2>
+<p>Each project defines its <strong>retention profile</strong> in <code>~/.SecFlow/projects/&lt;id&gt;/config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">retention</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">findings_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">  </span><span class="nt">runs_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">  </span><span class="nt">cache_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">artifacts_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">  </span><span class="nt">soft_delete_ttl_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
+<span class="w">  </span><span class="nt">auto_cleanup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">yaml</span>
 
-## 🧩 Retention Model
+<span class="c1">## 🧱 Data Lifecycle</span>
 
-Each project defines its **retention profile** in `~/.SecFlow/projects/&lt;id&gt;/config.yaml`:
+<span class="p p-Indicator">|</span><span class="err"> Stage | Description |</span>
+<span class="p p-Indicator">|</span><span class="err">-------|-------------|</span>
+<span class="p p-Indicator">|</span><span class="err"> **Active** | Data used by ongoing projects or workflows. |</span>
+<span class="nt">| **Soft Deleted** | Marked for deletion but restorable (`flag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deleted=true`). |</span>
+<span class="p p-Indicator">|</span><span class="err"> **Expired** | TTL exceeded; scheduled for cleanup. |</span>
+<span class="p p-Indicator">|</span><span class="err"> **Hard Deleted** | Permanently removed after grace period. |</span>
 
-```yaml
-retention:
-  findings_ttl_days: 180
-  runs_ttl_days: 90
-  cache_ttl_days: 30
-  artifacts_ttl_days: 180
-  soft_delete_ttl_days: 14
-  auto_cleanup: true
-```yaml
+<span class="c1">## 🧠 Database-Level Soft Delete</span>
 
-## 🧱 Data Lifecycle
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">class BaseModel(SQLModel)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UUID</span>
+<span class="w">    </span><span class="nt">created_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
+<span class="w">    </span><span class="nt">updated_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
+<span class="w">    </span><span class="nt">deleted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool = False</span>
+<span class="w">    </span><span class="nt">deleted_at</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Optional[datetime] = None</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
 
-| Stage | Description |
-|-------|-------------|
-| **Active** | Data used by ongoing projects or workflows. |
-| **Soft Deleted** | Marked for deletion but restorable (`flag: deleted=true`). |
-| **Expired** | TTL exceeded; scheduled for cleanup. |
-| **Hard Deleted** | Permanently removed after grace period. |
+<span class="nt">When a record is soft-deleted</span><span class="p">:</span>
 
-## 🧠 Database-Level Soft Delete
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">def soft_delete(obj)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted = True</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted_at = datetime.utcnow()</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">session.add(obj)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">session.commit()</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
 
-```python
-class BaseModel(SQLModel):
-    id: UUID
-    created_at: datetime
-    updated_at: datetime
-    deleted: bool = False
-    deleted_at: Optional[datetime] = None
-```python
+<span class="nt">Recovery</span><span class="p">:</span>
 
-When a record is soft-deleted:
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">def restore(obj)</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted = False</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">obj.deleted_at = None</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">session.commit()</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
 
-```python
-def soft_delete(obj):
-    obj.deleted = True
-    obj.deleted_at = datetime.utcnow()
-    session.add(obj)
-    session.commit()
-```python
+<span class="c1">## 🧩 File System Garbage Collector</span>
 
-Recovery:
+<span class="c1">### Directory Structure</span>
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="l l-Scalar l-Scalar-Plain">/data/</span>
+</code></pre></div>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["~/.SecFlow/"]
+    B["projects/"]
+    C["&lt;project_id&gt;/"]
+    D["findings/"]
+    E["runs/"]
+    F["logs/"]
+    G["artifacts/"]
+    H["cache/"]
+    I["tmp/"]
 
-```python
-def restore(obj):
-    obj.deleted = False
-    obj.deleted_at = None
-    session.commit()
-```text
+    A --&gt; B
+    A --&gt; H
+    A --&gt; I
+    B --&gt; C
+    C --&gt; D
+    C --&gt; E
+    C --&gt; F
+    C --&gt; G</div>
+<p>The GC worker traverses these trees periodically:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sweep_directory</span><span class="p">(</span><span class="n">base_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">older_than</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">):</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">older_than</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+<span class="err">```</span><span class="n">python</span>
 
-## 🧩 File System Garbage Collector
+<span class="c1">## 🧠 GC Task Scheduling</span>
 
-### Directory Structure
-```text
-/data/
- ├── projects/
- │   ├── &lt;project_id&gt;/
- │   │   ├── findings/
- │   │   ├── runs/
- │   │   ├── logs/
- │   │   └── artifacts/
- ├── cache/
- └── tmp/
-```python
+<span class="c1">### Celery Task Definition</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;gc.cleanup_expired&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cleanup_expired</span><span class="p">():</span>
+    <span class="n">sweep_projects</span><span class="p">()</span>
+    <span class="n">sweep_cache</span><span class="p">()</span>
+    <span class="n">sweep_artifacts</span><span class="p">()</span>
+<span class="err">```</span><span class="n">text</span>
 
-The GC worker traverses these trees periodically:
+<span class="c1">### Scheduler Configuration</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="n">CELERY_BEAT_SCHEDULE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;cleanup-every-6h&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;gc.cleanup_expired&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">crontab</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="s2">&quot;*/6&quot;</span><span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="n">text</span>
 
-```python
-def sweep_directory(base_path: Path, older_than: timedelta):
-    now = datetime.utcnow()
-    for p in base_path.rglob(&quot;*&quot;):
-        if p.is_file() and (now - datetime.fromtimestamp(p.stat().st_mtime)) &gt; older_than:
-            p.unlink()
-```python
+<span class="n">GC</span> <span class="n">tasks</span> <span class="n">can</span> <span class="n">be</span> <span class="n">triggered</span> <span class="n">manually</span><span class="p">:</span>
+<span class="err">```</span><span class="n">bash</span>
+<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">run</span> <span class="o">--</span><span class="n">project</span> <span class="n">acme</span><span class="o">-</span><span class="n">api</span>
+<span class="err">```</span><span class="n">python</span>
 
-## 🧠 GC Task Scheduling
+<span class="c1">## 🧩 Retention Policy Evaluation</span>
 
-### Celery Task Definition
-```python
-@app.task(name=&quot;gc.cleanup_expired&quot;)
-def cleanup_expired():
-    sweep_projects()
-    sweep_cache()
-    sweep_artifacts()
-```text
+<span class="c1">### Example Policy Rules</span>
+<span class="o">|</span> <span class="n">Rule</span> <span class="o">|</span> <span class="n">Condition</span> <span class="o">|</span> <span class="n">Action</span> <span class="o">|</span>
+<span class="o">|------|-----------|--------|</span>
+<span class="o">|</span> <span class="n">Inactive</span> <span class="n">Runs</span> <span class="o">|</span> <span class="n">Run</span> <span class="n">ended</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="n">days</span> <span class="n">ago</span> <span class="o">|</span> <span class="n">Delete</span> <span class="n">run</span> <span class="n">logs</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">Soft</span><span class="o">-</span><span class="n">Deleted</span> <span class="n">Findings</span> <span class="o">|</span> <span class="n">Deleted</span> <span class="o">&gt;</span> <span class="mi">14</span> <span class="n">days</span> <span class="n">ago</span> <span class="o">|</span> <span class="n">Purge</span> <span class="n">permanently</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">Cache</span> <span class="n">Expired</span> <span class="o">|</span> <span class="n">Cache</span> <span class="n">entry</span> <span class="n">older</span> <span class="n">than</span> <span class="mi">30</span> <span class="n">days</span> <span class="o">|</span> <span class="n">Remove</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">Unused</span> <span class="n">Artifacts</span> <span class="o">|</span> <span class="n">Artifact</span> <span class="ow">not</span> <span class="n">accessed</span> <span class="k">for</span> <span class="mi">180</span> <span class="n">days</span> <span class="o">|</span> <span class="n">Archive</span> <span class="ow">or</span> <span class="n">delete</span> <span class="o">|</span>
 
-### Scheduler Configuration
-```python
-CELERY_BEAT_SCHEDULE = {
-    &quot;cleanup-every-6h&quot;: {
-        &quot;task&quot;: &quot;gc.cleanup_expired&quot;,
-        &quot;schedule&quot;: crontab(hour=&quot;*/6&quot;),
-    },
-}
-```text
+<span class="c1">### Policy Engine Snippet</span>
+<span class="err">```</span><span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_retention</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">policy</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">deleted</span> <span class="ow">and</span> <span class="n">expired</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">deleted_at</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">soft_delete_ttl_days</span><span class="p">):</span>
+        <span class="n">hard_delete</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">expired</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">updated_at</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">findings_ttl_days</span><span class="p">):</span>
+        <span class="n">soft_delete</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+<span class="err">```</span><span class="n">text</span>
 
-GC tasks can be triggered manually:
-```bash
-SecFlow gc run --project acme-api
-```python
+<span class="c1">## 🧩 Audit Logging for GC</span>
 
-## 🧩 Retention Policy Evaluation
+<span class="n">Each</span> <span class="n">GC</span> <span class="n">operation</span> <span class="n">generates</span> <span class="n">an</span> <span class="n">audit</span> <span class="n">record</span><span class="p">:</span>
 
-### Example Policy Rules
-| Rule | Condition | Action |
-|------|-----------|--------|
-| Inactive Runs | Run ended &gt; 90 days ago | Delete run logs |
-| Soft-Deleted Findings | Deleted &gt; 14 days ago | Purge permanently |
-| Cache Expired | Cache entry older than 30 days | Remove |
-| Unused Artifacts | Artifact not accessed for 180 days | Archive or delete |
+<span class="err">```</span><span class="n">json</span>
+<span class="p">{</span>
+  <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;gc_delete&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;finding&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;target_id&quot;</span><span class="p">:</span> <span class="s2">&quot;f123-45ac&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="s2">&quot;p001&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-10-06T09:30:00Z&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;ttl_rule&quot;</span><span class="p">:</span> <span class="s2">&quot;soft_delete_ttl_days=14&quot;</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="n">text</span>
 
-### Policy Engine Snippet
-```python
-def evaluate_retention(entity, policy):
-    if entity.deleted and expired(entity.deleted_at, policy.soft_delete_ttl_days):
-        hard_delete(entity)
-    elif expired(entity.updated_at, policy.findings_ttl_days):
-        soft_delete(entity)
-```text
+<span class="n">Stored</span> <span class="ow">in</span><span class="p">:</span>
+<span class="err">```</span><span class="n">text</span>
+<span class="o">~/.</span><span class="n">SecFlow</span><span class="o">/</span><span class="n">audit</span><span class="o">/</span><span class="n">gc</span><span class="o">.</span><span class="n">log</span>
+<span class="err">```</span><span class="n">python</span>
 
-## 🧩 Audit Logging for GC
+<span class="c1">## 🧱 Orphan Detection</span>
 
-Each GC operation generates an audit record:
+<span class="c1">### SQL Example</span>
+<span class="err">```</span><span class="n">sql</span>
+<span class="n">SELECT</span> <span class="n">f</span><span class="o">.</span><span class="n">id</span>
+<span class="n">FROM</span> <span class="n">findings</span> <span class="n">f</span>
+<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">runs</span> <span class="n">r</span> <span class="n">ON</span> <span class="n">f</span><span class="o">.</span><span class="n">run_id</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span>
+<span class="n">WHERE</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="n">IS</span> <span class="n">NULL</span><span class="p">;</span>
+<span class="err">```</span><span class="n">python</span>
 
-```json
-{
-  &quot;event&quot;: &quot;gc_delete&quot;,
-  &quot;type&quot;: &quot;finding&quot;,
-  &quot;target_id&quot;: &quot;f123-45ac&quot;,
-  &quot;project_id&quot;: &quot;p001&quot;,
-  &quot;timestamp&quot;: &quot;2025-10-06T09:30:00Z&quot;,
-  &quot;user&quot;: &quot;system&quot;,
-  &quot;ttl_rule&quot;: &quot;soft_delete_ttl_days=14&quot;
-}
-```text
+<span class="n">Any</span> <span class="n">orphaned</span> <span class="n">findings</span> <span class="ow">or</span> <span class="n">artifacts</span> <span class="p">(</span><span class="n">without</span> <span class="n">associated</span> <span class="n">runs</span><span class="o">/</span><span class="n">projects</span><span class="p">)</span> <span class="n">are</span> <span class="n">purged</span> <span class="n">automatically</span><span class="o">.</span>
 
-Stored in:
-```text
-~/.SecFlow/audit/gc.log
-```python
+<span class="c1">## 🧩 Cache Lifecycle</span>
 
-## 🧱 Orphan Detection
+<span class="n">Caches</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">CVE</span> <span class="n">data</span><span class="p">,</span> <span class="n">scan</span> <span class="n">results</span><span class="p">,</span> <span class="n">tool</span> <span class="n">logs</span><span class="p">)</span> <span class="n">use</span> <span class="n">a</span> <span class="n">standardized</span> <span class="n">interface</span><span class="p">:</span>
 
-### SQL Example
-```sql
-SELECT f.id
-FROM findings f
-LEFT JOIN runs r ON f.run_id = r.id
-WHERE r.id IS NULL;
-```python
+<span class="err">```</span><span class="n">python</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CacheEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">expires_at</span><span class="p">:</span> <span class="n">datetime</span>
 
-Any orphaned findings or artifacts (without associated runs/projects) are purged automatically.
+<span class="k">def</span><span class="w"> </span><span class="nf">purge_expired</span><span class="p">():</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">CacheEntry</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">CacheEntry</span><span class="o">.</span><span class="n">expires_at</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="err">```</span><span class="n">text</span>
 
-## 🧩 Cache Lifecycle
+<span class="c1">## 🧠 Manual Cleanup Command</span>
 
-Caches (e.g., CVE data, scan results, tool logs) use a standardized interface:
+<span class="n">Users</span> <span class="n">can</span> <span class="n">trigger</span> <span class="n">GC</span> <span class="n">manually</span> <span class="n">via</span> <span class="n">CLI</span><span class="p">:</span>
 
-```python
-class CacheEntry(BaseModel):
-    key: str
-    value: bytes
-    expires_at: datetime
+<span class="err">```</span><span class="n">bash</span>
+<span class="c1"># Run full cleanup (all projects)</span>
+<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">run</span>
 
-def purge_expired():
-    session.query(CacheEntry).filter(CacheEntry.expires_at &lt; datetime.utcnow()).delete()
-```text
+<span class="c1"># Run cleanup for one project</span>
+<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">run</span> <span class="o">--</span><span class="n">project</span> <span class="n">acme</span><span class="o">-</span><span class="n">api</span>
 
-## 🧠 Manual Cleanup Command
+<span class="c1"># Preview what will be deleted</span>
+<span class="n">SecFlow</span> <span class="n">gc</span> <span class="n">dry</span><span class="o">-</span><span class="n">run</span>
+<span class="err">```</span><span class="n">text</span>
 
-Users can trigger GC manually via CLI:
+<span class="c1">### Example output:</span>
+<span class="err">```</span><span class="n">text</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Found</span> <span class="mi">12</span> <span class="n">expired</span> <span class="n">runs</span><span class="p">,</span> <span class="mi">4</span> <span class="n">orphaned</span> <span class="n">findings</span><span class="p">,</span> <span class="mi">6</span> <span class="n">stale</span> <span class="n">cache</span> <span class="n">entries</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Total</span> <span class="n">reclaimed</span><span class="p">:</span> <span class="mf">1.2</span> <span class="n">GB</span>
+<span class="err">```</span><span class="n">text</span>
 
-```bash
-# Run full cleanup (all projects)
-SecFlow gc run
+<span class="c1">## 🔐 Security Considerations</span>
 
-# Run cleanup for one project
-SecFlow gc run --project acme-api
+<span class="o">-</span> <span class="n">All</span> <span class="n">deletions</span> <span class="p">(</span><span class="n">soft</span> <span class="ow">or</span> <span class="n">hard</span><span class="p">)</span> <span class="n">are</span> <span class="n">logged</span><span class="o">.</span>
+<span class="o">-</span> <span class="n">Data</span> <span class="ow">is</span> <span class="n">never</span> <span class="n">removed</span> <span class="n">without</span> <span class="n">audit</span> <span class="n">trace</span><span class="o">.</span>
+<span class="o">-</span> <span class="n">System</span> <span class="n">prevents</span> <span class="n">GC</span> <span class="k">while</span> <span class="n">a</span> <span class="n">project</span> <span class="ow">is</span> <span class="n">locked</span> <span class="ow">or</span> <span class="n">running</span><span class="o">.</span>
+<span class="o">-</span> <span class="n">Manual</span> <span class="n">GC</span> <span class="n">requires</span> <span class="n">Admin</span> <span class="n">role</span><span class="o">.</span>
 
-# Preview what will be deleted
-SecFlow gc dry-run
-```text
+<span class="c1">## 🔄 GC Metrics &amp; Observability</span>
 
-### Example output:
-```text
-[GC] Found 12 expired runs, 4 orphaned findings, 6 stale cache entries
-[GC] Total reclaimed: 1.2 GB
-```text
+<span class="o">|</span> <span class="n">Metric</span> <span class="o">|</span> <span class="n">Description</span> <span class="o">|</span>
+<span class="o">|--------|-------------|</span>
+<span class="o">|</span> <span class="n">gc_runs_total</span> <span class="o">|</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">GC</span> <span class="n">cycles</span> <span class="n">executed</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">gc_files_removed_total</span> <span class="o">|</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">files</span> <span class="n">deleted</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">gc_bytes_reclaimed_total</span> <span class="o">|</span> <span class="n">Storage</span> <span class="n">reclaimed</span> <span class="ow">in</span> <span class="nb">bytes</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">gc_duration_seconds</span> <span class="o">|</span> <span class="n">Time</span> <span class="n">per</span> <span class="n">GC</span> <span class="n">cycle</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">gc_errors_total</span> <span class="o">|</span> <span class="n">Failed</span> <span class="n">cleanup</span> <span class="n">operations</span> <span class="o">|</span>
 
-## 🔐 Security Considerations
+<span class="n">Exposed</span> <span class="n">via</span> <span class="n">Prometheus</span> <span class="n">at</span> <span class="err">`</span><span class="o">/</span><span class="n">metrics</span><span class="err">`</span><span class="o">.</span>
 
-- All deletions (soft or hard) are logged.
-- Data is never removed without audit trace.
-- System prevents GC while a project is locked or running.
-- Manual GC requires Admin role.
+<span class="c1">## 🧠 Example GC Cycle Log</span>
 
-## 🔄 GC Metrics &amp; Observability
-
-| Metric | Description |
-|--------|-------------|
-| gc_runs_total | Number of GC cycles executed |
-| gc_files_removed_total | Number of files deleted |
-| gc_bytes_reclaimed_total | Storage reclaimed in bytes |
-| gc_duration_seconds | Time per GC cycle |
-| gc_errors_total | Failed cleanup operations |
-
-Exposed via Prometheus at `/metrics`.
-
-## 🧠 Example GC Cycle Log
-
-```text
-[GC] Cycle started at 2025-10-06T09:00:00Z
-[GC] Processed 3 projects
-[GC] Deleted 15 findings (soft)
-[GC] Purged 10 runs (hard)
-[GC] Reclaimed 1.8GB disk space
-[GC] Cycle completed in 42.3s
+<span class="err">```</span><span class="n">text</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Cycle</span> <span class="n">started</span> <span class="n">at</span> <span class="mi">2025</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">06</span><span class="n">T09</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="n">Z</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Processed</span> <span class="mi">3</span> <span class="n">projects</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Deleted</span> <span class="mi">15</span> <span class="n">findings</span> <span class="p">(</span><span class="n">soft</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Purged</span> <span class="mi">10</span> <span class="n">runs</span> <span class="p">(</span><span class="n">hard</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Reclaimed</span> <span class="mf">1.8</span><span class="n">GB</span> <span class="n">disk</span> <span class="n">space</span>
+<span class="p">[</span><span class="n">GC</span><span class="p">]</span> <span class="n">Cycle</span> <span class="n">completed</span> <span class="ow">in</span> <span class="mf">42.3</span><span class="n">s</span>
 </code></pre></div>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1551,63 +531,118 @@ Exposed via Prometheus at `/metrics`.
 <li>UI dashboard for retention and GC insights.</li>
 </ul>
 <hr />
-<p><strong>Next:</strong> <a href="../16-security-model/">Security Model (RBAC, Authentication, Sandboxing)</a></p>
-
-
-
-
-
-
-
-  
-  
-
-
-
-
-
-
-                
-              </article>
+<p><strong>Next:</strong> <a href="../16-security-model/">Security Model (RBAC, Authentication, Sandboxing)</a>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div></p></div>
             </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
-      
-    </div>
-  </div>
-</footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.expand", "content.code.copy", "toc.integrate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
-      
-    
-  </body>
+
+    </body>
 </html>

@@ -275,3 +275,29 @@ Rotation regenerates the encryption key and re-encrypts all entries.
 ---
 
 **Next:** [Observability, Logging & Metrics](17-observability-logging-and-metrics.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

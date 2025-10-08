@@ -1,0 +1,815 @@
+
+=== docs/architecture/23-future-roadmap.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Subsystem"]
+  n2["Description"]
+  n3["------------"]
+  n4["-------------"]
+  n5["Database"]
+  n6["Time-series analytics and trend computation"]
+  n7["Cache Layer"]
+  n8["High-throughput async workflows"]
+  n9["Task Queue"]
+  n10["Enhanced DAG orchestration and observability"]
+  n11["API Gateway"]
+  n12["Modular service boundaries"]
+  n13["UI Stack"]
+  n14["Real-time triage dashboards"]
+  n15["Integration"]
+  n16["--------------"]
+  n17["Caido  ZAP"]
+  n18["GitHub Advanced Security"]
+  n19["ExploitDB / Vulners API"]
+  n20["CISA KEV Sync"]
+  n21["AI Plugin System"]
+  n22["Area"]
+  n23["Use Case"]
+  n24["------"]
+  n25["----------"]
+  n26["Risk Intelligence"]
+  n27["Track improvement rate"]
+  n28["Workflow Analytics"]
+  n29["Optimize orchestration"]
+  n30["Tool Effectiveness"]
+  n31["ROI assessment"]
+  n32["Anomaly Detection"]
+  n33["Identify misbehaving scans"]
+  n34["Team Collaboration"]
+  n35["Operational efficiency"]
+  n36["Quarter"]
+  n37["Highlights"]
+  n38["Q4 2025"]
+  n39["API  Worker stable release"]
+  n40["Q1 2026"]
+  n41["LLM triage  CVE prediction"]
+  n42["Q2 2026"]
+  n43["Team dashboards tenant isolation"]
+  n44["Q3 2026"]
+  n45["Adaptive scans AI reasoning graph"]
+  n46["Q4 2026"]
+  n47["OSS launch plugin marketplace"]
+  n48["KPI"]
+  n49["Workflow execution success rate"]
+  n50["Mean enrichment latency"]
+  n51["AI triage accuracy"]
+  n52["MTTR Mean Time to Risk Report"]
+  n53["Plugin SDK adoption"]
+  n54["Platform uptime SLA"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+  n9 --> n10
+  n10 --> n11
+  n11 --> n12
+  n12 --> n13
+  n13 --> n14
+  n14 --> n15
+  n15 --> n16
+  n16 --> n17
+  n17 --> n18
+  n18 --> n19
+  n19 --> n20
+  n20 --> n21
+  n21 --> n22
+  n22 --> n23
+  n23 --> n24
+  n24 --> n25
+  n25 --> n26
+  n26 --> n27
+  n27 --> n28
+  n28 --> n29
+  n29 --> n30
+  n30 --> n31
+  n31 --> n32
+  n32 --> n33
+  n33 --> n34
+  n34 --> n35
+  n35 --> n36
+  n36 --> n37
+  n37 --> n38
+  n38 --> n39
+  n39 --> n40
+  n40 --> n41
+  n41 --> n42
+  n42 --> n43
+  n43 --> n44
+  n44 --> n45
+  n45 --> n46
+  n46 --> n47
+  n47 --> n48
+  n48 --> n49
+  n49 --> n50
+  n50 --> n51
+  n51 --> n52
+  n52 --> n53
+  n53 --> n54
+```
+
+=== docs/architecture/07-tools-integration-model.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Field"]
+  n2["-------"]
+  n3["detector_id"]
+  n4["title"]
+  n5["path"]
+  n6["severity"]
+  n7["evidence"]
+  n8["created_at"]
+  n9["provenance"]
+  n10["Condition"]
+  n11["-----------"]
+  n12["Tool binary missing"]
+  n13["Sandbox violation"]
+  n14["Timeout"]
+  n15["Parse failure"]
+  n16["Non-zero exit code"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+  n9 --> n10
+  n10 --> n11
+  n11 --> n12
+  n12 --> n13
+  n13 --> n14
+  n14 --> n15
+  n15 --> n16
+```
+
+=== docs/architecture/04-core-packages-and-responsibilities.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["core-lib/"]
+  n2["exceptions.py"]
+  n3["finding.py"]
+  n4["findings_port.py"]
+  n5["models/"]
+  n6["ports/"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/04-core-packages-and-responsibilities.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["base_wrapper.py"]
+  n2["ferox_wrapper.py"]
+  n3["nuclei_wrapper.py"]
+  n4["wrappers/"]
+  n5["zap_wrapper.py"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+```
+
+=== docs/architecture/04-core-packages-and-responsibilities.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Wrappers"]
+  n2["Findings-Engine"]
+  n3["Storage"]
+  n4["Resources"]
+  n5["Core-Lib"]
+  n6["Plugins"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/03-repository-layout.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["SecFlow/"]
+  n2["packages/"]
+  n3["core-lib findings etc."]
+  n4["apps/"]
+  n5["web-api worker cli ui"]
+  n6["tests/"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/01-title-and-executive-summary.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Web-API / UI"]
+  n2["Worker Engine"]
+  n3["Workflows DAG Queues"]
+  n4["Core-Lib"]
+  n5["Models Ports Repositories"]
+  n6["Wrappers / Plugins"]
+  n7["Nuclei Ferox Katana"]
+  n8["Findings Engine"]
+  n9["Normalization Metrics"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+```
+
+=== docs/architecture/17-observability-logging-and-metrics.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["GET /api/v1/workflows"]
+  n2["TraceID: 5b2e4f21c9a344f9"]
+  n3["api.request "]
+  n4["api.response"]
+  n5["findings.persist"]
+  n6["sandbox.cleanup"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/17-observability-logging-and-metrics.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Metric"]
+  n2["Description"]
+  n3["--------"]
+  n4["-------------"]
+  n5["secflow_requests_total"]
+  n6["Total API requests handled"]
+  n7["secflow_active_workflows"]
+  n8["Currently running workflows"]
+  n9["secflow_findings_generated_total"]
+  n10["Findings created"]
+  n11["secflow_task_duration_seconds"]
+  n12["Time taken by async tasks"]
+  n13["secflow_gc_bytes_reclaimed_total"]
+  n14["GC reclaimed bytes"]
+  n15["secflow_sandbox_executions_total"]
+  n16["Number of sandbox runs"]
+  n17["secflow_tool_failures_total"]
+  n18["Failed tool executions"]
+  n19["secflow_worker_queue_depth"]
+  n20["Pending Celery tasks"]
+  n21["secflow_cve_enrichment_latency_seconds"]
+  n22["Time per CVE query"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+  n9 --> n10
+  n10 --> n11
+  n11 --> n12
+  n12 --> n13
+  n13 --> n14
+  n14 --> n15
+  n15 --> n16
+  n16 --> n17
+  n17 --> n18
+  n18 --> n19
+  n19 --> n20
+  n20 --> n21
+  n21 --> n22
+```
+
+=== docs/architecture/24-final-consensus-summary.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Business logic"]
+  n2["DTOs"]
+  n3["Database and file system adapters"]
+  n4["Normalization"]
+  n5["Plugin system and registry"]
+  n6["Resource registry and management"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/24-final-consensus-summary.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Administrative tools"]
+  n2["Background task processor"]
+  n3["Command-line interface"]
+  n4["Web dashboard and API"]
+  n5["admin/             "]
+  n6["apps/"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/02-architecture-philosophy.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Analytics"]
+  n2["CVE/CWE/POC metadata"]
+  n3["Dashboards"]
+  n4["Enrichment Layer "]
+  n5["Findings "]
+  n6["Findings Engine  "]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/19-risk-assessment-framework.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["SecFlow Risk Engine"]
+  n2["- CVSS Normalizer from findings or enrichment"]
+  n3["- NIST 55 Contextual Matrix"]
+  n4["- MITRE ATTCK Mapper"]
+  n5["- Risk Aggregator  Scorer"]
+  n6["- Project Risk Dashboard"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/19-risk-assessment-framework.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["High"]
+  n2["Jan  Feb  Mar  Apr  May"]
+  n3["Medium"]
+  n4["Risk Trend "]
+  n5["Score over Time"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+```
+
+=== docs/architecture/05-orchestration-and-workflow-engine.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Component"]
+  n2["-----------"]
+  n3["WorkflowScheduler"]
+  n4["NodeExecutor"]
+  n5["ResultCache"]
+  n6["EventBus"]
+  n7["WorkflowStore"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+```
+
+=== docs/architecture/05-orchestration-and-workflow-engine.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["ferox"]
+  n2["httpx"]
+  n3["katana"]
+  n4["nuclei"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+```
+
+=== docs/architecture/05-orchestration-and-workflow-engine.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Component"]
+  n2["-----------"]
+  n3["Findings Engine"]
+  n4["Wrappers"]
+  n5["Storage"]
+  n6["Plugins"]
+  n7["UI / API"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+```
+
+=== docs/architecture/08-tool-manager-and-ux-design.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Tool Manager"]
+  n2["- Tool Registry runtime manifest cache"]
+  n3["- Config Editor CLI  UI layer"]
+  n4["- Execution Controller worker interface"]
+  n5["- Output Collector findings normalization"]
+  n6["Tool Wrappers Layer"]
+  n7["Findings Engine"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+```
+
+=== docs/architecture/08-tool-manager-and-ux-design.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Panel"]
+  n2["-------"]
+  n3["Tools Panel"]
+  n4["Workflow Builder"]
+  n5["Execution Log"]
+  n6["Results Viewer"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/20-migration-and-implementation-phases.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Metric"]
+  n2["--------"]
+  n3["Test Coverage"]
+  n4["CI Lint Pass Rate"]
+  n5["Workflow Execution Latency"]
+  n6["Risk Score Accuracy"]
+  n7["Mean Time to Deploy"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+```
+
+=== docs/architecture/09-resource-registry.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Mechanism"]
+  n2["-----------"]
+  n3["Hash Validation"]
+  n4["Signed Resources"]
+  n5["Access Control"]
+  n6["Audit Trail"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/10-wordlist-and-output-sharing.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Execution Context "]
+  n2["Global Cache"]
+  n3["Resource Registry "]
+  n4["Tool Wrapper Config "]
+  n5["Wordlist Resolver "]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+```
+
+=== docs/architecture/10-wordlist-and-output-sharing.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Feroxbuster "]
+  n2["Katana "]
+  n3["Nuclei"]
+  n4["Output "]
+  n5["urls.jsonl"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+```
+
+=== docs/architecture/10-wordlist-and-output-sharing.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Cached resources "]
+  n2["Custom payloads "]
+  n3["Findings enriched "]
+  n4["Katana "]
+  n5["Nuclei"]
+  n6["Parameters extracted "]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/14-poc-sources-and-legal-guidelines.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["CVE-2023-98765/"]
+  n2["CVE-2024-12345/"]
+  n3["README.md"]
+  n4["SecFlow/resources/poc/"]
+  n5["exploit.py"]
+  n6["metadata.json"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/14-poc-sources-and-legal-guidelines.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Role"]
+  n2["------"]
+  n3["Admin"]
+  n4["Analyst"]
+  n5["Viewer"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+```
+
+=== docs/architecture/00-index.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["00-index.md"]
+  n2["01-title-and-executive-summary.md"]
+  n3["02-architecture-philosophy.md"]
+  n4["03-repository-layout.md"]
+  n5["04-core-packages-and-responsibilities.md"]
+  n6["05-orchestration-and-workflow-engine.md"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/21-ci-cd-and-testing-strategy.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Developer"]
+  n2["Commit / PR  GitHub Repository"]
+  n3["GitHub Actions CI Workflow"]
+  n4["- Lint Ruff"]
+  n5["- Type Check Pyright"]
+  n6["- Test Pytest Matrix"]
+  n7["- Build Poetry / Docker"]
+  n8["Artifacts Published  Container Registry"]
+  n9["CD Pipeline Staging  Production"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+```
+
+=== docs/architecture/21-ci-cd-and-testing-strategy.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["CD pipeline to staging/prod"]
+  n2["Dependency "]
+  n3["Fast linting PR checks"]
+  n4["Main build "]
+  n5["Nightly validation builds"]
+  n6["ci.yml           "]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/21-ci-cd-and-testing-strategy.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["api/"]
+  n2["core/"]
+  n3["e2e/"]
+  n4["plugins/"]
+  n5["test_cve_enrichment.py"]
+  n6["test_ferox_wrapper.py"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+```
+
+=== docs/architecture/15-garbage-collection-and-retention.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Worker App"]
+  n2["- GC Scheduler Celery Beat"]
+  n3["- GC Worker Async Cleanup Tasks"]
+  n4["- Retention Policy Manager"]
+  n5["- Audit Trail Logger"]
+  n6["Persistent Storage Layer"]
+  n7["- DB Tables: projects runs findings logs"]
+  n8["- FS Paths: /resources /cache /artifacts"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+```
+
+=== docs/architecture/15-garbage-collection-and-retention.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Metric"]
+  n2["--------"]
+  n3["gc_runs_total"]
+  n4["gc_files_removed_total"]
+  n5["gc_bytes_reclaimed_total"]
+  n6["gc_duration_seconds"]
+  n7["gc_errors_total"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+```
+
+=== docs/review/REVIEW_GUIDELINES.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Week"]
+  n2["Deliverables"]
+  n3["------"]
+  n4["--------------"]
+  n5["Week 1"]
+  n6["Initial feedback reports"]
+  n7["Week 2"]
+  n8["Consolidated issue list"]
+  n9["Week 3"]
+  n10["Resolution plan"]
+  n11["Week 4"]
+  n12["Approved architecture"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+  n9 --> n10
+  n10 --> n11
+  n11 --> n12
+```
+
+=== docs/review/review_workflow.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Metric"]
+  n2["Measurement"]
+  n3["--------"]
+  n4["-------------"]
+  n5["Review Coverage"]
+  n6["All documents reviewed by assigned roles"]
+  n7["Issue Resolution"]
+  n8["Critical issues resolved before approval"]
+  n9["Consistency Score"]
+  n10["Cross-document consistency rating"]
+  n11["Technical Accuracy"]
+  n12["All code examples and diagrams validated"]
+  n13["Security Compliance"]
+  n14["All security requirements met"]
+  n15["Review Completion"]
+  n16["All assigned reviews completed on time"]
+  n17["Stakeholder Approval"]
+  n18["All stakeholders approve their sections"]
+  n19["Issue Response Time"]
+  n20["Time to respond to critical issues"]
+  n21["Document Update Time"]
+  n22["Time to update documents after feedback"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+  n9 --> n10
+  n10 --> n11
+  n11 --> n12
+  n12 --> n13
+  n13 --> n14
+  n14 --> n15
+  n15 --> n16
+  n16 --> n17
+  n17 --> n18
+  n18 --> n19
+  n19 --> n20
+  n20 --> n21
+  n21 --> n22
+```
+
+=== docs/review/review_workflow.md ===
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+  n1["Phase"]
+  n2["Key Activities"]
+  n3["-------"]
+  n4["----------------"]
+  n5["Phase 1"]
+  n6["Pre-review setup"]
+  n7["Phase 2"]
+  n8["Individual reviews"]
+  n9["Phase 3"]
+  n10["Cross-review sessions"]
+  n11["Phase 4"]
+  n12["Group review sessions"]
+  n13["Phase 5"]
+  n14["Final validation"]
+  n1 --> n2
+  n2 --> n3
+  n3 --> n4
+  n4 --> n5
+  n5 --> n6
+  n6 --> n7
+  n7 --> n8
+  n8 --> n9
+  n9 --> n10
+  n10 --> n11
+  n11 --> n12
+  n12 --> n13
+  n13 --> n14
+```

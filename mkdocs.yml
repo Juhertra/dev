@@ -1,31 +1,33 @@
-site_name: "SecFlow Architecture & Validation"
-site_description: "Hexagonal architecture, workflows, plugins, and validation portal"
-site_url: ""
-repo_url: ""
-theme:
-  name: material
-  features:
-    - navigation.indexes
-    - navigation.expand
-    - content.code.copy
-    - toc.integrate
-    - search.suggest
-    - search.highlight
+site_name: SecFlow Docs
+
+plugins:
+  - search
+
 markdown_extensions:
   - admonition
   - attr_list
   - def_list
-  - footnotes
-  - meta
-  - toc:
-      permalink: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
   - pymdownx.details
   - pymdownx.highlight
+  - pymdownx.critic
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets
   - pymdownx.tabbed
-plugins:
-  - search
-  - mermaid2
+  - pymdownx.tasklist
+  - tables
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - js/mermaid.min.js
+  - js/mermaid-init.js
 
 nav:
   - Overview:
@@ -63,4 +65,4 @@ nav:
       - Status: review/REVIEW_STATUS.md
       - Report: review/validation_report.md
       - AI Summary: review/VALIDATION_SUMMARY.md
-      - Glossary: review/glossary.yml
+      - Mermaid Smoketest: review/mermaid-smoketest.md

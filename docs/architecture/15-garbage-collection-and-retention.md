@@ -35,22 +35,14 @@ GC operates as an **asynchronous background service** within the `worker` app an
 
 ## 🧩 Architecture Diagram
 
-```text
-+---------------------------------------------+
-|                Worker App                   |
-| - GC Scheduler (Celery Beat)               |
-| - GC Worker (Async Cleanup Tasks)          |
-| - Retention Policy Manager                  |
-| - Audit Trail Logger                        |
-+---------------------------------------------+
-        │
-        ▼
-+---------------------------------------------+
-|         Persistent Storage Layer            |
-| - DB Tables: projects, runs, findings, logs |
-| - FS Paths: /resources, /cache, /artifacts  |
-+---------------------------------------------+
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Worker App<br/>- GC Scheduler (Celery Beat)<br/>- GC Worker (Async Cleanup Tasks)<br/>- Retention Policy Manager<br/>- Audit Trail Logger"]
+    B["Persistent Storage Layer<br/>- DB Tables: projects, runs, findings, logs<br/>- FS Paths: /resources, /cache, /artifacts"]
+    
+    A --> B
+```
 
 ---
 
@@ -112,15 +104,30 @@ def restore(obj):
 ### Directory Structure
 ```text
 /data/
- ├── projects/
- │   ├── <project_id>/
- │   │   ├── findings/
- │   │   ├── runs/
- │   │   ├── logs/
- │   │   └── artifacts/
- ├── cache/
- └── tmp/
-```python
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["~/.SecFlow/"]
+    B["projects/"]
+    C["<project_id>/"]
+    D["findings/"]
+    E["runs/"]
+    F["logs/"]
+    G["artifacts/"]
+    H["cache/"]
+    I["tmp/"]
+    
+    A --> B
+    A --> H
+    A --> I
+    B --> C
+    C --> D
+    C --> E
+    C --> F
+    C --> G
+```
 
 The GC worker traverses these trees periodically:
 
@@ -286,3 +293,37 @@ Exposed via Prometheus at `/metrics`.
 ---
 
 **Next:** [Security Model (RBAC, Authentication, Sandboxing)](16-security-model.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

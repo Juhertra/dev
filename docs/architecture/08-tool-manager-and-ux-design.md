@@ -24,25 +24,16 @@ The **UX design** ensures that both CLI users and UI users can:
 
 ## 🧩 Architecture Overview
 
-```text
-+------------------------------------------------------+
-|                    Tool Manager                      |
-| - Tool Registry (runtime manifest cache)             |
-| - Config Editor (CLI + UI layer)                    |
-| - Execution Controller (worker interface)           |
-| - Output Collector (findings normalization)         |
-+------------------------┬-----------------------------+
-                         |
-                         ▼
-           +---------------------+
-           | Tool Wrappers Layer |
-           +---------------------+
-                         |
-                         ▼
-           +---------------------+
-           | Findings Engine     |
-           +---------------------+
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Tool Manager<br/>- Tool Registry (runtime manifest cache)<br/>- Config Editor (CLI + UI layer)<br/>- Execution Controller (worker interface)<br/>- Output Collector (findings normalization)"]
+    B["Tool Wrappers Layer"]
+    C["Findings Engine"]
+    
+    A --> B
+    B --> C
+```
 
 ---
 
@@ -99,12 +90,23 @@ SecFlow run feroxbuster --target https://example.com | SecFlow run nuclei
 
 ### Visual Overview
 ```text
-+---------------------------------------------------------+
-| Project: Acme Web API                                   |
-|---------------------------------------------------------|
-| [Tools Panel] [Workflow Builder] [Execution Log] [Results] |
-+---------------------------------------------------------+
-```text
+Project: Acme Web API
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Project: Acme Web API"]
+    B["Tools Panel"]
+    C["Workflow Builder"]
+    D["Execution Log"]
+    E["Results"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+```
 
 ### Key Panels
 
@@ -117,11 +119,19 @@ SecFlow run feroxbuster --target https://example.com | SecFlow run nuclei
 
 ### Example Workflow Builder Nodes
 ```bash
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│ Feroxbuster  │───▶ │ Katana       │───▶ │ Nuclei       │
-└──────────────┘     └──────────────┘     └──────────────┘
   (Discovery)          (Crawler)            (Scanner)
-```bash
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+    A["Feroxbuster"]
+    B["Katana"]
+    C["Nuclei"]
+    
+    A --> B
+    B --> C
+```
 
 Users can:
 - Configure node properties via sidebar.
@@ -272,3 +282,27 @@ secflow run \
 ---
 
 **Next:** [Resource Registry](09-resource-registry.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

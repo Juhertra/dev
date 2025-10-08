@@ -104,15 +104,28 @@ Every API request, task dispatch, and plugin call generates spans linked under o
 ### Example Trace Structure
 ```text
 TraceID: 5b2e4f21c9a344f9
-└── api.request (GET /api/v1/workflows)
-    ├── worker.dispatch
-    │   ├── tool.nuclei.run
-    │   │   ├── sandbox.spawn
-    │   │   └── sandbox.cleanup
-    │   ├── tool.ferox.run
-    │   └── findings.persist
-    └── api.response
-```text
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["api.request (GET /api/v1/workflows)"]
+    B["worker.dispatch"]
+    C["tool.nuclei.run"]
+    D["sandbox.spawn"]
+    E["sandbox.cleanup"]
+    F["tool.ferox.run"]
+    G["findings.persist"]
+    H["api.response"]
+    
+    A --> B
+    A --> H
+    B --> C
+    B --> F
+    B --> G
+    C --> D
+    C --> E
+```
 
 ### Code Example
 ```python
@@ -236,14 +249,26 @@ def sanitize(data: dict) -> dict:
 
 ```bash
 [TRACE 5b2e4f21c9a344f9]
-└── /api/v1/workflows/start
-    ├── worker.queue.dispatch (duration=12ms)
-    ├── tool.ferox.run (duration=4.1s)
-    ├── tool.nuclei.run (duration=9.3s)
-    ├── enrich.cve (duration=1.4s)
-    ├── findings.persist (duration=320ms)
-    └── audit.log (duration=7ms)
-```bash
+```
+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["/api/v1/workflows/start"]
+    B["worker.queue.dispatch (duration=12ms)"]
+    C["tool.ferox.run (duration=4.1s)"]
+    D["tool.nuclei.run (duration=9.3s)"]
+    E["enrich.cve (duration=1.4s)"]
+    F["findings.persist (duration=320ms)"]
+    G["audit.log (duration=7ms)"]
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+```
 
 ## 🧩 Integration with CI/CD and Testing
 
@@ -269,3 +294,27 @@ env:
 ---
 
 **Next:** [Error Handling & Recovery](18-error-handling-and-recovery.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

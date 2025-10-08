@@ -61,14 +61,22 @@ Before using any exploit-related features:
 
 PoCs are stored as **immutable artifacts** under the internal resource store:
 
-```text
-~/.SecFlow/resources/poc/
-├── CVE-2024-12345/
-│   ├── exploit.py
-│   ├── metadata.json
-│   └── README.md
-└── CVE-2023-98765/
-```text
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["~/.SecFlow/resources/poc/"]
+    B["CVE-2024-12345/"]
+    C["exploit.py"]
+    D["metadata.json"]
+    E["README.md"]
+    F["CVE-2023-98765/"]
+    
+    A --> B
+    A --> F
+    B --> C
+    B --> D
+    B --> E
+```
 
 ### Example `metadata.json`
 ```json
@@ -200,7 +208,7 @@ You acknowledge that PoC exploitation is to be performed exclusively on systems 
 The system stores an acceptance hash:
 ```yaml
 ~/.SecFlow/.disclaimer_accepted
-```yaml
+```
 
 ## 🧩 Cross-Project PoC Access
 
@@ -225,14 +233,14 @@ C -->|Yes| D[Mark Verified]
 C -->|No| E[Quarantine]
 E --> F[Manual Review Required]
 D --> G[Available for Sandbox Run]
-```text
+```
 
 ## 🔒 Quarantine Mechanism
 
 Unknown or tampered PoCs are moved to:
 ```text
 ~/.SecFlow/resources/poc/quarantine/
-```python
+```
 
 Each is tagged with a quarantine reason.
 Admins can review and promote back to verified status.
@@ -241,7 +249,7 @@ Admins can review and promote back to verified status.
 def quarantine_poc(poc_id: str, reason: str):
     shutil.move(f"/pocstore/{poc_id}", "/pocstore/quarantine/")
     write_log(f"PoC {poc_id} quarantined: {reason}")
-```text
+```
 
 ## 🧠 Example Execution Trace
 
@@ -254,7 +262,7 @@ def quarantine_poc(poc_id: str, reason: str):
     [+] Exploit successful: remote command executed
 [Cleanup]
     PoC container destroyed after 120s
-```
+```text
 
 ## 🔮 Future Enhancements
 
@@ -267,3 +275,27 @@ def quarantine_poc(poc_id: str, reason: str):
 ---
 
 **Next:** [Garbage Collection & Data Retention Policy](15-garbage-collection-and-retention.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

@@ -20,19 +20,22 @@ Each node represents a *tool invocation*, and edges define *data flow* between o
 
 ## 🧱 Conceptual Model
 
-```yaml
-┌────────────────────────────────────────────────────────────┐
-│                    Workflow DAG                           │
-│                                                            │
-│  +---------+    +------------+    +-----------+           │
-│  | Node A  |--->|   Node B   |--->|   Node C  |           │
-│  | (Ferox) |    | (Nuclei)   |    | (CVE Enr)|           │
-│  +---------+    +------------+    +-----------+           │
-│      |              |              |                     │
-│      |              |              |                     │
-│  Inputs/Outputs  Config/Env    Artifact Storage          │
-└────────────────────────────────────────────────────────────┘
-```yaml
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+    A["Node A<br/>(Ferox)"]
+    B["Node B<br/>(Nuclei)"]
+    C["Node C<br/>(CVE Enr)"]
+    D["Inputs/Outputs"]
+    E["Config/Env"]
+    F["Artifact Storage"]
+    
+    A --> B
+    B --> C
+    A --> D
+    B --> E
+    C --> F
+```
 
 Each node produces one or more datasets that can be consumed by downstream nodes.  
 The workflow engine guarantees:
@@ -169,11 +172,19 @@ The orchestration engine is designed for asynchronous, multi-tool execution.
 | **Chained** | Output from one node auto-feeds into next via `ResultCache`. |
 
 ### Example
-```text
-[ferox] ──▶ [katana] ──▶ [nuclei]
-  │                         ▲
-  └──────▶ [httpx] ─────────┘
-```python
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart LR
+    A["ferox"]
+    B["katana"]
+    C["nuclei"]
+    D["httpx"]
+    
+    A --> B
+    B --> C
+    A --> D
+    D --> C
+```
 
 ## 🧩 Error Handling
 
@@ -258,3 +269,21 @@ These metrics feed Prometheus exporters and the analytics dashboards.
 ---
 
 **Next:** [Plugin System](06-plugin-system.md)
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```

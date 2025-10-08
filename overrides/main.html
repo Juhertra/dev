@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'neutral',
+        themeVariables: {
+          fontFamily: 'Inter, ui-sans-serif, system-ui',
+          primaryColor: '#0ea5e9',
+          primaryBorderColor: '#0ea5e9',
+          primaryTextColor: '#0b1220',
+          lineColor: '#6b7280',
+          secondaryColor: '#f1f5f9',
+          tertiaryColor: '#e2e8f0'
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -60,36 +60,25 @@ It merges **dynamic scanning**, **tool orchestration**, **data normalization**, 
 
 ## 🧱 Architecture Summary
 
-```text
-        +---------------------------+
-        |         Web-API / UI      |
-        +-------------+-------------+
-                      |
-                 REST / WebSocket
-                      |
-        +-------------v-------------+
-        |         Worker Engine     |
-        |  (Workflows, DAG, Queues) |
-        +-------------+-------------+
-                      |
-               Ports / DTOs
-                      |
-    +-----------------v-----------------+
-    |            Core-Lib              |
-    | (Models, Ports, Repositories)    |
-    +-----------------+----------------+
-                      |
-        +-------------v-------------+
-        |      Wrappers / Plugins   |
-        | (Nuclei, Ferox, Katana…)  |
-        +-------------+-------------+
-                      |
-                  Tool Output
-                      |
-        +-------------v-------------+
-        |        Findings Engine    |
-        |  (Normalization, Metrics) |
-        +---------------------------+
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Web-API / UI"]
+    B["REST / WebSocket"]
+    C["Worker Engine<br/>(Workflows, DAG, Queues)"]
+    D["Ports / DTOs"]
+    E["Core-Lib<br/>(Models, Ports, Repositories)"]
+    F["Wrappers / Plugins<br/>(Nuclei, Ferox, Katana…)"]
+    G["Tool Output"]
+    H["Findings Engine<br/>(Normalization, Metrics)"]
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
 ```
 
 ---
@@ -144,3 +133,4 @@ It aims to support:
 ---
 
 **Next:** [Architecture Philosophy](02-architecture-philosophy.md)
+```

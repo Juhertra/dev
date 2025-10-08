@@ -100,31 +100,29 @@ Each layer exposes **well-defined boundaries**:
 
 ## 🧩 Data Flow Model
 
-```text
-      ┌────────────┐
-      │  Project   │
-      └─────┬──────┘
-            │
-            ▼
-    ┌──────────────┐
-    │ Workflow DAG │
-    └─────┬────────┘
-          │
- ┌────────▼─────────┐
- │ Tool Wrappers    │───► Runs (execution logs)
- └────────┬─────────┘
-          │
- ┌────────▼─────────┐
- │ Findings Engine  │───► Findings (normalized)
- └────────┬─────────┘
-          │
- ┌────────▼─────────┐
- │ Enrichment Layer │───► CVE/CWE/POC metadata
- └────────┬─────────┘
-          │
- ┌────────▼─────────┐
- │ Triage / Metrics │───► Analytics, Dashboards
- └──────────────────┘
+```mermaid
+%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Project"]
+    B["Workflow DAG"]
+    C["Tool Wrappers"]
+    D["Runs (execution logs)"]
+    E["Findings Engine"]
+    F["Findings (normalized)"]
+    G["Enrichment Layer"]
+    H["CVE/CWE/POC metadata"]
+    I["Triage / Metrics"]
+    J["Analytics, Dashboards"]
+    
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    E --> F
+    E --> G
+    G --> H
+    G --> I
+    I --> J
 ```
 
 ---
@@ -162,3 +160,5 @@ Every architectural decision includes a security review:
 ---
 
 **Next:** [Repository Layout](03-repository-layout.md)
+```
+```
