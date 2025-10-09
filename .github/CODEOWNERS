@@ -1,0 +1,18 @@
+# SecFlow CODEOWNERS
+# Core & runtime
+/secflow/core/**         @runtime-lead @security-lead
+/secflow/storage/**      @runtime-lead
+/secflow/workflow/**     @workflow-lead @runtime-lead
+# Tools & parsers
+/secflow/tools/**        @tools-lead @findings-lead
+# Schemas
+/schemas/**              @findings-lead @runtime-lead
+# Plugins & policies
+/plugins/**              @security-lead
+# Observability & devex
+/ops/**                  @observability-lead @devex-lead
+/scripts/**              @devex-lead
+# Docs
+/docs/**                 @devex-lead
+# Root config
+/*                       @devex-lead

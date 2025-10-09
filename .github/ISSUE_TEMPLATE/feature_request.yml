@@ -1,0 +1,64 @@
+name: Feature request
+description: Suggest a new feature or enhancement for SecFlow
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What problem does this solve? What use case does it address?
+      placeholder: Describe the problem or use case...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should this be implemented?
+      placeholder: Describe your proposed solution...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What other approaches have you considered?
+      placeholder: List alternative approaches...
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which component would this affect?
+      options:
+        - runtime
+        - wrappers/parsers
+        - workflow
+        - plugins
+        - observability
+        - docs/devex
+        - schemas
+        - qa
+        - ci/cd
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How will we know this feature is complete?
+      placeholder: |
+        - [ ] Feature works as described
+        - [ ] Tests pass
+        - [ ] Documentation updated
