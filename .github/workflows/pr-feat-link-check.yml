@@ -1,0 +1,15 @@
+name: PR FEAT Link Check
+on: [pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: match
+        with:
+          text: ${{ github.event.pull_request.body }}
+          regex: 'Fixes\s+#\d+'
+      - name: Warn if missing
+        if: steps.match.outputs.match == ''
+        run: |
+          echo "::warning::PR body missing 'Fixes #<issue>' link. Please link to a FEAT or BUG."

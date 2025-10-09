@@ -2,6 +2,23 @@ site_name: SecFlow Docs
 
 plugins:
   - search
+  # mkdocstrings configuration (enabled in M6)
+  # - mkdocstrings:
+  #     handlers:
+  #       python:
+  #         paths: [.]
+  #         options:
+  #           docstring_style: google
+  #           show_source: true
+  #           show_root_heading: true
+  #           show_root_toc_entry: true
+  #           show_signature_annotations: true
+  #           show_signature_return_annotations: true
+  #           separate_signature: true
+  #           heading_level: 2
+  #           filters: ["!^_"]
+  #           members_order: source
+  #           merge_init_into_class: true
 
 markdown_extensions:
   - admonition
@@ -34,6 +51,8 @@ nav:
   - Governance:
       - Engineering Standards: governance/engineering-standards.md
       - Development Conventions: governance/development-conventions.md
+  - API Documentation:
+      - Overview: api/README.md
   - Overview:
       - Home: architecture/00-index.md
       - Executive Summary: architecture/01-title-and-executive-summary.md
