@@ -22,12 +22,21 @@ repos:
 
   - repo: local
     hooks:
-      - id: pytest
-        name: pytest
+      - id: pyright
+        name: pyright
+        entry: pyright
+        language: system
+        types: [python]
+        args: [--warnings]
+        pass_filenames: false
+        always_run: true
+
+      - id: quick-test
+        name: quick-test
         entry: pytest
         language: system
         types: [python]
-        args: [-q, --maxfail=1]
+        args: [-q, -k, 'not slow']
         pass_filenames: false
         always_run: true
 
