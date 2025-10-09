@@ -2,16 +2,17 @@
 """
 Enhanced Pattern Engine - Advanced pattern detection with external integrations.
 """
-import os
 import json
+import os
 import time
-from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
+from .modsecurity_integration import ModSecurityIntegration
+from .nuclei_integration import NucleiIntegration
 from .pattern_engine import PatternEngine
 from .pattern_manager import PatternManager
-from .nuclei_integration import NucleiIntegration
-from .modsecurity_integration import ModSecurityIntegration
+
 
 class EnhancedPatternEngine(PatternEngine):
     """

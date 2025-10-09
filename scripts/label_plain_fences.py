@@ -10,9 +10,8 @@ Relabels any plain "```" to an explicit language based on content heuristics:
 - text: otherwise
 """
 
-import re
 import pathlib
-import sys
+import re
 
 OPEN = re.compile(r'^```\s*$')
 CLOSE = re.compile(r'^```\s*$')

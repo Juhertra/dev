@@ -2,16 +2,15 @@
 """
 Pattern Engine CLI - Management and testing utilities for the pattern engine.
 """
-import sys
-import os
-import json
 import argparse
-from typing import Dict, Any, List
+import os
+import sys
 
 # Add the current directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from detectors.pattern_engine import PatternEngine
+
 
 def print_stats(engine: PatternEngine):
     """Print comprehensive pattern statistics."""

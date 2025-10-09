@@ -6,22 +6,19 @@ Tests the full contract: normalize_finding → append_findings → cache bust �
 Uses a temp project ID to avoid affecting real data.
 """
 
-import unittest
-import tempfile
-import shutil
-import os
 import json
-import time
-from unittest.mock import patch, MagicMock
+import shutil
 import sys
+import time
+import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils.findings_normalize import normalize_finding
 from findings import append_findings
-from routes.vulns import _compute_vulns_summary
+from utils.findings_normalize import normalize_finding
 
 
 class TestAppendAndCache(unittest.TestCase):
@@ -94,7 +91,6 @@ class TestAppendAndCache(unittest.TestCase):
         
         # Test vulns summary computation (without actually storing)
         # This tests that the normalized finding would work in the summary
-        from routes.vulns import _compute_vulns_summary
         
         # Create a mock findings list for testing
         mock_findings = [normalized]
@@ -182,7 +178,6 @@ class TestAppendAndCache(unittest.TestCase):
         
         # Test vulns summary computation (without actually storing)
         # This tests that the normalized finding would work in the summary
-        from routes.vulns import _compute_vulns_summary
         
         # Create a mock findings list for testing
         mock_findings = [normalized1]

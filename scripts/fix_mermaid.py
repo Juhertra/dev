@@ -3,10 +3,9 @@
 Mermaid Block Fix Script
 Fixes common formatting and syntax issues in Mermaid blocks
 """
-import re
 import pathlib
+import re
 import sys
-from typing import List, Tuple
 
 ROOT = pathlib.Path("docs")
 MERMAID_OPEN = re.compile(r'^```mermaid\s*$')

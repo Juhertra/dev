@@ -1,14 +1,21 @@
 """Profiles storage wrappers delegating to existing store.py (Phase 1)."""
 
 from __future__ import annotations
+
 from typing import Any, Dict, List
 
 try:
     from store import (
-        get_profiles as _get_profiles,
-        save_profile as _save_profile,
-        load_profile as _load_profile,
         delete_profile as _delete_profile,
+    )
+    from store import (
+        get_profiles as _get_profiles,
+    )
+    from store import (
+        load_profile as _load_profile,
+    )
+    from store import (
+        save_profile as _save_profile,
     )
 except Exception as _e:  # pragma: no cover
     def _get_profiles(pid: str) -> List[Dict[str, Any]]: return []

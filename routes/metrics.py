@@ -5,11 +5,11 @@ P6 - Metrics Routes
 REST endpoints for findings metrics and analytics dashboard.
 """
 
-import json
-from typing import Dict, Any
-from flask import Blueprint, request, jsonify, render_template, current_app
+from typing import Any, Dict
 
-from analytics_core.analytics import get_metrics, get_filtered_metrics
+from flask import Blueprint, current_app, jsonify, render_template, request
+
+from analytics_core.analytics import get_filtered_metrics, get_metrics
 
 
 def register_metrics_routes(web_bp: Blueprint):
@@ -133,12 +133,19 @@ def _generate_csv_export(metrics: Dict[str, Any]) -> str:
 def _generate_pdf_export(metrics: Dict[str, Any], pid: str) -> bytes:
     """Generate PDF export of metrics."""
     try:
-        from reportlab.lib.pagesizes import letter
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-        from reportlab.lib.styles import getSampleStyleSheet
-        from reportlab.lib import colors
-        from reportlab.lib.units import inch
         import io
+
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.styles import getSampleStyleSheet
+        from reportlab.lib.units import inch
+        from reportlab.platypus import (
+            Paragraph,
+            SimpleDocTemplate,
+            Spacer,
+            Table,
+            TableStyle,
+        )
         
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter)

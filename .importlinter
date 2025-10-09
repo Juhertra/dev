@@ -1,0 +1,14 @@
+[importlinter]
+root_packages =
+    packages.runtime_core
+    packages.findings
+    packages.workflow_engine
+
+[importlinter:contract:1]
+name = Findings Package Isolation
+type = forbidden
+source_modules =
+    packages.findings
+forbidden_modules =
+    packages.runtime_core
+    packages.workflow_engine

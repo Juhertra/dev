@@ -2,11 +2,11 @@
 """
 ModSecurity CRS Integration - Convert OWASP ModSecurity Core Rule Set to pattern engine format.
 """
-import os
-import re
 import json
-from typing import Dict, List, Any, Optional, Tuple
+import re
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 
 class ModSecurityIntegration:
     """

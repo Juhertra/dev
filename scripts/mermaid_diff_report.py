@@ -1,4 +1,6 @@
-import re, sys, pathlib, html, os
+import html
+import pathlib
+import re
 
 DOCS = pathlib.Path("docs")
 SITE = pathlib.Path("site")

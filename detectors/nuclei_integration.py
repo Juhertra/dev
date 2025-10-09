@@ -2,12 +2,13 @@
 """
 Nuclei Integration - Convert and integrate Nuclei templates with the pattern engine.
 """
-import os
-import yaml
 import json
 import re
-from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import yaml
+
 
 class NucleiIntegration:
     """

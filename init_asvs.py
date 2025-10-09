@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from nuclei_integration import nuclei_integration
 
+
 def main():
     """Initialize ASVS template support."""
     
@@ -59,7 +60,7 @@ def main():
         nuclei_count = len([t for t in templates if t.get("source") == "nuclei"])
         asvs_count = len([t for t in templates if t.get("source") == "asvs"])
         
-        print(f"📊 Template counts:")
+        print("📊 Template counts:")
         print(f"   - Nuclei templates: {nuclei_count}")
         print(f"   - ASVS templates: {asvs_count}")
         print(f"   - Total: {len(templates)}")

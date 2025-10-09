@@ -1,9 +1,12 @@
-from flask import Flask
-from web_routes import bp as web_bp
-from api_endpoints import api_bp
-from store import PROJECTS_INDEX, list_projects, create_project, set_current_project_id
-from core import write_json
 import os
+
+from flask import Flask
+
+from api_endpoints import api_bp
+from core import write_json
+from store import PROJECTS_INDEX, create_project, list_projects, set_current_project_id
+from web_routes import bp as web_bp
+
 
 def create_app():
     app = Flask(__name__)

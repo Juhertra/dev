@@ -9,9 +9,9 @@ This script runs all the documentation quality gates in sequence:
 Returns 0 if all gates pass, 1 if any gate fails.
 """
 
+import os
 import subprocess
 import sys
-import os
 
 
 def run_gate(script_name, description):

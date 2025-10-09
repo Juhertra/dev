@@ -2,6 +2,7 @@
 import glob
 import subprocess
 
+
 def countTpl(path):
 	return len(glob.glob(path + "/*.*"))
 

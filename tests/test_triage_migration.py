@@ -5,21 +5,24 @@ P5 - Triage Migration Tests
 Test the idempotent migration script for backfilling triage defaults.
 """
 
-import unittest
 import json
 import os
-import tempfile
 import shutil
-from unittest.mock import patch, MagicMock
-from pathlib import Path
 
 # Add project root to path
 import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from scripts.backfill_triage_defaults import (
-    load_findings_file, save_findings_file, add_triage_defaults,
-    migrate_project_findings
+    add_triage_defaults,
+    load_findings_file,
+    migrate_project_findings,
+    save_findings_file,
 )
 
 
@@ -156,11 +159,11 @@ class TestTriageMigration(unittest.TestCase):
         self.assertTrue(result)
         
         # Verify backup was created
-        backup_files = [f for f in os.listdir(self.test_dir) if f.endswith('.bak.')]
+        backup_files = [f for f in os.listdir(self.ui_projects_dir) if '.bak.' in f]
         self.assertEqual(len(backup_files), 1)
         
         # Verify original content is in backup
-        backup_file = os.path.join(self.test_dir, backup_files[0])
+        backup_file = os.path.join(self.ui_projects_dir, backup_files[0])
         with open(backup_file, 'r') as f:
             backup_findings = json.load(f)
         self.assertEqual(backup_findings, original_findings)
@@ -223,8 +226,13 @@ class TestTriageMigration(unittest.TestCase):
         with open(self.findings_file, 'w') as f:
             json.dump(test_findings, f)
         
-        # Run migration in actual mode
-        stats = migrate_project_findings("test", dry_run=False, backup=False)
+        # Change to test directory and run migration
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(self.test_dir)
+            stats = migrate_project_findings("test", dry_run=False, backup=False)
+        finally:
+            os.chdir(original_cwd)
         
         self.assertEqual(stats["processed"], 1)
         self.assertEqual(stats["updated"], 1)
@@ -261,8 +269,13 @@ class TestTriageMigration(unittest.TestCase):
         with open(self.findings_file, 'w') as f:
             json.dump(test_findings, f)
         
-        # Run migration
-        stats = migrate_project_findings("test", dry_run=False, backup=False)
+        # Change to test directory and run migration
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(self.test_dir)
+            stats = migrate_project_findings("test", dry_run=False, backup=False)
+        finally:
+            os.chdir(original_cwd)
         
         self.assertEqual(stats["processed"], 1)
         self.assertEqual(stats["updated"], 0)  # No updates needed

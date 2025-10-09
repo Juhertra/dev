@@ -5,22 +5,27 @@ P6 - Metrics Tests
 Test the analytics and metrics functionality.
 """
 
-import unittest
 import json
 import os
-import tempfile
 import shutil
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-from datetime import datetime, timezone, timedelta
 
 # Add project root to path
 import sys
+import tempfile
+import unittest
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from unittest.mock import patch
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from analytics_core.analytics import (
-    get_metrics, _compute_metrics, _is_suppressed, _calculate_fix_time,
-    _compute_trend_30d, rebuild_metrics_cache, get_filtered_metrics
+    _calculate_fix_time,
+    _compute_metrics,
+    _compute_trend_30d,
+    _is_suppressed,
+    get_filtered_metrics,
+    rebuild_metrics_cache,
 )
 
 

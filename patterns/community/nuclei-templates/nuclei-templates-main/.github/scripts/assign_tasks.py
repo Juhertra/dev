@@ -1,6 +1,7 @@
-import requests
-import sys
 import json
+import sys
+
+import requests
 
 # GitHub credentials
 password = sys.argv[3]
@@ -97,7 +98,7 @@ def main():
                 else:
                     review_pr(reviewer, issue_number)
 
-            except Exception as e:
+            except Exception:
                 reviewer = pr_user_list[0]
                 review_pr(reviewer, issue_number)
         else:
@@ -114,7 +115,7 @@ def main():
                     assign_issue_or_pr(pr_user_list[index + 2], issue_number)
                 else:
                     assign_issue_or_pr(pr_user_list[index + 1], issue_number)
-            except Exception as e:
+            except Exception:
                 if (pr_user_list[0] == reviewer):
                     assign_issue_or_pr(pr_user_list[1], issue_number)
                 else:
@@ -131,7 +132,7 @@ def main():
             try:
                 index = issue_user_list.index(assignee)
                 assign_issue_or_pr(issue_user_list[index + 1], issue_number)
-            except Exception as e:
+            except Exception:
                 assign_issue_or_pr(issue_user_list[0], issue_number)
         else:
             assign_issue_or_pr(issue_user_list[0], issue_number)

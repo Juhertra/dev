@@ -1,6 +1,9 @@
 from __future__ import annotations
-import os, sys, json, time, hashlib
-from urllib import request, parse
+
+import json
+import os
+import sys
+from urllib import parse, request
 
 
 def main() -> None:
@@ -93,8 +96,9 @@ def main() -> None:
         f.write((html or "")[:200] + "\n")
 
     # Dossier excerpt by canonical key
-    from utils.endpoints import endpoint_key
     import re as _re
+
+    from utils.endpoints import endpoint_key
 
     key = endpoint_key("GET", "https://example.com", "/ping")
     safe = _re.sub(r"[^A-Za-z0-9._-]+", "_", key)

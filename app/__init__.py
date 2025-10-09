@@ -6,9 +6,9 @@ top-level application wiring while allowing centralized logging and
 middleware registration. Behavior and URLs remain unchanged.
 """
 
-from typing import Any
-import os
 import importlib.util
+import os
+from typing import Any
 
 
 def create_app() -> Any:

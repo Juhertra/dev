@@ -1,5 +1,5 @@
-import re, time
-from urllib import request, parse
+import re
+from urllib import parse, request
 
 BASE = "http://127.0.0.1:5010"
 PIDS = [

@@ -1,7 +1,7 @@
 # server/sitemap_builder.py
 import re
 from collections import defaultdict
-from typing import Dict, List, Optional, TypedDict, Tuple, Any
+from typing import Any, Dict, List, Optional, Tuple, TypedDict
 
 # Stage 4: Light caching
 # Try to import cache decorator with fallback
@@ -161,8 +161,8 @@ def iter_operations(spec: Dict, resolver=None) -> List[Dict]:
 @cached(ttl_seconds=300)  # Cache for 5 minutes
 def build_site_map(pid: str) -> List[SiteMapNode]:
     """Build complete site map from specs and findings."""
-    from store import get_runtime, get_sends
     from findings import get_findings
+    from store import get_runtime, get_sends
     
     session, SPECS, QUEUE = get_runtime(pid)
     findings = get_findings(pid)

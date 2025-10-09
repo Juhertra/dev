@@ -6,10 +6,11 @@ Converts SecFlow workflow recipe YAML files into Mermaid flowcharts.
 Usage: python3 tools/workflow_to_mermaid.py workflows/recipe.yaml
 """
 
-import sys
-import yaml
 import os
-from pathlib import Path
+import sys
+
+import yaml
+
 
 def as_id(n: str) -> str:
     """Convert node ID to valid Mermaid identifier."""

@@ -1,5 +1,7 @@
-from typing import Any, Dict, List
-from flask import render_template, request, render_template_string, redirect, url_for
+from typing import Any, Dict
+
+from flask import request
+
 from utils.rendering import render_first
 
 
@@ -8,9 +10,9 @@ def register_queue_routes(bp):
 
     @bp.get("/p/<pid>/queue")
     def queue_page(pid: str):
-        from store import get_runtime, get_project_name
-        from specs import RefResolver, op_seed, build_preview
-        from core import compose_display_url, _json_safe
+        from core import compose_display_url
+        from specs import RefResolver, build_preview, op_seed
+        from store import get_project_name, get_runtime
 
         session, SPECS, QUEUE = get_runtime(pid)
 
@@ -53,9 +55,9 @@ def register_queue_routes(bp):
 
     @bp.post("/p/<pid>/queue/item_details")
     def queue_item_details(pid: str):
+        from core import _files_preview_map, _json_safe
+        from specs import RefResolver, build_preview, op_seed
         from store import get_runtime
-        from specs import RefResolver, op_seed, build_preview
-        from core import _json_safe, _files_preview_map
 
         session, SPECS, QUEUE = get_runtime(pid)
         try:

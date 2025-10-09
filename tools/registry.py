@@ -1,7 +1,8 @@
 """Simple Tool protocol and in-memory registry (Phase 1)."""
 
 from __future__ import annotations
-from typing import Protocol, Dict, Any, Optional
+
+from typing import Any, Dict, Optional, Protocol
 
 
 class Tool(Protocol):

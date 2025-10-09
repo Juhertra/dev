@@ -5,19 +5,21 @@ P5 - Triage Routes Tests
 Test the triage API routes for updating findings triage state.
 """
 
-import unittest
 import json
 import os
-import tempfile
 import shutil
-from unittest.mock import patch, MagicMock
-from pathlib import Path
 
 # Add project root to path
 import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from flask import Flask
+
 from routes.triage import register_triage_routes
 
 

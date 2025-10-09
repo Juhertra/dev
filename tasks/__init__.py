@@ -3,7 +3,7 @@ Task runner interface for Phase 3 observability.
 Provides abstraction for nuclei invocation that can be swapped for async queues later.
 """
 
-from typing import Dict, Any, Optional, Callable
+from typing import Any, Callable, Dict, Optional
 
 
 class ScanPlan:
@@ -48,8 +48,9 @@ def submit_scan(plan: ScanPlan) -> ScanResult:
     Returns:
         ScanResult with execution details
     """
-    import time
     import logging
+    import time
+
     from .nuclei import execute_nuclei_pipeline
     
     logger = logging.getLogger('tasks')

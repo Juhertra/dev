@@ -1,5 +1,9 @@
-import os, json, time, re, subprocess
-from urllib import request, parse
+import json
+import os
+import re
+import subprocess
+import time
+from urllib import parse, request
 
 BASE = os.environ.get("APP_BASE", "http://127.0.0.1:5010")
 
@@ -39,7 +43,7 @@ def capture_sse(url: str, max_time: int = 10):
         done = next((ln for ln in lines if ln.startswith("event: done")), "[no done]")
         return start, done
     except Exception as e:
-        return f"[sse error: {e}]", f"[sse error]"
+        return f"[sse error: {e}]", "[sse error]"
 
 def safe_filename(s: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", s)

@@ -5,22 +5,25 @@ P6 - Export Tests
 Test the export functionality for findings reports.
 """
 
-import unittest
+import csv
 import json
 import os
-import tempfile
 import shutil
-import csv
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-from datetime import datetime, timezone
 
 # Add project root to path
 import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from scripts.export_findings_report import (
-    export_csv, export_json, export_pdf, _apply_filters
+    _apply_filters,
+    export_csv,
+    export_json,
+    export_pdf,
 )
 
 

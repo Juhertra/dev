@@ -4,8 +4,8 @@ Provides counters and histograms for performance monitoring.
 """
 
 import os
-from typing import Dict, Any
 import time
+from typing import Any, Dict
 
 # Simple in-memory metrics store (can be swapped for Prometheus later)
 _metrics: Dict[str, Any] = {

@@ -6,20 +6,18 @@ Tests the SSE stream contract: start → finding with stored:true → done.
 Uses Flask test client to subscribe to stream for a tiny scan stub.
 """
 
-import unittest
 import json
-import time
-import tempfile
 import shutil
-from unittest.mock import patch, MagicMock
 import sys
+import time
+import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app import create_app
-from utils.findings_normalize import normalize_finding
 
 
 class TestSSEStream(unittest.TestCase):

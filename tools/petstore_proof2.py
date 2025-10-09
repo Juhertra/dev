@@ -1,5 +1,9 @@
-import os, re, json, time, subprocess
-from urllib import request, parse
+import json
+import os
+import re
+import subprocess
+import time
+from urllib import parse, request
 
 BASE = os.environ.get("APP_BASE", "http://127.0.0.1:5010")
 PID = "ec4c0976-fd94-463c-8ada-0705fe12b944"

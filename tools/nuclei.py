@@ -1,9 +1,8 @@
 """Nuclei tool adapter (Phase 1). Pass-through to existing integration."""
 
 from __future__ import annotations
-from typing import Any, Dict
 
-from .registry import Tool
+from typing import Any, Dict
 
 
 class NucleiTool:

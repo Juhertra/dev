@@ -3,16 +3,16 @@ Nuclei Wrapper for Active Testing (Phase 5)
 Integrates Nuclei scanner with the Security Toolkit for active vulnerability testing.
 """
 
+import glob
 import json
+import os
 import subprocess
 import tempfile
-import os
 import time
-import glob
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import yaml
@@ -299,7 +299,8 @@ class NucleiWrapper:
             if save_cmd_dir:
                 try:
                     os.makedirs(save_cmd_dir, exist_ok=True)
-                    import hashlib, shutil
+                    import hashlib
+                    import shutil
                     key = hashlib.sha1(f"{url}|{method}|{','.join(templates or [])}|{','.join(severity or [])}".encode()).hexdigest()[:10]
                     saved_input = os.path.join(save_cmd_dir, f"input_{key}.txt")
                     shutil.copyfile(input_file, saved_input)

@@ -13,14 +13,15 @@ Tests cover:
 
 import json
 import os
-import tempfile
-import time
-import unittest
-from unittest.mock import patch, MagicMock
-from datetime import datetime, timezone, timedelta
 
 # Add the project root to the path
 import sys
+import tempfile
+import time
+import unittest
+from datetime import datetime, timedelta, timezone
+from unittest.mock import patch
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from routes.vulns import _apply_bulk_actions

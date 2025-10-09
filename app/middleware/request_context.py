@@ -6,11 +6,13 @@ Safe to register multiple times; handlers are idempotent.
 """
 
 from __future__ import annotations
+
+import logging
 import time
 import uuid
-import logging
-from flask import g, request
 from typing import Any
+
+from flask import g, request
 
 
 def register_request_context(app: Any) -> None:
