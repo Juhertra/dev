@@ -1,0 +1,41 @@
+version: "1.0"
+name: "Linear Security Scan"
+description: "Simple linear workflow: discovery → scan → enrichment"
+
+nodes:
+  - id: "discovery"
+    type: "discovery.ferox"
+    config:
+      wordlist: "res://wordlists/dirb:latest"
+      threads: 50
+      timeout: 300
+    outputs: ["urls"]
+
+  - id: "scan"
+    type: "scan.nuclei"
+    inputs: ["urls"]
+    config:
+      templates: "res://templates/owasp-top10:latest"
+      rate_limit: 150
+      timeout: 600
+    outputs: ["findings"]
+
+  - id: "enrich"
+    type: "enrich.cve"
+    inputs: ["findings"]
+    config:
+      sources: ["nvd", "osv", "exploitdb"]
+      timeout: 120
+    outputs: ["enriched_findings"]
+
+# Retry configuration
+retry:
+  max_attempts: 3
+  backoff_factor: 2.0
+  base_delay: 5.0
+
+# State management
+state:
+  checkpoint_interval: 30
+  resume_on_failure: true
+  cache_intermediate: true
