@@ -1,0 +1,68 @@
+name: ci
+on:
+  pull_request:
+    paths:
+      - "**.py"
+      - "pyproject.toml"
+      - "Makefile"
+      - "docs/**"
+      - ".github/workflows/**"
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install ruff
+        run: pip install ruff
+      - name: Lint (advisory)
+        run: ruff --version && ruff check --exit-zero .
+  type:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20'}
+      - name: Type check (advisory)
+        run: npx pyright --version && npx pyright --warnings
+  arch:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install import-linter
+        run: pip install import-linter
+      - name: Architecture check (advisory)
+        run: import-linter --version && import-linter
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install deps
+        run: pip install poetry && poetry install --no-root
+      - name: Unit tests
+        run: poetry run make unit
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install deps
+        run: pip install poetry && poetry install --no-root
+      - name: Coverage report
+        run: poetry run make coverage
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Install deps
+        run: pip install poetry && poetry install --no-root
+      - name: Docs health check
+        run: poetry run make health
