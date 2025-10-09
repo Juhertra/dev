@@ -1,0 +1,22 @@
+[
+  {
+    "template-id": "http-methods",
+    "matched-at": "http://example.com/api",
+    "info": {
+      "name": "HTTP Methods Test",
+      "severity": "medium",
+      "description": "Test template for HTTP methods detection"
+    },
+    "timestamp": "2025-10-09T19:30:00Z"
+  },
+  {
+    "template-id": "tech-detect",
+    "matched-at": "http://example.com/",
+    "info": {
+      "name": "Technology Detection",
+      "severity": "info",
+      "description": "Detects web technologies"
+    },
+    "timestamp": "2025-10-09T19:30:01Z"
+  }
+]
