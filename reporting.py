@@ -2,14 +2,13 @@
 """
 Reporting Module - Generate comprehensive security reports.
 """
-import os
-import json
 import csv
-from typing import Dict, List, Any, Optional
+import json
 from datetime import datetime
-from pathlib import Path
+from typing import Any, Dict, List
 
 from findings import get_findings, group_findings_for_ui
+
 
 class SecurityReporter:
     """

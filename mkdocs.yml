@@ -30,6 +30,10 @@ extra_javascript:
   - js/mermaid-init.js
 
 nav:
+  - Developer Start Here: developer-start-here.md
+  - Governance:
+      - Engineering Standards: governance/engineering-standards.md
+      - Development Conventions: governance/development-conventions.md
   - Overview:
       - Home: architecture/00-index.md
       - Executive Summary: architecture/01-title-and-executive-summary.md

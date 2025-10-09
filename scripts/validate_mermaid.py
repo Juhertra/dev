@@ -3,10 +3,10 @@
 Mermaid Block Validation Script
 Validates syntax and formatting of all Mermaid blocks in Markdown files
 """
-import re
 import pathlib
+import re
 import sys
-from typing import List, Tuple, Dict
+from typing import List
 
 ROOT = pathlib.Path("docs")
 MERMAID_OPEN = re.compile(r'^```mermaid\s*$')

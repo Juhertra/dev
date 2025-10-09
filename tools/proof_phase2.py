@@ -1,5 +1,9 @@
-import os, json, time, re, subprocess
-from urllib import request, parse
+import json
+import os
+import re
+import subprocess
+import time
+from urllib import parse, request
 
 BASE = os.environ.get("APP_BASE", "http://127.0.0.1:5010")
 
@@ -43,7 +47,7 @@ def capture_sse(url: str, max_time: int = 60):
         done = next((ln for ln in lines if ln.startswith("event: done")), "[no done]")
         return start, done
     except Exception as e:
-        return f"[sse error: {e}]", f"[sse error]"
+        return f"[sse error: {e}]", "[sse error]"
 
 def main():
     ensure_server()
@@ -63,7 +67,7 @@ def main():
     # queue summary snapshot
     try:
         st, qsum = get(f"/p/{pid}/queue/summary")
-        append(f"### Queue Dedupe\nsummary: "+(qsum or "")[:200]+"\nkeys:\n- GET https://example.com/ping\n")
+        append("### Queue Dedupe\nsummary: "+(qsum or "")[:200]+"\nkeys:\n- GET https://example.com/ping\n")
     except Exception:
         pass
 

@@ -1,15 +1,22 @@
 """Findings storage wrappers delegating to existing findings.py (Phase 1)."""
 
 from __future__ import annotations
-from typing import Any, Dict, List
+
 import logging
+from typing import Any, Dict, List
 
 try:
     from findings import (
-        get_findings as _get_findings,
-        count_findings as _count_findings,
-        clear_findings as _clear_findings,
         append_findings as _append_findings,
+    )
+    from findings import (
+        clear_findings as _clear_findings,
+    )
+    from findings import (
+        count_findings as _count_findings,
+    )
+    from findings import (
+        get_findings as _get_findings,
     )
 except Exception as _e:  # pragma: no cover
     def _get_findings(pid: str) -> List[Dict[str, Any]]: return []

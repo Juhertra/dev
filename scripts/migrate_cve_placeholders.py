@@ -11,17 +11,18 @@ Usage:
 If no project_id is provided, it will migrate all projects.
 """
 
-import os
-import sys
 import json
-import re
 import logging
-from typing import Dict, Any, List
+import os
+import re
+import sys
+from typing import Dict
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from store import list_projects, STORE_DIR
+from store import STORE_DIR, list_projects
+
 
 def _is_valid_cve(cve_id: str) -> bool:
     """Check if CVE ID matches the valid pattern and is not a placeholder."""

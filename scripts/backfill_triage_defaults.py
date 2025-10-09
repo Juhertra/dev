@@ -6,13 +6,13 @@ Idempotent migration to add default triage fields to existing findings.
 Safe to run multiple times - only adds missing triage fields.
 """
 
+import argparse
 import json
 import os
 import sys
-import argparse
 import time
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -186,7 +186,7 @@ def main():
         total_stats["errors"] += stats["errors"]
     
     # Summary
-    print(f"\n📊 Migration Summary")
+    print("\n📊 Migration Summary")
     print("=" * 40)
     print(f"Projects processed: {len(project_ids)}")
     print(f"Total findings: {total_stats['processed']}")
@@ -198,9 +198,9 @@ def main():
         return 1
     
     if args.dry_run:
-        print(f"\n🔍 Dry run completed successfully")
+        print("\n🔍 Dry run completed successfully")
     else:
-        print(f"\n✅ Migration completed successfully")
+        print("\n✅ Migration completed successfully")
     
     return 0
 

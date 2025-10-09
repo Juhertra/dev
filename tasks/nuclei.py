@@ -1,6 +1,7 @@
 """Nuclei task wrappers (sync for Phase 1)."""
 
 from __future__ import annotations
+
 from typing import Any, Dict, List, Optional
 
 
@@ -69,13 +70,13 @@ def execute_nuclei_pipeline(run_id: str,
         )
         
         # Log SSE operations for observability
-        from app.specialized_loggers import log_sse_operation, log_scan_completion
+        from app.specialized_loggers import log_scan_completion, log_sse_operation
         
         log_sse_operation("start", run_id, len(endpoints))
         log_sse_operation("complete", run_id, len(endpoints))
         
         # Record metrics
-        from metrics import record_scan_run, record_run_findings
+        from metrics import record_run_findings, record_scan_run
         for severity in severity_levels:
             record_scan_run(severity)
             

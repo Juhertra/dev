@@ -1,4 +1,6 @@
-import re, sys, pathlib
+import pathlib
+import re
+
 root = pathlib.Path("docs")
 boxes = re.compile(r'[┌┐└┘├┤┬┴┼─│]|^\s*(\+[-+]{3,}\+|\|[^\n]*\|)\s*$', re.M)
 

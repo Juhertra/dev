@@ -3,16 +3,18 @@
 API Endpoints - REST API for external integrations.
 """
 import os
-import json
 import time
-from typing import Dict, List, Any, Optional
-from flask import Blueprint, request, jsonify, current_app, Response
 from functools import wraps
 
-from findings import get_findings, count_findings, clear_findings, analyze_and_record
-from findings import get_finding_explanation, group_findings_for_ui, get_finding_by_index
+from flask import Blueprint, Response, current_app, jsonify, request
+
 from detectors.enhanced_pattern_engine import EnhancedPatternEngine
-from detectors.pattern_manager import PatternManager
+from findings import (
+    analyze_and_record,
+    count_findings,
+    get_findings,
+    group_findings_for_ui,
+)
 from reporting import SecurityReporter
 
 api_bp = Blueprint("api", __name__, url_prefix="/api/v1")

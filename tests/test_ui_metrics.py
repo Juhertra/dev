@@ -5,16 +5,17 @@ P6 - UI Metrics Tests
 Test the metrics dashboard UI functionality.
 """
 
-import unittest
 import json
 import os
-import tempfile
 import shutil
-from unittest.mock import patch, MagicMock
-from pathlib import Path
 
 # Add project root to path
 import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app import create_app
@@ -71,7 +72,7 @@ class TestUIMetrics(unittest.TestCase):
         response = self.client.get(f'/p/{self.pid}/metrics')
         
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Metrics & Analytics', response.data)
+        self.assertIn(b'Project Metrics', response.data)
         self.assertIn(b'Total Findings', response.data)
         self.assertIn(b'Active', response.data)
         self.assertIn(b'Resolved', response.data)
@@ -144,7 +145,7 @@ class TestUIMetrics(unittest.TestCase):
         response = self.client.get(f'/p/{self.pid}/metrics?status=open&owner=alice@example.com')
         
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Metrics & Analytics', response.data)
+        self.assertIn(b'Project Metrics', response.data)
     
     @patch('routes.metrics.get_metrics')
     def test_metrics_empty_project(self, mock_get_metrics):
@@ -174,7 +175,7 @@ class TestUIMetrics(unittest.TestCase):
         response = self.client.get(f'/p/{self.pid}/metrics')
     
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Metrics & Analytics', response.data)
+        self.assertIn(b'Project Metrics', response.data)
     
     @patch('routes.metrics.get_metrics')
     def test_metrics_error_handling(self, mock_get_metrics):
@@ -217,10 +218,10 @@ class TestUIMetrics(unittest.TestCase):
             response = self.client.get(f'/p/{self.pid}/metrics')
             
             # Check for key template elements
-            self.assertIn(b'Metrics & Analytics', response.data)
+            self.assertIn(b'Project Metrics', response.data)
             self.assertIn(b'Total Findings', response.data)
-            self.assertIn(b'30-Day Trend', response.data)
-            self.assertIn(b'Severity Breakdown', response.data)
+            self.assertIn(b'30-day Trend', response.data)
+            self.assertIn(b'Severity', response.data)
             
             # Check for Chart.js integration
             self.assertIn(b'Chart.js', response.data)

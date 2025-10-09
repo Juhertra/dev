@@ -1,0 +1,7 @@
+[lint]
+select = []
+ignore = []
+exclude = ["site","docs","review",".venv",".pytest_cache","**/__pycache__","venv/**"]
+
+[lint.pycodestyle]
+max-line-length = 120

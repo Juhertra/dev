@@ -34,6 +34,22 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
                                 <ul class="dropdown-menu">
@@ -276,6 +292,10 @@
               </ul>
             </li>
             <li class="nav-item" data-bs-level="2"><a href="#disaster-recovery-rollback" class="nav-link">🧱 Disaster Recovery &amp; Rollback</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#contract-testing" class="nav-link">🔒 Contract Testing</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -627,6 +647,96 @@ docker compose up -d --no-build
 <ul>
 <li>Database snapshots every 6h during staging deployment</li>
 </ul>
+<h2 id="contract-testing">🔒 Contract Testing<a class="headerlink" href="#contract-testing" title="Permanent link">&para;</a></h2>
+<p>Contract tests ensure data integrity and API compatibility across system boundaries. They validate invariants that must hold true regardless of implementation changes.</p>
+<h3 id="contract-test-categories">Contract Test Categories<a class="headerlink" href="#contract-test-categories" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Purpose</th>
+<th>Location</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Finding Invariants</strong></td>
+<td>Validate finding data structure</td>
+<td><code>tests/contracts/test_finding_invariants.py</code></td>
+<td>Detector ID regex, UTC timestamps</td>
+</tr>
+<tr>
+<td><strong>Storage Layout</strong></td>
+<td>Validate data persistence format</td>
+<td><code>tests/contracts/test_storage_layout.py</code></td>
+<td>Schema version, file structure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="finding-invariants-contract">Finding Invariants Contract<a class="headerlink" href="#finding-invariants-contract" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Ensure findings conform to expected data structure and format requirements.</p>
+<p><strong>Key Validations:</strong>
+- Detector IDs match pattern: <code>^[A-Za-z0-9_.-]+$</code>
+- Timestamps are ISO 8601 UTC format ending with 'Z'
+- Required fields are present and properly typed</p>
+<p><strong>Test Structure:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Positive cases - valid data should pass</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_detector_id_regex_valid</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">DETECTOR_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;EXAMPLE_1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Negative cases - invalid data should fail  </span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_detector_id_regex_invalid</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">DETECTOR_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;invalid:id&quot;</span><span class="p">)</span>
+
+<span class="c1"># Future implementation stubs</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">xfail</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Implementation pending&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_finding_schema_validation</span><span class="p">():</span>
+    <span class="c1"># Will pass when schema validation is implemented</span>
+</code></pre></div></p>
+<h3 id="storage-layout-contract">Storage Layout Contract<a class="headerlink" href="#storage-layout-contract" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Ensure data persistence maintains expected structure and versioning.</p>
+<p><strong>Key Validations:</strong>
+- Schema version field present and valid format
+- File structure supports expected operations
+- Backward compatibility for data migration</p>
+<p><strong>Test Structure:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Happy path - valid storage layout</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_store_layout_has_schema_version</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;store_schema_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="s2">&quot;store_schema_version&quot;</span> <span class="ow">in</span> <span class="n">data</span>
+
+<span class="c1"># Edge cases - missing or invalid versions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_store_layout_missing_schema_version</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;detector_id&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="s2">&quot;store_schema_version&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
+</code></pre></div></p>
+<h3 id="contract-test-execution">Contract Test Execution<a class="headerlink" href="#contract-test-execution" title="Permanent link">&para;</a></h3>
+<p>Run contract tests independently:
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all contract tests</span>
+pytest<span class="w"> </span>tests/contracts/<span class="w"> </span>-q
+
+<span class="c1"># Run specific contract category</span>
+pytest<span class="w"> </span>tests/contracts/test_finding_invariants.py<span class="w"> </span>-q
+pytest<span class="w"> </span>tests/contracts/test_storage_layout.py<span class="w"> </span>-q
+</code></pre></div></p>
+<h3 id="contract-test-principles">Contract Test Principles<a class="headerlink" href="#contract-test-principles" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Fail Fast:</strong> Contract tests should fail immediately when invariants are violated</li>
+<li><strong>Implementation Agnostic:</strong> Tests validate contracts, not implementation details</li>
+<li><strong>Future-Proof:</strong> Use <code>@pytest.mark.xfail</code> for pending implementations</li>
+<li><strong>Comprehensive Coverage:</strong> Include both positive and negative test cases</li>
+<li><strong>Clear Documentation:</strong> Each test explains the contract being validated</li>
+</ol>
+<h3 id="integration-with-cicd">Integration with CI/CD<a class="headerlink" href="#integration-with-cicd" title="Permanent link">&para;</a></h3>
+<p>Contract tests run in the main CI pipeline:
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Contract Tests</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest tests/contracts/ --tb=short</span>
+</code></pre></div></p>
+<p>They provide early warning when:
+- Data format changes break compatibility
+- Schema evolution violates existing contracts
+- New implementations don't meet contract requirements</p>
 <h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Integration with GitHub Advanced Security (code scanning)</li>

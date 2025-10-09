@@ -1,4 +1,5 @@
-import re, sys, pathlib
+import pathlib
+import re
 
 DOCS = pathlib.Path("docs")
 

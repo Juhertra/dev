@@ -1,15 +1,24 @@
 """Runs storage wrappers delegating to existing store.py (Phase 1)."""
 
 from __future__ import annotations
-from typing import Any, Dict, List
+
 import logging
+from typing import Any, Dict, List
 
 try:
     from store import (
         append_run as _append_run,
+    )
+    from store import (
         list_runs as _list_runs,
-        save_run as _save_run,
+    )
+    from store import (
         load_run as _load_run,
+    )
+    from store import (
+        save_run as _save_run,
+    )
+    from store import (
         update_endpoint_dossier as _update_endpoint_dossier,
     )
 except Exception as _e:  # pragma: no cover

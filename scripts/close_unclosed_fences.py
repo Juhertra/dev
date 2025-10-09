@@ -6,7 +6,6 @@ Non-destructive script that only adds missing closing ``` at EOF for truly unclo
 This safely fixes fence mismatches without modifying existing content.
 """
 
-import sys
 import pathlib
 import re
 

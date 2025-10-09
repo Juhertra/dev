@@ -1,5 +1,6 @@
-from typing import Any, Dict, List, Optional
-from flask import render_template_string, request, redirect, url_for
+from typing import Any, Dict, Optional
+
+from flask import redirect, render_template_string, request, url_for
 
 
 def register_history_routes(bp):
@@ -7,8 +8,7 @@ def register_history_routes(bp):
 
     @bp.get("/p/<pid>/sends")
     def sends_page(pid: str):
-        from store import get_runtime, get_project_name
-        from store import get_sends
+        from store import get_project_name, get_sends
         rows = list(reversed(get_sends(pid)))
 
         # Filters
@@ -152,7 +152,6 @@ def register_history_routes(bp):
 {% endblock %}
 """
         from flask import make_response
-        from store import get_project_name
         response = make_response(render_template_string(T, pid=pid, project_name=get_project_name(pid), rows=rows))
         # Disable caching for this page
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'

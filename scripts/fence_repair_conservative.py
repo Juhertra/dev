@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import re, sys, pathlib
+import pathlib
+import re
+import sys
 
 ROOT = pathlib.Path("docs")
 FILES = list(ROOT.rglob("*.md"))

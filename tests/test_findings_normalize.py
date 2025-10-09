@@ -6,10 +6,9 @@ Tests the main transforms in utils.findings_normalize.normalize_finding()
 to prevent regressions in the findings contract.
 """
 
-import unittest
-import time
-from unittest.mock import patch
 import sys
+import time
+import unittest
 from pathlib import Path
 
 # Add project root to path

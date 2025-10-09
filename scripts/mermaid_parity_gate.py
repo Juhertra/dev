@@ -1,4 +1,6 @@
-import sys, subprocess, shlex
+import subprocess
+import sys
+
 
 def sh(cmd): return subprocess.check_output(cmd, shell=True, text=True).strip()
 

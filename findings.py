@@ -1,12 +1,18 @@
 from __future__ import annotations
-import os, re, json, hashlib, logging, time
-from typing import Any, Dict, List, Optional, Callable, Iterable, Tuple
-from dataclasses import dataclass, asdict, field
+
+import hashlib
+import json
+import logging
+import os
+import re
+import time
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-from core import read_json, write_json, _json_safe
+from core import _json_safe, read_json, write_json
 from store import STORE_DIR
 
 # Try to import cache decorator with fallback
@@ -1302,7 +1308,7 @@ def _rate_limit_status(headers: dict) -> dict:
 
 def _jwt_quick_parse(auth_header: str) -> dict:
     """Very lightweight JWT header/claims parse (no verification). Accepts 'Authorization: Bearer <token>'."""
-    import base64, json
+    import base64
     out = {"alg": None, "claims": {}}
     if not auth_header or " " not in auth_header:
         return out

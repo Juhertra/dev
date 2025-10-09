@@ -1,8 +1,17 @@
 from __future__ import annotations
-import os, json, random, base64, uuid, hashlib
+
+import base64
+import hashlib
+import json
+import os
+import random
+import uuid
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional, Tuple
-from datetime import datetime, date
-import requests, yaml
+
+import requests
+import yaml
+
 from core import Json
 
 PREFERRED_CT = ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
@@ -275,11 +284,9 @@ def spec_meta(spec: Json) -> Tuple[str,str]:
 
 def _rand_str(n: int = 8) -> str:
     alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    import random
     return "".join(random.choice(alphabet) for _ in range(n))
 
 def _rand_int(minimum: Optional[int] = None, maximum: Optional[int] = None) -> int:
-    import random
     if minimum is None and maximum is None: return random.randint(1, 1000)
     if minimum is None: return random.randint(max(0, int(maximum) - 100), int(maximum))
     if maximum is None: return random.randint(int(minimum), int(minimum) + 100)
@@ -288,7 +295,6 @@ def _rand_int(minimum: Optional[int] = None, maximum: Optional[int] = None) -> i
     return random.randint(a, b)
 
 def _rand_float(minimum: Optional[float] = None, maximum: Optional[float] = None) -> float:
-    import random
     if minimum is None and maximum is None: return round(random.uniform(1, 1000), 3)
     if minimum is None:
         m = float(maximum); return round(random.uniform(max(0.0, m - 100.0), m), 3)
@@ -299,7 +305,6 @@ def _rand_float(minimum: Optional[float] = None, maximum: Optional[float] = None
     return round(random.uniform(a, b), 3)
 
 def gen_example(resolver: RefResolver, schema: Optional[Json]) -> Any:
-    import random
     if not schema: return None
     schema = resolver.resolve(schema)
     if not isinstance(schema, dict): return None
@@ -388,7 +393,6 @@ def op_seed(spec_url: str, method: str, path: str) -> int:
 def _with_seed(seed: Optional[int], fn):
     if seed is None:
         return fn()
-    import random
     state = random.getstate()
     try:
         random.seed(seed)

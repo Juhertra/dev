@@ -6,9 +6,8 @@ Relabels any plain "```" to an explicit language based on content heuristics.
 This version is more careful about preserving mermaid fences.
 """
 
-import re
 import pathlib
-import sys
+import re
 
 OPEN = re.compile(r'^```\s*$')
 CLOSE = re.compile(r'^```\s*$')

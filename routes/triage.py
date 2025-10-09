@@ -9,10 +9,9 @@ REST endpoints for findings triage workflow:
 """
 
 import json
-import time
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional
-from flask import Blueprint, request, jsonify, current_app
+
+from flask import Blueprint, current_app, jsonify, request
 
 from store import _bust_vulns_cache
 from utils.schema_validation import validate_json

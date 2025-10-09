@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import re, sys, pathlib
+import pathlib
+import re
 
 ROOT = pathlib.Path("docs")
 MERMAID_PATTERNS = [

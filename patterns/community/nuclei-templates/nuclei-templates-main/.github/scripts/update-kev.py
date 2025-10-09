@@ -13,10 +13,10 @@ import os
 import re
 import sys
 import time
-import json
-import requests
 from pathlib import Path
-from typing import Set, Optional, Dict, Tuple
+from typing import Optional, Set
+
+import requests
 
 # Configuration
 CISA_KEV_JSON_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
@@ -343,7 +343,7 @@ class EnhancedKEVUpdater:
             else:
                 print(f"Could not extract CVE ID from {file_path}")
 
-        print(f"\nEnhanced KEV/vKEV update complete!")
+        print("\nEnhanced KEV/vKEV update complete!")
         print(f"Templates updated: {self.updated_count}")
         print(f"CISA KEV CVEs found in templates: {cisa_kev_found}")
         print(f"VulnCheck KEV CVEs found in templates: {vulncheck_kev_found}")

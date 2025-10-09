@@ -4,6 +4,7 @@ Default level: INFO. Safe to call multiple times.
 """
 
 from __future__ import annotations
+
 import json
 import logging
 import os

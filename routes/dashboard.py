@@ -2,14 +2,14 @@
 Dashboard routes for project overview and key metrics.
 """
 
-from flask import Blueprint, render_template, request, jsonify
-import os
-import json
 import glob
-from datetime import datetime, timedelta
-from collections import defaultdict
-from utils.endpoints import endpoint_key, endpoint_safe_key
+import json
 import logging
+import os
+from collections import defaultdict
+from datetime import datetime
+
+from flask import Blueprint, render_template, request
 
 logger = logging.getLogger(__name__)
 
