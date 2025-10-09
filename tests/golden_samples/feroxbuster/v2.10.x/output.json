@@ -1,0 +1,16 @@
+[
+  {
+    "url": "http://example.com/api/users",
+    "status": 200,
+    "size": 1024,
+    "method": "GET",
+    "timestamp": "2025-10-09T19:30:00Z"
+  },
+  {
+    "url": "http://example.com/admin",
+    "status": 403,
+    "size": 512,
+    "method": "GET",
+    "timestamp": "2025-10-09T19:30:01Z"
+  }
+]
