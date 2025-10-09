@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a defect in SecFlow
+labels: [bug]
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: What happened?
+      description: Clear description of the issue.
+      placeholder: Describe the bug…
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Include commands or workflow YAML if applicable.
+      placeholder: |
+        1) Run command: `make test`
+        2) Observe error: ...
+    validations:
+      required: true
+  - type: textarea
+    id: expect
+    attributes:
+      label: Expected behavior
+      description: What should have happened instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: SecFlow version
+      description: Version or commit hash where bug occurs
+      placeholder: e.g., v0.1.0 or abc1234
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which component is affected?
+      options:
+        - runtime
+        - wrappers/parsers
+        - workflow
+        - plugins
+        - observability
+        - docs/devex
+        - schemas
+        - qa
+        - ci/cd
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error logs/output
+      description: Paste any error messages or logs
+      render: shell

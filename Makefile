@@ -4,10 +4,10 @@ install:
 	pip install -r requirements.txt || poetry install --no-root
 
 lint:
-	@echo "Skipping lint for now - existing code has style issues"
+	ruff check --fix .
 
 type:
-	@echo "Skipping type checking for now - existing code has type issues"
+	pyright --warnings
 
 unit:
 	pytest -q --maxfail=1
