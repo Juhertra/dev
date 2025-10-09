@@ -1,0 +1,7 @@
+default: deny
+allow:
+  - name: example_safe_plugin
+    fs_allowlist: ["data/"]
+    network: false
+    cpu_seconds: 5
+    memory_mb: 256

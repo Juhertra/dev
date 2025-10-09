@@ -5,19 +5,19 @@ P6 - Export Findings Report Script
 CLI tool for exporting findings reports in various formats.
 """
 
+import argparse
+import csv
 import json
 import os
 import sys
-import argparse
-import csv
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from analytics_core.analytics import get_metrics, get_filtered_metrics
+from analytics_core.analytics import get_filtered_metrics, get_metrics
 from findings import get_findings
 
 
@@ -105,11 +105,17 @@ def export_json(pid: str, filters: Dict[str, Any], output_file: str) -> None:
 def export_pdf(pid: str, filters: Dict[str, Any], output_file: str) -> None:
     """Export findings to PDF format."""
     try:
-        from reportlab.lib.pagesizes import letter
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-        from reportlab.lib.styles import getSampleStyleSheet
         from reportlab.lib import colors
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.styles import getSampleStyleSheet
         from reportlab.lib.units import inch
+        from reportlab.platypus import (
+            Paragraph,
+            SimpleDocTemplate,
+            Spacer,
+            Table,
+            TableStyle,
+        )
         
         # Get metrics and findings
         metrics = get_filtered_metrics(pid, filters) if filters else get_metrics(pid)
@@ -294,7 +300,7 @@ def main():
     elif args.format == 'pdf':
         export_pdf(args.pid, filters, args.output)
     
-    print(f"\n✅ Export completed successfully!")
+    print("\n✅ Export completed successfully!")
 
 
 if __name__ == "__main__":

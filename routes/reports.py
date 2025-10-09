@@ -1,4 +1,4 @@
-from flask import render_template, request, Response
+from flask import Response, render_template, request
 
 
 def register_reports_routes(bp):

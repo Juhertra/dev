@@ -14,10 +14,9 @@ Features:
 """
 
 import argparse
-import json
 import sys
 from pathlib import Path
-from typing import Dict, List
+from typing import List
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -42,8 +41,8 @@ def rebuild_cache_for_project(pid: str) -> bool:
     """Rebuild cache for a specific project."""
     try:
         # Import here to avoid circular imports
-        from store import _bust_vulns_cache
         from routes.vulns import _compute_vulns_summary
+        from store import _bust_vulns_cache
         
         print(f"🔄 Rebuilding cache for project {pid}")
         

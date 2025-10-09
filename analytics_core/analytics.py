@@ -6,14 +6,12 @@ Data aggregation and metrics computation for findings analytics and reporting.
 """
 
 import json
+import logging
 import os
 import time
-from datetime import datetime, timezone, timedelta
-from typing import Dict, List, Any, Optional
-from collections import defaultdict, Counter
-from pathlib import Path
-
-import logging
+from collections import Counter, defaultdict
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

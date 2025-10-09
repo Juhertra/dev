@@ -1,4 +1,3 @@
-from typing import Any, Dict
 from flask import render_template, request
 
 
@@ -7,9 +6,10 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns")
     def patterns_page(pid: str):
+        import os
+
         from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         from store import get_project_name
-        import os
         try:
             base_dir = os.path.dirname(os.path.abspath(__file__))
             base_dir = os.path.dirname(base_dir)  # project root for engine
@@ -53,8 +53,9 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns/test", methods=["POST"])
     def test_pattern(pid: str):
-        from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         import os
+
+        from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         try:
             pattern_id = request.form.get('pattern_id')
             test_text = request.form.get('test_text', '')
@@ -70,8 +71,9 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns/toggle", methods=["POST"])
     def toggle_pattern(pid: str):
-        from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         import os
+
+        from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         try:
             pattern_id = request.form.get('pattern_id')
             enabled = request.form.get('enabled', '').lower() == 'true'
@@ -90,8 +92,10 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns/export")
     def export_patterns(pid: str):
+        import os
+        import tempfile
+
         from detectors.enhanced_pattern_engine import EnhancedPatternEngine
-        import os, tempfile
         try:
             format_type = request.args.get('format', 'json')
             if format_type not in ['json', 'csv', 'yaml']:
@@ -116,8 +120,10 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns/import", methods=["POST"])
     def import_patterns(pid: str):
+        import os
+        import tempfile
+
         from detectors.enhanced_pattern_engine import EnhancedPatternEngine
-        import os, tempfile
         try:
             if 'file' not in request.files:
                 return {"error": "No file provided"}, 400
@@ -150,8 +156,9 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns/community/update", methods=["POST"])
     def update_community_packs(pid: str):
-        from detectors.pattern_manager import PatternManager
         import os
+
+        from detectors.pattern_manager import PatternManager
         try:
             force = request.form.get('force', '').lower() == 'true'
             base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -168,8 +175,9 @@ def register_patterns_routes(bp):
 
     @bp.route("/p/<pid>/patterns/stats")
     def pattern_statistics(pid: str):
-        from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         import os
+
+        from detectors.enhanced_pattern_engine import EnhancedPatternEngine
         try:
             base_dir = os.path.dirname(os.path.abspath(__file__))
             base_dir = os.path.dirname(base_dir)

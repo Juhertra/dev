@@ -15,11 +15,10 @@ Features:
 
 import argparse
 import json
-import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -108,13 +107,13 @@ def backfill_run_file(file_path: Path, dry_run: bool = False, backup: bool = Fal
     # Save if modified and not dry run
     if modified and not dry_run:
         if save_run_file(file_path, run_data, backup):
-            print(f"✅ Saved backfilled run")
+            print("✅ Saved backfilled run")
         else:
             print(f"❌ Failed to save {file_path}")
     elif modified and dry_run:
         print(f"🔍 Dry run: would backfill {stats['backfilled']} findings")
     else:
-        print(f"ℹ️  No backfilling needed")
+        print("ℹ️  No backfilling needed")
     
     return stats
 

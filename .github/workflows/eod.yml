@@ -1,0 +1,31 @@
+name: Nightly EOD Report
+on:
+  schedule:
+    - cron: "0 0 * * *"  # 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  eod:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps (best-effort)
+        run: |
+          pip install -U pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          pip install pytest pytest-cov || true
+          pip install ruff pyright import-linter || true
+      - name: Run EOD report
+        run: |
+          chmod +x scripts/eod_report.sh || true
+          make eod || ./scripts/eod_report.sh
+      - name: Upload EOD artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eod-${{ github.run_id }}
+          path: reports/eod/*.md

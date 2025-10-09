@@ -5,7 +5,6 @@ avoid any behavior changes while providing a stable import path.
 
 from typing import Any
 
-
 try:
     # Re-export current blueprint defined in api_endpoints.py
     from api_endpoints import api_bp  # type: ignore

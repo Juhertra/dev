@@ -3,15 +3,15 @@
 Pattern Manager - Advanced pattern management with per-project directories,
 community packs, and external integrations.
 """
-import os
 import json
 import shutil
-import requests
 import zipfile
-import tempfile
-from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import requests
+
 
 class PatternManager:
     """

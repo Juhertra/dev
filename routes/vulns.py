@@ -1,10 +1,11 @@
-from typing import Any, Dict, List
-from flask import render_template, request, current_app, jsonify
-import logging
-import time
-import os
 import json
+import logging
+import os
+import time
 from collections import defaultdict
+from typing import Any, Dict, List
+
+from flask import jsonify, render_template, request
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,6 @@ def register_vulns_routes(bp):
         
         try:
             from store import get_project_name
-            from utils.endpoints import endpoint_key
             from utils.schema_validation import validate_json
             
             # Check if we have a cached summary
@@ -122,7 +122,6 @@ def register_vulns_routes(bp):
     def vulns_bulk_actions(pid: str):
         """Apply bulk triage actions to multiple vulnerabilities."""
         try:
-            from utils.schema_validation import validate_json
             
             # Get request data
             data = request.get_json() or {}
@@ -161,9 +160,10 @@ def register_vulns_routes(bp):
 def _apply_bulk_actions(pid: str, indices: List[int], actions: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Apply bulk triage actions to findings with batching and error handling."""
     try:
+        from datetime import datetime, timezone
+
         from findings import get_findings
         from store import _bust_vulns_cache
-        from datetime import datetime, timezone
         
         # Load findings
         findings = get_findings(pid)
@@ -264,8 +264,8 @@ def _apply_bulk_actions(pid: str, indices: List[int], actions: List[Dict[str, An
 def _compute_vulns_summary(pid: str) -> List[Dict[str, Any]]:
     """Compute vulnerabilities summary from runs data."""
     try:
-        from utils.endpoints import endpoint_key
         from findings import get_findings
+        from utils.endpoints import endpoint_key
         
         # Get all findings for the project
         findings = get_findings(pid)

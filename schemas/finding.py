@@ -4,6 +4,7 @@ If pydantic is unavailable, provide a minimal shim to avoid runtime errors.
 """
 
 from __future__ import annotations
+
 from typing import Any, Dict, List, Optional
 
 try:

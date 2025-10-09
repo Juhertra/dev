@@ -1,6 +1,9 @@
 from __future__ import annotations
-import json, os, time, re
-from urllib import request, parse
+
+import json
+import os
+import time
+from urllib import parse, request
 
 BASE = os.environ.get("BASE_URL", "http://127.0.0.1:5010")
 IDX = json.load(open(os.path.join(os.path.dirname(__file__), "..", "ui_projects", "projects.json")))

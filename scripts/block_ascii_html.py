@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import pathlib, re, sys
+import pathlib
+import re
+import sys
 
 SITE = pathlib.Path("site")
 # More specific patterns for actual ASCII diagrams, not HTML/CSS

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-import pathlib, re, sys, subprocess
+import pathlib
+import re
+import subprocess
+import sys
 
 SRC = pathlib.Path("docs")
 SITE = pathlib.Path("site")

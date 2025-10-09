@@ -1,9 +1,11 @@
-from typing import Any, Dict
-from flask import render_template, render_template_string, request, redirect, url_for
-from utils.runtime import safe_int
 import json as _json
 import time as _time
+from typing import Any, Dict
+
 import requests
+from flask import render_template, render_template_string, request
+
+from utils.runtime import safe_int
 
 
 def register_explorer_routes(bp):
@@ -11,9 +13,9 @@ def register_explorer_routes(bp):
 
     @bp.post("/p/<pid>/op_details")
     def op_details(pid: str):
-        from store import get_runtime
+        from core import _files_preview_map, _json_safe, compose_display_url
         from specs import RefResolver, build_preview, op_seed
-        from core import compose_display_url, _json_safe, _files_preview_map
+        from store import get_runtime
 
         session, SPECS, QUEUE = get_runtime(pid)
         spec_id = request.form.get("spec_id")
@@ -51,9 +53,9 @@ def register_explorer_routes(bp):
 
     @bp.post("/p/<pid>/op_edit")
     def op_edit(pid: str):
-        from store import get_runtime
-        from specs import RefResolver, build_preview, op_seed
         from core import _json_safe
+        from specs import RefResolver, build_preview, op_seed
+        from store import get_runtime
 
         session, SPECS, QUEUE = get_runtime(pid)
         spec_id = request.form.get("spec_id"); idx_raw = request.form.get("index")
@@ -77,9 +79,9 @@ def register_explorer_routes(bp):
 
     @bp.post("/p/<pid>/op_preview_override")
     def op_preview_override(pid: str):
-        from store import get_runtime
-        from specs import RefResolver, build_preview, op_seed
         from core import _json_safe
+        from specs import RefResolver, build_preview, op_seed
+        from store import get_runtime
 
         def _make_override_from_form(form) -> Dict[str, Any]:
             from core import parse_json_field
@@ -144,7 +146,6 @@ def register_explorer_routes(bp):
     @bp.post("/p/<pid>/queue_add_override")
     def queue_add_override(pid: str):
         from store import get_runtime, persist_from_runtime
-        from core import _json_safe
 
         def _make_override_from_form(form) -> Dict[str, Any]:
             from core import parse_json_field
@@ -195,8 +196,8 @@ def register_explorer_routes(bp):
 
     @bp.post("/p/<pid>/send_now_override")
     def send_now_override(pid: str):
-        from store import get_runtime
         from specs import RefResolver, build_preview, op_seed
+        from store import get_runtime
         session, SPECS, QUEUE = get_runtime(pid)
         spec_id = request.form.get("spec_id"); idx = int(request.form.get("index") or 0)
         s = SPECS.get(spec_id)

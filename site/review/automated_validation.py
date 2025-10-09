@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
+import ast
+import glob
+import json
 import os
 import re
 import sys
-import glob
-import json
-import yaml
-import ast
-import tempfile
 from datetime import datetime
-from typing import List, Dict, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
+
+import yaml
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 ARCH_DIR = os.path.join(ROOT, "docs", "architecture")
@@ -336,7 +336,7 @@ def main():
                 files_fixed += 1
                 total_fixes += fixes
         
-        print(f"\n✅ Terminology fixes complete:")
+        print("\n✅ Terminology fixes complete:")
         print(f"Files processed: {len(files)}")
         print(f"Files fixed: {files_fixed}")
         print(f"Total terminology fixes: {total_fixes}")

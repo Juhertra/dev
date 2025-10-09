@@ -1,6 +1,7 @@
-from typing import Any, Dict
-from flask import jsonify, request, render_template, current_app
 import logging
+from typing import Any, Dict
+
+from flask import current_app, jsonify, render_template, request
 
 logger = logging.getLogger(__name__)
 
@@ -44,11 +45,13 @@ def register_nuclei_routes(bp):
 
     @bp.post("/p/<pid>/nuclei/scan")
     def nuclei_scan(pid: str):
-        from nuclei_integration import nuclei_integration
-        from store import save_run, get_runtime, update_endpoint_dossier_by_key
-        from utils.endpoints import endpoint_key
-        import time as _t, threading
         import os
+        import threading
+        import time as _t
+
+        from nuclei_integration import nuclei_integration
+        from store import get_runtime, save_run, update_endpoint_dossier_by_key
+        from utils.endpoints import endpoint_key
         try:
             templates = request.form.getlist('templates') or None
             severity = request.form.getlist('severity') or None
@@ -97,6 +100,7 @@ def register_nuclei_routes(bp):
                     try:
                         import json as _json
                         from urllib.parse import urlsplit as _us
+
                         from nuclei_integration import nuclei_integration as _ni
                         results: list[dict] = []
                         per_ep: dict[tuple[str,str,str], dict] = {}
@@ -153,7 +157,7 @@ def register_nuclei_routes(bp):
                         pass
                     # Update endpoint dossiers using canonical queue keys (preserving query)
                     try:
-                        from store import get_runtime, _endpoint_dossier_path_by_key
+                        from store import _endpoint_dossier_path_by_key, get_runtime
                         session, SPECS, QUEUE = get_runtime(pid)
                         from specs import RefResolver, build_preview, op_seed
                         summary = {
@@ -227,10 +231,11 @@ def register_nuclei_routes(bp):
     @bp.get("/p/<pid>/nuclei/stream")
     def nuclei_stream(pid: str):
         """Server-Sent Events stream for live Nuclei scanning (Phase 4A enhanced)."""
-        from flask import Response
-        from nuclei_integration import nuclei_integration
         import time as _t
-        import threading
+
+        from flask import Response
+
+        from nuclei_integration import nuclei_integration
         
         try:
             run_id = request.args.get('run_id') or f"{_t.strftime('%Y-%m-%dT%H-%M-%SZ', _t.gmtime())}-{pid[:4].upper()}"
@@ -368,8 +373,8 @@ def register_nuclei_routes(bp):
                 # If no specs, try endpoint dossiers
                 if endpoint_count == 0:
                     try:
-                        import os
                         import json
+                        import os
                         endpoints_dir = os.path.join('ui_projects', pid, 'endpoints')
                         if os.path.exists(endpoints_dir):
                             for filename in os.listdir(endpoints_dir):

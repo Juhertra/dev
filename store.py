@@ -1,8 +1,22 @@
 from __future__ import annotations
-import os, uuid, threading, time, json, logging
+
+import json
+import logging
+import os
+import threading
+import time
+import uuid
 from typing import Any, Dict, List, Optional, Tuple
-from core import read_json, write_json, safe_id, Json
-from specs import load_spec_text, parse_spec, pick_server, RefResolver, iter_operations, spec_meta
+
+from core import read_json, safe_id, write_json
+from specs import (
+    RefResolver,
+    iter_operations,
+    load_spec_text,
+    parse_spec,
+    pick_server,
+    spec_meta,
+)
 
 ROOT = os.path.dirname(__file__)
 STORE_DIR = os.path.join(ROOT, "ui_projects")
@@ -89,7 +103,7 @@ def build_runtime_from_state(state: Dict[str, Any]) -> Tuple[Dict[str, Any], Dic
                 "url": u, "title": title, "version": version, "base_url": base,
                 "ops": ops, "spec": spec, "safe_id": safe_id(spec_id)
             }
-        except Exception as e:
+        except Exception:
             pass
     
     for q in (state.get("queue") or []):
@@ -315,7 +329,6 @@ def make_run_id() -> str:
 
 def endpoint_id(base: str, method: str, path: str) -> str:
     """Generate a unique endpoint ID."""
-    import hashlib
     key = f"{base}|{method}|{path}"
     return hashlib.sha1(key.encode()).hexdigest()[:16]
 
@@ -380,15 +393,17 @@ def get_endpoint_runs(pid: str, base: str, method: str, path: str, limit: int = 
     return doc.get("runs", [])[:limit]
 
 # === By-key helpers (canonical key: base|METHOD|/path) ===
-from utils.endpoints import endpoint_key
 import hashlib
+
 
 def _pj(pid, *parts):
     return os.path.join(STORE_DIR, pid, *parts)
 
 def _endpoint_dossier_path_by_key(pid: str, key: str) -> str:
     # Use safe canonical filename (not hash) so proof paths match expectations
-    from utils.endpoints import endpoint_safe_key as _esk  # local import to avoid cycles
+    from utils.endpoints import (
+        endpoint_safe_key as _esk,  # local import to avoid cycles
+    )
     return _pj(pid, "endpoints", f"{_esk(key)}.json")
 
 def update_endpoint_dossier_by_key(pid: str, key: str, run_summary: Dict[str, Any]):
@@ -480,7 +495,7 @@ def ensure_dirs(pid: str):
 
 # === By-key dossier helpers (canonical key) ===
 import re as _re
-from utils.endpoints import endpoint_key as _endpoint_key
+
 
 def _safe_filename(s: str) -> str:
     return _re.sub(r"[^A-Za-z0-9._-]+", "_", s)

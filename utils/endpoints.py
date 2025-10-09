@@ -1,6 +1,6 @@
-from urllib.parse import urlsplit
 import re
 from typing import Optional
+from urllib.parse import urlsplit
 
 
 def _norm_base(base: str) -> str:

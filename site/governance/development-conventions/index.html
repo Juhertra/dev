@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Development Conventions - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../engineering-standards/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../../architecture/00-index/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#development-conventions" class="nav-link">Development Conventions</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#definition-of-done-dod-checklist" class="nav-link">Definition of Done (DoD) Checklist</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sodeod-rituals-coordinatordevex-automation" class="nav-link">SOD/EOD Rituals (Coordinator/DevEx Automation)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#branch-naming-pr-rules" class="nav-link">Branch Naming &amp; PR Rules</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ci-order-fast-fail" class="nav-link">CI Order (Fast-Fail)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#coverage-ratchet-ladder" class="nav-link">Coverage Ratchet Ladder</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#development-workflow" class="nav-link">Development Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tool-integration" class="nav-link">Tool Integration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#quality-gates" class="nav-link">Quality Gates</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#emergency-procedures" class="nav-link">Emergency Procedures</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#team-coordination" class="nav-link">Team Coordination</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="development-conventions">Development Conventions<a class="headerlink" href="#development-conventions" title="Permanent link">&para;</a></h1>
+<h2 id="definition-of-done-dod-checklist">Definition of Done (DoD) Checklist<a class="headerlink" href="#definition-of-done-dod-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All tests pass (<code>make test</code>)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Code coverage meets current milestone threshold (see Coverage Ratchet below)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No linting errors (<code>ruff</code>, <code>pyright</code>, <code>import-linter</code>)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All imports properly organized and unused imports removed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Code follows project style guidelines</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Type hints added for all public functions and classes</li>
+</ul>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation updated for any API changes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Docstrings added for new functions/classes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> README updated if installation/usage changed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Docs health gates pass (<code>make health</code>)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No broken internal links</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mermaid diagrams render correctly (parity check)</li>
+</ul>
+<h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Unit tests written for new functionality</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration tests updated if needed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Contract tests pass</li>
+<li class="task-list-item"><input type="checkbox" disabled/> E2E tests pass (if applicable)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test coverage doesn't drop below current threshold</li>
+</ul>
+<h3 id="security-compliance">Security &amp; Compliance<a class="headerlink" href="#security-compliance" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> No hardcoded secrets or credentials</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Security-sensitive code reviewed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Dependencies updated and vulnerabilities checked</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Input validation implemented where needed</li>
+</ul>
+<h3 id="review-process">Review Process<a class="headerlink" href="#review-process" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> PR description includes context and testing instructions</li>
+<li class="task-list-item"><input type="checkbox" disabled/> PR size ≤400 LOC or requires 2 approvals</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All CI checks pass</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Code review completed by required reviewers</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validation evidence pasted in PR comments</li>
+</ul>
+<h2 id="sodeod-rituals-coordinatordevex-automation">SOD/EOD Rituals (Coordinator/DevEx Automation)<a class="headerlink" href="#sodeod-rituals-coordinatordevex-automation" title="Permanent link">&para;</a></h2>
+<h3 id="start-of-day-sod-automated-by-coordinator">Start of Day (SOD) - Automated by Coordinator<a class="headerlink" href="#start-of-day-sod-automated-by-coordinator" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>CI Status Check</strong>: Automated scan of overnight CI results</li>
+<li><strong>Coverage Monitoring</strong>: Automated coverage trend analysis</li>
+<li><strong>Dependency Alerts</strong>: Automated security vulnerability scanning</li>
+<li><strong>Build Health</strong>: Automated build failure notifications</li>
+<li><strong>Sprint Progress</strong>: Automated sprint burn-down updates</li>
+</ul>
+<h3 id="end-of-day-eod-devex-automation">End of Day (EOD) - DevEx Automation<a class="headerlink" href="#end-of-day-eod-devex-automation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Health Gates</strong>: Automated <code>make health</code> execution</li>
+<li><strong>Coverage Ratchet</strong>: Automated coverage threshold validation</li>
+<li><strong>Documentation Sync</strong>: Automated docs build and link validation</li>
+<li><strong>Metrics Collection</strong>: Automated performance and quality metrics</li>
+<li><strong>Report Generation</strong>: Automated EOD summary creation</li>
+</ul>
+<h3 id="report-locations">Report Locations<a class="headerlink" href="#report-locations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Daily Reports</strong>: <code>reports/daily/YYYY-MM-DD.md</code> (auto-generated)</li>
+<li><strong>Sprint Reports</strong>: <code>reports/sprints/sprint-N.md</code> (auto-updated)</li>
+<li><strong>Milestone Reports</strong>: <code>reports/milestones/M{N}.md</code> (auto-compiled)</li>
+<li><strong>Health Reports</strong>: <code>reports/health/YYYY-MM-DD-health.md</code> (auto-generated)</li>
+</ul>
+<h2 id="branch-naming-pr-rules">Branch Naming &amp; PR Rules<a class="headerlink" href="#branch-naming-pr-rules" title="Permanent link">&para;</a></h2>
+<h3 id="branch-naming-convention">Branch Naming Convention<a class="headerlink" href="#branch-naming-convention" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Features</strong>: <code>feat/description-of-feature</code></li>
+<li><strong>Bug Fixes</strong>: <code>fix/description-of-bug</code></li>
+<li><strong>Documentation</strong>: <code>docs/description-of-changes</code></li>
+<li><strong>Refactoring</strong>: <code>refactor/description-of-refactor</code></li>
+<li><strong>Hotfixes</strong>: <code>hotfix/description-of-fix</code></li>
+<li><strong>Security</strong>: <code>security/description-of-security-fix</code></li>
+</ul>
+<h3 id="pr-size-rule">PR Size Rule<a class="headerlink" href="#pr-size-rule" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Standard</strong>: ≤400 LOC per PR</li>
+<li><strong>Large PRs</strong>: &gt;400 LOC requires 2 approvals minimum</li>
+<li><strong>Emergency</strong>: Hotfixes may exceed limits with security team approval</li>
+<li><strong>Documentation</strong>: Docs-only PRs have relaxed limits (≤1000 LOC)</li>
+</ul>
+<h3 id="security-review-rule">Security Review Rule<a class="headerlink" href="#security-review-rule" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Mandatory Security Review</strong>: All PRs touching security-sensitive code</li>
+<li><strong>Security Team</strong>: <code>@security-lead</code> must approve security-related changes</li>
+<li><strong>Automated Scanning</strong>: All PRs scanned for secrets and vulnerabilities</li>
+<li><strong>Dependency Updates</strong>: Security updates get priority review queue</li>
+</ul>
+<h2 id="ci-order-fast-fail">CI Order (Fast-Fail)<a class="headerlink" href="#ci-order-fast-fail" title="Permanent link">&para;</a></h2>
+<p>The CI pipeline runs in strict fast-fail order:</p>
+<h3 id="phase-1-code-quality-fast-fail">Phase 1: Code Quality (Fast-Fail)<a class="headerlink" href="#phase-1-code-quality-fast-fail" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Ruff Linting</strong> - Python code style and formatting</li>
+<li><strong>Pyright Type Checking</strong> - Static type analysis</li>
+<li><strong>Import Linter</strong> - Import organization and unused imports</li>
+</ol>
+<h3 id="phase-2-testing-fast-fail">Phase 2: Testing (Fast-Fail)<a class="headerlink" href="#phase-2-testing-fast-fail" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Unit Tests</strong> - Core functionality testing</li>
+<li><strong>Coverage Measurement</strong> - Code coverage analysis</li>
+<li><strong>Coverage Ratchet</strong> - Threshold enforcement (fail if drop &gt;2%)</li>
+</ol>
+<h3 id="phase-3-integration-fast-fail">Phase 3: Integration (Fast-Fail)<a class="headerlink" href="#phase-3-integration-fast-fail" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Contract Tests</strong> - API contract validation</li>
+<li><strong>Integration Tests</strong> - Component interaction testing</li>
+</ol>
+<h3 id="phase-4-documentation-fast-fail">Phase 4: Documentation (Fast-Fail)<a class="headerlink" href="#phase-4-documentation-fast-fail" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Docs Health</strong> - <code>make health</code> execution</li>
+<li><strong>Mermaid Parity</strong> - Diagram rendering validation</li>
+<li><strong>ASCII Blocker</strong> - ASCII diagram detection</li>
+</ol>
+<h3 id="phase-5-end-to-end-fast-fail">Phase 5: End-to-End (Fast-Fail)<a class="headerlink" href="#phase-5-end-to-end-fast-fail" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>E2E Tests</strong> - Full system testing</li>
+<li><strong>Performance Tests</strong> - Regression detection</li>
+</ol>
+<h2 id="coverage-ratchet-ladder">Coverage Ratchet Ladder<a class="headerlink" href="#coverage-ratchet-ladder" title="Permanent link">&para;</a></h2>
+<h3 id="milestone-thresholds">Milestone Thresholds<a class="headerlink" href="#milestone-thresholds" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>M1</strong>: 80% minimum coverage</li>
+<li><strong>M2</strong>: 82% minimum coverage</li>
+<li><strong>M3</strong>: 84% minimum coverage</li>
+<li><strong>M4</strong>: 86% minimum coverage</li>
+<li><strong>M5</strong>: 88% minimum coverage</li>
+<li><strong>M6</strong>: 90% minimum coverage</li>
+</ul>
+<h3 id="failure-conditions">Failure Conditions<a class="headerlink" href="#failure-conditions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Drop &gt;2% from previous milestone</li>
+<li>Fall below current milestone threshold</li>
+<li>New code without corresponding tests</li>
+<li>Critical paths without test coverage</li>
+</ul>
+<h2 id="development-workflow">Development Workflow<a class="headerlink" href="#development-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="daily-development-loop">Daily Development Loop<a class="headerlink" href="#daily-development-loop" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Pull Latest</strong>: <code>git pull origin main</code></li>
+<li><strong>Run Tests</strong>: <code>make test</code> (full suite)</li>
+<li><strong>Quick Iteration</strong>: <code>make quick-test</code> (fast feedback)</li>
+<li><strong>Health Check</strong>: <code>make health</code> (before commit)</li>
+<li><strong>Commit &amp; Push</strong>: Follow commit standards</li>
+<li><strong>Create PR</strong>: Include validation evidence</li>
+</ol>
+<h3 id="pre-commit-checklist">Pre-Commit Checklist<a class="headerlink" href="#pre-commit-checklist" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All tests pass locally</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Code coverage maintained</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Linting passes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation updated</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Security review completed (if applicable)</li>
+</ul>
+<h3 id="pr-creation-process">PR Creation Process<a class="headerlink" href="#pr-creation-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Branch from main</strong>: <code>git checkout -b feat/description</code></li>
+<li><strong>Implement changes</strong>: Follow DoD checklist</li>
+<li><strong>Run validation</strong>: <code>make test &amp;&amp; make health</code></li>
+<li><strong>Create PR</strong>: Include context and evidence</li>
+<li><strong>Request reviews</strong>: Assign appropriate reviewers</li>
+<li><strong>Monitor CI</strong>: Ensure all checks pass</li>
+</ol>
+<h2 id="tool-integration">Tool Integration<a class="headerlink" href="#tool-integration" title="Permanent link">&para;</a></h2>
+<h3 id="development-tools">Development Tools<a class="headerlink" href="#development-tools" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Poetry</strong>: Dependency management</li>
+<li><strong>Ruff</strong>: Code formatting and linting</li>
+<li><strong>Pyright</strong>: Static type checking</li>
+<li><strong>Pytest</strong>: Testing framework</li>
+<li><strong>MkDocs</strong>: Documentation generation</li>
+</ul>
+<h3 id="cicd-tools">CI/CD Tools<a class="headerlink" href="#cicd-tools" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>GitHub Actions</strong>: CI pipeline execution</li>
+<li><strong>Coverage.py</strong>: Coverage measurement</li>
+<li><strong>Mermaid</strong>: Diagram rendering</li>
+<li><strong>Link Checker</strong>: Documentation validation</li>
+</ul>
+<h2 id="quality-gates">Quality Gates<a class="headerlink" href="#quality-gates" title="Permanent link">&para;</a></h2>
+<h3 id="code-quality-gates">Code Quality Gates<a class="headerlink" href="#code-quality-gates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Linting</strong>: Zero ruff/pyright errors</li>
+<li><strong>Type Safety</strong>: Full type coverage for public APIs</li>
+<li><strong>Import Hygiene</strong>: No unused imports</li>
+<li><strong>Style Consistency</strong>: Automated formatting applied</li>
+</ul>
+<h3 id="testing-gates">Testing Gates<a class="headerlink" href="#testing-gates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Unit Coverage</strong>: Minimum threshold per milestone</li>
+<li><strong>Integration Coverage</strong>: Critical path coverage</li>
+<li><strong>Contract Validation</strong>: API compatibility</li>
+<li><strong>Performance Regression</strong>: No performance degradation</li>
+</ul>
+<h3 id="documentation-gates">Documentation Gates<a class="headerlink" href="#documentation-gates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Build Success</strong>: MkDocs builds without errors</li>
+<li><strong>Link Validation</strong>: No broken internal links</li>
+<li><strong>Mermaid Parity</strong>: Diagrams render correctly</li>
+<li><strong>ASCII Blocker</strong>: No ASCII diagrams allowed</li>
+</ul>
+<h2 id="emergency-procedures">Emergency Procedures<a class="headerlink" href="#emergency-procedures" title="Permanent link">&para;</a></h2>
+<h3 id="hotfix-process">Hotfix Process<a class="headerlink" href="#hotfix-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Create hotfix branch</strong>: <code>hotfix/critical-issue</code></li>
+<li><strong>Implement minimal fix</strong>: Focus on stability</li>
+<li><strong>Security review</strong>: Mandatory for security issues</li>
+<li><strong>Fast-track CI</strong>: Expedited review process</li>
+<li><strong>Deploy immediately</strong>: After approval</li>
+</ol>
+<h3 id="rollback-process">Rollback Process<a class="headerlink" href="#rollback-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Identify issue</strong>: Automated monitoring alerts</li>
+<li><strong>Create rollback PR</strong>: Revert problematic changes</li>
+<li><strong>Emergency review</strong>: Security team approval</li>
+<li><strong>Deploy rollback</strong>: Immediate deployment</li>
+<li><strong>Post-mortem</strong>: Document lessons learned</li>
+</ol>
+<h2 id="team-coordination">Team Coordination<a class="headerlink" href="#team-coordination" title="Permanent link">&para;</a></h2>
+<h3 id="daily-standups">Daily Standups<a class="headerlink" href="#daily-standups" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SOD Reports</strong>: Automated CI status</li>
+<li><strong>Blockers</strong>: Manual escalation process</li>
+<li><strong>Progress</strong>: Sprint burn-down updates</li>
+<li><strong>Dependencies</strong>: Cross-team coordination</li>
+</ul>
+<h3 id="weekly-reviews">Weekly Reviews<a class="headerlink" href="#weekly-reviews" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Coverage Trends</strong>: Automated analysis</li>
+<li><strong>Performance Metrics</strong>: Automated collection</li>
+<li><strong>Security Updates</strong>: Automated scanning</li>
+<li><strong>Process Improvements</strong>: Team feedback integration</li>
+</ul>
+<h3 id="monthly-retrospectives">Monthly Retrospectives<a class="headerlink" href="#monthly-retrospectives" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Process Effectiveness</strong>: DoD checklist review</li>
+<li><strong>Tool Updates</strong>: CI/CD pipeline improvements</li>
+<li><strong>Training Needs</strong>: Skill gap identification</li>
+<li><strong>Process Refinement</strong>: Continuous improvement</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -3,12 +3,16 @@ Nuclei Integration Layer (Phase 5)
 Converts Nuclei results to our finding model and integrates with the existing system.
 """
 
-import time, os, json, logging
-from typing import Dict, List, Any, Optional, Tuple, Union
-from nuclei_wrapper import NucleiWrapper, NucleiResult, NucleiStatus
-from findings import append_findings, get_findings
-from store import get_runtime, persist_from_runtime, ensure_dirs, get_project_dir
+import json
+import logging
+import os
+import time
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+from findings import append_findings
+from nuclei_wrapper import NucleiResult, NucleiWrapper
 from specs import RefResolver, build_preview, op_seed
+from store import ensure_dirs, get_project_dir, get_runtime
 
 logger = logging.getLogger(__name__)
 
@@ -101,9 +105,8 @@ class NucleiIntegration:
         # If no specs, try to get endpoints from endpoint dossiers
         if not endpoints:
             try:
-                import os
                 import json
-                from utils.endpoints import endpoint_key
+                import os
                 
                 endpoints_dir = os.path.join('ui_projects', pid, 'endpoints')
                 if os.path.exists(endpoints_dir):
@@ -738,6 +741,7 @@ class NucleiIntegration:
         """Generator that scans and yields SSE-formatted events as progress/findings arrive."""
         import json as _json
         import time
+
         from findings import append_findings
         from store import ensure_dirs, get_project_dir
         
@@ -903,7 +907,7 @@ class NucleiIntegration:
                             }
                             yield f"event: finding\ndata: {_json.dumps(out)}\n\n"
                             logger.info(f"SSE_EVENT kind=\"finding\" run_id={run_id} endpoint_key=\"{ep_key}\" detector_id=\"{pf.get('detector_id')}\" severity={sev} stored=true")
-                except Exception as e:
+                except Exception:
                     # Pattern engine errors are non-fatal
                     pass
                 # Emit finding event (compact) - only after successful storage

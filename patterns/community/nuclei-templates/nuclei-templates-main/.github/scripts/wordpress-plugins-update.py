@@ -14,13 +14,14 @@ nuclei -t http/technologies/wordpress/plugins -tags top-100 -u https://www.examp
 
 __author__ = "ricardomaia"
 
-from time import sleep
-from bs4 import BeautifulSoup
-import requests
-import re
-from markdown import markdown
 import os
-from termcolor import colored, cprint
+import re
+from time import sleep
+
+import requests
+from bs4 import BeautifulSoup
+from markdown import markdown
+from termcolor import cprint
 
 # Regex to extract the name of th plugin from the URL
 regex = r"https://wordpress.org/plugins/(\w.+)/"

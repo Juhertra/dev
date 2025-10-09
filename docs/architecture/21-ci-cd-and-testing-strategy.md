@@ -282,6 +282,97 @@ docker compose up -d --no-build
 
 - Database snapshots every 6h during staging deployment
 
+## 🔒 Contract Testing
+
+Contract tests ensure data integrity and API compatibility across system boundaries. They validate invariants that must hold true regardless of implementation changes.
+
+### Contract Test Categories
+
+| Category | Purpose | Location | Example |
+|----------|---------|----------|---------|
+| **Finding Invariants** | Validate finding data structure | `tests/contracts/test_finding_invariants.py` | Detector ID regex, UTC timestamps |
+| **Storage Layout** | Validate data persistence format | `tests/contracts/test_storage_layout.py` | Schema version, file structure |
+
+### Finding Invariants Contract
+
+**Purpose:** Ensure findings conform to expected data structure and format requirements.
+
+**Key Validations:**
+- Detector IDs match pattern: `^[A-Za-z0-9_.-]+$`
+- Timestamps are ISO 8601 UTC format ending with 'Z'
+- Required fields are present and properly typed
+
+**Test Structure:**
+```python
+# Positive cases - valid data should pass
+def test_detector_id_regex_valid():
+    assert DETECTOR_RE.match("EXAMPLE_1")
+
+# Negative cases - invalid data should fail  
+def test_detector_id_regex_invalid():
+    assert not DETECTOR_RE.match("invalid:id")
+
+# Future implementation stubs
+@pytest.mark.xfail(reason="Implementation pending")
+def test_finding_schema_validation():
+    # Will pass when schema validation is implemented
+```
+
+### Storage Layout Contract
+
+**Purpose:** Ensure data persistence maintains expected structure and versioning.
+
+**Key Validations:**
+- Schema version field present and valid format
+- File structure supports expected operations
+- Backward compatibility for data migration
+
+**Test Structure:**
+```python
+# Happy path - valid storage layout
+def test_store_layout_has_schema_version(tmp_path):
+    data = {"store_schema_version": "1.0.0"}
+    assert "store_schema_version" in data
+
+# Edge cases - missing or invalid versions
+def test_store_layout_missing_schema_version(tmp_path):
+    data = {"detector_id": "test"}
+    assert "store_schema_version" not in data
+```
+
+### Contract Test Execution
+
+Run contract tests independently:
+```bash
+# Run all contract tests
+pytest tests/contracts/ -q
+
+# Run specific contract category
+pytest tests/contracts/test_finding_invariants.py -q
+pytest tests/contracts/test_storage_layout.py -q
+```
+
+### Contract Test Principles
+
+1. **Fail Fast:** Contract tests should fail immediately when invariants are violated
+2. **Implementation Agnostic:** Tests validate contracts, not implementation details
+3. **Future-Proof:** Use `@pytest.mark.xfail` for pending implementations
+4. **Comprehensive Coverage:** Include both positive and negative test cases
+5. **Clear Documentation:** Each test explains the contract being validated
+
+### Integration with CI/CD
+
+Contract tests run in the main CI pipeline:
+```yaml
+- name: Run Contract Tests
+  run: pytest tests/contracts/ --tb=short
+```
+
+They provide early warning when:
+- Data format changes break compatibility
+- Schema evolution violates existing contracts
+- New implementations don't meet contract requirements
+
 ## 🔮 Future Enhancements
 
 - Integration with GitHub Advanced Security (code scanning)

@@ -4,8 +4,8 @@ Provides simple in-memory caching with TTL for expensive operations.
 """
 
 import time
-from typing import Any, Dict, Optional
 from functools import wraps
+from typing import Any, Dict
 
 # Simple in-memory cache with TTL
 _cache: Dict[str, Dict[str, Any]] = {}

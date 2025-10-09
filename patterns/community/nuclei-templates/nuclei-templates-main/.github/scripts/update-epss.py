@@ -13,10 +13,11 @@ import os
 import re
 import sys
 import time
-import yaml
-import requests
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional
+
+import requests
+import yaml
 
 # Configuration
 EPSS_API_URL = "https://api.first.org/data/v1/epss"
@@ -238,7 +239,7 @@ class EPSSUpdater:
                 print(f"No EPSS data found for {cve_id}")
                 self.error_count += 1
         
-        print(f"\nUpdate complete!")
+        print("\nUpdate complete!")
         print(f"Templates updated: {self.updated_count}")
         print(f"Errors: {self.error_count}")
 

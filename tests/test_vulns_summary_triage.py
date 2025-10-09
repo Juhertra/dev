@@ -5,17 +5,18 @@ P5 - Vulns Summary Triage Tests
 Test the vulns summary computation with triage and suppression handling.
 """
 
-import unittest
 import json
 import os
-import tempfile
 import shutil
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-from datetime import datetime, timezone, timedelta
 
 # Add project root to path
 import sys
+import tempfile
+import unittest
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from unittest.mock import patch
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from routes.vulns import _compute_vulns_summary

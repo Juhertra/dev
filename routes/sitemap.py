@@ -1,13 +1,12 @@
-from typing import Any, Dict
-from flask import render_template, request, render_template_string, current_app
-from utils.rendering import render_first
-from utils.preview import build_endpoint_preview
-from store import get_runtime
-from utils.endpoints import endpoint_key
-import logging
-import time
-import os
 import json
+import logging
+import os
+import time
+from typing import Any, Dict
+
+from flask import current_app, render_template, request
+
+from utils.endpoints import endpoint_key
 
 # Local imports inside route functions to avoid circular deps
 
@@ -33,8 +32,8 @@ def register_sitemap_routes(bp):
         request_id = getattr(request, 'request_id', 'unknown')
         
         try:
-            from store import get_project_name
             from findings import count_findings_cached
+            from store import get_project_name
             
             # Use cached sitemap builder
             sitemap_roots = _build_cached_sitemap(pid)
@@ -192,7 +191,7 @@ def register_sitemap_routes(bp):
         request_id = getattr(request, 'request_id', 'unknown')
         
         try:
-            from store import get_endpoint_runs_by_key, _endpoint_dossier_path_by_key
+            from store import _endpoint_dossier_path_by_key, get_endpoint_runs_by_key
 
             url = request.form.get("url") or ""
             method = (request.form.get("method") or "GET").upper()
@@ -268,8 +267,8 @@ def register_sitemap_routes(bp):
     def sitemap_preview_endpoint(pid: str):
         """Legacy alias that builds a rich preview from spec (kept for compatibility)."""
         try:
+            from specs import RefResolver, build_preview, op_seed
             from store import get_runtime
-            from specs import RefResolver, op_seed, build_preview
             method = request.form.get("method")
             path = request.form.get("path")
             spec_id = request.form.get("spec_id")
@@ -315,8 +314,8 @@ def register_sitemap_routes(bp):
     def runs_index_page(pid: str):
         """Simple runs list page; returns 200 with recent runs and logs RUNS_INDEX."""
         try:
-            from store import list_runs, get_project_name
             from findings import count_findings_cached
+            from store import get_project_name, list_runs
             runs = list_runs(pid, limit=50)
             try:
                 current_app.logger.info(f"RUNS_INDEX pid=\"{pid}\" count={len(runs or [])}")

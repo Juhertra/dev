@@ -1,9 +1,9 @@
-from typing import Any, Dict
-from flask import render_template, request, jsonify, current_app
-import logging
-import time
-import os
 import json
+import logging
+import os
+import time
+
+from flask import jsonify, render_template, request
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ def register_tools_routes(bp):
         request_id = getattr(request, 'request_id', 'unknown')
         
         try:
-            from store import get_project_name
             from nuclei_integration import nuclei_integration
+            from store import get_project_name
             
             # Get nuclei status and template count
             try:
@@ -118,7 +118,6 @@ def register_tools_routes(bp):
         request_id = getattr(request, 'request_id', 'unknown')
         
         try:
-            from nuclei_integration import nuclei_integration
             
             # Use fixture templates for self-test
             fixture_dir = "tools/fixtures/nuclei"

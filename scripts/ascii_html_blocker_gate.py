@@ -1,4 +1,7 @@
-import sys, re, pathlib
+import pathlib
+import re
+import sys
+
 root = pathlib.Path("site")
 bad = []
 u_box = re.compile(r'[┌┐└┘├┤┬┴┼─│]')

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import json
-import sys
 import glob
+import json
 import os
+import sys
+
 
 def main() -> int:
     base = os.path.dirname(os.path.dirname(__file__))

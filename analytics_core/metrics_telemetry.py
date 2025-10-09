@@ -6,11 +6,10 @@ Simple metrics telemetry logging for observability.
 """
 
 import json
-import os
-import time
-from datetime import datetime, timezone
-from typing import Dict, Any
 import logging
+import os
+from datetime import datetime, timezone
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

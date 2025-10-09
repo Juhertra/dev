@@ -5,8 +5,9 @@ Expose get_settings() returning a dict-like settings snapshot.
 """
 
 from __future__ import annotations
-import os
+
 import json
+import os
 from typing import Any, Dict
 
 

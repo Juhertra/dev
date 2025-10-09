@@ -4,14 +4,14 @@ Security Toolkit Smoke Test
 Creates/loads project, queues endpoints, starts scan, verifies dossier files
 """
 
-import os
-import sys
 import json
-import time
-import requests
+import os
 import subprocess
+import sys
+import time
 from pathlib import Path
-from typing import Dict, Any, List
+
+import requests
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

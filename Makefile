@@ -1,4 +1,4 @@
-.PHONY: install lint type test unit contracts docs health quick-test eod _eod_local_coverage
+.PHONY: install lint type test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package
 
 install:
 	pip install -r requirements.txt || poetry install --no-root
@@ -36,3 +36,20 @@ _eod_local_coverage:
 	@command -v poetry >/dev/null 2>&1 && poetry run pytest -q --cov=. --cov-report=term \
 	 || (command -v pytest >/dev/null 2>&1 && python -c "import pytest_cov" 2>/dev/null && pytest -q --cov=. --cov-report=term \
 	 || echo "Coverage not available (pytest-cov not installed)")
+
+# Scaffold a new package with basic structure
+scaffold-package:
+	@echo "Usage: make scaffold-package PACKAGE_NAME=<name>"
+	@if [ -z "$(PACKAGE_NAME)" ]; then \
+		echo "Error: PACKAGE_NAME is required"; \
+		exit 1; \
+	fi
+	@mkdir -p packages/$(PACKAGE_NAME)
+	@echo '"""' > packages/$(PACKAGE_NAME)/__init__.py
+	@echo "$(PACKAGE_NAME) Package" >> packages/$(PACKAGE_NAME)/__init__.py
+	@echo "" >> packages/$(PACKAGE_NAME)/__init__.py
+	@echo "This package contains..." >> packages/$(PACKAGE_NAME)/__init__.py
+	@echo '"""' >> packages/$(PACKAGE_NAME)/__init__.py
+	@echo "" >> packages/$(PACKAGE_NAME)/__init__.py
+	@echo '__version__ = "0.1.0"' >> packages/$(PACKAGE_NAME)/__init__.py
+	@echo "Created package: packages/$(PACKAGE_NAME)/"

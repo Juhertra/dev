@@ -1,4 +1,6 @@
-import sys, pathlib, re
+import pathlib
+import re
+
 root = pathlib.Path("docs")
 OPEN = re.compile(r'^```([a-zA-Z0-9_\-+.]+)?\s*$')
 CLOSE = re.compile(r'^```\s*$')

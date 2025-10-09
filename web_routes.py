@@ -1,27 +1,67 @@
 from __future__ import annotations
-import json, requests, urllib3
+
+import json
 import logging
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, List, Optional
+
+import requests
+import urllib3
 
 logger = logging.getLogger(__name__)
-import os, time, uuid
-from flask import Blueprint, request, render_template_string, render_template, redirect, url_for, current_app, g, jsonify
+import os
+import time
+import uuid
 
-from core import Json, compose_display_url, parse_json_field, _json_safe, _files_preview_map
-from specs import RefResolver, build_preview, load_spec_text, parse_spec, pick_server, iter_operations, spec_meta, op_seed, is_openapi3
-from specs import load_spec_from_text_or_convert
-from utils.endpoints import endpoint_key
-from store import (
-    list_projects, get_current_project_id, set_current_project_id, create_project, rename_project,
-    delete_project, get_runtime, persist_from_runtime, ensure_runtime, get_project_name,
-    append_send_log, get_sends, clear_sends, append_run, list_runs, make_run_id, save_run, 
-    update_endpoint_dossier, get_endpoint_runs, load_run
+from flask import (
+    Blueprint,
+    current_app,
+    g,
+    jsonify,
+    redirect,
+    render_template,
+    render_template_string,
+    request,
+    url_for,
 )
-from findings import analyze_and_record, get_findings, count_findings, clear_findings, count_findings_cached
-from findings import get_finding_explanation, group_findings_for_ui, get_finding_by_index, build_groups
+
+from core import _files_preview_map, _json_safe, compose_display_url, parse_json_field
+from findings import (
+    analyze_and_record,
+    count_findings_cached,
+    get_finding_by_index,
+    get_finding_explanation,
+    get_findings,
+)
+from specs import (
+    RefResolver,
+    build_preview,
+    iter_operations,
+    load_spec_from_text_or_convert,
+    load_spec_text,
+    op_seed,
+    pick_server,
+    spec_meta,
+)
+from store import (
+    append_send_log,
+    create_project,
+    delete_project,
+    ensure_runtime,
+    get_current_project_id,
+    get_project_name,
+    get_runtime,
+    list_projects,
+    load_run,
+    make_run_id,
+    persist_from_runtime,
+    rename_project,
+    save_run,
+    set_current_project_id,
+)
+from utils.endpoints import endpoint_key
+
 # from detectors.enhanced_pattern_engine import EnhancedPatternEngine  # Unused import
 # from detectors.pattern_manager import PatternManager  # Unused import
-from reporting import SecurityReporter
 
 try:
     # Prefer modular blueprint if available
@@ -42,6 +82,8 @@ bp.add_app_template_global(feature_flag, name="feature_flag")
 
 # Add regex_search filter for CVE validation
 import re
+
+
 def regex_search(text: str, pattern: str) -> bool:
     """Check if text matches regex pattern."""
     if not text or not isinstance(text, str):
@@ -139,7 +181,6 @@ def _specs_model(SPECS: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 # Import the new sitemap builder
-from sitemap_builder import build_site_map
 from nuclei_integration import nuclei_integration
 
 # ---------- Shared CSS + JS blocks ----------
@@ -401,16 +442,16 @@ document.body.addEventListener('htmx:responseError', function(ev){
 def render_projects_dashboard():
     projs = list_projects()
     current = get_current_project_id()
-    T = f"""
+    T = """
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Projects — OpenAPI UI</title>
-<link rel="stylesheet" href="{{{{ url_for('static', filename='tokens.css') }}}}">
-<link rel="stylesheet" href="{{{{ url_for('static', filename='main.css') }}}}">
-<script src="{{{{ url_for('static', filename='main.js') }}}}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='tokens.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 </head>
 <body>
 
@@ -426,7 +467,7 @@ def render_projects_dashboard():
 
     <div class="card">
       <div class="hint" style="margin-bottom:8px">Create, rename, switch, or delete projects.</div>
-      <form method="post" action="{{{{ url_for('web.project_create') }}}}">
+      <form method="post" action="{{ url_for('web.project_create') }}">
         <div class="row">
           <div style="flex:1 1 360px"><input type="text" name="name" placeholder="New project name"></div>
           <button class="btn primary" type="submit">Create project</button>
@@ -435,9 +476,9 @@ def render_projects_dashboard():
     </div>
 
     <div class="card" style="margin-top:16px">
-      {{% if not projs %}}
+      {% if not projs %}
         <div class="hint">No projects yet.</div>
-      {{% else %}}
+      {% else %}
         <table>
           <thead>
             <tr>
@@ -448,46 +489,46 @@ def render_projects_dashboard():
             </tr>
           </thead>
           <tbody>
-          {{% for p in projs %}}
+          {% for p in projs %}
             <tr>
               <!-- Name + inline rename -->
               <td>
-                <form method="post" action="{{{{ url_for('web.project_rename') }}}}"
+                <form method="post" action="{{ url_for('web.project_rename') }}"
                       style="display:flex;gap:8px;align-items:center">
-                  <input type="hidden" name="id" value="{{{{ p.id }}}}">
-                  <input type="text" name="name" value="{{{{ p.name }}}}" style="max-width:260px">
+                  <input type="hidden" name="id" value="{{ p.id }}">
+                  <input type="text" name="name" value="{{ p.name }}" style="max-width:260px">
                   <button class="btn ghost" type="submit">Rename</button>
                 </form>
               </td>
 
               <!-- ID -->
-              <td class="id">{{{{ p.id }}}}</td>
+              <td class="id">{{ p.id }}</td>
 
               <!-- Current -->
               <td style="text-align:center;white-space:nowrap">
-                {{% if p.id == current %}}
+                {% if p.id == current %}
                   <span class="pill">Yes</span>
-                {{% else %}}
-                  <form method="post" action="{{{{ url_for('web.project_set_current') }}}}" style="display:inline">
-                    <input type="hidden" name="id" value="{{{{ p.id }}}}">
+                {% else %}
+                  <form method="post" action="{{ url_for('web.project_set_current') }}" style="display:inline">
+                    <input type="hidden" name="id" value="{{ p.id }}">
                     <button class="btn ghost" type="submit">Set current</button>
                   </form>
-                {{% endif %}}
+                {% endif %}
               </td>
 
               <!-- Actions -->
               <td style="text-align:center;white-space:nowrap">
-                <a class="btn ghost" href="{{{{ url_for('web.project_open', pid=p.id) }}}}">Open</a>
-                <form method="post" action="{{{{ url_for('web.project_delete') }}}}" style="display:inline">
-                  <input type="hidden" name="id" value="{{{{ p.id }}}}">
+                <a class="btn ghost" href="{{ url_for('web.project_open', pid=p.id) }}">Open</a>
+                <form method="post" action="{{ url_for('web.project_delete') }}" style="display:inline">
+                  <input type="hidden" name="id" value="{{ p.id }}">
                   <button class="btn primary" type="submit">Delete</button>
                 </form>
               </td>
             </tr>
-          {{% endfor %}}
+          {% endfor %}
           </tbody>
         </table>
-      {{% endif %}}
+      {% endif %}
     </div>
   </div>
   
@@ -1328,6 +1369,7 @@ def old_finding_view(pid: str):
     def _hl(s: str, needles: List[str]) -> str:
         try:
             import re as _re
+
             from markupsafe import escape
             out = s or ""
             for t in needles:
@@ -1670,7 +1712,8 @@ def nuclei_scan(pid: str):
                 # Save run document
                 save_run(pid, run_doc)
                 # Update endpoint dossiers for each queued endpoint using canonical key
-                from store import get_runtime, _endpoint_dossier_path_by_key, update_endpoint_dossier_by_key as write_dossier
+                from store import _endpoint_dossier_path_by_key, get_runtime
+                from store import update_endpoint_dossier_by_key as write_dossier
                 from utils.endpoints import endpoint_key as make_key
                 session, SPECS, QUEUE = get_runtime(pid)
                 # Build a normalized per-endpoint summary
@@ -1757,6 +1800,7 @@ def triage_stats(pid: str):
 def nuclei_profiles(pid: str):
     """Get list of saved template profiles."""
     from flask import jsonify
+
     from store import get_profiles
     
     try:
@@ -1768,7 +1812,8 @@ def nuclei_profiles(pid: str):
 ## moved to routes/nuclei.py: nuclei_profiles_save
 def nuclei_profiles_save(pid: str):
     """Save a template profile."""
-    from flask import request, jsonify
+    from flask import jsonify, request
+
     from store import save_profile
     
     try:
@@ -1789,6 +1834,7 @@ def nuclei_profiles_save(pid: str):
 def nuclei_profile_load(pid: str, name: str):
     """Load a specific template profile."""
     from flask import jsonify
+
     from store import load_profile
     
     try:
@@ -1801,6 +1847,7 @@ def nuclei_profile_load(pid: str, name: str):
 def nuclei_profile_delete(pid: str, name: str):
     """Delete a template profile."""
     from flask import jsonify
+
     from store import delete_profile
     
     try:
@@ -1897,10 +1944,12 @@ def run_detail_latest(pid: str):
 def runs_page(pid: str):
     """Enhanced runs list page with endpoint info, filtering, and sorting."""
     try:
-        from store import list_runs, get_project_name
-        from findings import count_findings_cached
-        from flask import request
         import logging
+
+        from flask import request
+
+        from findings import count_findings_cached
+        from store import get_project_name, list_runs
         
         # Get runs with enhanced endpoint information
         runs = list_runs(pid, limit=100)  # Get more runs for filtering
@@ -1966,7 +2015,7 @@ def runs_page(pid: str):
 def run_export(pid: str):
     """Download run artifact (NDJSON) if available."""
     try:
-        from flask import send_file, abort
+        from flask import send_file
         run_id = request.args.get("run_id")
         if not run_id:
             return {"error": "run_id required"}, 400
@@ -2034,8 +2083,10 @@ def template_status(pid: str):
 def templates_reindex(pid: str):
     """Kick off a background reindex of templates without blocking the UI."""
     try:
+        import threading
+        import time as _t
+
         from nuclei_integration import nuclei_integration
-        import threading, time as _t
         if _TPL_REINDEX_STATUS.get(pid, {}).get("running"):
             return {"success": True, "message": "Reindex already running"}
 
@@ -2156,9 +2207,8 @@ def register_template_source(pid: str):
 
 def install_asvs_templates():
     """Install ASVS templates automatically."""
-    import subprocess
-    import tempfile
     import shutil
+    import tempfile
     import urllib.request
     import zipfile
     
@@ -2339,11 +2389,17 @@ def register_nuclei_routes(bp):
 
     @bp.post("/p/<pid>/nuclei/scan")
     def nuclei_scan(pid: str):
-        from nuclei_integration import nuclei_integration
-        from store import save_run, get_runtime, update_endpoint_dossier_by_key, _endpoint_dossier_path_by_key
-        from utils.endpoints import endpoint_key
-        import time as _t
         import logging
+        import time as _t
+
+        from nuclei_integration import nuclei_integration
+        from store import (
+            _endpoint_dossier_path_by_key,
+            get_runtime,
+            save_run,
+            update_endpoint_dossier_by_key,
+        )
+        from utils.endpoints import endpoint_key
         try:
             templates = request.form.getlist('templates') or None
             severity = request.form.getlist('severity') or None
@@ -2428,9 +2484,11 @@ def register_nuclei_routes(bp):
     @bp.get("/p/<pid>/nuclei/stream")
     def nuclei_stream(pid: str):
         """Deterministic SSE: start, heartbeats, then done within ~10s."""
-        from flask import Response
-        from nuclei_integration import nuclei_integration
         import time as _t
+
+        from flask import Response
+
+        from nuclei_integration import nuclei_integration
         try:
             run_id = request.args.get('run_id') or f"{_t.strftime('%Y-%m-%dT%H-%M-%SZ', _t.gmtime())}-{pid[:4].upper()}"
             templates = request.args.getlist('templates') or None
@@ -2500,8 +2558,8 @@ def register_nuclei_routes(bp):
                 # If no specs, try endpoint dossiers
                 if endpoint_count == 0:
                     try:
-                        import os
                         import json
+                        import os
                         endpoints_dir = os.path.join('ui_projects', pid, 'endpoints')
                         print(f"DEBUG: Checking endpoints dir: {endpoints_dir}")
                         print(f"DEBUG: Dir exists: {os.path.exists(endpoints_dir)}")
@@ -2643,9 +2701,8 @@ def register_nuclei_routes(bp):
 
     def install_asvs_templates():
         """Install ASVS templates automatically."""
-        import subprocess
-        import tempfile
         import shutil
+        import tempfile
         import urllib.request
         import zipfile
         

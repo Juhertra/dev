@@ -6,6 +6,7 @@ Runs both Mermaid parity and ASCII artifact checks
 import subprocess
 import sys
 
+
 def run_command(cmd, description):
     """Run a command and return success status"""
     print(f"🔍 {description}...")

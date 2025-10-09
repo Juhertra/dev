@@ -1,5 +1,6 @@
-from typing import Any, Dict, List, Optional
-from flask import render_template, request, jsonify, redirect, url_for
+from typing import Any, Dict, List
+
+from flask import jsonify, redirect, render_template, request, url_for
 
 
 def register_findings_routes(bp):
@@ -8,7 +9,7 @@ def register_findings_routes(bp):
     @bp.get("/p/<pid>/findings")
     def findings_page(pid: str):
         """Enhanced findings page with flexible grouping system."""
-        from findings import get_findings, build_groups
+        from findings import build_groups, get_findings
         from store import get_project_name
 
         group_by = request.args.get('group', 'rule')
@@ -125,7 +126,7 @@ def register_findings_routes(bp):
     def finding_detail(pid: str, idx: int):
         """Get individual finding details for the side panel (rich)."""
         try:
-            from findings import get_findings, get_finding_explanation
+            from findings import get_finding_explanation, get_findings
             rows = get_findings(pid) or []
             if idx < 0 or idx >= len(rows):
                 return render_template("finding_detail.html", error="Not found"), 404
@@ -249,7 +250,7 @@ def register_findings_routes(bp):
 
     @bp.post("/p/<pid>/findings/view")
     def finding_view(pid: str):
-        from findings import get_finding_by_index, get_finding_explanation
+        from findings import get_finding_by_index
         try:
             try:
                 idx = int(request.form.get("idx") or -1)
