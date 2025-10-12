@@ -126,3 +126,22 @@ class TestSampleWorkflow:
         assert 'findings' in scan_node['outputs']
         assert 'findings' in enrich_node['inputs']
         assert 'enriched_findings' in enrich_node['outputs']
+    
+    def test_sample_workflow_retry_state_config(self):
+        """Test sample workflow retry and state configuration."""
+        sample_path = Path(__file__).parent.parent.parent / "workflows" / "sample-linear.yaml"
+        
+        with open(sample_path, 'r') as f:
+            data = yaml.safe_load(f)
+        
+        # Check retry configuration
+        retry_config = data.get('retry', {})
+        assert retry_config['max_attempts'] == 3
+        assert retry_config['backoff_factor'] == 2.0
+        assert retry_config['base_delay'] == 5.0
+        
+        # Check state configuration
+        state_config = data.get('state', {})
+        assert state_config['checkpoint_interval'] == 30
+        assert state_config['resume_on_failure'] is True
+        assert state_config['cache_intermediate'] is True
