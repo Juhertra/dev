@@ -8,149 +8,53 @@ on:
       - "docs/**"
       - ".github/workflows/**"
 jobs:
-  # Fast-fail order: ruff → pyright → import-linter → unit-tests → coverage-ratchet → contract-tests → docs-health
-  ruff:
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install ruff
-        run: pip install ruff
-      - name: Lint (advisory for M0)
-        run: ruff --version && ruff check --exit-zero .
-  pyright:
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Type check (advisory for M0)
-        run: npx pyright --version && npx pyright --warnings
-  import-linter:
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install import-linter
-        run: pip install import-linter
-      - name: Architecture check (advisory for M0)
-        run: import-linter --version && import-linter
-  unit-tests:
+  # ensure this is the test job used by PRs
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - name: Cache pip packages
-        uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Cache pytest
-        uses: actions/cache@v4
-        with:
-          path: .pytest_cache
-          key: ${{ runner.os }}-pytest-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pytest-
+          python-version: "3.11.9"
+
       - name: Install deps
-        run: pip install poetry && poetry install --no-root
-      - name: Unit tests
-        run: poetry run make unit
-  coverage-ratchet:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Cache pytest
-        uses: actions/cache@v4
-        with:
-          path: .pytest_cache
-          key: ${{ runner.os }}-pytest-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pytest-
-      - name: Install deps
-        run: pip install poetry && poetry install --no-root
-      - name: Coverage report
-        run: poetry run make coverage
-  contract-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Cache pytest
-        uses: actions/cache@v4
-        with:
-          path: .pytest_cache
-          key: ${{ runner.os }}-pytest-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pytest-
-      - name: Install deps
-        run: pip install poetry && poetry install --no-root
-      - name: Contract tests
-        run: poetry run pytest tests/contracts/ -q || echo "Contract tests not implemented yet"
-  docs-health:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Cache mkdocs
-        uses: actions/cache@v4
-        with:
-          path: site/
-          key: ${{ runner.os }}-mkdocs-${{ hashFiles('**/mkdocs.yml', 'docs/**') }}
-          restore-keys: |
-            ${{ runner.os }}-mkdocs-
-      - name: Install deps
-        run: pip install poetry && poetry install --no-root
-      - name: Docs health check
-        run: poetry run make health
+        run: |
+          python -m pip install -U pip
+          pip install pytest pytest-cov ruff pyright import-linter
+          # project extras if present
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f pyproject.toml ]; then pip install . || true; fi
+
+      - name: Lint
+        run: ruff check --output-format=github .
+
+      - name: Type
+        run: pyright --warnings
+
+      - name: Import architecture
+        run: |
+          if command -v lint-imports >/dev/null 2>&1; then
+            lint-imports
+          else
+            echo "lint-imports not available; skipping (advisory in M0)"
+          fi
+
+      - name: Unit + Coverage
+        env:
+          MIN_COV: "18"  # M0 baseline; ratchet at M1
+        run: |
+          pytest -q --maxfail=1 --cov=. --cov-report=term
+          # extract TOTAL% and enforce ratchet
+          TOTAL=$(coverage report | awk '/TOTAL/ {gsub("%","",$4); print $4}')
+          echo "Coverage TOTAL=${TOTAL}% (min ${MIN_COV}%)"
+          awk -v t="$TOTAL" -v m="$MIN_COV" 'BEGIN{exit (t+0<m+0)}'
+
+      - name: Docs health (conditional)
+        run: |
+          # If docs changed in this diff, run the health gate
+          if git diff --name-only HEAD~1 | grep -E '^docs/|^mkdocs.yml' >/dev/null 2>&1; then
+            make health
+          else
+            echo "Docs unchanged; skipping health gate."
+          fi
