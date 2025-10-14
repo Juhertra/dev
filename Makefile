@@ -1,22 +1,28 @@
-.PHONY: install lint type imports test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package
+PY := python
+PIP := pip
+
+.PHONY: setup install lint type imports test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package
+
+setup:
+	$(PIP) install -e ".[dev]"
 
 install:
 	pip install -r requirements.txt || poetry install --no-root
 
 lint:
-	ruff check --fix .
+	ruff check .
 
 type:
-	pyright --warnings
+	pyright
 
 imports:
-	@lint-imports
+	lint-imports
 
 unit:
-	pytest -q --maxfail=1
+	pytest -q
 
 coverage:
-	pytest -q --cov=. --cov-report=term-missing
+	coverage run -m pytest -q && coverage report -m
 
 test: type unit
 

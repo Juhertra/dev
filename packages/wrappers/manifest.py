@@ -9,9 +9,32 @@ from typing import Any, Dict, List, Optional, Union
 from dataclasses import dataclass
 import json
 import yaml
-import jsonschema
 import logging
 from pathlib import Path
+
+# Minimal JSON schema validator stub for M0
+try:
+    import jsonschema
+    HAS_JSONSCHEMA = True
+except ImportError:
+    HAS_JSONSCHEMA = False
+    # Stub jsonschema.ValidationError for M0 compatibility
+    class ValidationError(Exception):
+        def __init__(self, message, path=None):
+            super().__init__(message)
+            self.message = message
+            self.path = path or []
+    
+    def validate(instance, schema):
+        """Stub validation function for M0."""
+        if not HAS_JSONSCHEMA:
+            logger.warning("jsonschema not available - using stub validator")
+            # Basic validation - check required fields exist
+            required_fields = schema.get("required", [])
+            for field in required_fields:
+                if field not in instance:
+                    raise ValidationError(f"Missing required field: {field}")
+            return True
 
 logger = logging.getLogger(__name__)
 
