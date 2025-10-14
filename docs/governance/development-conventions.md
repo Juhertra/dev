@@ -112,6 +112,7 @@ The CI pipeline runs in strict fast-fail order:
 ## Coverage Ratchet Ladder
 
 ### Milestone Thresholds
+- **M0**: 18% minimum coverage (baseline)
 - **M1**: 80% minimum coverage
 - **M2**: 82% minimum coverage
 - **M3**: 84% minimum coverage

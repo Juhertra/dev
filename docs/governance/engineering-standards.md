@@ -89,8 +89,9 @@ The CI pipeline runs in strict order with gates that must pass:
 
 Coverage thresholds increase by milestone with strict enforcement:
 
+- **M0**: 18% minimum coverage (baseline)
 - **M1**: 80% minimum coverage
-- **M2**: 82% minimum coverage  
+- **M2**: 82% minimum coverage
 - **M3**: 84% minimum coverage
 - **M4**: 86% minimum coverage
 - **M5**: 88% minimum coverage
