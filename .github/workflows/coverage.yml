@@ -1,25 +1,17 @@
 name: coverage
-on: [pull_request, push]
+on: [push, pull_request]
 jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11.9' }
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+        with: { python-version: "3.11.9" }
       - run: pip install -e ".[dev]"
+      - run: coverage run -m pytest -q
       - run: |
-          coverage run -m pytest -q
-          COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $$4}' | tr -d '%')
-          echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
-      - run: python scripts/coverage_ratchet.py
-        env:
+          pct=$(coverage report -m | tail -1 | awk '{print $NF}' | sed 's/%//')
+          echo "COVERAGE_PERCENT=$pct" >> $GITHUB_ENV
+      - env:
           MILESTONE: M0
-          COVERAGE_PERCENT: ${{ env.COVERAGE_PERCENT }}
+        run: python scripts/coverage_ratchet.py

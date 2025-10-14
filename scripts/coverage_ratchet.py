@@ -9,11 +9,9 @@ import os
 import sys
 
 TARGETS = {"M0":18, "M1":80, "M2":82, "M3":84, "M4":86, "M5":88, "M6":90}
-milestone = os.getenv("MILESTONE","M0").upper()
-cov_str = os.getenv("COVERAGE_PERCENT","0").replace("%","")
-try: cov = int(float(cov_str))
-except: print("Coverage parse error"); sys.exit(2)
-target = TARGETS.get(milestone, 18)
-if cov < target:
-    print(f"Coverage {cov}% < target {target}%"); sys.exit(1)
-print(f"Coverage OK: {cov}% >= {target}%")
+mile = os.getenv("MILESTONE", "M0")
+got = int(float(os.getenv("COVERAGE_PERCENT","0")))
+need = TARGETS.get(mile, 18)
+if got < need:
+    print(f"Coverage {got}% < target {need}%"); sys.exit(1)
+print(f"Coverage OK: {got}% >= {need}%")
