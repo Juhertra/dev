@@ -1,0 +1,16 @@
+[
+  {
+    "url": "http://example.com/profile",
+    "method": "GET",
+    "status": 200,
+    "depth": 1,
+    "timestamp": "2025-10-08T18:45:00Z"
+  },
+  {
+    "url": "http://example.com/settings",
+    "method": "GET",
+    "status": 200,
+    "depth": 2,
+    "timestamp": "2025-10-08T18:45:01Z"
+  }
+]
