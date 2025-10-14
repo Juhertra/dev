@@ -32,7 +32,7 @@ docs:
 
 # placeholder; wired in P5
 health:
-	python scripts/mermaid_parity_gate.py && python scripts/ascii_html_blocker_gate.py
+	$(PY) scripts/mermaid_parity_gate.py && $(PY) scripts/ascii_html_blocker_gate.py
 
 quick-test:
 	pytest -q -k 'not slow'

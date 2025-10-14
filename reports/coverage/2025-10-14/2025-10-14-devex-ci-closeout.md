@@ -50,9 +50,9 @@ Coverage OK: 80% >= 80%
 
 ### CI Integration
 - **Coverage Collection**: `coverage run -m pytest -q`
-- **Percentage Extraction**: `coverage report -m | tail -1 | awk '{print $4}' | tr -d '%'`
+- **Percentage Extraction**: `coverage report -m | tail -1 | awk '{print $NF}' | sed 's/%//'`
 - **Ratchet Enforcement**: `python scripts/coverage_ratchet.py`
-- **Environment Variables**: `MILESTONE=M0`, `COVERAGE_PERCENT=$COVERAGE_PERCENT`
+- **Environment Variables**: `MILESTONE=M0`, `COVERAGE_PERCENT=$pct`
 
 ## 📈 **Coverage Analysis**
 
@@ -122,7 +122,8 @@ make coverage
 
 # CI pipeline
 coverage run -m pytest -q
-COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $4}' | tr -d '%')
+pct=$(coverage report -m | tail -1 | awk '{print $NF}' | sed 's/%//')
+echo "COVERAGE_PERCENT=$pct" >> $GITHUB_ENV
 python scripts/coverage_ratchet.py
 ```
 
