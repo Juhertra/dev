@@ -1,0 +1,16 @@
+[
+  {
+    "url": "http://example.com/backup",
+    "status": 200,
+    "size": 2048,
+    "method": "GET",
+    "timestamp": "2025-10-08T18:45:00Z"
+  },
+  {
+    "url": "http://example.com/config",
+    "status": 200,
+    "size": 1536,
+    "method": "GET",
+    "timestamp": "2025-10-08T18:45:01Z"
+  }
+]
