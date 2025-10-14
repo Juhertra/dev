@@ -36,6 +36,10 @@ class RecipeValidator:
         """Initialize validator."""
         pass
     
+    def validate(self, recipe: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate recipe - minimal implementation."""
+        return {"ok": True, "nodes": len(recipe.get("nodes", []))}
+    
     def validate_yaml_syntax(self, recipe_path: str) -> Tuple[bool, Optional[str]]:
         """Validate YAML syntax - stub implementation."""
         try:
