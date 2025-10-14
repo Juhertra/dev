@@ -8,6 +8,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11.9" }
       - run: pip install pytest pytest-cov flask jsonschema requests pyyaml
+      - run: pip install .
       - run: coverage run -m pytest -q
       - run: |
           pct=$(coverage report -m | tail -1 | awk '{print $NF}' | sed 's/%//')
