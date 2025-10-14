@@ -1,0 +1,22 @@
+[
+  {
+    "template-id": "ssl-cert",
+    "matched-at": "https://example.com",
+    "info": {
+      "name": "SSL Certificate Test",
+      "severity": "low",
+      "description": "SSL certificate information disclosure"
+    },
+    "timestamp": "2025-10-08T18:45:00Z"
+  },
+  {
+    "template-id": "cors-misconfig",
+    "matched-at": "https://api.example.com/users",
+    "info": {
+      "name": "CORS Misconfiguration",
+      "severity": "medium",
+      "description": "Cross-Origin Resource Sharing misconfiguration detected"
+    },
+    "timestamp": "2025-10-08T18:45:01Z"
+  }
+]
