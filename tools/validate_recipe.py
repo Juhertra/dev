@@ -15,7 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    from packages.workflow_engine.validate_recipe import RecipeValidator, RecipeValidationError
+    from packages.workflow_engine.validator import RecipeValidator, RecipeValidationError
 except ImportError:
     print("Warning: Could not import RecipeValidator from packages.workflow_engine")
     RecipeValidator = None

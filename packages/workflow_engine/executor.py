@@ -60,6 +60,10 @@ class WorkflowExecutor:
         """Get workflow execution status - stub implementation."""
         # TODO: Implement status tracking
         return {"status": "unknown", "workflow_id": workflow_id}
+    
+    def dry_run(self, recipe: Dict[str, Any]) -> Dict[str, Any]:
+        """Dry run workflow - minimal implementation."""
+        return {"nodes": len(recipe.get("nodes", []))}
 
 
 # Future FEAT-020: WorkflowScheduler implementation
