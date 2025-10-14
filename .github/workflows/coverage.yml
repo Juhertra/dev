@@ -6,13 +6,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11.9" }
-      - run: pip install pytest pytest-cov flask jsonschema requests pyyaml
-      - run: pip install .
-      - run: coverage run -m pytest -q
-      - run: |
+        with:
+          python-version: '3.11.9'
+      - name: Install package + dev deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest -q
+          coverage report -m
           pct=$(coverage report -m | tail -1 | awk '{print $NF}' | sed 's/%//')
           echo "COVERAGE_PERCENT=$pct" >> $GITHUB_ENV
-      - env:
+      - name: Enforce M0 ratchet (18%)
+        env:
           MILESTONE: M0
         run: python scripts/coverage_ratchet.py
