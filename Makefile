@@ -1,4 +1,4 @@
-.PHONY: install lint type test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package
+.PHONY: install lint type imports test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package
 
 install:
 	pip install -r requirements.txt || poetry install --no-root
@@ -8,6 +8,9 @@ lint:
 
 type:
 	pyright --warnings
+
+imports:
+	@lint-imports
 
 unit:
 	pytest -q --maxfail=1

@@ -33,22 +33,18 @@ jobs:
         run: pyright --warnings
 
       - name: Import architecture
-        run: |
-          if command -v lint-imports >/dev/null 2>&1; then
-            lint-imports
-          else
-            echo "lint-imports not available; skipping (advisory in M0)"
-          fi
+        run: make imports
 
       - name: Unit + Coverage
         env:
-          MIN_COV: "18"  # M0 baseline; ratchet at M1
+          MILESTONE: "M0"
         run: |
-          pytest -q --maxfail=1 --cov=. --cov-report=term
-          # extract TOTAL% and enforce ratchet
+          pytest -q --maxfail=1 --cov=. --cov-report=term --cov-report=xml
+          # extract TOTAL% and enforce dynamic ratchet
           TOTAL=$(coverage report | awk '/TOTAL/ {gsub("%","",$4); print $4}')
-          echo "Coverage TOTAL=${TOTAL}% (min ${MIN_COV}%)"
-          awk -v t="$TOTAL" -v m="$MIN_COV" 'BEGIN{exit (t+0<m+0)}'
+          echo "Coverage TOTAL=${TOTAL}%"
+          export COVERAGE_PERCENT=$TOTAL
+          python scripts/coverage_ratchet.py
 
       - name: Docs health (conditional)
         run: |
