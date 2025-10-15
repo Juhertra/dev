@@ -1,12 +1,7 @@
 name: ci
 on:
   pull_request:
-    paths:
-      - "**.py"
-      - "pyproject.toml"
-      - "Makefile"
-      - "docs/**"
-      - ".github/workflows/**"
+    paths-ignore: ["**"]
 jobs:
   # ensure this is the test job used by PRs
   test:

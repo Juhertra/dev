@@ -1,68 +1,45 @@
-# Coordinator Merge Train Report - 2025-10-15
+# Coordinator — Merge Train
 
-**Generated**: $(date -u +%F) (UTC)  
+**Generated**: 2025-10-15 (UTC)  
 **Coordinator**: M0-D1..D5 Merge Train Execution  
-**Train Order**: [72 → 73 → 68 → 67]
+**Train Order**: [72 → 73 → 68 → 67] (PR #76 already merged)
 
 ---
 
-## 🚂 **Merge Train Summary**
+## 🚂 **Merge Train Status**
 
 ### **Status**: 🔴 **STOPPED** at PR #72
-**Reason**: PR #72 has failing checks (findings-contract-tests, test)
+**Reason**: PR #72 has failing checks (findings-contract-tests)
 
 ---
 
-## 📊 **Per-PR Context Table**
+## 📊 **Required Contexts**
 
-| PR | Title | ruff | pyright | imports | unit | coverage | contracts | docs-health | Status |
-|----|-------|------|---------|---------|------|----------|-----------|-------------|--------|
-| 72 | fix(workflow): make scaffold importable to unskip tests | ❓ | ❓ | ❓ | ❌ | ❓ | ❌ | ❓ | **STOPPED** |
-| 73 | feat: Add N-1 golden samples for Nuclei, Feroxbuster, Katana | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | **PENDING** |
-| 68 | feat(runtime): implement StoragePort interface + finding schema v1.0.0 | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | **PENDING** |
-| 67 | chore(devex): fix Python version to 3.11.9 for pytest compatibility | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | **PENDING** |
+**Required Contexts**: `ruff, pyright, imports, unit, coverage, contracts, docs-health`
 
-**Legend**: ✅ SUCCESS | ❌ FAIL | ❓ UNKNOWN
-
----
-
-## 🎯 **Required Contexts Verification**
-
-### **Required Contexts**: `ruff pyright imports unit coverage contracts docs-health`
-
-### **PR #72 Status Check**
+### **PR #72 Verification**
 - **Context**: findings-contract-tests → ❌ **FAIL**
-- **Context**: test → ❌ **FAIL**  
+- **Context**: test → ⏳ **PENDING**
 - **Context**: check → ✅ **PASS**
 
-**Result**: ❌ **STOPPED** - 2/7 contexts failing
+**Result**: ❌ **STOPPED** - PR #72 failing at findings-contract-tests
 
 ---
 
-## 🚧 **Stop Points**
+## 🎯 **Outcome**
 
-### **PR #72** - Workflow Scaffold
+### **Train Order**: #72 → #73 → #68 → #67
+### **Required Contexts**: ruff, pyright, imports, unit, coverage, contracts, docs-health
+### **Outcome**: **STOPPED** - See CI history for each PR; merge train paused with comment on first failure
+
+### **Stop Point**
+- **PR #72**: [Comment](https://github.com/Juhertra/dev/pull/72#issuecomment-3408195877) - "🔴 Merge train paused here — failing `findings-contract-tests`. Please fix."
 - **Owner**: @workflow-lead
-- **Failing Contexts**: findings-contract-tests, test
-- **Comment**: [PR #72](https://github.com/Juhertra/dev/pull/72#issuecomment-3408131939) - "🔴 Merge train paused here — failing `findings-contract-tests`, `test`. Please fix."
-- **Fix ETA**: **TBD** (awaiting @workflow-lead response)
+- **Action Required**: Fix findings-contract-tests failure
 
 ---
 
-## 📈 **Train Progress**
-
-### **Completed**
-- **PRs Merged**: 0/4 (0%)
-- **Lead PR**: ❌ Blocked (PR #72 failing)
-
-### **Blocked**
-- **PRs Remaining**: 4/4 (100%)
-- **Blocking Issue**: PR #72 failing checks
-- **Next Action**: @workflow-lead must repair PR #72
-
----
-
-## 🔗 **Links**
+## 🔗 **CI History Links**
 
 - **PR #72**: https://github.com/Juhertra/dev/pull/72 (STOPPED)
 - **PR #73**: https://github.com/Juhertra/dev/pull/73 (PENDING)
@@ -74,10 +51,17 @@
 ## 🎯 **Resume Commands** (when PR #72 is green)
 
 ```bash
-# Resume merge train in order
+# Verify PR #72 is fully green (all 7 contexts)
+for ctx in ruff pyright imports unit coverage contracts docs-health; do
+  gh pr checks 72 --watch --required | grep -E " ${ctx} +SUCCESS" >/dev/null || {
+    echo "PR #72 failing at ${ctx}"; exit 1; }
+done
+
+# Merge #72 with linear history
 gh pr merge 72 --rebase --auto
 gh run watch --exit-status
 
+# Proceed with train (#73 -> #68 -> #67), stopping at first failure
 for pr in 73 68 67; do
   echo "== Checking PR #${pr} =="
   for ctx in ruff pyright imports unit coverage contracts docs-health; do
@@ -90,22 +74,6 @@ for pr in 73 68 67; do
   gh run watch --exit-status
 done
 ```
-
----
-
-## 📊 **M0 Close Status**
-
-### **Current State**: ⚠️ **INCOMPLETE**
-- **Workflow Foundation**: ❌ Blocked (PR #72 failing)
-- **Tools Samples**: ⏸️ Waiting (PR #73)
-- **Runtime Foundation**: ⏸️ Waiting (PR #68)
-- **Python Version**: ⏸️ Waiting (PR #67)
-
-### **M0 Completion Criteria**
-- [ ] All 4 train PRs merged successfully
-- [ ] All 7 required checks green on main
-- [ ] Coverage ≥18% maintained
-- [ ] Linear history preserved
 
 ---
 
