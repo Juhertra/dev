@@ -12,7 +12,7 @@ Import Rules:
 """
 
 from .executor import WorkflowExecutor, Workflow, WorkflowNode
-from .validator import RecipeValidator
+from .validate_recipe import RecipeValidator
 
 __version__ = "0.1.0"
 __all__ = ["WorkflowExecutor", "Workflow", "WorkflowNode", "RecipeValidator"]
