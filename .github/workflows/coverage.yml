@@ -1,5 +1,6 @@
 name: coverage
-on: [pull_request, push]
+on: { pull_request: {}, push: { branches: [ main ] } }
+permissions: { contents: read }
 jobs:
   coverage:
     runs-on: ubuntu-latest
@@ -7,15 +8,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.11.9' }
-      - name: Install dev deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-      - run: |
-          coverage run -m pytest -q
-          COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $$4}' | tr -d '%')
-          echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: coverage run -m pytest -q
+      - run: coverage report -m
       - run: python scripts/coverage_ratchet.py
         env:
           MILESTONE: M0
-          COVERAGE_PERCENT: ${{ env.COVERAGE_PERCENT }}
+          # coverage.py prints "TOTAL ... XX%" — the ratchet reads COVERAGE_PERCENT
+          COVERAGE_PERCENT: ${{ steps.coverage_out.outputs.percent }}

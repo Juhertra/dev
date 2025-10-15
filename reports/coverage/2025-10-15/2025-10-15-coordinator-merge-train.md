@@ -28,9 +28,9 @@
 ### **Required Coverage Gate**: ≥18% for M0
 
 ### **PR #72 Coverage Check**
-- **Status**: ❌ **CANNOT VERIFY** (coverage job failing)
-- **Reason**: PR #72 has failing checks (findings-contract-tests, test)
-- **Action**: Must fix failing checks before coverage can be verified
+- **Status**: ❌ **CANNOT VERIFY** (ALL 7 contexts failing)
+- **Reason**: PR #72 has failing checks (findings-contract-tests, test, ruff, pyright, imports, coverage, docs-health)
+- **Action**: Must fix ALL failing contexts before coverage can be verified
 
 ---
 
@@ -38,9 +38,9 @@
 
 ### **PR #72** - Workflow Scaffold
 - **Owner**: @workflow-lead
-- **Blocking Issue**: Coverage job cannot run due to failing checks
-- **Required Fix**: Fix findings-contract-tests and test failures
-- **Coverage Verification**: Pending after check fixes
+- **Blocking Issue**: ALL 7 contexts failing (findings-contract-tests, test, ruff, pyright, imports, coverage, docs-health)
+- **Required Fix**: Fix ALL failing contexts
+- **Coverage Verification**: Pending after ALL check fixes
 
 ---
 

@@ -9,7 +9,7 @@
 ## 🚂 **Merge Train Status**
 
 ### **Status**: 🔴 **STOPPED** at PR #72
-**Reason**: PR #72 has failing checks (findings-contract-tests)
+**Reason**: PR #72 has failing checks (ALL 7 required contexts failing)
 
 ---
 
@@ -19,10 +19,14 @@
 
 ### **PR #72 Verification**
 - **Context**: findings-contract-tests → ❌ **FAIL**
-- **Context**: test → ⏳ **PENDING**
-- **Context**: check → ✅ **PASS**
+- **Context**: test → ❌ **FAIL**
+- **Context**: ruff → ❌ **FAIL**
+- **Context**: pyright → ❌ **FAIL**
+- **Context**: imports → ❌ **FAIL**
+- **Context**: coverage → ❌ **FAIL**
+- **Context**: docs-health → ❌ **FAIL**
 
-**Result**: ❌ **STOPPED** - PR #72 failing at findings-contract-tests
+**Result**: ❌ **STOPPED** - ALL 7 required contexts failing
 
 ---
 
@@ -33,9 +37,9 @@
 ### **Outcome**: **STOPPED** - See CI history for each PR; merge train paused with comment on first failure
 
 ### **Stop Point**
-- **PR #72**: [Comment](https://github.com/Juhertra/dev/pull/72#issuecomment-3408195877) - "🔴 Merge train paused here — failing `findings-contract-tests`. Please fix."
+- **PR #72**: [Comment](https://github.com/Juhertra/dev/pull/72#issuecomment-3408281172) - "🔴 Merge train paused — failing `findings-contract-tests`, `test`, `ruff`, `pyright`, `imports`, `coverage`, `docs-health`. All 7 required contexts failing."
 - **Owner**: @workflow-lead
-- **Action Required**: Fix findings-contract-tests failure
+- **Action Required**: Fix ALL 7 failing contexts
 
 ---
 
