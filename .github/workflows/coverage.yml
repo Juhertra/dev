@@ -10,7 +10,7 @@ jobs:
         with: { python-version: '3.11.9' }
       - run: python -m pip install --upgrade pip
       - run: pip install -e .
-      - run: pip install pytest pytest-cov coverage[toml]
+      - run: pip install pytest pytest-cov coverage[toml] requests flask pyyaml
       - run: coverage run -m pytest -q
       - run: coverage report -m
       - run: python scripts/coverage_ratchet.py
