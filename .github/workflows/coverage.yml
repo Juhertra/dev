@@ -12,7 +12,7 @@ jobs:
       - run: pip install pytest pytest-cov coverage[toml] requests flask pyyaml jsonschema
       - run: |
           coverage run -m pytest -q
-          COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $$4}' | tr -d '%')
+          COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $NF}' | tr -d '%')
           echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
       - run: python scripts/coverage_ratchet.py
         env:
