@@ -5,11 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.11.9', '3.14']
+        python-version: ['3.11.9', '3.12']
         include:
           - python-version: '3.11.9'
             is_primary: true
-          - python-version: '3.14'
+          - python-version: '3.12'
             is_primary: false
     
     steps:
