@@ -5,9 +5,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v5
         with: { python-version: '3.11.9' }
+      
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
       - run: python -m pip install --upgrade pip
       - run: pip install -e .
-      - run: pip install pytest pytest-cov requests flask pyyaml jsonschema
-      - run: pytest -q
+      - run: pip install pytest pytest-cov requests flask pyyaml jsonschema pytest-xdist
+      - run: pytest -q -n auto --maxfail=3

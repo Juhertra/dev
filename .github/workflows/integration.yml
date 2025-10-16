@@ -1,0 +1,65 @@
+name: integration
+on: 
+  pull_request:
+    paths:
+      - "tests/e2e/**"
+      - "packages/**"
+      - "workflows/**"
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - workflows
+          - api
+          - runtime
+          - security
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        test_suite: [workflows, api, runtime, security]
+        include:
+          - test_suite: all
+            run_all: true
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-cov requests flask pyyaml jsonschema
+          pip install pytest-xdist  # For parallel test execution
+      
+      - name: Run integration tests
+        run: |
+          if [ "${{ matrix.run_all }}" = "true" ] || [ "${{ github.event.inputs.test_suite }}" = "all" ] || [ "${{ github.event.inputs.test_suite }}" = "${{ matrix.test_suite }}" ]; then
+            echo "Running ${{ matrix.test_suite }} integration tests"
+            pytest tests/e2e/${{ matrix.test_suite }}/ -v --tb=short --maxfail=3
+          else
+            echo "Skipping ${{ matrix.test_suite }} tests"
+          fi
+        continue-on-error: true  # Allow tests to fail initially as they're being developed
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results-${{ matrix.test_suite }}
+          path: |
+            tests/e2e/${{ matrix.test_suite }}/test-results/
+            pytest-report.html
+          retention-days: 7

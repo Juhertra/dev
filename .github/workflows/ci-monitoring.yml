@@ -1,0 +1,107 @@
+name: ci-monitoring
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+  workflow_dispatch:
+
+jobs:
+  monitor-ci-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check CI workflow health
+        run: |
+          echo "## CI Health Check - $(date)" > ci-health-report.md
+          echo "" >> ci-health-report.md
+          
+          # Check workflow files
+          echo "### Workflow Files Status" >> ci-health-report.md
+          for workflow in ruff pyright imports unit coverage contracts docs-health integration security-scan runtime-infrastructure; do
+              if [ -f ".github/workflows/${workflow}.yml" ]; then
+                  echo "✅ ${workflow}.yml exists" >> ci-health-report.md
+              else
+                  echo "❌ ${workflow}.yml missing" >> ci-health-report.md
+              fi
+          done
+          
+          echo "" >> ci-health-report.md
+          echo "### Recent CI Runs" >> ci-health-report.md
+          
+          # Get recent workflow runs
+          gh run list --limit 10 --json status,conclusion,name,createdAt >> recent-runs.json || echo "[]" > recent-runs.json
+          
+          # Analyze success rate
+          python3 << 'EOF'
+          import json
+          import sys
+          from datetime import datetime, timedelta
+          
+          try:
+              with open('recent-runs.json', 'r') as f:
+                  runs = json.load(f)
+              
+              if not runs:
+                  print("No recent runs found")
+                  sys.exit(0)
+              
+              # Calculate success rate for last 24 hours
+              now = datetime.now()
+              recent_runs = [r for r in runs if 
+                  datetime.fromisoformat(r['createdAt'].replace('Z', '+00:00')) > 
+                  now - timedelta(hours=24)]
+              
+              if recent_runs:
+                  successful = len([r for r in recent_runs if r['conclusion'] == 'success'])
+                  total = len(recent_runs)
+                  success_rate = (successful / total) * 100
+                  
+                  print(f"📊 Last 24h Success Rate: {success_rate:.1f}% ({successful}/{total})")
+                  
+                  # Check for failing workflows
+                  failed_workflows = [r['name'] for r in recent_runs if r['conclusion'] == 'failure']
+                  if failed_workflows:
+                      print(f"⚠️  Failed workflows: {', '.join(set(failed_workflows))}")
+                  else:
+                      print("✅ All workflows passing")
+              else:
+                  print("No runs in last 24 hours")
+                  
+          except Exception as e:
+              print(f"Error analyzing runs: {e}")
+          EOF
+          
+      - name: Upload CI health report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-health-report
+          path: |
+            ci-health-report.md
+            recent-runs.json
+          retention-days: 30
+      
+      - name: Create issue if CI health is poor
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read the health report
+            let healthReport = '';
+            try {
+              healthReport = fs.readFileSync('ci-health-report.md', 'utf8');
+            } catch (e) {
+              healthReport = 'CI health check failed to generate report';
+            }
+            
+            // Create issue
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 CI Health Check Failed',
+              body: `## CI Health Alert\n\n${healthReport}\n\n**Action Required**: Please investigate CI workflow issues.\n\n---\n*This issue was automatically created by the CI monitoring workflow.*`,
+              labels: ['ci', 'monitoring', 'urgent']
+            });

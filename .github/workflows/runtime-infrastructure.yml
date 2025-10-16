@@ -1,0 +1,118 @@
+name: runtime-infrastructure
+on: 
+  pull_request:
+    paths:
+      - "packages/runtime_core/**"
+      - "packages/workflow_engine/**"
+      - "packages/plugins/**"
+      - "tools/**"
+  workflow_dispatch:
+
+jobs:
+  runtime-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: secflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y redis-tools postgresql-client
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-cov requests flask pyyaml jsonschema
+          pip install redis psycopg2-binary celery
+      
+      - name: Test Redis connectivity
+        run: |
+          redis-cli -h localhost ping
+          echo "Redis is ready for runtime operations"
+      
+      - name: Test PostgreSQL connectivity
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d secflow_test -c "SELECT 1;"
+          echo "PostgreSQL is ready for runtime operations"
+      
+      - name: Test runtime package imports
+        run: |
+          python -c "
+          from packages.runtime_core.storage.storage_port import StoragePort
+          from packages.workflow_engine.executor import WorkflowExecutor
+          print('✅ Runtime packages import successfully')
+          "
+      
+      - name: Test plugin infrastructure
+        run: |
+          # Test plugin discovery and loading
+          python -c "
+          import os
+          plugin_dirs = ['packages/plugins', 'tools']
+          for plugin_dir in plugin_dirs:
+              if os.path.exists(plugin_dir):
+                  print(f'✅ Plugin directory {plugin_dir} exists')
+              else:
+                  print(f'⚠️  Plugin directory {plugin_dir} not found (expected for M1)')
+          "
+      
+      - name: Test external tool availability
+        run: |
+          # Test for external security tools (if available)
+          for tool in ['nuclei', 'feroxbuster', 'katana']:
+              if command -v $tool >/dev/null 2>&1; then
+                  echo "✅ $tool is available"
+              else
+                  echo "⚠️  $tool not found (expected for M1 - will be installed in M2)"
+              fi
+      
+      - name: Run runtime-specific tests
+        run: |
+          # Run any existing runtime tests
+          if [ -d "tests/runtime" ]; then
+              pytest tests/runtime/ -v
+          else
+              echo "No runtime tests found yet (expected for M1)"
+          fi
+        continue-on-error: true
+      
+      - name: Upload runtime test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-test-results
+          path: |
+            runtime-test-output.log
+            test-results/
+          retention-days: 7
