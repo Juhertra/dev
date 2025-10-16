@@ -162,6 +162,10 @@ class ManifestValidator:
         Raises:
             jsonschema.ValidationError: If manifest is invalid
         """
+        if not HAS_JSONSCHEMA:
+            logger.warning("jsonschema not available, skipping validation")
+            return True
+            
         try:
             jsonschema.validate(manifest_data, self.schema)
             return True
