@@ -16,14 +16,31 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       
-      - run: python -m pip install --upgrade pip
-      - run: pip install -e .
-      - run: pip install pytest pytest-cov coverage[toml] requests flask pyyaml jsonschema pytest-xdist
-      - run: |
-          coverage run -m pytest -q
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run coverage analysis
+        run: |
+          pytest --cov=. --cov-report=xml --cov-report=term-missing -q
           COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $NF}' | tr -d '%')
           echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
-      - run: python scripts/coverage_ratchet.py
+      
+      - name: Generate coverage dashboard
+        run: python scripts/coverage_dashboard.py
+      
+      - name: Enforce coverage ratchet
+        run: python scripts/coverage_ratchet.py
         env:
-          MILESTONE: M0
+          MILESTONE: M1
           COVERAGE_PERCENT: ${{ env.COVERAGE_PERCENT }}
+      
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            coverage.xml
+            htmlcov/
+            reports/coverage/

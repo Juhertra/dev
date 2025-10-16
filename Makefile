@@ -1,7 +1,7 @@
 PY := python
 PIP := pip
 
-.PHONY: setup install lint type imports test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package
+.PHONY: setup install lint type imports test unit contracts docs health quick-test eod _eod_local_coverage scaffold-package coverage-dashboard coverage-html coverage-xml test-unit test-integration test-e2e test-security test-workflow test-plugin test-coverage test-all
 
 setup:
 	$(PIP) install -e ".[dev]"
@@ -23,6 +23,57 @@ unit:
 
 coverage:
 	coverage run -m pytest -q && coverage report -m
+
+# Coverage targets for M1
+coverage-dashboard:
+	python scripts/coverage_dashboard.py
+
+coverage-html:
+	pytest --cov=. --cov-report=html -q
+
+coverage-xml:
+	pytest --cov=. --cov-report=xml -q
+
+# Test categories for M1
+test-unit:
+	pytest -m unit -q
+
+test-integration:
+	pytest -m integration -q
+
+test-e2e:
+	pytest -m e2e -q
+
+test-security:
+	pytest -m security -q
+
+test-workflow:
+	pytest -m workflow -q
+
+test-plugin:
+	pytest -m plugin -q
+
+test-coverage:
+	pytest --cov=. --cov-report=term-missing --cov-report=xml -q
+
+# Demo targets for M1
+demo-setup:
+	python scripts/m1_demo_tools.py setup
+
+demo-workflow:
+	python scripts/m1_demo_tools.py workflow security_scan --target https://example.com
+
+demo-plugin:
+	python scripts/m1_demo_tools.py plugin http_scanner
+
+demo-benchmark:
+	python scripts/m1_demo_tools.py benchmark
+
+demo-menu:
+	python scripts/m1_demo_tools.py menu
+
+demo-status:
+	python scripts/m1_demo_tools.py status
 
 test: type unit
 

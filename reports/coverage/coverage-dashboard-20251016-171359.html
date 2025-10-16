@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SecFlow M1 Coverage Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #2c3e50; color: white; padding: 20px; border-radius: 5px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+        .metric { background: #ecf0f1; padding: 15px; border-radius: 5px; text-align: center; }
+        .metric-value { font-size: 2em; font-weight: bold; color: #2c3e50; }
+        .metric-label { color: #7f8c8d; margin-top: 5px; }
+        .progress-bar { background: #bdc3c7; height: 20px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { background: #27ae60; height: 100%; transition: width 0.3s; }
+        .modules { margin: 20px 0; }
+        .module { background: white; border: 1px solid #bdc3c7; margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .module-header { display: flex; justify-content: space-between; align-items: center; }
+        .module-name { font-weight: bold; }
+        .module-coverage { font-size: 1.2em; }
+        .priority-high { border-left: 5px solid #e74c3c; }
+        .priority-medium { border-left: 5px solid #f39c12; }
+        .priority-low { border-left: 5px solid #27ae60; }
+        .coverage-low { color: #e74c3c; }
+        .coverage-medium { color: #f39c12; }
+        .coverage-high { color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 SecFlow M1 Coverage Dashboard</h1>
+        <p>Target: 80% Coverage | Generated: 2025-10-16T17:13:59.665124</p>
+    </div>
+    
+    <div class="metrics">
+        <div class="metric">
+            <div class="metric-value">27.8%</div>
+            <div class="metric-label">Current Coverage</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">80.0%</div>
+            <div class="metric-label">Target Coverage</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">7,311</div>
+            <div class="metric-label">Statements to Cover</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">14,009</div>
+            <div class="metric-label">Total Statements</div>
+        </div>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: 27.810000000000002%"></div>
+    </div>
+    
+    <div class="modules">
+        <h2>📊 Module Coverage Analysis</h2>
+        
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">.</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">analytics_core</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">api</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">app</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">app.middleware</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">detectors</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.plugins</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.plugins.discovery</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.plugins.enrichers</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.plugins.scan</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.runtime_core</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.runtime_core.observability</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.runtime_core.storage</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.storage.adapters</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.workflow_engine</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">packages.wrappers</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">routes</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">schemas</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">scripts</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">secflow</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">secflow.core</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">secflow.storage</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">secflow.tools</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">secflow.workflow</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">security</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">storage</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">tasks</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">tools</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+            <div class="module priority-medium">
+                <div class="module-header">
+                    <div class="module-name">utils</div>
+                    <div class="module-coverage coverage-low">0.0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p>Covered: 0 / 0 statements</p>
+            </div>
+            
+    </div>
+</body>
+</html>
+        

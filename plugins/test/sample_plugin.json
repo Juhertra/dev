@@ -1,0 +1,28 @@
+{
+  "name": "sample_plugin",
+  "version": "1.0.0",
+  "description": "Sample plugin for security testing",
+  "author": "Security Team",
+  "entrypoint": "Plugin",
+  "created_at": "2025-10-16T13:34:50.370460",
+  "security_profile": {
+    "resource_limits": {
+      "cpu_seconds": 30,
+      "memory_mb": 256
+    },
+    "permissions": {
+      "network_access": false,
+      "filesystem_access": {
+        "read_only": true,
+        "read_allowlist": [
+          "/tmp"
+        ],
+        "write_allowlist": []
+      }
+    },
+    "signature_required": true
+  },
+  "signature": "WX40h7iu7sTiBxzQgwitDElQDAI/mu9qrtXM4Buc+PuPQseGKUxqT2YPfIaydpAt0Kq9zLRw0R2MEnHVLGoD3DB0/kHV+dKvwXxESWa8OC0s2eufhJj7kifMS0DXL+sttX5bMREOVUjPfKhIjkom0sCoQByFaGP9RLN8XzjgBbBAZOK9tgzKM/O1VAwEWinP4q4ICPt60RM3od7Xe4fR3vHu84OlTVsdvVz4AcGcvopo8P342zMVwf86KVN/naSzhi6V6xw4rGVFcLrbOZbZ4J0VPBBsbAKznpwSnebJLndbj/mTB1YpBrvULO15EpUtPDM+b2HZuvxbrreT206m8g==",
+  "signature_type": "rsa",
+  "code_hash": "fffe572bd52d2743c92eb1391f7ef5cbbd9884a2d888a09a14be862ae2f5a89b"
+}

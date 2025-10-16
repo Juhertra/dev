@@ -1,0 +1,5 @@
+{
+  "example_safe_plugin": "sha256:abc123def456789",
+  "nuclei_detector": "sha256:def456ghi789012",
+  "owasp_zap_detector": "sha256:ghi789jkl012345"
+}

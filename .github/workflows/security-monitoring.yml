@@ -1,0 +1,236 @@
+name: Security Monitoring
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+  workflow_dispatch:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  dependency-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install safety
+          
+      - name: Run Safety dependency audit
+        run: |
+          mkdir -p reports/security
+          safety check --json --output reports/security/dependency-audit-$(date +%Y%m%d).json
+          safety check --full-report > reports/security/dependency-audit-$(date +%Y%m%d).md
+          
+      - name: Upload dependency audit results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-audit-${{ github.run_number }}
+          path: reports/security/dependency-audit-*.json
+          
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'reports/security/dependency-audit-*.json';
+            if (fs.existsSync(path)) {
+              const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+              const vulnerabilities = report.vulnerabilities || [];
+              if (vulnerabilities.length > 0) {
+                const comment = `## 🔒 Dependency Security Audit
+                
+                **Vulnerabilities Found:** ${vulnerabilities.length}
+                
+                ${vulnerabilities.map(v => `- **${v.package_name}** (${v.analyzed_version}): ${v.advisory}`).join('\n')}
+                
+                Please review and update dependencies as needed.`;
+                
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            }
+
+  sast-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install bandit
+          
+      - name: Run Bandit SAST scan
+        run: |
+          mkdir -p reports/security
+          bandit -r . -f json -o reports/security/bandit-report-$(date +%Y%m%d).json
+          bandit -r . -f txt > reports/security/bandit-report-$(date +%Y%m%d).txt
+          
+      - name: Upload SAST results
+        uses: actions/upload-artifact@v3
+        with:
+          name: sast-scan-${{ github.run_number }}
+          path: reports/security/bandit-report-*.json
+          
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'reports/security/bandit-report-*.json';
+            if (fs.existsSync(path)) {
+              const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+              const results = report.results || [];
+              const highSeverity = results.filter(r => r.issue_severity === 'HIGH');
+              const mediumSeverity = results.filter(r => r.issue_severity === 'MEDIUM');
+              
+              if (highSeverity.length > 0 || mediumSeverity.length > 0) {
+                const comment = `## 🔒 SAST Security Scan
+                
+                **High Severity Issues:** ${highSeverity.length}
+                **Medium Severity Issues:** ${mediumSeverity.length}
+                
+                ${highSeverity.length > 0 ? '### High Severity Issues\n' + highSeverity.map(r => `- **${r.issue_text}** (${r.filename}:${r.line_number})`).join('\n') : ''}
+                
+                ${mediumSeverity.length > 0 ? '### Medium Severity Issues\n' + mediumSeverity.map(r => `- **${r.issue_text}** (${r.filename}:${r.line_number})`).join('\n') : ''}
+                
+                Please review and fix security issues before merging.`;
+                
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            }
+
+  secrets-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Run Gitleaks secrets scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload secrets scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: secrets-scan-${{ github.run_number }}
+          path: gitleaks-report.json
+        if: always()
+
+  plugin-security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pyyaml
+          
+      - name: Run plugin security audit
+        run: |
+          mkdir -p reports/security
+          python tools/plugin_security_audit.py > reports/security/plugin-audit-$(date +%Y%m%d).txt
+          
+      - name: Upload plugin audit results
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-audit-${{ github.run_number }}
+          path: reports/security/plugin-audit-*.txt
+
+  security-gate:
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, sast-scan, secrets-scan, plugin-security-audit]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        
+      - name: Security gate check
+        run: |
+          echo "🔒 Security Gate Check"
+          
+          # Check dependency audit results
+          if [ -f "dependency-audit-${{ github.run_number }}/dependency-audit-*.json" ]; then
+            echo "✅ Dependency audit completed"
+          else
+            echo "❌ Dependency audit failed"
+            exit 1
+          fi
+          
+          # Check SAST scan results
+          if [ -f "sast-scan-${{ github.run_number }}/bandit-report-*.json" ]; then
+            echo "✅ SAST scan completed"
+          else
+            echo "❌ SAST scan failed"
+            exit 1
+          fi
+          
+          # Check secrets scan results
+          if [ -f "secrets-scan-${{ github.run_number }}/gitleaks-report.json" ]; then
+            echo "✅ Secrets scan completed"
+          else
+            echo "❌ Secrets scan failed"
+            exit 1
+          fi
+          
+          # Check plugin security audit results
+          if [ -f "plugin-audit-${{ github.run_number }}/plugin-audit-*.txt" ]; then
+            echo "✅ Plugin security audit completed"
+          else
+            echo "❌ Plugin security audit failed"
+            exit 1
+          fi
+          
+          echo "🎉 All security checks passed!"
+          
+      - name: Security gate summary
+        run: |
+          echo "## 🔒 Security Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Audit | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| SAST Scan | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secrets Scan | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| Plugin Security Audit | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All security checks have passed successfully!" >> $GITHUB_STEP_SUMMARY

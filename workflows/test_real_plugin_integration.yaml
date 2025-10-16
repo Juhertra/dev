@@ -1,0 +1,93 @@
+# SecFlow Test Workflow - Real Plugin Integration
+# This workflow demonstrates end-to-end plugin execution with real tool integration
+
+name: "Real Plugin Integration Test"
+version: "1.0.0"
+description: "Test workflow for real Nuclei plugin integration"
+
+# Workflow configuration
+config:
+  target_domain: "example.com"
+  use_golden_samples: true  # Set to false to use real Nuclei binary
+  severity_levels: ["critical", "high", "medium", "low"]
+
+# Workflow steps
+steps:
+  - name: "Discovery Phase"
+    plugin: "discovery.ferox"
+    config:
+      target: "https://{{ config.target_domain }}"
+      threads: 50
+      timeout: 10
+    outputs:
+      - "discovered_urls"
+    
+  - name: "Vulnerability Scanning"
+    plugin: "scan.real_nuclei"
+    inputs:
+      - "discovered_urls"
+    config:
+      targets: "{{ inputs.discovered_urls | map(attribute='url') | list }}"
+      templates: "res://templates/nuclei:latest"
+      threads: 25
+      rate_limit: 150
+      severity: "{{ config.severity_levels }}"
+      use_golden_samples: "{{ config.use_golden_samples }}"
+    outputs:
+      - "vulnerability_findings"
+    
+  - name: "CVE Enrichment"
+    plugin: "enricher.cve_mapper"
+    inputs:
+      - "vulnerability_findings"
+    config:
+      findings: "{{ inputs.vulnerability_findings }}"
+      severity_threshold: "low"
+    outputs:
+      - "enriched_findings"
+
+# Expected outputs
+expected_outputs:
+  discovered_urls:
+    type: "list"
+    min_count: 1
+    description: "List of discovered URLs from Feroxbuster"
+  
+  vulnerability_findings:
+    type: "list"
+    min_count: 1
+    description: "List of vulnerability findings from Nuclei"
+  
+  enriched_findings:
+    type: "list"
+    min_count: 1
+    description: "List of CVE-enriched findings"
+
+# Validation rules
+validation:
+  - name: "Check Discovery Results"
+    condition: "len(discovered_urls) > 0"
+    message: "Discovery phase must find at least one URL"
+  
+  - name: "Check Scan Results"
+    condition: "len(vulnerability_findings) > 0"
+    message: "Scan phase must find at least one vulnerability"
+  
+  - name: "Check Enrichment Results"
+    condition: "len(enriched_findings) > 0"
+    message: "Enrichment phase must process at least one finding"
+  
+  - name: "Check CVE Mapping"
+    condition: "any('cve_details' in finding for finding in enriched_findings)"
+    message: "At least one finding must have CVE details"
+
+# Performance requirements
+performance:
+  max_execution_time: 30  # seconds
+  max_memory_usage: 512  # MB
+  
+# Security requirements
+security:
+  require_signed_plugins: true
+  sandbox_execution: true
+  timeout_per_step: 60  # seconds

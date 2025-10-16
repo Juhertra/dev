@@ -1,0 +1,243 @@
+{
+  "timestamp": "2025-10-16T17:13:59.665124",
+  "total_statements": 14009,
+  "covered_statements": 3896,
+  "missing_statements": 10113,
+  "coverage_percentage": 27.810000000000002,
+  "modules": [
+    {
+      "name": ".",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "analytics_core",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "api",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "app",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "app.middleware",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "detectors",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.plugins",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.plugins.discovery",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.plugins.enrichers",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.plugins.scan",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.runtime_core",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.runtime_core.observability",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.runtime_core.storage",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.storage.adapters",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.workflow_engine",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "packages.wrappers",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "routes",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "schemas",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "scripts",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "secflow",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "secflow.core",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "secflow.storage",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "secflow.tools",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "secflow.workflow",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "security",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "storage",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "tasks",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "tools",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "utils",
+      "statements": 0,
+      "covered": 0,
+      "missing": 0,
+      "coverage": 0,
+      "priority": "MEDIUM"
+    }
+  ],
+  "target_coverage": 80.0,
+  "coverage_gap": 7311
+}
