@@ -3,18 +3,24 @@ on:
   schedule:
     - cron: '0 6 * * *'  # Daily at 6 AM UTC
   workflow_dispatch:
+    inputs:
+      check_python314:
+        description: 'Check Python 3.14 compatibility'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   monitor-ci-health:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     
     steps:
       - uses: actions/checkout@v4
       
       - name: Check CI workflow health
         run: |
-          echo "## CI Health Check - $(date)" > ci-health-report.md
+          echo "## M1 CI Health Check - $(date)" > ci-health-report.md
           echo "" >> ci-health-report.md
           
           # Check workflow files
@@ -28,12 +34,27 @@ jobs:
           done
           
           echo "" >> ci-health-report.md
-          echo "### Recent CI Runs" >> ci-health-report.md
+          echo "### M1 Coverage Status" >> ci-health-report.md
+          
+          # Check coverage dashboard
+          if [ -d "reports/coverage" ]; then
+              latest_dashboard=$(ls -t reports/coverage/coverage-dashboard-*.html 2>/dev/null | head -1)
+              if [ -n "$latest_dashboard" ]; then
+                  echo "✅ Latest coverage dashboard: $(basename $latest_dashboard)" >> ci-health-report.md
+              else
+                  echo "⚠️  No coverage dashboard found" >> ci-health-report.md
+              fi
+          else
+              echo "❌ Coverage reports directory missing" >> ci-health-report.md
+          fi
+          
+          echo "" >> ci-health-report.md
+          echo "### Recent CI Runs Analysis" >> ci-health-report.md
           
           # Get recent workflow runs
-          gh run list --limit 10 --json status,conclusion,name,createdAt >> recent-runs.json || echo "[]" > recent-runs.json
+          gh run list --limit 20 --json status,conclusion,name,createdAt,workflowName >> recent-runs.json || echo "[]" > recent-runs.json
           
-          # Analyze success rate
+          # Analyze success rate and Python 3.14 compatibility
           python3 << 'EOF'
           import json
           import sys
@@ -66,17 +87,60 @@ jobs:
                       print(f"⚠️  Failed workflows: {', '.join(set(failed_workflows))}")
                   else:
                       print("✅ All workflows passing")
+                  
+                  # Check Python 3.14 compatibility
+                  python314_runs = [r for r in recent_runs if '3.14' in r.get('name', '')]
+                  if python314_runs:
+                      python314_success = len([r for r in python314_runs if r['conclusion'] == 'success'])
+                      python314_total = len(python314_runs)
+                      python314_rate = (python314_success / python314_total) * 100
+                      print(f"🐍 Python 3.14 Compatibility: {python314_rate:.1f}% ({python314_success}/{python314_total})")
+                  else:
+                      print("🐍 Python 3.14: No recent test runs")
               else:
                   print("No runs in last 24 hours")
                   
           except Exception as e:
               print(f"Error analyzing runs: {e}")
           EOF
+      
+      - name: Check Python 3.14 compatibility
+        if: github.event.inputs.check_python314 == 'true'
+        run: |
+          echo "🐍 Checking Python 3.14 compatibility..." >> ci-health-report.md
           
+          # Test Python 3.14 syntax compatibility
+          python3.14 --version || echo "Python 3.14 not available (expected)"
+          
+          # Check if our code works with Python 3.14
+          python3.14 -c "
+          import sys
+          print(f'Python version: {sys.version}')
+          
+          # Test critical imports
+          try:
+              import cryptography
+              print('✅ cryptography: OK')
+          except Exception as e:
+              print(f'❌ cryptography: {e}')
+          
+          try:
+              import requests
+              print('✅ requests: OK')
+          except Exception as e:
+              print(f'❌ requests: {e}')
+          
+          try:
+              import flask
+              print('✅ flask: OK')
+          except Exception as e:
+              print(f'❌ flask: {e}')
+          " || echo "Python 3.14 compatibility check failed (expected during transition)"
+      
       - name: Upload CI health report
         uses: actions/upload-artifact@v4
         with:
-          name: ci-health-report
+          name: ci-health-report-m1
           path: |
             ci-health-report.md
             recent-runs.json
@@ -94,14 +158,14 @@ jobs:
             try {
               healthReport = fs.readFileSync('ci-health-report.md', 'utf8');
             } catch (e) {
-              healthReport = 'CI health check failed to generate report';
+              healthReport = 'M1 CI health check failed to generate report';
             }
             
             // Create issue
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: '🚨 CI Health Check Failed',
-              body: `## CI Health Alert\n\n${healthReport}\n\n**Action Required**: Please investigate CI workflow issues.\n\n---\n*This issue was automatically created by the CI monitoring workflow.*`,
-              labels: ['ci', 'monitoring', 'urgent']
+              title: '🚨 M1 CI Health Check Failed',
+              body: `## M1 CI Health Alert\n\n${healthReport}\n\n**Action Required**: Please investigate M1 CI workflow issues.\n\n---\n*This issue was automatically created by the M1 CI monitoring workflow.*`,
+              labels: ['ci', 'monitoring', 'm1', 'urgent']
             });

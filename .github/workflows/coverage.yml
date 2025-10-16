@@ -3,17 +3,27 @@ on: [pull_request, push]
 jobs:
   coverage:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11.9', '3.14']
+        include:
+          - python-version: '3.11.9'
+            is_primary: true
+          - python-version: '3.14'
+            is_primary: false
+    
     steps:
       - uses: actions/checkout@v4
       
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11.9' }
+        with: { python-version: ${{ matrix.python-version }} }
       
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
           restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
             ${{ runner.os }}-pip-
       
       - name: Install dev dependencies
@@ -26,21 +36,26 @@ jobs:
           pytest --cov=. --cov-report=xml --cov-report=term-missing -q
           COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $NF}' | tr -d '%')
           echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
+        continue-on-error: ${{ matrix.is_primary != 'true' }}
       
       - name: Generate coverage dashboard
         run: python scripts/coverage_dashboard.py
+        continue-on-error: ${{ matrix.is_primary != 'true' }}
       
       - name: Enforce coverage ratchet
         run: python scripts/coverage_ratchet.py
         env:
           MILESTONE: M1
           COVERAGE_PERCENT: ${{ env.COVERAGE_PERCENT }}
+        continue-on-error: ${{ matrix.is_primary != 'true' }}
       
       - name: Upload coverage reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports
+          name: coverage-reports-${{ matrix.python-version }}
           path: |
             coverage.xml
             htmlcov/
             reports/coverage/
+          retention-days: 7

@@ -3,20 +3,50 @@ on: [pull_request, push]
 jobs:
   unit:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11.9', '3.14']
+        include:
+          - python-version: '3.11.9'
+            is_primary: true
+          - python-version: '3.14'
+            is_primary: false
+    
     steps:
       - uses: actions/checkout@v4
       
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11.9' }
+        with: { python-version: ${{ matrix.python-version }} }
       
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
           restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
             ${{ runner.os }}-pip-
       
-      - run: python -m pip install --upgrade pip
-      - run: pip install -e .
-      - run: pip install pytest pytest-cov requests flask pyyaml jsonschema pytest-xdist
-      - run: pytest -q -n auto --maxfail=3
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install pytest-xdist  # For parallel test execution
+      
+      - name: Run unit tests
+        run: |
+          if [ "${{ matrix.is_primary }}" = "true" ]; then
+            pytest -q -n auto --maxfail=3 --tb=short
+          else
+            pytest -q -n auto --maxfail=3 --tb=short || echo "Python 3.14 tests failed (expected during transition)"
+          fi
+        continue-on-error: ${{ matrix.is_primary != 'true' }}
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results-${{ matrix.python-version }}
+          path: |
+            .pytest_cache/
+            test-results/
+          retention-days: 7

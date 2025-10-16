@@ -3,11 +3,34 @@ on: [pull_request, push]
 jobs:
   ruff:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11.9', '3.14']
+        include:
+          - python-version: '3.11.9'
+            is_primary: true
+          - python-version: '3.14'
+            is_primary: false
+    
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11.9' }
-      - run: python -m pip install --upgrade pip
-      - run: pip install -e .
-      - run: pip install ruff
-      - run: ruff check .
+        with: { python-version: ${{ matrix.python-version }} }
+      
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run ruff linting
+        run: ruff check .
+        continue-on-error: ${{ matrix.is_primary != 'true' }}
