@@ -9,7 +9,7 @@ jobs:
         with: { python-version: '3.11.9' }
       - run: python -m pip install --upgrade pip
       - run: pip install -e .
-      - run: pip install pytest pytest-cov coverage[toml] requests flask pyyaml
+      - run: pip install pytest pytest-cov coverage[toml] requests flask pyyaml jsonschema
       - run: |
           coverage run -m pytest -q
           COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $$4}' | tr -d '%')
