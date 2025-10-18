@@ -21,10 +21,12 @@ def get_fields(project_id):
           id
           fields(first:100){
             nodes{
-              id
-              name
-              dataType
-              ... on ProjectV2SingleSelectField { options { id name } }
+              ... on ProjectV2SingleSelectField {
+                id
+                name
+                dataType
+                options { id name }
+              }
             }
           }
         }
@@ -33,7 +35,7 @@ def get_fields(project_id):
     """
     data=gql(q,{"id":project_id})
     nodes=data["node"]["fields"]["nodes"]
-    by_name={n["name"]:n for n in nodes}
+    by_name={n["name"]:n for n in nodes if n}
     return by_name
 
 def get_items(project_id, after=None, first=50):
