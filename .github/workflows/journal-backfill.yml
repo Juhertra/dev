@@ -1,0 +1,32 @@
+name: Journal Backfill
+on:
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "Only backfill handoffs with period >= this date (YYYY-MM-DD)"
+        required: false
+        default: "1970-01-01"
+      dry_run:
+        description: "If true, do not create Issues/items"
+        required: false
+        default: "false"
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  projects: write
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Run journal backfill
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+          PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
+        run: |
+          python tools/journal_backfill.py --since "${{ inputs.since }}" $([ "${{ inputs.dry_run }}" = "true" ] && echo "--dry-run" || true)
