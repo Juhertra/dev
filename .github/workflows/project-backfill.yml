@@ -1,0 +1,139 @@
+name: Project Backfill
+on:
+  workflow_dispatch:
+    inputs:
+      include_issues:
+        type: boolean
+        default: true
+        description: "Backfill Issues"
+      include_prs:
+        type: boolean
+        default: true
+        description: "Backfill PRs"
+      state:
+        type: choice
+        default: open
+        options: [open, closed, all]
+        description: "Which items to include"
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  projects: write
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Backfill issues
+        if: ${{ inputs.include_issues == true }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
+          script: |
+            const projectId = process.env.PROJECTS_V2_ID;
+            if (!projectId) core.setFailed("PROJECTS_V2_ID missing");
+            const state = "${{ inputs.state }}";
+            const owner = context.repo.owner, repo = context.repo.repo;
+            // Get Status field/options
+            const fields = await github.graphql(`
+              query($project:ID!){
+                node(id:$project){ ... on ProjectV2 {
+                  fields(first:50){ nodes { id name dataType
+                    ... on ProjectV2SingleSelectField { options { id name } } } } } }
+              }`, { project: projectId });
+            const statusFld = fields.node.fields.nodes.find(f => f.name === "Status" && f.dataType === "SINGLE_SELECT");
+            const opt = name => statusFld?.options.find(o => o.name.toLowerCase() === name.toLowerCase());
+            const todo = opt("Todo"), inprog = opt("In Progress"), blocked = opt("Blocked"), done = opt("Done");
+
+            const perPage = 100;
+            let page = 1, count=0;
+            while (true) {
+              const issues = await github.request("GET /repos/{owner}/{repo}/issues", {
+                owner, repo, state, per_page: perPage, page
+              });
+              if (!issues.data.length) break;
+              for (const it of issues.data) {
+                if (it.pull_request) continue; // this step is issues only
+                const labels = (it.labels||[]).map(l => typeof l === "string" ? l : l.name);
+                // Add to project
+                const add = await github.graphql(`
+                  mutation($project:ID!,$content:ID!){
+                    addProjectV2ItemById(input:{projectId:$project, contentId:$content}){ item { id } }
+                  }`, { project: projectId, content: it.node_id });
+                const itemId = add.addProjectV2ItemById.item.id;
+                // Decide status
+                let target = todo;
+                if (labels.includes("status:Blocked")) target = blocked||target;
+                else if (labels.includes("status:In Progress")) target = inprog||target;
+                else if (it.state === "closed") target = done||target;
+                // Set status
+                if (statusFld && target) {
+                  await github.graphql(`
+                    mutation($project:ID!, $item:ID!, $field:ID!, $option:ID!){
+                      updateProjectV2ItemFieldValue(input:{
+                        projectId:$project, itemId:$item, fieldId:$field,
+                        value:{ singleSelectOptionId:$option }
+                      }) { clientMutationId }
+                  }`, { project: projectId, item: itemId, field: statusFld.id, option: target.id });
+                }
+                count++;
+              }
+              page++;
+            }
+            core.info(`Backfilled issues: ${count}`);
+
+      - name: Backfill pull requests
+        if: ${{ inputs.include_prs == true }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
+          script: |
+            const projectId = process.env.PROJECTS_V2_ID;
+            if (!projectId) core.setFailed("PROJECTS_V2_ID missing");
+            const state = "${{ inputs.state }}";
+            const owner = context.repo.owner, repo = context.repo.repo;
+
+            const fields = await github.graphql(`
+              query($project:ID!){
+                node(id:$project){ ... on ProjectV2 {
+                  fields(first:50){ nodes { id name dataType
+                    ... on ProjectV2SingleSelectField { options { id name } } } } } }
+              }`, { project: projectId });
+            const statusFld = fields.node.fields.nodes.find(f => f.name === "Status" && f.dataType === "SINGLE_SELECT");
+            const opt = name => statusFld?.options.find(o => o.name.toLowerCase() === name.toLowerCase());
+            const todo = opt("Todo"), inprog = opt("In Progress"), blocked = opt("Blocked"), done = opt("Done");
+
+            const perPage = 100;
+            let page = 1, count=0;
+            while (true) {
+              const prs = await github.request("GET /repos/{owner}/{repo}/pulls", {
+                owner, repo, state, per_page: perPage, page
+              });
+              if (!prs.data.length) break;
+              for (const pr of prs.data) {
+                const labels = (pr.labels||[]).map(l => typeof l === "string" ? l : l.name);
+                const add = await github.graphql(`
+                  mutation($project:ID!,$content:ID!){
+                    addProjectV2ItemById(input:{projectId:$project, contentId:$content}){ item { id } }
+                  }`, { project: projectId, content: pr.node_id });
+                const itemId = add.addProjectV2ItemById.item.id;
+                let target = todo;
+                if (labels.includes("status:Blocked")) target = blocked||target;
+                else if (labels.includes("status:In Progress") || pr.draft) target = inprog||target;
+                else if (pr.merged_at || pr.state === "closed") target = done||target;
+                if (statusFld && target) {
+                  await github.graphql(`
+                    mutation($project:ID!, $item:ID!, $field:ID!, $option:ID!){
+                      updateProjectV2ItemFieldValue(input:{
+                        projectId:$project, itemId:$item, fieldId:$field,
+                        value:{ singleSelectOptionId:$option }
+                      }) { clientMutationId }
+                  }`, { project: projectId, item: itemId, field: statusFld.id, option: target.id });
+                }
+                count++;
+              }
+              page++;
+            }
+            core.info(`Backfilled PRs: ${count}`);
+    env:
+      PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
