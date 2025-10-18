@@ -4,6 +4,13 @@ on:
     types: [opened, edited, labeled]
   pull_request:
     types: [opened, edited, labeled, ready_for_review]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  projects: write
+
 jobs:
   add_to_project:
     runs-on: ubuntu-latest
