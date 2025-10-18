@@ -1,26 +1,25 @@
 name: Project AutoSync
 on:
-  issues:
-    types: [opened, edited, labeled, unlabeled, reopened, closed, assigned, unassigned]
-  pull_request:
-    types: [opened, edited, labeled, unlabeled, reopened, closed, ready_for_review, converted_to_draft]
+  issues:   [opened, edited, labeled, unlabeled, reopened, closed, assigned, unassigned]
+  pull_request: [opened, edited, labeled, unlabeled, reopened, ready_for_review, converted_to_draft, closed]
+
 permissions:
   contents: read
   issues: write
   pull-requests: write
   projects: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - name: Sync this item to project (status + assignees)
+        with: { python-version: '3.11' }
+      - run: pip install requests
+      - name: Reconcile Status/Assignees
         env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
           PROJECTS_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
           PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
         run: |
-          python tools/project_repair.py
+          python tools/project_reconcile.py

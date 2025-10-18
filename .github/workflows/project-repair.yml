@@ -1,24 +1,25 @@
-name: Project Repair
+name: Project Nightly Repair
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
   schedule:
-    - cron: "15 5 * * *"  # nightly 05:15 UTC
+    - cron: '15 5 * * *'   # 05:15 UTC nightly
+
 permissions:
   contents: read
   issues: write
   pull-requests: write
   projects: write
+
 jobs:
   repair:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - name: Run repair
+        with: { python-version: '3.11' }
+      - run: pip install requests
+      - name: Repair full board
         env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
           PROJECTS_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
           PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
-        run: python tools/project_repair.py
+        run: python tools/project_reconcile.py
