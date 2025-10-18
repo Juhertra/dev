@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>SecFlow Plugin Security Threat Model - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../" class="nav-link">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#secflow-plugin-security-threat-model" class="nav-link">SecFlow Plugin Security Threat Model</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#assets-protected" class="nav-link">Assets Protected</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#threat-actors" class="nav-link">Threat Actors</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#primary-threats" class="nav-link">Primary Threats</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#threat-scenarios" class="nav-link">Threat Scenarios</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-control-mapping" class="nav-link">Security Control Mapping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#risk-assessment" class="nav-link">Risk Assessment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-requirements" class="nav-link">Security Requirements</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#threat-model-validation" class="nav-link">Threat Model Validation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#references" class="nav-link">References</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="secflow-plugin-security-threat-model">SecFlow Plugin Security Threat Model<a class="headerlink" href="#secflow-plugin-security-threat-model" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document defines the threat model for the SecFlow plugin system, identifying assets, threat actors, and primary threats to guide security control implementation.</p>
+<h2 id="assets-protected">Assets Protected<a class="headerlink" href="#assets-protected" title="Permanent link">&para;</a></h2>
+<h3 id="primary-assets">Primary Assets<a class="headerlink" href="#primary-assets" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Runtime Environment</strong>: Core execution environment for plugins</li>
+<li><strong>Plugin Loader</strong>: Component responsible for loading and validating plugins</li>
+<li><strong>Plugin Manifests</strong>: Metadata files describing plugin capabilities and permissions</li>
+<li><strong>YAML Workflow Recipes</strong>: User-defined workflow configurations</li>
+<li><strong>System Resources</strong>: CPU, memory, filesystem, and network access</li>
+<li><strong>Sensitive Data</strong>: Findings, configurations, and user data processed by plugins</li>
+</ul>
+<h3 id="secondary-assets">Secondary Assets<a class="headerlink" href="#secondary-assets" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Registry</strong>: Repository of approved plugins</li>
+<li><strong>Security Policies</strong>: Plugin security configuration and constraints</li>
+<li><strong>Audit Logs</strong>: Security event logging and monitoring data</li>
+<li><strong>Signature Keys</strong>: Cryptographic keys for plugin verification</li>
+</ul>
+<h2 id="threat-actors">Threat Actors<a class="headerlink" href="#threat-actors" title="Permanent link">&para;</a></h2>
+<h3 id="external-threat-actors">External Threat Actors<a class="headerlink" href="#external-threat-actors" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Malicious Plugin Developers</strong>: Developers creating plugins with malicious intent</li>
+<li><strong>Supply Chain Compromise</strong>: Attackers compromising plugin distribution channels</li>
+<li><strong>Script Kiddies</strong>: Low-skill attackers using automated tools</li>
+<li><strong>Advanced Persistent Threats (APT)</strong>: Sophisticated attackers with long-term objectives</li>
+</ul>
+<h3 id="internal-threat-actors">Internal Threat Actors<a class="headerlink" href="#internal-threat-actors" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Insider Abuse</strong>: Authorized users misusing their privileges</li>
+<li><strong>Compromised Accounts</strong>: Legitimate accounts taken over by attackers</li>
+<li><strong>Social Engineering</strong>: Attackers manipulating users to bypass security controls</li>
+</ul>
+<h2 id="primary-threats">Primary Threats<a class="headerlink" href="#primary-threats" title="Permanent link">&para;</a></h2>
+<h3 id="1-code-execution-attacks">1. Code Execution Attacks<a class="headerlink" href="#1-code-execution-attacks" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Arbitrary Code Execution</strong>: Malicious plugins executing unauthorized code</li>
+<li><strong>Privilege Escalation</strong>: Plugins gaining elevated system privileges</li>
+<li><strong>Remote Code Execution</strong>: Plugins executing code from external sources</li>
+</ul>
+<p><strong>Attack Vectors:</strong>
+- Malicious plugin manifests with dangerous node types
+- YAML deserialization attacks
+- Plugin signature forgery
+- Sandbox escape techniques</p>
+<h3 id="2-data-exfiltration">2. Data Exfiltration<a class="headerlink" href="#2-data-exfiltration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Sensitive Data Theft</strong>: Plugins accessing and exfiltrating sensitive information</li>
+<li><strong>Configuration Disclosure</strong>: Plugins revealing system configurations</li>
+<li><strong>User Data Harvesting</strong>: Plugins collecting user information</li>
+</ul>
+<p><strong>Attack Vectors:</strong>
+- Unauthorized filesystem access
+- Network communication to external servers
+- Memory dumps and process inspection
+- Log file access</p>
+<h3 id="3-system-compromise">3. System Compromise<a class="headerlink" href="#3-system-compromise" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Resource Exhaustion</strong>: Plugins consuming excessive system resources</li>
+<li><strong>Denial of Service</strong>: Plugins causing system unavailability</li>
+<li><strong>System Modification</strong>: Plugins modifying system files or configurations</li>
+</ul>
+<p><strong>Attack Vectors:</strong>
+- CPU and memory exhaustion attacks
+- Infinite loops and recursive operations
+- File system modification
+- Network flooding</p>
+<h3 id="4-supply-chain-attacks">4. Supply Chain Attacks<a class="headerlink" href="#4-supply-chain-attacks" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Tampering</strong>: Modification of plugins during distribution</li>
+<li><strong>Dependency Poisoning</strong>: Compromise of plugin dependencies</li>
+<li><strong>Manifest Spoofing</strong>: Creation of fake plugin manifests</li>
+</ul>
+<p><strong>Attack Vectors:</strong>
+- Man-in-the-middle attacks on plugin distribution
+- Compromise of plugin registry
+- Dependency confusion attacks
+- Signature forgery</p>
+<h2 id="threat-scenarios">Threat Scenarios<a class="headerlink" href="#threat-scenarios" title="Permanent link">&para;</a></h2>
+<h3 id="scenario-1-malicious-plugin-execution">Scenario 1: Malicious Plugin Execution<a class="headerlink" href="#scenario-1-malicious-plugin-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Actor</strong>: Malicious plugin developer
+<strong>Objective</strong>: Execute arbitrary code on the system
+<strong>Method</strong>: 
+1. Create plugin with malicious manifest
+2. Bypass signature verification
+3. Execute code with elevated privileges
+4. Exfiltrate sensitive data</p>
+<p><strong>Mitigations</strong>:
+- Plugin signature verification
+- Sandbox execution environment
+- Resource limits and monitoring
+- Audit logging</p>
+<h3 id="scenario-2-supply-chain-compromise">Scenario 2: Supply Chain Compromise<a class="headerlink" href="#scenario-2-supply-chain-compromise" title="Permanent link">&para;</a></h3>
+<p><strong>Actor</strong>: Advanced persistent threat
+<strong>Objective</strong>: Compromise plugin distribution
+<strong>Method</strong>:
+1. Compromise plugin registry
+2. Inject malicious code into legitimate plugins
+3. Distribute compromised plugins
+4. Execute malicious code on target systems</p>
+<p><strong>Mitigations</strong>:
+- Cryptographic signature verification
+- Plugin integrity checking
+- Secure distribution channels
+- Regular security audits</p>
+<h3 id="scenario-3-insider-abuse">Scenario 3: Insider Abuse<a class="headerlink" href="#scenario-3-insider-abuse" title="Permanent link">&para;</a></h3>
+<p><strong>Actor</strong>: Authorized user with elevated privileges
+<strong>Objective</strong>: Misuse system access
+<strong>Method</strong>:
+1. Create plugins with excessive permissions
+2. Bypass security controls
+3. Access sensitive data
+4. Modify system configurations</p>
+<p><strong>Mitigations</strong>:
+- Principle of least privilege
+- Audit logging and monitoring
+- Regular access reviews
+- Separation of duties</p>
+<h2 id="security-control-mapping">Security Control Mapping<a class="headerlink" href="#security-control-mapping" title="Permanent link">&para;</a></h2>
+<h3 id="prevention-controls">Prevention Controls<a class="headerlink" href="#prevention-controls" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Signature Verification</strong>: Prevents unauthorized plugin execution</li>
+<li><strong>Sandbox Execution</strong>: Isolates plugin execution environment</li>
+<li><strong>Resource Limits</strong>: Prevents resource exhaustion attacks</li>
+<li><strong>Input Validation</strong>: Prevents injection attacks</li>
+</ul>
+<h3 id="detection-controls">Detection Controls<a class="headerlink" href="#detection-controls" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Audit Logging</strong>: Records security events for analysis</li>
+<li><strong>Security Monitoring</strong>: Detects suspicious plugin behavior</li>
+<li><strong>Anomaly Detection</strong>: Identifies unusual resource usage patterns</li>
+<li><strong>Signature Verification</strong>: Detects plugin tampering</li>
+</ul>
+<h3 id="response-controls">Response Controls<a class="headerlink" href="#response-controls" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Termination</strong>: Stops malicious plugin execution</li>
+<li><strong>Resource Quotas</strong>: Limits plugin resource consumption</li>
+<li><strong>Network Isolation</strong>: Prevents data exfiltration</li>
+<li><strong>Incident Response</strong>: Procedures for security incidents</li>
+</ul>
+<h2 id="risk-assessment">Risk Assessment<a class="headerlink" href="#risk-assessment" title="Permanent link">&para;</a></h2>
+<h3 id="high-risk-threats">High Risk Threats<a class="headerlink" href="#high-risk-threats" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Arbitrary Code Execution</strong>: High impact, medium likelihood</li>
+<li><strong>Privilege Escalation</strong>: High impact, low likelihood</li>
+<li><strong>Data Exfiltration</strong>: High impact, medium likelihood</li>
+</ul>
+<h3 id="medium-risk-threats">Medium Risk Threats<a class="headerlink" href="#medium-risk-threats" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Resource Exhaustion</strong>: Medium impact, medium likelihood</li>
+<li><strong>Denial of Service</strong>: Medium impact, low likelihood</li>
+<li><strong>System Modification</strong>: Medium impact, low likelihood</li>
+</ul>
+<h3 id="low-risk-threats">Low Risk Threats<a class="headerlink" href="#low-risk-threats" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Information Disclosure</strong>: Low impact, low likelihood</li>
+<li><strong>Audit Trail Tampering</strong>: Low impact, very low likelihood</li>
+</ul>
+<h2 id="security-requirements">Security Requirements<a class="headerlink" href="#security-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="functional-requirements">Functional Requirements<a class="headerlink" href="#functional-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>FR-1</strong>: Plugin signature verification must be implemented</li>
+<li><strong>FR-2</strong>: Sandbox execution environment must isolate plugins</li>
+<li><strong>FR-3</strong>: Resource limits must be enforced</li>
+<li><strong>FR-4</strong>: Audit logging must record all security events</li>
+</ul>
+<h3 id="non-functional-requirements">Non-Functional Requirements<a class="headerlink" href="#non-functional-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>NFR-1</strong>: Security controls must not impact performance by more than 10%</li>
+<li><strong>NFR-2</strong>: Security monitoring must detect threats within 5 minutes</li>
+<li><strong>NFR-3</strong>: Incident response must be initiated within 15 minutes</li>
+<li><strong>NFR-4</strong>: Security updates must be deployed within 24 hours</li>
+</ul>
+<h2 id="threat-model-validation">Threat Model Validation<a class="headerlink" href="#threat-model-validation" title="Permanent link">&para;</a></h2>
+<h3 id="testing-scenarios">Testing Scenarios<a class="headerlink" href="#testing-scenarios" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Penetration Testing</strong>: Simulate attack scenarios</li>
+<li><strong>Red Team Exercises</strong>: Test security controls effectiveness</li>
+<li><strong>Vulnerability Assessment</strong>: Identify security weaknesses</li>
+<li><strong>Security Code Review</strong>: Analyze code for security issues</li>
+</ul>
+<h3 id="metrics-and-kpis">Metrics and KPIs<a class="headerlink" href="#metrics-and-kpis" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Mean Time to Detection (MTTD)</strong>: Time to detect security incidents</li>
+<li><strong>Mean Time to Response (MTTR)</strong>: Time to respond to security incidents</li>
+<li><strong>False Positive Rate</strong>: Rate of false security alerts</li>
+<li><strong>Security Control Coverage</strong>: Percentage of threats covered by controls</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats">STRIDE Threat Modeling</a></li>
+<li><a href="https://attack.mitre.org/">MITRE ATT&amp;CK Framework</a></li>
+<li><a href="https://owasp.org/www-community/Threat_Modeling">OWASP Threat Modeling</a></li>
+<li><a href="https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final">NIST SP 800-30 Risk Assessment</a></li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

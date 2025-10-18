@@ -1,0 +1,18 @@
+# Core
+/packages/core-lib/            @runtime-lead @security-lead
+/packages/workflow/            @workflow-lead @runtime-lead
+/packages/wrappers/            @tools-lead @findings-lead
+/packages/findings/            @findings-lead @security-lead
+/packages/observability/       @observability-lead
+/packages/security/            @security-lead
+/packages/resources/           @resources-lead @runtime-lead
+
+# Shared-state plumbing
+/control/**                    @integration-lead @devex-lead @coordinator
+/tools/journal.py              @integration-lead
+/tools/compile_daily_report.py @integration-lead
+/reports/**                    @integration-lead
+
+# Docs & CI/meta
+/docs/**                       @docs-lead @devex-lead
+/.github/**                    @devex-lead @integration-lead

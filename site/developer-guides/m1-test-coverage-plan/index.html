@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>M1 Test Coverage Plan - 80% Target - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../security/" class="nav-link">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#m1-test-coverage-plan-80-target" class="nav-link">M1 Test Coverage Plan - 80% Target</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#coverage-goal-28-80-52-percentage-points" class="nav-link">🎯 Coverage Goal: 28% → 80% (+52 percentage points)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-analysis-by-module" class="nav-link">📊 Priority Analysis by Module</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#test-implementation-strategy" class="nav-link">🧪 Test Implementation Strategy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#coverage-tracking-strategy" class="nav-link">📈 Coverage Tracking Strategy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#coverage-targets-by-module" class="nav-link">🎯 Coverage Targets by Module</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#coverage-progress-tracking" class="nav-link">📊 Coverage Progress Tracking</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#testing-tools-infrastructure" class="nav-link">🛠️ Testing Tools &amp; Infrastructure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#implementation-timeline" class="nav-link">🚀 Implementation Timeline</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#success-criteria" class="nav-link">📋 Success Criteria</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="m1-test-coverage-plan-80-target">M1 Test Coverage Plan - 80% Target<a class="headerlink" href="#m1-test-coverage-plan-80-target" title="Permanent link">&para;</a></h1>
+<h2 id="coverage-goal-28-80-52-percentage-points">🎯 <strong>Coverage Goal: 28% → 80% (+52 percentage points)</strong><a class="headerlink" href="#coverage-goal-28-80-52-percentage-points" title="Permanent link">&para;</a></h2>
+<p><strong>Current State</strong>: 28% coverage (3,896/14,009 statements covered)<br />
+<strong>Target</strong>: 80% coverage (11,207/14,009 statements covered)<br />
+<strong>Gap</strong>: 7,311 statements need test coverage</p>
+<h2 id="priority-analysis-by-module">📊 <strong>Priority Analysis by Module</strong><a class="headerlink" href="#priority-analysis-by-module" title="Permanent link">&para;</a></h2>
+<h3 id="tier-1-high-impact-low-coverage-modules-priority-1"><strong>Tier 1: High-Impact, Low-Coverage Modules (Priority 1)</strong><a class="headerlink" href="#tier-1-high-impact-low-coverage-modules-priority-1" title="Permanent link">&para;</a></h3>
+<h4 id="core-system-components"><strong>Core System Components</strong><a class="headerlink" href="#core-system-components" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>findings.py</code></strong>: 17% coverage (841 statements, 696 missed)</li>
+<li><strong>Impact</strong>: Critical for M1 vertical slice</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: High (696 statements to cover)</li>
+<li>
+<p><strong>Tests Needed</strong>: Unit tests for finding creation, validation, serialization</p>
+</li>
+<li>
+<p><strong><code>web_routes.py</code></strong>: 9% coverage (1,485 statements, 1,357 missed)</p>
+</li>
+<li><strong>Impact</strong>: Core API endpoints for M1</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: Very High (1,357 statements to cover)</li>
+<li>
+<p><strong>Tests Needed</strong>: API endpoint tests, request/response validation</p>
+</li>
+<li>
+<p><strong><code>store.py</code></strong>: 20% coverage (415 statements, 333 missed)</p>
+</li>
+<li><strong>Impact</strong>: Data persistence layer</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: High (333 statements to cover)</li>
+<li><strong>Tests Needed</strong>: Storage adapter tests, data operations</li>
+</ul>
+<h4 id="m1-new-components"><strong>M1 New Components</strong><a class="headerlink" href="#m1-new-components" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>packages/workflow_engine/executor.py</code></strong>: 89% coverage (354 statements, 38 missed)</li>
+<li><strong>Impact</strong>: Core M1 workflow execution</li>
+<li><strong>Target</strong>: 95% coverage</li>
+<li><strong>Effort</strong>: Low (38 statements to cover)</li>
+<li>
+<p><strong>Tests Needed</strong>: Edge case testing, error handling</p>
+</li>
+<li>
+<p><strong><code>packages/plugins/loader.py</code></strong>: 73% coverage (323 statements, 86 missed)</p>
+</li>
+<li><strong>Impact</strong>: Plugin loading system</li>
+<li><strong>Target</strong>: 85% coverage</li>
+<li><strong>Effort</strong>: Medium (86 statements to cover)</li>
+<li><strong>Tests Needed</strong>: Plugin loading edge cases, security validation</li>
+</ul>
+<h3 id="tier-2-medium-impact-modules-priority-2"><strong>Tier 2: Medium-Impact Modules (Priority 2)</strong><a class="headerlink" href="#tier-2-medium-impact-modules-priority-2" title="Permanent link">&para;</a></h3>
+<h4 id="security-components"><strong>Security Components</strong><a class="headerlink" href="#security-components" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>security/signing.py</code></strong>: 32% coverage (178 statements, 121 missed)</li>
+<li><strong>Impact</strong>: Plugin signature verification</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: Medium (121 statements to cover)</li>
+<li>
+<p><strong>Tests Needed</strong>: Cryptographic operations, key management</p>
+</li>
+<li>
+<p><strong><code>security/sandbox.py</code></strong>: 64% coverage (176 statements, 64 missed)</p>
+</li>
+<li><strong>Impact</strong>: Plugin sandboxing</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: Medium (64 statements to cover)</li>
+<li><strong>Tests Needed</strong>: Resource limits, isolation testing</li>
+</ul>
+<h4 id="runtime-components"><strong>Runtime Components</strong><a class="headerlink" href="#runtime-components" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>packages/runtime_core/executor.py</code></strong>: 67% coverage (226 statements, 74 missed)</li>
+<li><strong>Impact</strong>: Runtime execution engine</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: Medium (74 statements to cover)</li>
+<li><strong>Tests Needed</strong>: Execution flow, error handling</li>
+</ul>
+<h3 id="tier-3-supporting-components-priority-3"><strong>Tier 3: Supporting Components (Priority 3)</strong><a class="headerlink" href="#tier-3-supporting-components-priority-3" title="Permanent link">&para;</a></h3>
+<h4 id="analytics-metrics"><strong>Analytics &amp; Metrics</strong><a class="headerlink" href="#analytics-metrics" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>analytics_core/analytics.py</code></strong>: 76% coverage (247 statements, 60 missed)</li>
+<li><strong>Impact</strong>: Analytics and reporting</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: Low (60 statements to cover)</li>
+<li>
+<p><strong>Tests Needed</strong>: Analytics calculations, report generation</p>
+</li>
+<li>
+<p><strong><code>packages/runtime_core/observability/metrics.py</code></strong>: 71% coverage (129 statements, 37 missed)</p>
+</li>
+<li><strong>Impact</strong>: Performance monitoring</li>
+<li><strong>Target</strong>: 80% coverage</li>
+<li><strong>Effort</strong>: Low (37 statements to cover)</li>
+<li><strong>Tests Needed</strong>: Metrics collection, threshold monitoring</li>
+</ul>
+<h2 id="test-implementation-strategy">🧪 <strong>Test Implementation Strategy</strong><a class="headerlink" href="#test-implementation-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-core-m1-components-weeks-1-2"><strong>Phase 1: Core M1 Components (Weeks 1-2)</strong><a class="headerlink" href="#phase-1-core-m1-components-weeks-1-2" title="Permanent link">&para;</a></h3>
+<h4 id="11-workflow-engine-testing"><strong>1.1 Workflow Engine Testing</strong><a class="headerlink" href="#11-workflow-engine-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/unit/test_workflow_engine.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestWorkflowExecutor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_linear_workflow_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test basic linear workflow execution.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_workflow_error_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test workflow error handling and recovery.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_workflow_timeout_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test workflow timeout scenarios.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_workflow_retry_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test workflow retry mechanisms.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h4 id="12-plugin-loader-testing"><strong>1.2 Plugin Loader Testing</strong><a class="headerlink" href="#12-plugin-loader-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/unit/test_plugin_loader.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPluginLoader</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_discovery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin discovery mechanism.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_loading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin loading and initialization.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin execution in sandbox.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_security_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin security validation.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h4 id="13-findings-system-testing"><strong>1.3 Findings System Testing</strong><a class="headerlink" href="#13-findings-system-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/unit/test_findings.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestFindingsSystem</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_finding_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test finding object creation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_finding_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test finding data validation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_finding_serialization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test finding serialization/deserialization.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_finding_aggregation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test finding aggregation logic.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="phase-2-security-components-weeks-3-4"><strong>Phase 2: Security Components (Weeks 3-4)</strong><a class="headerlink" href="#phase-2-security-components-weeks-3-4" title="Permanent link">&para;</a></h3>
+<h4 id="21-signature-verification-testing"><strong>2.1 Signature Verification Testing</strong><a class="headerlink" href="#21-signature-verification-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/unit/test_security_signing.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPluginSigning</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_key_generation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test cryptographic key generation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin signing process.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_signature_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test signature verification.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_tamper_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test tamper detection.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h4 id="22-sandbox-testing"><strong>2.2 Sandbox Testing</strong><a class="headerlink" href="#22-sandbox-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/unit/test_security_sandbox.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPluginSandbox</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_resource_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test resource limit enforcement.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_process_isolation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test process isolation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_network_restrictions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test network access restrictions.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_filesystem_restrictions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test filesystem access restrictions.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="phase-3-api-web-components-weeks-5-6"><strong>Phase 3: API &amp; Web Components (Weeks 5-6)</strong><a class="headerlink" href="#phase-3-api-web-components-weeks-5-6" title="Permanent link">&para;</a></h3>
+<h4 id="31-api-endpoint-testing"><strong>3.1 API Endpoint Testing</strong><a class="headerlink" href="#31-api-endpoint-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/integration/test_api_endpoints.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestAPIEndpoints</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_workflow_execution_api</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test workflow execution API.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_management_api</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin management API.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_findings_api</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test findings API endpoints.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_security_api</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test security-related API endpoints.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h4 id="32-storage-layer-testing"><strong>3.2 Storage Layer Testing</strong><a class="headerlink" href="#32-storage-layer-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/unit/test_storage.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestStorageLayer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data_persistence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test data persistence operations.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data_retrieval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test data retrieval operations.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test data validation in storage.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_storage_adapter_switching</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test storage adapter switching.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="phase-4-integration-e2e-testing-weeks-7-8"><strong>Phase 4: Integration &amp; E2E Testing (Weeks 7-8)</strong><a class="headerlink" href="#phase-4-integration-e2e-testing-weeks-7-8" title="Permanent link">&para;</a></h3>
+<h4 id="41-end-to-end-workflow-testing"><strong>4.1 End-to-End Workflow Testing</strong><a class="headerlink" href="#41-end-to-end-workflow-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/integration/test_e2e_workflows.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestE2EWorkflows</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_scanning_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test complete scanning workflow.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_discovery_to_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test plugin discovery to execution flow.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_findings_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test findings processing pipeline.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_security_enforcement_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test security enforcement workflow.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h2 id="coverage-tracking-strategy">📈 <strong>Coverage Tracking Strategy</strong><a class="headerlink" href="#coverage-tracking-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="coverage-dashboard-setup"><strong>Coverage Dashboard Setup</strong><a class="headerlink" href="#coverage-dashboard-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/coverage_dashboard.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_coverage_report</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate detailed coverage report.&quot;&quot;&quot;</span>
+    <span class="c1"># Run coverage analysis</span>
+    <span class="c1"># Generate HTML report</span>
+    <span class="c1"># Track progress against targets</span>
+    <span class="c1"># Identify coverage gaps</span>
+</code></pre></div>
+<h3 id="coverage-ratchet-configuration"><strong>Coverage Ratchet Configuration</strong><a class="headerlink" href="#coverage-ratchet-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/coverage_ratchet.py</span>
+<span class="n">MILESTONE_TARGETS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;M0&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>    <span class="c1"># Current baseline</span>
+    <span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>    <span class="c1"># Target for M1</span>
+    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="mi">85</span><span class="p">,</span>    <span class="c1"># Future target</span>
+    <span class="s2">&quot;M3&quot;</span><span class="p">:</span> <span class="mi">90</span>     <span class="c1"># Future target</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="ci-integration"><strong>CI Integration</strong><a class="headerlink" href="#ci-integration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/coverage.yml</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coverage Analysis</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">pytest --cov=. --cov-report=xml --cov-report=html</span>
+<span class="w">    </span><span class="no">python scripts/coverage_ratchet.py</span>
+<span class="w">    </span><span class="no">python scripts/coverage_dashboard.py</span>
+</code></pre></div>
+<h2 id="coverage-targets-by-module">🎯 <strong>Coverage Targets by Module</strong><a class="headerlink" href="#coverage-targets-by-module" title="Permanent link">&para;</a></h2>
+<h3 id="m1-critical-path-modules-80-target"><strong>M1 Critical Path Modules (80%+ target)</strong><a class="headerlink" href="#m1-critical-path-modules-80-target" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Workflow Engine</strong>: 89% → 95% (+6%)</li>
+<li><strong>Plugin Loader</strong>: 73% → 85% (+12%)</li>
+<li><strong>Findings System</strong>: 17% → 80% (+63%)</li>
+<li><strong>Security Signing</strong>: 32% → 80% (+48%)</li>
+<li><strong>Security Sandbox</strong>: 64% → 80% (+16%)</li>
+</ul>
+<h3 id="m1-supporting-modules-70-target"><strong>M1 Supporting Modules (70%+ target)</strong><a class="headerlink" href="#m1-supporting-modules-70-target" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Web Routes</strong>: 9% → 70% (+61%)</li>
+<li><strong>Storage Layer</strong>: 20% → 70% (+50%)</li>
+<li><strong>Runtime Core</strong>: 67% → 75% (+8%)</li>
+<li><strong>Analytics</strong>: 76% → 80% (+4%)</li>
+</ul>
+<h3 id="m1-infrastructure-modules-60-target"><strong>M1 Infrastructure Modules (60%+ target)</strong><a class="headerlink" href="#m1-infrastructure-modules-60-target" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Observability</strong>: 71% → 75% (+4%)</li>
+<li><strong>Utilities</strong>: 62% → 70% (+8%)</li>
+<li><strong>Configuration</strong>: 49% → 60% (+11%)</li>
+</ul>
+<h2 id="coverage-progress-tracking">📊 <strong>Coverage Progress Tracking</strong><a class="headerlink" href="#coverage-progress-tracking" title="Permanent link">&para;</a></h2>
+<h3 id="weekly-coverage-goals"><strong>Weekly Coverage Goals</strong><a class="headerlink" href="#weekly-coverage-goals" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Week 1</strong>: 28% → 40% (+12%)</li>
+<li><strong>Week 2</strong>: 40% → 55% (+15%)</li>
+<li><strong>Week 3</strong>: 55% → 65% (+10%)</li>
+<li><strong>Week 4</strong>: 65% → 72% (+7%)</li>
+<li><strong>Week 5</strong>: 72% → 76% (+4%)</li>
+<li><strong>Week 6</strong>: 76% → 78% (+2%)</li>
+<li><strong>Week 7</strong>: 78% → 79% (+1%)</li>
+<li><strong>Week 8</strong>: 79% → 80% (+1%)</li>
+</ul>
+<h3 id="coverage-metrics-dashboard"><strong>Coverage Metrics Dashboard</strong><a class="headerlink" href="#coverage-metrics-dashboard" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Coverage tracking metrics</span>
+<span class="n">coverage_metrics</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;total_statements&quot;</span><span class="p">:</span> <span class="mi">14009</span><span class="p">,</span>
+    <span class="s2">&quot;covered_statements&quot;</span><span class="p">:</span> <span class="mi">3896</span><span class="p">,</span>
+    <span class="s2">&quot;current_coverage&quot;</span><span class="p">:</span> <span class="mf">28.0</span><span class="p">,</span>
+    <span class="s2">&quot;target_coverage&quot;</span><span class="p">:</span> <span class="mf">80.0</span><span class="p">,</span>
+    <span class="s2">&quot;coverage_gap&quot;</span><span class="p">:</span> <span class="mi">7311</span><span class="p">,</span>
+    <span class="s2">&quot;progress_percentage&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="testing-tools-infrastructure">🛠️ <strong>Testing Tools &amp; Infrastructure</strong><a class="headerlink" href="#testing-tools-infrastructure" title="Permanent link">&para;</a></h2>
+<h3 id="test-framework-enhancements"><strong>Test Framework Enhancements</strong><a class="headerlink" href="#test-framework-enhancements" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># pytest.ini</span>
+<span class="p">[</span><span class="n">tool</span><span class="p">:</span><span class="n">pytest</span><span class="p">]</span>
+<span class="n">markers</span> <span class="o">=</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="n">Unit</span> <span class="n">tests</span>
+    <span class="n">integration</span><span class="p">:</span> <span class="n">Integration</span> <span class="n">tests</span>
+    <span class="n">e2e</span><span class="p">:</span> <span class="n">End</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">end</span> <span class="n">tests</span>
+    <span class="n">slow</span><span class="p">:</span> <span class="n">Slow</span> <span class="n">running</span> <span class="n">tests</span>
+    <span class="n">security</span><span class="p">:</span> <span class="n">Security</span><span class="o">-</span><span class="n">related</span> <span class="n">tests</span>
+    <span class="n">workflow</span><span class="p">:</span> <span class="n">Workflow</span> <span class="n">engine</span> <span class="n">tests</span>
+    <span class="n">plugin</span><span class="p">:</span> <span class="n">Plugin</span> <span class="n">system</span> <span class="n">tests</span>
+</code></pre></div>
+<h3 id="test-data-management"><strong>Test Data Management</strong><a class="headerlink" href="#test-data-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/fixtures/test_data.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestDataFixtures</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_sample_findings</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create sample findings for testing.&quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_sample_workflows</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create sample workflows for testing.&quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_sample_plugins</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create sample plugins for testing.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="mock-and-stub-management"><strong>Mock and Stub Management</strong><a class="headerlink" href="#mock-and-stub-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/mocks/plugin_mocks.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockPlugin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock plugin for testing.&quot;&quot;&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MockWorkflow</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock workflow for testing.&quot;&quot;&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MockStorage</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock storage for testing.&quot;&quot;&quot;</span>
+</code></pre></div>
+<h2 id="implementation-timeline">🚀 <strong>Implementation Timeline</strong><a class="headerlink" href="#implementation-timeline" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-2-core-components"><strong>Week 1-2: Core Components</strong><a class="headerlink" href="#week-1-2-core-components" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Workflow engine testing (95% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Plugin loader testing (85% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Findings system testing (80% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Coverage tracking setup</li>
+</ul>
+<h3 id="week-3-4-security-components"><strong>Week 3-4: Security Components</strong><a class="headerlink" href="#week-3-4-security-components" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Signature verification testing (80% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Sandbox testing (80% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Security integration testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Coverage dashboard implementation</li>
+</ul>
+<h3 id="week-5-6-api-storage"><strong>Week 5-6: API &amp; Storage</strong><a class="headerlink" href="#week-5-6-api-storage" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> API endpoint testing (70% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Storage layer testing (70% target)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration testing framework</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Coverage ratchet enforcement</li>
+</ul>
+<h3 id="week-7-8-integration-e2e"><strong>Week 7-8: Integration &amp; E2E</strong><a class="headerlink" href="#week-7-8-integration-e2e" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> End-to-end workflow testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Complete system integration testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Final coverage validation (80% target)</li>
+</ul>
+<h2 id="success-criteria">📋 <strong>Success Criteria</strong><a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="coverage-targets"><strong>Coverage Targets</strong><a class="headerlink" href="#coverage-targets" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Overall Coverage</strong>: 80% (11,207/14,009 statements)</li>
+<li><strong>Critical Path Coverage</strong>: 85%+ (workflow, plugin, findings)</li>
+<li><strong>Security Coverage</strong>: 80%+ (signing, sandbox)</li>
+<li><strong>API Coverage</strong>: 70%+ (web routes, endpoints)</li>
+</ul>
+<h3 id="quality-gates"><strong>Quality Gates</strong><a class="headerlink" href="#quality-gates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>All Tests Passing</strong>: 100% test success rate</li>
+<li><strong>Coverage Ratchet</strong>: No decrease in coverage</li>
+<li><strong>CI Integration</strong>: Coverage reporting in CI</li>
+<li><strong>Documentation</strong>: Test coverage documentation</li>
+</ul>
+<h3 id="m1-deliverables"><strong>M1 Deliverables</strong><a class="headerlink" href="#m1-deliverables" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> 80% test coverage achieved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Coverage tracking dashboard</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Comprehensive test suite</li>
+<li class="task-list-item"><input type="checkbox" disabled/> CI coverage integration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test documentation</li>
+</ul>
+<hr />
+<p><strong>M1 Test Coverage Plan</strong>: Comprehensive strategy to achieve 80% coverage target through systematic testing of critical M1 components.</p>
+<p><em>Plan created by DevEx Lead - 2025-10-15</em></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

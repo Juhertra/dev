@@ -1,0 +1,15 @@
+name: Journals Lint
+on:
+  pull_request:
+    paths:
+      - "control/journal/**/*.ndjson"
+      - "control/config/shared_state.yaml"
+      - "tools/verify_journals.py"
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: python tools/verify_journals.py

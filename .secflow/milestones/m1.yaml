@@ -1,0 +1,155 @@
+# M1 Milestone Policy - Machine Readable Configuration
+# Generated: 2025-10-16 (UTC)
+# Coordinator: M1 Policy Enforcement
+
+ci:
+  required_checks: 7
+  forbid_deprecated_actions: true
+  artifact_version: v4
+  owners: ["@devex-lead", "@devops-lead"]
+  checks:
+    - ruff
+    - pyright
+    - imports
+    - unit
+    - coverage
+    - contracts
+    - docs-health
+
+coverage:
+  current_snapshot: 27.8
+  target: 80.0
+  fail_under: 30.0
+  owners: ["@devex-lead", "@qa-lead"]
+  config_file: ".coveragerc"
+  pytest_args: "--cov=packages --cov=secflow --cov=app --cov=core --cov-branch"
+
+design_reviews:
+  - topic: "Workflow↔Plugin Interface"
+    due: "2025-10-17"
+    owners: ["@workflow-lead", "@runtime-lead", "@tools-lead"]
+    deliverables:
+      - "Interface specification"
+      - "Error handling protocol"
+      - "State management schema"
+      - "Integration tests"
+  - topic: "Security Integration"
+    due: "2025-10-18"
+    owners: ["@security-lead", "@tools-lead", "@runtime-lead"]
+    deliverables:
+      - "Security architecture"
+      - "Policy enforcement points"
+      - "Audit schema"
+      - "Trust model"
+  - topic: "Observability Integration"
+    due: "2025-10-19"
+    owners: ["@observability-lead", "@workflow-lead", "@runtime-lead"]
+    deliverables:
+      - "Metrics schema"
+      - "Monitoring points"
+      - "Dashboard requirements"
+      - "Alerting rules"
+
+security:
+  plugin_signature_required: true
+  sandbox_required: true
+  audit_logging_required: true
+  owners: ["@security-lead"]
+
+extensibility:
+  plugin_registry_required: true
+  dynamic_loading_required: true
+  standardized_interface_required: true
+  owners: ["@tools-lead"]
+
+exit_criteria:
+  - "CI green (7/7 checks passing)"
+  - "Coverage ≥ 80%"
+  - "3/3 design reviews documented"
+  - "At least 1 E2E workflow demo"
+  - "Security audit passes (0 High, 0 Critical)"
+  - "Documentation updated"
+
+milestone_timeline:
+  week_1:
+    goals:
+      - "Complete all 3 design review sessions"
+      - "Document interface specifications"
+      - "Begin FEAT-041 (Plugin Loader) implementation"
+      - "Begin FEAT-044 (Execution Engine) implementation"
+      - "Begin FEAT-056 (Coverage) improvement"
+    success_criteria:
+      - "All design reviews completed with documented decisions"
+      - "Foundation issues in development"
+      - "CI pipeline stable"
+  week_2:
+    goals:
+      - "Complete FEAT-041 (Plugin Loader)"
+      - "Complete FEAT-044 (Execution Engine)"
+      - "Begin FEAT-050 (Signature Verification)"
+      - "Begin FEAT-051 (Sandbox Environment)"
+      - "Begin FEAT-047 (Orchestration)"
+    success_criteria:
+      - "Plugin loader functional with security validation"
+      - "Execution engine running sequential workflows"
+      - "Integration issues unblocked"
+  week_3:
+    goals:
+      - "Complete FEAT-047 (Orchestration)"
+      - "Complete FEAT-053 (Metrics Collection)"
+      - "Complete FEAT-054 (Performance Monitoring)"
+      - "End-to-end testing"
+      - "Coverage improvement to 80%"
+    success_criteria:
+      - "All M1 components integrated"
+      - "End-to-end workflows functional"
+      - "80% test coverage achieved"
+  week_4:
+    goals:
+      - "Performance optimization"
+      - "Documentation completion"
+      - "M1 validation"
+      - "M2 planning"
+    success_criteria:
+      - "All M1 success criteria met"
+      - "Documentation updated"
+      - "M2 roadmap established"
+
+dependency_flow:
+  phase_1_foundation:
+    - "FEAT-041 (Plugin Loader) → FEAT-050 (Signature Verification)"
+    - "FEAT-041 (Plugin Loader) → FEAT-051 (Sandbox Environment)"
+    - "FEAT-044 (Execution Engine) → FEAT-047 (Orchestration)"
+    - "FEAT-044 (Execution Engine) → FEAT-053 (Metrics Collection)"
+    - "FEAT-056 (Coverage) → Independent"
+  phase_2_integration:
+    - "FEAT-047 (Orchestration) → FEAT-054 (Performance Monitoring)"
+    - "All components → End-to-end testing"
+  phase_3_polish:
+    - "Integration testing → Performance optimization → Documentation"
+
+quality_gates:
+  ci_stability:
+    required: true
+    threshold: "7/7 checks passing"
+    owners: ["@devops-lead"]
+  coverage:
+    required: true
+    threshold: "≥80%"
+    current: 27.8
+    owners: ["@qa-lead"]
+  security:
+    required: true
+    threshold: "0 High, 0 Critical findings"
+    owners: ["@security-lead"]
+  documentation:
+    required: true
+    threshold: "All M1 features documented"
+    owners: ["@devex-lead"]
+
+enforcement:
+  merge_train: true
+  coordinator_approval: true
+  design_review_gates: true
+  quality_gates: true
+  no_red_rule: true

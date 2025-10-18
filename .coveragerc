@@ -1,0 +1,15 @@
+[run]
+source =
+    packages
+    secflow
+    app
+    core
+branch = True
+omit =
+    */__init__.py
+    */tests/*
+    */migrations/*
+    */.venv/*
+[report]
+fail_under = 30
+show_missing = True

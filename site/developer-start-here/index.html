@@ -59,6 +59,9 @@
 </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a href="../security/" class="nav-link">Security</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
                                 <ul class="dropdown-menu">
@@ -256,7 +259,43 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#quick-tutorial-running-your-first-workflow" class="nav-link">Quick Tutorial: Running Your First Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-development-guide" class="nav-link">Plugin Development Guide</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#workflow-development" class="nav-link">Workflow Development</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#storage-integration" class="nav-link">Storage Integration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#testing" class="nav-link">Testing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#observability-debugging" class="nav-link">Observability &amp; Debugging</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#next-steps" class="nav-link">Next Steps</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resources" class="nav-link">Resources</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#next-steps_1" class="nav-link">Next Steps</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -288,12 +327,423 @@
 <p>This page covers daily development workflows, SOD/EOD rituals, branch naming conventions, PR rules, and CI fast-fail order that every developer needs to follow.</p>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Python 3.11+</strong> (3.14 compatibility under testing)</li>
+<li><strong>Poetry</strong> for dependency management</li>
+<li><strong>Git</strong> for version control</li>
+<li><strong>Docker</strong> (optional, for containerized testing)</li>
+</ul>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/secflow.git
+<span class="nb">cd</span><span class="w"> </span>secflow
+
+<span class="c1"># Install dependencies</span>
+poetry<span class="w"> </span>install<span class="w"> </span>--no-root
+
+<span class="c1"># Verify installation</span>
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import secflow; print(&#39;SecFlow installed successfully&#39;)&quot;</span>
+</code></pre></div>
+<h3 id="m1-features-overview">M1 Features Overview<a class="headerlink" href="#m1-features-overview" title="Permanent link">&para;</a></h3>
+<p><strong>M1 Implementation Status</strong>: ✅ <strong>Complete</strong> - Plugin system, workflow engine, and storage framework delivered.</p>
+<h4 id="plugin-system">Plugin System<a class="headerlink" href="#plugin-system" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Plugin Loader</strong>: Dynamic plugin discovery and loading</li>
+<li><strong>Security Framework</strong>: Signature verification and sandboxing</li>
+<li><strong>Stub Implementations</strong>: CVEMapper, FeroxStub, NucleiStub plugins</li>
+<li><strong>StoragePort Integration</strong>: Findings persistence via StoragePort</li>
+</ul>
+<h4 id="workflow-engine">Workflow Engine<a class="headerlink" href="#workflow-engine" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Sequential Execution</strong>: Nodes execute in topological order</li>
+<li><strong>YAML Recipes</strong>: Declarative workflow definition</li>
+<li><strong>Retry Logic</strong>: Configurable retry with exponential backoff</li>
+<li><strong>Timeout Handling</strong>: Per-node timeout enforcement</li>
+</ul>
+<h4 id="storage-framework">Storage Framework<a class="headerlink" href="#storage-framework" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>StoragePort Interface</strong>: Protocol-based storage abstraction</li>
+<li><strong>In-Memory Adapter</strong>: Thread-safe in-memory storage</li>
+<li><strong>Finding Schema</strong>: JSON Schema validation (v1.0.0)</li>
+<li><strong>Project Isolation</strong>: Separate storage per project</li>
+</ul>
+<h2 id="quick-tutorial-running-your-first-workflow">Quick Tutorial: Running Your First Workflow<a class="headerlink" href="#quick-tutorial-running-your-first-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="1-validate-a-workflow-recipe">1. Validate a Workflow Recipe<a class="headerlink" href="#1-validate-a-workflow-recipe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Validate the sample workflow</span>
+python<span class="w"> </span>tools/validate_recipe.py<span class="w"> </span>workflows/sample-linear.yaml
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># ✅ YAML syntax valid: workflows/sample-linear.yaml</span>
+<span class="c1"># ✅ Schema validation passed: Linear Security Scan</span>
+<span class="c1"># ✅ DAG validation passed: 3 nodes</span>
+<span class="c1"># ✅ RecipeValidator validation passed</span>
+<span class="c1"># 🎯 Recipe validation successful: Linear Security Scan</span>
+</code></pre></div>
+<h3 id="2-execute-a-workflow-dry-run">2. Execute a Workflow (Dry Run)<a class="headerlink" href="#2-execute-a-workflow-dry-run" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dry-run the workflow (analyze without execution)</span>
+python<span class="w"> </span>tools/run_workflow.py<span class="w"> </span>workflows/sample-linear.yaml<span class="w"> </span>--dry-run
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># 🔍 DRY RUN: Linear Security Scan</span>
+<span class="c1"># 📝 Description: Simple linear workflow: discovery → scan → enrichment</span>
+<span class="c1"># 📊 Nodes: 3</span>
+<span class="c1">#   1. discovery (discovery.ferox)</span>
+<span class="c1">#   2. scan (scan.nuclei)</span>
+<span class="c1">#   3. enrich (enrich.cve)</span>
+<span class="c1"># ✅ Dry run completed - no actual execution performed</span>
+</code></pre></div>
+<h3 id="3-execute-a-workflow-actual-execution">3. Execute a Workflow (Actual Execution)<a class="headerlink" href="#3-execute-a-workflow-actual-execution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Execute the workflow with M1 stub implementations</span>
+python<span class="w"> </span>tools/run_workflow.py<span class="w"> </span>workflows/sample-linear.yaml<span class="w"> </span>--execute
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># 🚀 EXECUTING: Linear Security Scan</span>
+<span class="c1"># [2025-10-14 12:01:02] Workflow started</span>
+<span class="c1"># [2025-10-14 12:01:05] Node discovery.ferox completed (urls=356)</span>
+<span class="c1"># [2025-10-14 12:01:07] Node scan.nuclei completed (findings=112)</span>
+<span class="c1"># [2025-10-14 12:01:10] Node enrich.cve completed (enriched_findings=112)</span>
+<span class="c1"># [2025-10-14 12:01:10] Workflow completed successfully</span>
+</code></pre></div>
+<h3 id="4-view-results">4. View Results<a class="headerlink" href="#4-view-results" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check findings stored via StoragePort</span>
+python<span class="w"> </span>tools/list_findings.py<span class="w"> </span>--project-id<span class="w"> </span>sample-project
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># 📊 Findings for project: sample-project</span>
+<span class="c1"># Total findings: 112</span>
+<span class="c1"># By severity:</span>
+<span class="c1">#   - Critical: 5</span>
+<span class="c1">#   - High: 23</span>
+<span class="c1">#   - Medium: 45</span>
+<span class="c1">#   - Low: 32</span>
+<span class="c1">#   - Info: 7</span>
+</code></pre></div>
+<h2 id="plugin-development-guide">Plugin Development Guide<a class="headerlink" href="#plugin-development-guide" title="Permanent link">&para;</a></h2>
+<h3 id="creating-a-new-plugin">Creating a New Plugin<a class="headerlink" href="#creating-a-new-plugin" title="Permanent link">&para;</a></h3>
+<h4 id="1-plugin-structure">1. Plugin Structure<a class="headerlink" href="#1-plugin-structure" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># packages/plugins/stubs/my_plugin.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.plugins.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginInterface</span><span class="p">,</span> <span class="n">PluginMetadata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.runtime_core.storage.storage_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoragePort</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyPlugin</span><span class="p">(</span><span class="n">PluginInterface</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Example plugin implementation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;my-plugin&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;1.0.0&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PluginMetadata</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">PluginMetadata</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-plugin&quot;</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Example plugin for SecFlow&quot;</span><span class="p">,</span>
+            <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Your Name&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;detector&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;enricher&quot; or &quot;analytics&quot;</span>
+            <span class="n">entrypoint</span><span class="o">=</span><span class="s2">&quot;packages.plugins.stubs.my_plugin:MyPlugin&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
+            <span class="n">context</span><span class="p">:</span> <span class="n">ExecutionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute plugin logic.&quot;&quot;&quot;</span>
+        <span class="c1"># Your plugin logic here</span>
+        <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Process inputs and generate findings</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">finding</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;finding_schema_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">generate_uuid</span><span class="p">(),</span>
+                <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">project_id</span><span class="p">,</span>
+                <span class="s2">&quot;detector_id&quot;</span><span class="p">:</span> <span class="s2">&quot;my-plugin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Example finding&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;severity&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;resource&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;evidence&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;raw_data&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">},</span>
+                <span class="s2">&quot;created_at&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;Z&quot;</span>
+            <span class="p">}</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finding</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;findings&quot;</span><span class="p">:</span> <span class="n">findings</span><span class="p">}</span>
+</code></pre></div>
+<h4 id="2-plugin-manifest">2. Plugin Manifest<a class="headerlink" href="#2-plugin-manifest" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-plugin&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example plugin for SecFlow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Your Name&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;detector&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;entrypoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;packages.plugins.stubs.my_plugin:MyPlugin&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;requests&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;config_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;code_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:abc123...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:def456...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-10-14T10:00:00Z&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="3-plugin-registration">3. Plugin Registration<a class="headerlink" href="#3-plugin-registration" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># packages/plugins/registry.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.plugins.stubs.my_plugin</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyPlugin</span>
+
+<span class="c1"># Register your plugin</span>
+<span class="n">PluginRegistry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;my-plugin&quot;</span><span class="p">,</span> <span class="n">MyPlugin</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="plugin-security">Plugin Security<a class="headerlink" href="#plugin-security" title="Permanent link">&para;</a></h3>
+<h4 id="signature-verification-m1">Signature Verification (M1)<a class="headerlink" href="#signature-verification-m1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># M1: Basic hash-based verification</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_plugin_signature</span><span class="p">(</span><span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify plugin signature using SHA256 hash.&quot;&quot;&quot;</span>
+    <span class="n">expected_hash</span> <span class="o">=</span> <span class="n">manifest</span><span class="o">.</span><span class="n">code_hash</span>
+    <span class="n">actual_hash</span> <span class="o">=</span> <span class="n">calculate_file_hash</span><span class="p">(</span><span class="n">plugin_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">expected_hash</span> <span class="o">==</span> <span class="n">actual_hash</span>
+
+<span class="c1"># M2+: Full cryptographic verification (planned)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_plugin_signature_crypto</span><span class="p">(</span><span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify plugin signature using RSA/ECDSA.&quot;&quot;&quot;</span>
+    <span class="c1"># Implementation planned for M2</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h4 id="sandbox-execution">Sandbox Execution<a class="headerlink" href="#sandbox-execution" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Plugin execution in sandboxed environment</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_plugin_secure</span><span class="p">(</span><span class="n">plugin</span><span class="p">:</span> <span class="n">PluginInterface</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute plugin in sandboxed environment.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">sandbox_context</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">plugin</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="workflow-development">Workflow Development<a class="headerlink" href="#workflow-development" title="Permanent link">&para;</a></h2>
+<h3 id="yaml-recipe-format">YAML Recipe Format<a class="headerlink" href="#yaml-recipe-format" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">Custom</span><span class="nv"> </span><span class="s">Workflow&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Custom</span><span class="nv"> </span><span class="s">workflow</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">testing&quot;</span>
+
+<span class="nt">nodes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;discovery&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;discovery.ferox&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wordlist</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;res://wordlists/custom:latest&quot;</span>
+<span class="w">      </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;scan&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;scan.nuclei&quot;</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">templates</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;res://templates/custom:latest&quot;</span>
+<span class="w">      </span><span class="nt">rate_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enrich&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enrich.cve&quot;</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">sources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;nvd&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;osv&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;enriched_findings&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="c1"># Retry configuration</span>
+<span class="nt">retry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_attempts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">backoff_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">base_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+
+<span class="c1"># State management</span>
+<span class="nt">state</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">checkpoint_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">resume_on_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">cache_intermediate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="programmatic-workflow-execution">Programmatic Workflow Execution<a class="headerlink" href="#programmatic-workflow-execution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">packages.workflow_engine.executor</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowExecutor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.workflow_engine.validate_recipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecipeValidator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.storage.adapters.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryStorageAdapter</span>
+
+<span class="c1"># Validate recipe</span>
+<span class="n">validator</span> <span class="o">=</span> <span class="n">RecipeValidator</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate_file</span><span class="p">(</span><span class="s2">&quot;my-workflow.yaml&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;ok&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Execute workflow</span>
+<span class="n">storage</span> <span class="o">=</span> <span class="n">InMemoryStorageAdapter</span><span class="p">()</span>
+<span class="n">executor</span> <span class="o">=</span> <span class="n">WorkflowExecutor</span><span class="p">(</span><span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">)</span>
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">load_workflow_from_yaml</span><span class="p">(</span><span class="s2">&quot;my-workflow.yaml&quot;</span><span class="p">)</span>
+<span class="n">execution_result</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">execute_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Workflow status: </span><span class="si">{</span><span class="n">execution_result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed nodes: </span><span class="si">{</span><span class="n">execution_result</span><span class="p">[</span><span class="s1">&#39;completed_nodes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="storage-integration">Storage Integration<a class="headerlink" href="#storage-integration" title="Permanent link">&para;</a></h2>
+<h3 id="using-storageport">Using StoragePort<a class="headerlink" href="#using-storageport" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">packages.runtime_core.storage.storage_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoragePort</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.storage.adapters.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryStorageAdapter</span>
+
+<span class="c1"># Initialize storage</span>
+<span class="n">storage</span><span class="p">:</span> <span class="n">StoragePort</span> <span class="o">=</span> <span class="n">InMemoryStorageAdapter</span><span class="p">()</span>
+
+<span class="c1"># Save a finding</span>
+<span class="n">finding</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;finding_schema_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;uuid-here&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="s2">&quot;project-123&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detector_id&quot;</span><span class="p">:</span> <span class="s2">&quot;scan.nuclei&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;SQL Injection Vulnerability&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;severity&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resource&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/login&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;evidence&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;payload&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&#39; OR &#39;1&#39;=&#39;1&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-10-14T10:30:00Z&quot;</span>
+<span class="p">}</span>
+
+<span class="n">storage</span><span class="o">.</span><span class="n">save_finding</span><span class="p">(</span><span class="n">finding</span><span class="p">)</span>
+
+<span class="c1"># List findings</span>
+<span class="n">findings</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">list_findings</span><span class="p">(</span><span class="s2">&quot;project-123&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">findings</span><span class="p">)</span><span class="si">}</span><span class="s2"> findings&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="finding-schema-compliance">Finding Schema Compliance<a class="headerlink" href="#finding-schema-compliance" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># All findings must include these required fields:</span>
+<span class="n">required_fields</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;finding_schema_version&quot;</span><span class="p">,</span>  <span class="c1"># Must be &quot;1.0.0&quot;</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">,</span>                     <span class="c1"># UUID format</span>
+    <span class="s2">&quot;project_id&quot;</span><span class="p">,</span>             <span class="c1"># UUID format</span>
+    <span class="s2">&quot;detector_id&quot;</span><span class="p">,</span>            <span class="c1"># Pattern: ^[A-Za-z0-9_.-]+$</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">,</span>                  <span class="c1"># Non-empty string</span>
+    <span class="s2">&quot;severity&quot;</span><span class="p">,</span>               <span class="c1"># Enum: info, low, medium, high, critical</span>
+    <span class="s2">&quot;resource&quot;</span><span class="p">,</span>               <span class="c1"># String (URL or identifier)</span>
+    <span class="s2">&quot;created_at&quot;</span>              <span class="c1"># ISO 8601 timestamp with Z suffix</span>
+<span class="p">]</span>
+
+<span class="c1"># Optional fields:</span>
+<span class="n">optional_fields</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;evidence&quot;</span><span class="p">,</span>               <span class="c1"># Object with additional properties</span>
+    <span class="s2">&quot;cwe&quot;</span><span class="p">,</span>                    <span class="c1"># Integer (CWE ID)</span>
+    <span class="s2">&quot;owasp&quot;</span><span class="p">,</span>                  <span class="c1"># Pattern: ^A\d{2}$ (OWASP Top 10)</span>
+    <span class="s2">&quot;cve_ids&quot;</span><span class="p">,</span>                <span class="c1"># Array of CVE identifiers</span>
+    <span class="s2">&quot;enrichment&quot;</span>              <span class="c1"># Object with enrichment data</span>
+<span class="p">]</span>
+</code></pre></div>
+<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
+<h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
+make<span class="w"> </span><span class="nb">test</span>
+
+<span class="c1"># Run quick tests (unit tests only)</span>
+make<span class="w"> </span>quick-test
+
+<span class="c1"># Run specific test file</span>
+pytest<span class="w"> </span>tests/workflow/test_workflow_executor.py<span class="w"> </span>-v
+
+<span class="c1"># Run with coverage</span>
+pytest<span class="w"> </span>--cov<span class="o">=</span>packages<span class="w"> </span>tests/
+</code></pre></div>
+<h3 id="test-structure">Test Structure<a class="headerlink" href="#test-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>tests/
+├── unit/                    # Unit tests
+│   ├── test_plugin_loader.py
+│   ├── test_workflow_executor.py
+│   └── test_storage_adapter.py
+├── integration/             # Integration tests
+│   ├── test_workflow_execution.py
+│   └── test_plugin_integration.py
+├── contracts/               # Contract tests
+│   ├── test_storage_port.py
+│   └── test_finding_schema.py
+└── golden_samples/          # Test data
+    ├── ferox_output.json
+    ├── nuclei_output.json
+    └── cve_data.json
+</code></pre></div>
+<h2 id="observability-debugging">Observability &amp; Debugging<a class="headerlink" href="#observability-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="c1"># Enable debug logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="c1"># Plugin execution logs</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plugin </span><span class="si">{</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2"> executed successfully&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plugin </span><span class="si">{</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="metrics-collection">Metrics Collection<a class="headerlink" href="#metrics-collection" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># M1: In-memory metrics collection</span>
+<span class="c1"># M5: Prometheus metrics (planned)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_plugin_metrics</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect plugin execution metrics.&quot;&quot;&quot;</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;plugin_name&quot;</span><span class="p">:</span> <span class="n">plugin_name</span><span class="p">,</span>
+        <span class="s2">&quot;duration_ms&quot;</span><span class="p">:</span> <span class="n">duration</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;Z&quot;</span>
+    <span class="p">}</span>
+    <span class="c1"># Store metrics via StoragePort</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">save_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="debug-mode">Debug Mode<a class="headerlink" href="#debug-mode" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Enable verbose logging</span>
+python<span class="w"> </span>tools/run_workflow.py<span class="w"> </span>workflows/sample-linear.yaml<span class="w"> </span>--execute<span class="w"> </span>--verbose
+
+<span class="c1"># Debug plugin loading</span>
+python<span class="w"> </span>tools/validate_recipe.py<span class="w"> </span>workflows/sample-linear.yaml<span class="w"> </span>--debug
+</code></pre></div>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Import Errors</strong>: Ensure <code>packages/</code> is in Python path</li>
+<li><strong>Validation Failures</strong>: Check YAML syntax and required fields</li>
+<li><strong>Execution Failures</strong>: Verify node types and configuration</li>
+<li><strong>Plugin Load Failures</strong>: Check plugin manifest and signature</li>
+<li><strong>Storage Errors</strong>: Verify finding schema compliance</li>
+</ol>
+<h3 id="debug-commands">Debug Commands<a class="headerlink" href="#debug-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Python path</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys; print(&#39;\n&#39;.join(sys.path))&quot;</span>
+
+<span class="c1"># Validate finding schema</span>
+python<span class="w"> </span>tools/validate_finding.py<span class="w"> </span>--file<span class="w"> </span>finding.json
+
+<span class="c1"># Check plugin registry</span>
+python<span class="w"> </span>tools/list_plugins.py
+
+<span class="c1"># Test storage adapter</span>
+python<span class="w"> </span>tools/test_storage.py<span class="w"> </span>--adapter<span class="w"> </span>memory
+</code></pre></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Read Architecture Docs</strong>: Start with <code>docs/architecture/00-index.md</code></li>
+<li><strong>Explore Examples</strong>: Check <code>workflows/sample-linear.yaml</code> and plugin stubs</li>
+<li><strong>Run Tests</strong>: Execute <code>make test</code> to verify your setup</li>
+<li><strong>Create Plugin</strong>: Follow the plugin development guide above</li>
+<li><strong>Build Workflow</strong>: Create your own YAML recipe</li>
+<li><strong>Contribute</strong>: Follow the governance guidelines for PRs</li>
+</ol>
+<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Architecture Documentation</strong>: <code>docs/architecture/</code></li>
+<li><strong>API Reference</strong>: <code>docs/api/</code> (M6: mkdocstrings integration)</li>
+<li><strong>Sample Workflows</strong>: <code>workflows/</code></li>
+<li><strong>Plugin Examples</strong>: <code>packages/plugins/stubs/</code></li>
+<li><strong>Test Examples</strong>: <code>tests/</code></li>
+</ul>
+<hr />
+<p><strong>Ready to start developing?</strong> Check out the <a href="../architecture/00-index/">Architecture Index</a> for detailed technical documentation.</p>
 <ol>
 <li><strong>Poetry</strong>: Install Poetry for dependency management</li>
 <li><strong>Git</strong>: For version control and branching</li>
 <li><strong>Make</strong>: For running build commands</li>
 </ol>
-<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<h3 id="installation_1">Installation<a class="headerlink" href="#installation_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
 git<span class="w"> </span>clone<span class="w"> </span>&lt;repository-url&gt;
 <span class="nb">cd</span><span class="w"> </span>secflow
@@ -308,7 +758,7 @@ poetry<span class="w"> </span>install<span class="w"> </span>--no-root
 <li><strong>Feature branches</strong>: Use <code>feat/...</code> prefix for new features</li>
 <li><strong>Pull Request limits</strong>: ≤400 LOC or require 2 approvals</li>
 </ul>
-<h4 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h4>
+<h4 id="testing_1">Testing<a class="headerlink" href="#testing_1" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>Full test suite</strong>: <code>make test</code></li>
 <li><strong>Quick iteration</strong>: <code>make quick-test</code> for faster feedback</li>
@@ -326,7 +776,7 @@ poetry<span class="w"> </span>install<span class="w"> </span>--no-root
 </ol>
 <h3 id="definition-of-done">Definition of Done<a class="headerlink" href="#definition-of-done" title="Permanent link">&para;</a></h3>
 <p>The DoD checklist is available in the PR template. Always paste validation evidence in your pull requests to demonstrate compliance.</p>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="next-steps_1">Next Steps<a class="headerlink" href="#next-steps_1" title="Permanent link">&para;</a></h2>
 <p>After completing the setup, explore the architecture documentation to understand the system design and begin contributing to the project.</p></div>
             </div>
         </div>

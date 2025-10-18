@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Security Controls Standards Mapping - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../" class="nav-link">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#security-controls-standards-mapping" class="nav-link">Security Controls Standards Mapping</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#standards-mapping-matrix" class="nav-link">Standards Mapping Matrix</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#detailed-standards-compliance" class="nav-link">Detailed Standards Compliance</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#compliance-assessment" class="nav-link">Compliance Assessment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#compliance-roadmap" class="nav-link">Compliance Roadmap</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#compliance-evidence" class="nav-link">Compliance Evidence</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#compliance-monitoring" class="nav-link">Compliance Monitoring</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#references" class="nav-link">References</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="security-controls-standards-mapping">Security Controls Standards Mapping<a class="headerlink" href="#security-controls-standards-mapping" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document maps SecFlow security controls to industry standards and frameworks, providing traceable compliance evidence for security assessments and audits.</p>
+<h2 id="standards-mapping-matrix">Standards Mapping Matrix<a class="headerlink" href="#standards-mapping-matrix" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control Category</th>
+<th>Control</th>
+<th>Implementation</th>
+<th>Standard</th>
+<th>Mapping</th>
+<th>Compliance Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Integrity</strong></td>
+<td>Signature Verification</td>
+<td>SHA256 hash verification</td>
+<td>NIST SP 800-57 Part 1</td>
+<td>Cryptographic Key Management</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>CA/Browser Forum BR 7.1</td>
+<td>Certificate Authority Standards</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>FIPS 140-2</td>
+<td>Cryptographic Module Validation</td>
+<td>Not Applicable</td>
+</tr>
+<tr>
+<td><strong>Runtime Environment</strong></td>
+<td>Sandbox Limits</td>
+<td>CPU/Memory constraints</td>
+<td>OWASP ASVS 4.0 14.2</td>
+<td>Runtime Environment Protection</td>
+<td>Full</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>NIST SP 800-53 SC-7</td>
+<td>Boundary Protection</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>ISO 27001 A.12.6</td>
+<td>Technical Vulnerability Management</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td><strong>Data Protection</strong></td>
+<td>Safe YAML Parsing</td>
+<td>yaml.safe_load() usage</td>
+<td>OWASP API Top 10 A8</td>
+<td>Injection</td>
+<td>Full</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>OWASP Top 10 A03</td>
+<td>Injection</td>
+<td>Full</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>NIST SP 800-53 SI-10</td>
+<td>Information Input Validation</td>
+<td>Full</td>
+</tr>
+<tr>
+<td><strong>Development</strong></td>
+<td>PR Security Checklist</td>
+<td>Security review process</td>
+<td>ISO 27001 A.14</td>
+<td>System Acquisition, Development and Maintenance</td>
+<td>Full</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>NIST SP 800-53 SA-11</td>
+<td>Developer Security Testing</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>OWASP SAMM</td>
+<td>Secure Development Lifecycle</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Audit Logging</td>
+<td>Security event logging</td>
+<td>NIST SP 800-53 AU-2</td>
+<td>Audit Events</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>ISO 27001 A.12.4</td>
+<td>Logging and Monitoring</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>SOC 2 Type II CC6.1</td>
+<td>Logical and Physical Access Controls</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td><strong>Access Control</strong></td>
+<td>Plugin Permissions</td>
+<td>Filesystem/Network restrictions</td>
+<td>NIST SP 800-53 AC-3</td>
+<td>Access Enforcement</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>ISO 27001 A.9.1</td>
+<td>Business Requirements of Access Control</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>OWASP ASVS 4.0 4.1</td>
+<td>Authentication</td>
+<td>Partial</td>
+</tr>
+</tbody>
+</table>
+<h2 id="detailed-standards-compliance">Detailed Standards Compliance<a class="headerlink" href="#detailed-standards-compliance" title="Permanent link">&para;</a></h2>
+<h3 id="nist-sp-800-53-compliance">NIST SP 800-53 Compliance<a class="headerlink" href="#nist-sp-800-53-compliance" title="Permanent link">&para;</a></h3>
+<h4 id="ac-3-access-enforcement">AC-3: Access Enforcement<a class="headerlink" href="#ac-3-access-enforcement" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Plugin permissions enforce access restrictions</li>
+<li><strong>Implementation</strong>: Filesystem allowlists, network access controls</li>
+<li><strong>Status</strong>: ✅ Implemented</li>
+<li><strong>Evidence</strong>: Plugin manifest security checklist, sandbox configuration</li>
+</ul>
+<h4 id="au-2-audit-events">AU-2: Audit Events<a class="headerlink" href="#au-2-audit-events" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Security events are logged and monitored</li>
+<li><strong>Implementation</strong>: Plugin execution logging, security event recording</li>
+<li><strong>Status</strong>: ⚠️ Partial Implementation</li>
+<li><strong>Evidence</strong>: Basic logging implemented, enhanced monitoring needed</li>
+</ul>
+<h4 id="sc-7-boundary-protection">SC-7: Boundary Protection<a class="headerlink" href="#sc-7-boundary-protection" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: System boundaries are protected</li>
+<li><strong>Implementation</strong>: Sandbox isolation, resource limits</li>
+<li><strong>Status</strong>: ⚠️ Partial Implementation</li>
+<li><strong>Evidence</strong>: Process-based sandboxing, container-based sandboxing planned</li>
+</ul>
+<h4 id="si-10-information-input-validation">SI-10: Information Input Validation<a class="headerlink" href="#si-10-information-input-validation" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Input validation prevents malicious data</li>
+<li><strong>Implementation</strong>: YAML safe loading, schema validation</li>
+<li><strong>Status</strong>: ✅ Implemented</li>
+<li><strong>Evidence</strong>: yaml.safe_load() usage, recipe validation framework</li>
+</ul>
+<h3 id="owasp-compliance">OWASP Compliance<a class="headerlink" href="#owasp-compliance" title="Permanent link">&para;</a></h3>
+<h4 id="owasp-asvs-40">OWASP ASVS 4.0<a class="headerlink" href="#owasp-asvs-40" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>14.2 Runtime Environment Protection</strong>: ✅ Implemented</li>
+<li>Sandbox execution environment</li>
+<li>Resource limits enforcement</li>
+<li>Process isolation</li>
+<li><strong>4.1 Authentication</strong>: ⚠️ Partial Implementation</li>
+<li>Plugin signature verification</li>
+<li>User authentication not implemented</li>
+</ul>
+<h4 id="owasp-api-top-10">OWASP API Top 10<a class="headerlink" href="#owasp-api-top-10" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>A8 Injection</strong>: ✅ Implemented</li>
+<li>Safe YAML parsing</li>
+<li>Input validation</li>
+<li>Schema validation</li>
+</ul>
+<h4 id="owasp-samm">OWASP SAMM<a class="headerlink" href="#owasp-samm" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Secure Development Lifecycle</strong>: ⚠️ Partial Implementation</li>
+<li>Security review process</li>
+<li>Static analysis integration</li>
+<li>Security testing framework</li>
+</ul>
+<h3 id="iso-27001-compliance">ISO 27001 Compliance<a class="headerlink" href="#iso-27001-compliance" title="Permanent link">&para;</a></h3>
+<h4 id="a91-business-requirements-of-access-control">A.9.1 Business Requirements of Access Control<a class="headerlink" href="#a91-business-requirements-of-access-control" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Access control based on business requirements</li>
+<li><strong>Implementation</strong>: Plugin permission model</li>
+<li><strong>Status</strong>: ⚠️ Partial Implementation</li>
+<li><strong>Evidence</strong>: Plugin security policy, permission validation</li>
+</ul>
+<h4 id="a124-logging-and-monitoring">A.12.4 Logging and Monitoring<a class="headerlink" href="#a124-logging-and-monitoring" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Security events are logged and monitored</li>
+<li><strong>Implementation</strong>: Audit logging, security monitoring</li>
+<li><strong>Status</strong>: ⚠️ Partial Implementation</li>
+<li><strong>Evidence</strong>: Basic logging, enhanced monitoring planned</li>
+</ul>
+<h4 id="a126-technical-vulnerability-management">A.12.6 Technical Vulnerability Management<a class="headerlink" href="#a126-technical-vulnerability-management" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Technical vulnerabilities are managed</li>
+<li><strong>Implementation</strong>: Dependency auditing, SAST scanning</li>
+<li><strong>Status</strong>: ✅ Implemented</li>
+<li><strong>Evidence</strong>: Safety dependency audit, Bandit SAST integration</li>
+</ul>
+<h4 id="a14-system-acquisition-development-and-maintenance">A.14 System Acquisition, Development and Maintenance<a class="headerlink" href="#a14-system-acquisition-development-and-maintenance" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Control</strong>: Secure development practices</li>
+<li><strong>Implementation</strong>: Security review process, PR checklist</li>
+<li><strong>Status</strong>: ✅ Implemented</li>
+<li><strong>Evidence</strong>: PR security template, security review guidelines</li>
+</ul>
+<h2 id="compliance-assessment">Compliance Assessment<a class="headerlink" href="#compliance-assessment" title="Permanent link">&para;</a></h2>
+<h3 id="current-compliance-status">Current Compliance Status<a class="headerlink" href="#current-compliance-status" title="Permanent link">&para;</a></h3>
+<h4 id="high-compliance-80-100">High Compliance (80-100%)<a class="headerlink" href="#high-compliance-80-100" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Data Protection</strong>: Safe YAML parsing, input validation</li>
+<li><strong>Development Security</strong>: PR security checklist, review process</li>
+<li><strong>Vulnerability Management</strong>: Dependency auditing, SAST scanning</li>
+</ul>
+<h4 id="medium-compliance-50-79">Medium Compliance (50-79%)<a class="headerlink" href="#medium-compliance-50-79" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Access Control</strong>: Plugin permissions, sandbox restrictions</li>
+<li><strong>Runtime Environment</strong>: Process isolation, resource limits</li>
+<li><strong>Monitoring</strong>: Basic logging, security event recording</li>
+</ul>
+<h4 id="low-compliance-0-49">Low Compliance (0-49%)<a class="headerlink" href="#low-compliance-0-49" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Cryptographic Controls</strong>: Signature verification (hash-based only)</li>
+<li><strong>Authentication</strong>: User authentication not implemented</li>
+<li><strong>Incident Response</strong>: Formal incident response procedures needed</li>
+</ul>
+<h3 id="compliance-gaps">Compliance Gaps<a class="headerlink" href="#compliance-gaps" title="Permanent link">&para;</a></h3>
+<h4 id="critical-gaps">Critical Gaps<a class="headerlink" href="#critical-gaps" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>User Authentication</strong>: No user authentication system</li>
+<li><strong>Incident Response</strong>: No formal incident response procedures</li>
+<li><strong>Cryptographic Standards</strong>: Hash-based signatures only</li>
+</ul>
+<h4 id="medium-priority-gaps">Medium Priority Gaps<a class="headerlink" href="#medium-priority-gaps" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Enhanced Monitoring</strong>: Real-time security monitoring needed</li>
+<li><strong>Container Sandboxing</strong>: Full isolation not implemented</li>
+<li><strong>Secrets Management</strong>: No formal secrets management system</li>
+</ul>
+<h4 id="low-priority-gaps">Low Priority Gaps<a class="headerlink" href="#low-priority-gaps" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Compliance Reporting</strong>: Automated compliance reporting needed</li>
+<li><strong>Security Training</strong>: Security awareness training program needed</li>
+<li><strong>Third-party Audits</strong>: External security audits not conducted</li>
+</ul>
+<h2 id="compliance-roadmap">Compliance Roadmap<a class="headerlink" href="#compliance-roadmap" title="Permanent link">&para;</a></h2>
+<h3 id="m1-current">M1 (Current)<a class="headerlink" href="#m1-current" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ Basic security controls implemented</li>
+<li>✅ Security review process established</li>
+<li>✅ Dependency auditing operational</li>
+<li>✅ SAST scanning integrated</li>
+</ul>
+<h3 id="m2-next-3-months">M2 (Next 3 months)<a class="headerlink" href="#m2-next-3-months" title="Permanent link">&para;</a></h3>
+<ul>
+<li>🔄 Enhanced signature verification (RSA/ECDSA)</li>
+<li>🔄 Container-based sandboxing</li>
+<li>🔄 Real-time security monitoring</li>
+<li>🔄 Formal incident response procedures</li>
+</ul>
+<h3 id="m3-next-6-months">M3 (Next 6 months)<a class="headerlink" href="#m3-next-6-months" title="Permanent link">&para;</a></h3>
+<ul>
+<li>🔄 User authentication system</li>
+<li>🔄 Secrets management system</li>
+<li>🔄 Compliance reporting automation</li>
+<li>🔄 External security audits</li>
+</ul>
+<h3 id="m4-next-12-months">M4 (Next 12 months)<a class="headerlink" href="#m4-next-12-months" title="Permanent link">&para;</a></h3>
+<ul>
+<li>🔄 Full NIST SP 800-53 compliance</li>
+<li>🔄 SOC 2 Type II certification</li>
+<li>🔄 ISO 27001 certification</li>
+<li>🔄 Continuous compliance monitoring</li>
+</ul>
+<h2 id="compliance-evidence">Compliance Evidence<a class="headerlink" href="#compliance-evidence" title="Permanent link">&para;</a></h2>
+<h3 id="documentation-evidence">Documentation Evidence<a class="headerlink" href="#documentation-evidence" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Security Policy</strong>: <code>plugins/plugin_policy.yaml</code></li>
+<li><strong>Threat Model</strong>: <code>docs/security/threat-model.md</code></li>
+<li><strong>Security Review Guidelines</strong>: <code>docs/security/security-review-guidelines.md</code></li>
+<li><strong>Audit Reports</strong>: <code>reports/security/</code></li>
+</ul>
+<h3 id="technical-evidence">Technical Evidence<a class="headerlink" href="#technical-evidence" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Code Implementation</strong>: Security controls in codebase</li>
+<li><strong>Test Results</strong>: Security test suite results</li>
+<li><strong>Scan Reports</strong>: SAST and dependency audit reports</li>
+<li><strong>Configuration</strong>: Security configuration files</li>
+</ul>
+<h3 id="process-evidence">Process Evidence<a class="headerlink" href="#process-evidence" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>PR Templates</strong>: Security checklist in PR template</li>
+<li><strong>Review Process</strong>: Security review guidelines</li>
+<li><strong>Training Materials</strong>: Security awareness documentation</li>
+<li><strong>Incident Procedures</strong>: Security incident response procedures</li>
+</ul>
+<h2 id="compliance-monitoring">Compliance Monitoring<a class="headerlink" href="#compliance-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="automated-monitoring">Automated Monitoring<a class="headerlink" href="#automated-monitoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Daily</strong>: Dependency vulnerability scans</li>
+<li><strong>Weekly</strong>: SAST security scans</li>
+<li><strong>Monthly</strong>: Compliance assessment reports</li>
+<li><strong>Quarterly</strong>: Security control effectiveness reviews</li>
+</ul>
+<h3 id="manual-monitoring">Manual Monitoring<a class="headerlink" href="#manual-monitoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Monthly</strong>: Security policy review</li>
+<li><strong>Quarterly</strong>: Compliance gap analysis</li>
+<li><strong>Annually</strong>: External security audit</li>
+<li><strong>As Needed</strong>: Incident response reviews</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final">NIST SP 800-53</a></li>
+<li><a href="https://owasp.org/www-project-application-security-verification-standard/">OWASP ASVS 4.0</a></li>
+<li><a href="https://www.iso.org/standard/54534.html">ISO 27001:2013</a></li>
+<li><a href="https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report">SOC 2 Type II</a></li>
+<li><a href="https://cabforum.org/baseline-requirements-documents/">CA/Browser Forum BR</a></li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

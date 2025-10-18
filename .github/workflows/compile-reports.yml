@@ -1,0 +1,21 @@
+name: Compile Reports
+on:
+  push:
+    paths:
+      - "control/journal/**/*.ndjson"
+      - "tools/compile_daily_report.py"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: python tools/compile_daily_report.py
+      - name: Commit daily report
+        run: |
+          git config user.name "secflow-bot"
+          git config user.email "secflow-bot@example.com"
+          git add reports/daily
+          git commit -m "chore(reports): recompile daily rollups" || echo "no changes"
+          git push || true

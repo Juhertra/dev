@@ -1,61 +1,46 @@
-name: coverage
-on: [pull_request, push]
+name: Coverage Report
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
 jobs:
   coverage:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.11.9', '3.12']
-        include:
-          - python-version: '3.11.9'
-            is_primary: true
-          - python-version: '3.12'
-            is_primary: false
-    
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-python@v5
-        with: { python-version: ${{ matrix.python-version }} }
-      
-      - uses: actions/cache@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-            ${{ runner.os }}-pip-
-      
-      - name: Install dev dependencies
+          python-version: '3.11'
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      
-      - name: Run coverage analysis
+          pip install coverage pytest pytest-cov
+
+      - name: Run tests with coverage
         run: |
-          pytest --cov=. --cov-report=xml --cov-report=term-missing -q
-          COVERAGE_PERCENT=$(coverage report -m | tail -1 | awk '{print $NF}' | tr -d '%')
-          echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
-        continue-on-error: ${{ matrix.is_primary != 'true' }}
-      
-      - name: Generate coverage dashboard
-        run: python scripts/coverage_dashboard.py
-        continue-on-error: ${{ matrix.is_primary != 'true' }}
-      
-      - name: Enforce coverage ratchet
-        run: python scripts/coverage_ratchet.py
-        env:
-          MILESTONE: M1
-          COVERAGE_PERCENT: ${{ env.COVERAGE_PERCENT }}
-        continue-on-error: ${{ matrix.is_primary != 'true' }}
-      
-      - name: Upload coverage reports
-        if: always()
+          pytest -q \
+            --cov=packages --cov=secflow --cov=app --cov=core \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --cov-report=html
+
+      - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports-${{ matrix.python-version }}
+          name: coverage-report
           path: |
+            htmlcov/**
             coverage.xml
-            htmlcov/
-            reports/coverage/
-          retention-days: 7
+
+      - name: Check coverage threshold
+        run: |
+          coverage report --fail-under=30
