@@ -8,3 +8,9 @@ area:resources:      [ 'packages/resources/**' ]
 area:docs:           [ 'docs/**' ]
 role:coordinator:    [ 'control/**', 'reports/**' ]
 role:integration:    [ 'control/**', 'tools/**' ]
+
+# Status labels for project management
+status:Todo:         [ 'control/journal/**/*.ndjson' ]
+status:In Progress:  [ 'packages/**', 'tools/**', 'scripts/**' ]
+status:Blocked:      [ 'docs/**', 'tests/**' ]
+status:Done:         [ 'reports/**', 'archive/**' ]
