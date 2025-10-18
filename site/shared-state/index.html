@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Shared-State Guide - SecFlow Docs</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Shared-State Guide</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../security/" class="nav-link">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../developer-start-here/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../governance/engineering-standards/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#secflow-shared-state-v10" class="nav-link">SecFlow Shared-State v1.0</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">🧭 Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#file-structure" class="nav-link">📁 File Structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#event-types" class="nav-link">📝 Event Types</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#how-to-log-events" class="nav-link">🔧 How to Log Events</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#how-to-read-daily-status" class="nav-link">📖 How to Read Daily Status</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#shared-state-contract" class="nav-link">🔍 Shared-State Contract</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tools-and-commands" class="nav-link">🛠️ Tools and Commands</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#best-practices" class="nav-link">📚 Best Practices</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#integration-with-workflow" class="nav-link">🔗 Integration with Workflow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#troubleshooting" class="nav-link">🚨 Troubleshooting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#metrics-and-reporting" class="nav-link">📈 Metrics and Reporting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="secflow-shared-state-v10">SecFlow Shared-State v1.0<a class="headerlink" href="#secflow-shared-state-v10" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Shared-State System</strong> provides a standardized way for all SecFlow team members to log daily activities, decisions, and handoffs. This system ensures transparency, accountability, and continuity across all roles and responsibilities.</p>
+<p><strong>Key Components</strong>:
+- <strong>Journals</strong>: Individual role-based activity logs
+- <strong>Reports</strong>: Daily compiled status reports
+- <strong>Contract</strong>: Configuration and validation rules
+- <strong>Events</strong>: Standardized event types for different activities</p>
+<hr />
+<h2 id="file-structure">📁 File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h2>
+<h3 id="journals">Journals<a class="headerlink" href="#journals" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>/control/journal/agents/&lt;role&gt;/&lt;YYYY-MM&gt;/&lt;role&gt;-&lt;YYYY-MM-DD&gt;.ndjson
+</code></pre></div>
+<p><strong>Examples</strong>:
+- <code>/control/journal/agents/docs-lead/2025-10/docs-lead-2025-10-14.ndjson</code>
+- <code>/control/journal/agents/workflow-lead/2025-10/workflow-lead-2025-10-14.ndjson</code>
+- <code>/control/journal/agents/security-lead/2025-10/security-lead-2025-10-14.ndjson</code></p>
+<h3 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>/reports/daily/YYYY/MM/DD/compiled.md
+</code></pre></div>
+<p><strong>Examples</strong>:
+- <code>/reports/daily/2025/10/14/compiled.md</code>
+- <code>/reports/daily/2025/10/15/compiled.md</code></p>
+<h3 id="contract-configuration">Contract Configuration<a class="headerlink" href="#contract-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>/control/config/shared_state.yaml
+</code></pre></div>
+<hr />
+<h2 id="event-types">📝 Event Types<a class="headerlink" href="#event-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event Type</th>
+<th>Purpose</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>sod</strong></td>
+<td>Start of Day</td>
+<td>Beginning of work session, objectives, priorities</td>
+</tr>
+<tr>
+<td><strong>mid</strong></td>
+<td>Mid-day Update</td>
+<td>Progress check, blockers, adjustments</td>
+</tr>
+<tr>
+<td><strong>eod</strong></td>
+<td>End of Day</td>
+<td>Completion summary, results, next steps</td>
+</tr>
+<tr>
+<td><strong>note</strong></td>
+<td>General Note</td>
+<td>Important observations, discoveries, context</td>
+</tr>
+<tr>
+<td><strong>handoff</strong></td>
+<td>Work Transfer</td>
+<td>Passing work to another role, dependencies</td>
+</tr>
+<tr>
+<td><strong>decision</strong></td>
+<td>Policy/Architecture Decision</td>
+<td>Important decisions with rationale and artifacts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="how-to-log-events">🔧 How to Log Events<a class="headerlink" href="#how-to-log-events" title="Permanent link">&para;</a></h2>
+<h3 id="using-the-journal-tool">Using the Journal Tool<a class="headerlink" href="#using-the-journal-tool" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Log a Start of Day event</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>sod<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;M1 Documentation Update&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;Update plugin system docs,expand workflow engine docs,create security documentation&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123,FEAT-022&quot;</span>
+
+<span class="c1"># Log a Mid-day Update</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>mid<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Plugin docs completed&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;Plugin system docs updated with M1 implementation,security framework documented,storage integration added&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123&quot;</span>
+
+<span class="c1"># Log an End of Day event</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>eod<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;M1 docs complete&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;All M1 features documented,health gates passing,navigation updated&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123,FEAT-022&quot;</span>
+
+<span class="c1"># Log a Handoff event</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>handoff<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Handoff to Integration Lead&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;Documentation ready for review,test workflow execution,validate plugin integration&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123&quot;</span><span class="w"> </span>--handoff-to<span class="w"> </span><span class="s2">&quot;@integration-lead&quot;</span>
+
+<span class="c1"># Log a Decision event</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>decision<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;M1 Documentation Strategy&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;Comprehensive M1 docs created,security model documented,observability framework added&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123,FEAT-022&quot;</span>
+</code></pre></div>
+<h3 id="event-format">Event Format<a class="headerlink" href="#event-format" title="Permanent link">&para;</a></h3>
+<p>Each event follows this structure:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:30:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sod|mid|eod|note|handoff|decision&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concise action/result&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;Concrete bullet point 1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Concrete bullet point 2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Concrete bullet point 3&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;PR#123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;FEAT-022&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;https://github.com/org/repo/commit/abc123&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;handoff_to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@role-name (for handoff events only)&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="how-to-read-daily-status">📖 How to Read Daily Status<a class="headerlink" href="#how-to-read-daily-status" title="Permanent link">&para;</a></h2>
+<h3 id="1-navigate-to-daily-report">1. Navigate to Daily Report<a class="headerlink" href="#1-navigate-to-daily-report" title="Permanent link">&para;</a></h3>
+<p>Open the compiled daily report:
+<div class="highlight"><pre><span></span><code>/reports/daily/YYYY/MM/DD/compiled.md
+</code></pre></div></p>
+<p><strong>Example</strong>: <code>/reports/daily/2025/10/14/compiled.md</code></p>
+<h3 id="2-report-structure">2. Report Structure<a class="headerlink" href="#2-report-structure" title="Permanent link">&para;</a></h3>
+<p>Daily reports are organized in chronological order:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Daily Status Report - 2025-10-14</span>
+
+<span class="gu">## SOD (Start of Day)</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**docs-lead**</span>: M1 Documentation Update
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Update plugin system docs
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Expand workflow engine docs
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Create security documentation
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Links: [<span class="nt">PR#123</span>](<span class="na">link</span>), [<span class="nt">FEAT-022</span>](<span class="na">link</span>)
+
+<span class="gu">## MID (Mid-day Updates)</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**docs-lead**</span>: Plugin docs completed
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Plugin system docs updated with M1 implementation
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Security framework documented
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Storage integration added
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Links: [<span class="nt">PR#123</span>](<span class="na">link</span>)
+
+<span class="gu">## NOTES</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**workflow-lead**</span>: Sequential execution working
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>All nodes execute in topological order
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Retry logic functioning correctly
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Links: [<span class="nt">PR#124</span>](<span class="na">link</span>)
+
+<span class="gu">## HANDOFFS</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**docs-lead**</span> → <span class="gs">**@integration-lead**</span>: Documentation ready for review
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Test workflow execution
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Validate plugin integration
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Links: [<span class="nt">PR#123</span>](<span class="na">link</span>)
+
+<span class="gu">## DECISIONS</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**docs-lead**</span>: M1 Documentation Strategy
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Comprehensive M1 docs created
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Security model documented
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Observability framework added
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Links: [<span class="nt">PR#123</span>](<span class="na">link</span>), [<span class="nt">FEAT-022</span>](<span class="na">link</span>)
+
+<span class="gu">## EOD (End of Day)</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**docs-lead**</span>: M1 docs complete
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>All M1 features documented
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Health gates passing
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Navigation updated
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Links: [<span class="nt">PR#123</span>](<span class="na">link</span>), [<span class="nt">FEAT-022</span>](<span class="na">link</span>)
+</code></pre></div>
+<h3 id="3-reading-tips">3. Reading Tips<a class="headerlink" href="#3-reading-tips" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SOD → EOD Flow</strong>: Follow the natural progression of work throughout the day</li>
+<li><strong>Handoffs</strong>: Look for <code>@role-name</code> mentions to understand work transfers</li>
+<li><strong>Decisions</strong>: Important architectural or policy changes are logged here</li>
+<li><strong>Links</strong>: Click through to PRs, FEATs, and commits for detailed context</li>
+<li><strong>Cross-Role Dependencies</strong>: Use handoffs to understand blocking relationships</li>
+</ul>
+<hr />
+<h2 id="shared-state-contract">🔍 Shared-State Contract<a class="headerlink" href="#shared-state-contract" title="Permanent link">&para;</a></h2>
+<h3 id="core-rules">Core Rules<a class="headerlink" href="#core-rules" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Append Only</strong>: Never edit existing journal entries</li>
+<li><strong>Event Types</strong>: Use only the 6 defined event types</li>
+<li><strong>Period Format</strong>: Always use <code>YYYY-MM-DD</code> format</li>
+<li><strong>Concrete Items</strong>: Write specific, actionable bullet points</li>
+<li><strong>Link Everything</strong>: Include PRs, FEATs, commits, and build URLs</li>
+<li><strong>Handoff Protocol</strong>: Use <code>@role-name</code> for work transfers</li>
+</ol>
+<h3 id="validation-rules">Validation Rules<a class="headerlink" href="#validation-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Required Fields</strong>: timestamp, event, period, title, items</li>
+<li><strong>Event Validation</strong>: Must be one of: sod, mid, eod, note, handoff, decision</li>
+<li><strong>Period Format</strong>: Must match <code>YYYY-MM-DD</code> pattern</li>
+<li><strong>Links Format</strong>: Must be valid URLs or PR/FEAT references</li>
+<li><strong>Handoff Requirement</strong>: handoff events must include <code>handoff_to</code> field</li>
+</ul>
+<h3 id="ci-integration">CI Integration<a class="headerlink" href="#ci-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Daily Compilation</strong>: CI automatically generates daily reports</li>
+<li><strong>Validation</strong>: Journal entries are validated against the contract</li>
+<li><strong>Error Reporting</strong>: Invalid entries are flagged in CI logs</li>
+<li><strong>Archive</strong>: Historical reports are preserved for reference</li>
+</ul>
+<hr />
+<h2 id="tools-and-commands">🛠️ Tools and Commands<a class="headerlink" href="#tools-and-commands" title="Permanent link">&para;</a></h2>
+<h3 id="journal-tool-usage">Journal Tool Usage<a class="headerlink" href="#journal-tool-usage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic event logging</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>&lt;event_type&gt;<span class="w"> </span>--period<span class="w"> </span>&lt;YYYY-MM-DD&gt;<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;&lt;title&gt;&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;&lt;item1&gt;,&lt;item2&gt;,&lt;item3&gt;&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;&lt;link1&gt;,&lt;link2&gt;&quot;</span>
+
+<span class="c1"># Handoff with specific role</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>handoff<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Work transfer&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;Task completed,ready for review&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123&quot;</span><span class="w"> </span>--handoff-to<span class="w"> </span><span class="s2">&quot;@integration-lead&quot;</span>
+
+<span class="c1"># Decision with rationale</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--event<span class="w"> </span>decision<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Architecture decision&quot;</span><span class="w"> </span>--items<span class="w"> </span><span class="s2">&quot;Chose sequential execution for M1,parallel execution planned for M3&quot;</span><span class="w"> </span>--links<span class="w"> </span><span class="s2">&quot;PR#123,FEAT-020&quot;</span>
+</code></pre></div>
+<h3 id="reading-commands">Reading Commands<a class="headerlink" href="#reading-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># View today&#39;s journal</span>
+cat<span class="w"> </span>/control/journal/agents/docs-lead/2025-10/docs-lead-2025-10-14.ndjson
+
+<span class="c1"># View compiled daily report</span>
+cat<span class="w"> </span>/reports/daily/2025/10/14/compiled.md
+
+<span class="c1"># Search for specific events</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;handoff&quot;</span><span class="w"> </span>/control/journal/agents/*/2025-10/
+
+<span class="c1"># Find decisions by role</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;decision&quot;</span><span class="w"> </span>/control/journal/agents/docs-lead/2025-10/
+</code></pre></div>
+<hr />
+<h2 id="best-practices">📚 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="for-all-roles">For All Roles<a class="headerlink" href="#for-all-roles" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Daily Logging</strong>: Log SOD, MID, and EOD events consistently</li>
+<li><strong>Concrete Items</strong>: Write specific, measurable outcomes</li>
+<li><strong>Link Everything</strong>: Include all relevant PRs, FEATs, and commits</li>
+<li><strong>Clear Titles</strong>: Use concise, descriptive titles</li>
+<li><strong>Timely Updates</strong>: Log events as they happen, not at end of day</li>
+</ol>
+<h3 id="for-handoffs">For Handoffs<a class="headerlink" href="#for-handoffs" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Clear Recipients</strong>: Always use <code>@role-name</code> format</li>
+<li><strong>Context Transfer</strong>: Include all necessary context and links</li>
+<li><strong>Dependencies</strong>: Clearly state any blocking dependencies</li>
+<li><strong>Timeline</strong>: Include expected completion timelines</li>
+<li><strong>Follow-up</strong>: Specify when/how to follow up</li>
+</ol>
+<h3 id="for-decisions">For Decisions<a class="headerlink" href="#for-decisions" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Rationale</strong>: Always include the reasoning behind decisions</li>
+<li><strong>Artifacts</strong>: Link to relevant documents, PRs, or discussions</li>
+<li><strong>Impact</strong>: Describe the impact on other roles/teams</li>
+<li><strong>Reversibility</strong>: Note if the decision can be reversed</li>
+<li><strong>Documentation</strong>: Update relevant documentation</li>
+</ol>
+<hr />
+<h2 id="integration-with-workflow">🔗 Integration with Workflow<a class="headerlink" href="#integration-with-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="daily-standup-integration">Daily Standup Integration<a class="headerlink" href="#daily-standup-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SOD Events</strong>: Use for standup preparation</li>
+<li><strong>MID Events</strong>: Use for mid-day check-ins</li>
+<li><strong>EOD Events</strong>: Use for end-of-day retrospectives</li>
+</ul>
+<h3 id="pr-integration">PR Integration<a class="headerlink" href="#pr-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Link PRs</strong>: Always include PR numbers in relevant events</li>
+<li><strong>Status Updates</strong>: Use events to track PR progress</li>
+<li><strong>Review Requests</strong>: Use handoffs to request reviews</li>
+</ul>
+<h3 id="feat-integration">FEAT Integration<a class="headerlink" href="#feat-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>FEAT Tracking</strong>: Link FEAT numbers to track feature progress</li>
+<li><strong>Milestone Updates</strong>: Use events to report milestone completion</li>
+<li><strong>Blockers</strong>: Use handoffs to report FEAT blockers</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">🚨 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Invalid Event Type</strong>: Use only the 6 defined event types</li>
+<li><strong>Wrong Period Format</strong>: Use <code>YYYY-MM-DD</code> format</li>
+<li><strong>Missing Links</strong>: Always include relevant PRs/FEATs</li>
+<li><strong>Handoff Format</strong>: Use <code>@role-name</code> for handoffs</li>
+<li><strong>CI Failures</strong>: Check journal format against contract</li>
+</ol>
+<h3 id="debug-commands">Debug Commands<a class="headerlink" href="#debug-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Validate journal format</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--validate<span class="w"> </span>--file<span class="w"> </span>/control/journal/agents/docs-lead/2025-10/docs-lead-2025-10-14.ndjson
+
+<span class="c1"># Check contract compliance</span>
+python<span class="w"> </span>tools/journal.py<span class="w"> </span>--check-contract<span class="w"> </span>--period<span class="w"> </span><span class="m">2025</span>-10-14
+
+<span class="c1"># View CI logs</span>
+cat<span class="w"> </span>/logs/ci/shared-state-validation.log
+</code></pre></div>
+<hr />
+<h2 id="metrics-and-reporting">📈 Metrics and Reporting<a class="headerlink" href="#metrics-and-reporting" title="Permanent link">&para;</a></h2>
+<h3 id="daily-metrics">Daily Metrics<a class="headerlink" href="#daily-metrics" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Events Logged</strong>: Count of events per role per day</li>
+<li><strong>Handoffs</strong>: Number of work transfers</li>
+<li><strong>Decisions</strong>: Number of architectural decisions</li>
+<li><strong>Links</strong>: Number of PRs/FEATs referenced</li>
+</ul>
+<h3 id="weekly-reports">Weekly Reports<a class="headerlink" href="#weekly-reports" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Activity Summary</strong>: Aggregate events by role</li>
+<li><strong>Handoff Analysis</strong>: Track work flow between roles</li>
+<li><strong>Decision Impact</strong>: Analyze decision frequency and impact</li>
+<li><strong>Collaboration Metrics</strong>: Cross-role interaction patterns</li>
+</ul>
+<hr />
+<p><strong>Next:</strong> <a href="../developer-start-here/">Developer Start Here</a> | <a href="../governance/engineering-standards/">Governance</a></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../js/mermaid.min.js"></script>
+        <script src="../js/mermaid-init.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

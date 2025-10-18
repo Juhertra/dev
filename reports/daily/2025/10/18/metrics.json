@@ -1,0 +1,29 @@
+{
+  "period": "2025-10-18",
+  "summary": {
+    "total_entries": 38,
+    "processed_files": 6,
+    "event_types": 3,
+    "roles": 4
+  },
+  "events": {
+    "sod": 6,
+    "note": 2,
+    "decision": 2
+  },
+  "by_role": {
+    "coordinator": {
+      "sod": 6
+    },
+    "devex-lead": {
+      "note": 1
+    },
+    "observability": {
+      "note": 1
+    },
+    "integration-lead": {
+      "decision": 2
+    }
+  },
+  "generated_at": "2025-10-18T14:20:13.606648Z"
+}

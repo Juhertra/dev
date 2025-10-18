@@ -1,0 +1,14 @@
+{
+  "file": "control/journal/agents/observability/2025-10/observability-2025-10-18.ndjson",
+  "fixed": [
+    {
+      "line": 1,
+      "title": "Journal Metrics Collection Implementation",
+      "event": "note",
+      "ts": "2025-10-18T14:19:59Z"
+    }
+  ],
+  "repair_timestamp": "2025-10-18T15:50:05Z",
+  "total_lines": 1,
+  "repaired_lines": 1
+}

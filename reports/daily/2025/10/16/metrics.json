@@ -1,0 +1,18 @@
+{
+  "period": "2025-10-16",
+  "summary": {
+    "total_entries": 1,
+    "processed_files": 1,
+    "event_types": 1,
+    "roles": 1
+  },
+  "events": {
+    "sod": 1
+  },
+  "by_role": {
+    "agents": {
+      "sod": 1
+    }
+  },
+  "generated_at": "2025-10-18T14:19:37.471136Z"
+}

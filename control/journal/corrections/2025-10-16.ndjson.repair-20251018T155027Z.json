@@ -1,0 +1,14 @@
+{
+  "file": "control/journal/agents/observability/2025-10-16.ndjson",
+  "fixed": [
+    {
+      "line": 1,
+      "title": "Observability metrics implementation",
+      "event": "sod",
+      "ts": "2025-10-18T15:50:27Z"
+    }
+  ],
+  "repair_timestamp": "2025-10-18T15:50:27Z",
+  "total_lines": 1,
+  "repaired_lines": 1
+}

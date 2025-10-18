@@ -9,9 +9,13 @@
 /schemas/**              @findings-lead @runtime-lead
 # Plugins & policies
 /plugins/**              @security-lead
+# Security components
+/security/**             @security-lead
 # Observability & devex
 /ops/**                  @observability-lead @devex-lead
 /scripts/**              @devex-lead
+# GitHub workflows and security
+/.github/**              @devex-lead @security-lead
 # Docs
 /docs/**                 @devex-lead
 # Root config

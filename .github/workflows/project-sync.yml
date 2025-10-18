@@ -4,9 +4,14 @@ on:
     types: [opened, edited, labeled]
   pull_request:
     types: [opened, edited, labeled, ready_for_review]
+
 jobs:
   add_to_project:
     runs-on: ubuntu-latest
+    permissions:
+      # Minimal permissions for project sync only
+      issues: read
+      pull-requests: read
     steps:
       - uses: actions/github-script@v7
         with:
@@ -22,8 +27,13 @@ jobs:
             );
         env:
           PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
+          
   label_by_path:
     runs-on: ubuntu-latest
+    permissions:
+      # Minimal permissions for labeling only
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/labeler@v5
         with:
