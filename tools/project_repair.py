@@ -27,21 +27,30 @@ def gql(query, variables):
 
 def get_status_field(project_id):
     q = """
-    query($id:ID!){
-      node(id:$id){
+    query($id: ID!) {
+      node(id: $id) {
         ... on ProjectV2 {
-          fields(first:50){
-            nodes{
-              id name dataType
-              ... on ProjectV2SingleSelectField { options{ id name } }
+          fields(first: 50) {
+            nodes {
+              ... on ProjectV2SingleSelectField {
+                id
+                name
+                options {
+                  id
+                  name
+                }
+              }
             }
           }
         }
       }
     }"""
     r = gql(q, {"id":project_id})
+    if "errors" in r:
+        print(f"GraphQL errors: {r['errors']}")
+        return None
     fields = r["data"]["node"]["fields"]["nodes"]
-    st = next((f for f in fields if f["name"]=="Status" and f["dataType"]=="SINGLE_SELECT"), None)
+    st = next((f for f in fields if f and f.get("name")=="Status"), None)
     return st
 
 def add_to_project(node_id):
