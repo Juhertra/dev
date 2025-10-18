@@ -85,46 +85,65 @@ def gql(query, variables):
     return http("POST", "/graphql", payload, headers={"Content-Type":"application/json"})
 
 def add_to_project_and_set_status(node_id, status="Todo"):
-    # 1) add item
-    add = gql("""
-      mutation($project:ID!,$content:ID!){
-        addProjectV2ItemById(input:{projectId:$project, contentId:$content}){
-          item { id }
-        }
-      }""", {"project": PROJECT_ID, "content": node_id})
-    item_id = add["data"]["addProjectV2ItemById"]["item"]["id"]
-    # 2) set Status if available
-    fields = gql("""
-      query($project:ID!){
-        node(id:$project){
-          ... on ProjectV2 {
-            fields(first:50){
-              nodes {
-                id name dataType
-                ... on ProjectV2SingleSelectField { options { id name } }
-              }
+    try:
+        # 1) add item
+        add = gql("""
+          mutation($project:ID!,$content:ID!){
+            addProjectV2ItemById(input:{projectId:$project, contentId:$content}){
+              item { id }
             }
-          }
-        }
-      }""", {"project": PROJECT_ID})
-    fld = None
-    for n in fields["data"]["node"]["fields"]["nodes"]:
-        if n["name"] == "Status" and n["dataType"] == "SINGLE_SELECT":
-            fld = n
-            break
-    if not fld: return
-    opt = None
-    for o in fld["options"]:
-        if o["name"].lower() == status.lower():
-            opt = o; break
-    if not opt: return
-    gql("""
-      mutation($project:ID!, $item:ID!, $field:ID!, $option:ID!){
-        updateProjectV2ItemFieldValue(input:{
-          projectId:$project, itemId:$item,
-          fieldId:$field, value:{ singleSelectOptionId:$option }
-        }){ clientMutationId }
-      }""", {"project": PROJECT_ID, "item": item_id, "field": fld["id"], "option": opt["id"]})
+          }""", {"project": PROJECT_ID, "content": node_id})
+        item_id = add["data"]["addProjectV2ItemById"]["item"]["id"]
+        
+        # 2) set Status if available (skip if no Status field)
+        try:
+            fields = gql("""
+              query($project:ID!){
+                node(id:$project){
+                  ... on ProjectV2 {
+                    fields(first:50){
+                      nodes {
+                        ... on ProjectV2SingleSelectField { 
+                          id name 
+                          options { id name } 
+                        }
+                      }
+                    }
+                  }
+                }
+              }""", {"project": PROJECT_ID})
+            
+            fld = None
+            for n in fields["data"]["node"]["fields"]["nodes"]:
+                if n.get("name") == "Status":
+                    fld = n
+                    break
+            if not fld: 
+                print("No Status field found, skipping status update")
+                return
+                
+            opt = None
+            for o in fld.get("options", []):
+                if o["name"].lower() == status.lower():
+                    opt = o
+                    break
+            if not opt: 
+                print(f"No '{status}' option found, skipping status update")
+                return
+                
+            gql("""
+              mutation($project:ID!, $item:ID!, $field:ID!, $option:ID!){
+                updateProjectV2ItemFieldValue(input:{
+                  projectId:$project, itemId:$item,
+                  fieldId:$field, value:{ singleSelectOptionId:$option }
+                }){ clientMutationId }
+              }""", {"project": PROJECT_ID, "item": item_id, "field": fld["id"], "option": opt["id"]})
+        except Exception as e:
+            print(f"Status update failed (continuing): {e}")
+            
+    except Exception as e:
+        print(f"Failed to add to project: {e}")
+        raise
 
 def main():
     ap = argparse.ArgumentParser()
