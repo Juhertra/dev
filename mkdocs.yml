@@ -48,6 +48,7 @@ extra_javascript:
 
 nav:
   - Developer Start Here: developer-start-here.md
+  - Shared-State Guide: shared-state.md
   - Governance:
       - Engineering Standards: governance/engineering-standards.md
       - Development Conventions: governance/development-conventions.md
