@@ -21,12 +21,65 @@ jobs:
           script: |
             const contentId = context.payload.pull_request?.node_id || context.payload.issue?.node_id;
             if (!contentId) return;
-            await github.graphql(`
+            
+            // 1) Add to project
+            const addResp = await github.graphql(`
               mutation($project:ID!, $content:ID!){
                 addProjectV2ItemById(input:{projectId:$project, contentId:$content}){item{id}}
               }`,
               { project: process.env.PROJECTS_V2_ID, content: contentId }
             );
+            const itemId = addResp.addProjectV2ItemById.item.id;
+            
+            // 2) Set Status field based on labels
+            const labels = (context.payload.pull_request?.labels || context.payload.issue?.labels || []).map(l => l.name);
+            let statusValue = "Todo"; // default
+            
+            if (labels.includes("status:In Progress")) statusValue = "In Progress";
+            else if (labels.includes("status:Blocked")) statusValue = "Blocked";
+            else if (labels.includes("status:Done")) statusValue = "Done";
+            else if (labels.includes("status:Todo")) statusValue = "Todo";
+            
+            // Get Status field and options
+            const fieldsResp = await github.graphql(`
+              query($project:ID!){
+                node(id:$project){
+                  ... on ProjectV2 {
+                    fields(first:50){
+                      nodes {
+                        ... on ProjectV2SingleSelectField { 
+                          id name 
+                          options { id name } 
+                        }
+                      }
+                    }
+                  }
+                }
+              }`,
+              { project: process.env.PROJECTS_V2_ID }
+            );
+            
+            const statusField = fieldsResp.node.fields.nodes.find(f => f.name === "Status");
+            if (statusField) {
+              const statusOption = statusField.options.find(o => o.name === statusValue);
+              if (statusOption) {
+                await github.graphql(`
+                  mutation($project:ID!, $item:ID!, $field:ID!, $option:ID!){
+                    updateProjectV2ItemFieldValue(input:{
+                      projectId:$project, itemId:$item,
+                      fieldId:$field, value:{ singleSelectOptionId:$option }
+                    }){ clientMutationId }
+                  }`,
+                  { 
+                    project: process.env.PROJECTS_V2_ID, 
+                    item: itemId, 
+                    field: statusField.id, 
+                    option: statusOption.id 
+                  }
+                );
+                console.log(`Set Status="${statusValue}" for item ${itemId}`);
+              }
+            }
         env:
           PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
   label_by_path:
