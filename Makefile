@@ -113,3 +113,7 @@ scaffold-package:
 	@echo "" >> packages/$(PACKAGE_NAME)/__init__.py
 	@echo '__version__ = "0.1.0"' >> packages/$(PACKAGE_NAME)/__init__.py
 	@echo "Created package: packages/$(PACKAGE_NAME)/"
+
+# Shared-state report helper
+report:
+	python3 tools/compile_daily_report.py $(PERIOD)

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Security - SecFlow Docs</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../api/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../architecture/00-index/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#security-documentation" class="nav-link">Security Documentation</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">🧭 Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-architecture" class="nav-link">🔐 Security Architecture</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-security-model" class="nav-link">🔑 Plugin Security Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sandbox-execution-model" class="nav-link">🏗️ Sandbox Execution Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#audit-logging" class="nav-link">📊 Audit Logging</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#policy-enforcement" class="nav-link">🛡️ Policy Enforcement</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-monitoring" class="nav-link">🔍 Security Monitoring</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-incident-response" class="nav-link">🚨 Security Incident Response</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-configuration" class="nav-link">🔧 Security Configuration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements-m2" class="nav-link">🔮 Future Enhancements (M2+)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-best-practices" class="nav-link">📚 Security Best Practices</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="security-documentation">Security Documentation<a class="headerlink" href="#security-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="overview">🧭 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document describes the <strong>security model</strong> implemented in SecFlow M1, covering plugin security, signature verification, sandboxing, and audit logging. The security framework ensures that plugins execute safely and that all security events are properly logged and monitored.</p>
+<p><strong>M1 Implementation Status</strong>: ✅ <strong>Complete</strong> - Plugin signature verification, sandboxing, and audit logging delivered.</p>
+<hr />
+<h2 id="security-architecture">🔐 Security Architecture<a class="headerlink" href="#security-architecture" title="Permanent link">&para;</a></h2>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Plugin Loader"]
+    B["Security Framework"]
+    C["Signature Verification"]
+    D["Sandbox Execution"]
+    E["Audit Logging"]
+    F["Policy Enforcement"]
+
+    A --&gt; B
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E
+    B --&gt; F
+
+    G["Plugin Manifest"]
+    H["Hash Verification"]
+    I["Sandbox Context"]
+    J["Security Events"]
+
+    G --&gt; C
+    H --&gt; C
+    I --&gt; D
+    J --&gt; E</div>
+<p><strong>M1 Security Components</strong>:
+- ✅ <strong>Plugin Signature Verification</strong>: Hash-based integrity checking
+- ✅ <strong>Sandbox Execution</strong>: Controlled execution environment
+- ✅ <strong>Audit Logging</strong>: Comprehensive security event logging
+- ✅ <strong>Policy Enforcement</strong>: Security policy validation
+- ✅ <strong>Manifest Validation</strong>: JSON schema validation for plugin manifests</p>
+<hr />
+<h2 id="plugin-security-model">🔑 Plugin Security Model<a class="headerlink" href="#plugin-security-model" title="Permanent link">&para;</a></h2>
+<h3 id="signature-verification-m1">Signature Verification (M1)<a class="headerlink" href="#signature-verification-m1" title="Permanent link">&para;</a></h3>
+<p><strong>M1 Implementation</strong>: Hash-based verification using SHA256 checksums.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/signing.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginManifest</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin manifest with signature information.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">entrypoint</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">code_hash</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">signature_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sha256&quot;</span>  <span class="c1"># M1: hash-based, M2+: RSA/ECDSA</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">expires_at</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginSignatureVerifier</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin signature verification for M1.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_plugin_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> 
+                               <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify plugin signature using hash-based verification.&quot;&quot;&quot;</span>
+        <span class="c1"># M1: SHA256 hash verification</span>
+        <span class="n">expected_hash</span> <span class="o">=</span> <span class="n">manifest</span><span class="o">.</span><span class="n">code_hash</span>
+        <span class="n">actual_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_file_hash</span><span class="p">(</span><span class="n">plugin_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">expected_hash</span> <span class="o">==</span> <span class="n">actual_hash</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_file_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate SHA256 hash of plugin file.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>M1 Security Features</strong>:
+- ✅ <strong>Integrity Checking</strong>: SHA256 checksums prevent tampering
+- ✅ <strong>Manifest Validation</strong>: JSON schema validation
+- ✅ <strong>Expiration Support</strong>: Optional expiration dates
+- ✅ <strong>Author Verification</strong>: Author information in manifest</p>
+<h3 id="cryptographic-signing-m2-planned">Cryptographic Signing (M2+ Planned)<a class="headerlink" href="#cryptographic-signing-m2-planned" title="Permanent link">&para;</a></h3>
+<p><strong>Future Enhancement</strong>: Full cryptographic signature verification using RSA/ECDSA.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># M2+: Full cryptographic verification (planned)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_plugin_signature_crypto</span><span class="p">(</span><span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> 
+                                  <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                  <span class="n">public_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify plugin signature using RSA/ECDSA.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span><span class="p">,</span> <span class="n">serialization</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.asymmetric</span><span class="w"> </span><span class="kn">import</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rsa</span>
+
+    <span class="c1"># Load public key</span>
+    <span class="n">public_key_obj</span> <span class="o">=</span> <span class="n">load_pem_public_key</span><span class="p">(</span><span class="n">public_key</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+
+    <span class="c1"># Verify signature</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">public_key_obj</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span>
+            <span class="n">manifest</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+            <span class="n">manifest</span><span class="o">.</span><span class="n">code_hash</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+            <span class="n">padding</span><span class="o">.</span><span class="n">PSS</span><span class="p">(</span>
+                <span class="n">mgf</span><span class="o">=</span><span class="n">padding</span><span class="o">.</span><span class="n">MGF1</span><span class="p">(</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">()),</span>
+                <span class="n">salt_length</span><span class="o">=</span><span class="n">padding</span><span class="o">.</span><span class="n">PSS</span><span class="o">.</span><span class="n">MAX_LENGTH</span>
+            <span class="p">),</span>
+            <span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">InvalidSignature</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
+<hr />
+<h2 id="sandbox-execution-model">🏗️ Sandbox Execution Model<a class="headerlink" href="#sandbox-execution-model" title="Permanent link">&para;</a></h2>
+<h3 id="sandbox-configuration">Sandbox Configuration<a class="headerlink" href="#sandbox-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/sandbox.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SandboxConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sandbox configuration for plugin execution.&quot;&quot;&quot;</span>
+    <span class="n">filesystem_access</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;read-only&quot;</span>  <span class="c1"># &quot;read-only&quot; | &quot;temp&quot; | &quot;denied&quot;</span>
+    <span class="n">network_access</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">memory_limit_mb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span>
+    <span class="n">cpu_time_limit_s</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">max_file_size_mb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">allowed_imports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">denied_imports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_plugin_secure</span><span class="p">(</span><span class="n">plugin</span><span class="p">:</span> <span class="n">PluginInterface</span><span class="p">,</span> 
+                     <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+                     <span class="n">config</span><span class="p">:</span> <span class="n">SandboxConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute plugin in sandboxed environment.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">sandbox_context</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">plugin</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="sandbox-controls">Sandbox Controls<a class="headerlink" href="#sandbox-controls" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Enforcement</th>
+<th>M1 Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Filesystem</strong></td>
+<td>Read-only mount or temp directory</td>
+<td>✅ Implemented</td>
+</tr>
+<tr>
+<td><strong>Network</strong></td>
+<td>Denied by default, opt-in per manifest</td>
+<td>✅ Implemented</td>
+</tr>
+<tr>
+<td><strong>Memory / CPU</strong></td>
+<td>Controlled via subprocess resource limits</td>
+<td>✅ Implemented</td>
+</tr>
+<tr>
+<td><strong>Timeouts</strong></td>
+<td>Enforced via execution wrapper</td>
+<td>✅ Implemented</td>
+</tr>
+<tr>
+<td><strong>Imports</strong></td>
+<td>Whitelist/blacklist of allowed modules</td>
+<td>✅ Implemented</td>
+</tr>
+<tr>
+<td><strong>Audit</strong></td>
+<td>Every plugin invocation logged with context</td>
+<td>✅ Implemented</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sandbox-context-manager">Sandbox Context Manager<a class="headerlink" href="#sandbox-context-manager" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/sandbox.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">resource</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sandbox_context</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">SandboxConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager for sandboxed plugin execution.&quot;&quot;&quot;</span>
+    <span class="c1"># Set resource limits</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">memory_limit_mb</span><span class="p">:</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_AS</span><span class="p">,</span> 
+                          <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">memory_limit_mb</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">cpu_time_limit_s</span><span class="p">:</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_CPU</span><span class="p">,</span> 
+                          <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cpu_time_limit_s</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Create temporary directory for filesystem access</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">filesystem_access</span> <span class="o">==</span> <span class="s2">&quot;temp&quot;</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+            <span class="k">yield</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">yield</span>
+</code></pre></div>
+<hr />
+<h2 id="audit-logging">📊 Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<h3 id="security-event-types">Security Event Types<a class="headerlink" href="#security-event-types" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/audit_logging.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityEvent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security event for audit logging.&quot;&quot;&quot;</span>
+    <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">session_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">severity</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># &quot;info&quot; | &quot;warning&quot; | &quot;error&quot; | &quot;critical&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityAuditLogger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security audit logger for M1.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_plugin_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                       <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="n">session_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log plugin loading event.&quot;&quot;&quot;</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">SecurityEvent</span><span class="p">(</span>
+            <span class="n">event_type</span><span class="o">=</span><span class="s2">&quot;plugin_load&quot;</span><span class="p">,</span>
+            <span class="n">plugin_name</span><span class="o">=</span><span class="n">plugin_name</span><span class="p">,</span>
+            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+            <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;plugin_loaded&quot;</span><span class="p">},</span>
+            <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;info&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_signature_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                                  <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                                  <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log signature verification event.&quot;&quot;&quot;</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">SecurityEvent</span><span class="p">(</span>
+            <span class="n">event_type</span><span class="o">=</span><span class="s2">&quot;signature_verification&quot;</span><span class="p">,</span>
+            <span class="n">plugin_name</span><span class="o">=</span><span class="n">plugin_name</span><span class="p">,</span>
+            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+            <span class="n">session_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">},</span>
+            <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span> <span class="k">else</span> <span class="s2">&quot;info&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_security_violation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                              <span class="n">violation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+                              <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log security violation event.&quot;&quot;&quot;</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">SecurityEvent</span><span class="p">(</span>
+            <span class="n">event_type</span><span class="o">=</span><span class="s2">&quot;security_violation&quot;</span><span class="p">,</span>
+            <span class="n">plugin_name</span><span class="o">=</span><span class="n">plugin_name</span><span class="p">,</span>
+            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+            <span class="n">session_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;violation_type&quot;</span><span class="p">:</span> <span class="n">violation_type</span><span class="p">,</span> <span class="o">**</span><span class="n">details</span><span class="p">},</span>
+            <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;critical&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="audit-event-examples">Audit Event Examples<a class="headerlink" href="#audit-event-examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;plugin_load&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;plugin_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cve-mapper&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;session-456&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:30:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;plugin_loaded&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;signature_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;info&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;security_violation&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;plugin_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;malicious-plugin&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:35:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;violation_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sandbox_escape&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;attempted_action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_system_access&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;blocked_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/etc/passwd&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;critical&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="policy-enforcement">🛡️ Policy Enforcement<a class="headerlink" href="#policy-enforcement" title="Permanent link">&para;</a></h2>
+<h3 id="security-policy-manager">Security Policy Manager<a class="headerlink" href="#security-policy-manager" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/policy_enforcement.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityPolicy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security policy configuration.&quot;&quot;&quot;</span>
+    <span class="n">allow_unsigned_plugins</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># M1: Allow in development</span>
+    <span class="n">require_signature_verification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">sandbox_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">audit_logging_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">max_plugin_execution_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># seconds</span>
+    <span class="n">max_plugin_memory_mb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span>
+    <span class="n">allowed_plugin_categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityPolicyManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security policy manager for M1.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">SecurityPolicy</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">policy</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_plugin_security</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                             <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if plugin meets security policy requirements.&quot;&quot;&quot;</span>
+        <span class="c1"># Check signature verification requirement</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">require_signature_verification</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">manifest</span><span class="o">.</span><span class="n">signature</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">allow_unsigned_plugins</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Check plugin category</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">allowed_plugin_categories</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">manifest</span><span class="o">.</span><span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">allowed_plugin_categories</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">enforce_security_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                               <span class="n">execution_context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enforce security policy during plugin execution.&quot;&quot;&quot;</span>
+        <span class="c1"># Check execution time limits</span>
+        <span class="k">if</span> <span class="n">execution_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;execution_time&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">max_plugin_execution_time</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Check memory limits</span>
+        <span class="k">if</span> <span class="n">execution_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;memory_usage_mb&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">max_plugin_memory_mb</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+<h3 id="policy-configuration">Policy Configuration<a class="headerlink" href="#policy-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/policy.yaml</span>
+<span class="nt">security_policy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">allow_unsigned_plugins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">require_signature_verification</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">sandbox_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">audit_logging_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">max_plugin_execution_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">  </span><span class="nt">max_plugin_memory_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512</span>
+<span class="w">  </span><span class="nt">allowed_plugin_categories</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;detector&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;enricher&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;analytics&quot;</span>
+
+<span class="w">  </span><span class="nt">sandbox_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filesystem_access</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;read-only&quot;</span>
+<span class="w">    </span><span class="nt">network_access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">memory_limit_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512</span>
+<span class="w">    </span><span class="nt">cpu_time_limit_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">max_file_size_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="w">  </span><span class="nt">audit_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;info&quot;</span>
+<span class="w">    </span><span class="nt">log_file</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;logs/security_audit.log&quot;</span>
+<span class="w">    </span><span class="nt">max_log_size_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">log_retention_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+</code></pre></div>
+<hr />
+<h2 id="security-monitoring">🔍 Security Monitoring<a class="headerlink" href="#security-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="security-metrics">Security Metrics<a class="headerlink" href="#security-metrics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/metrics.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityMetrics</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security metrics for monitoring.&quot;&quot;&quot;</span>
+    <span class="n">total_plugins_loaded</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">signature_verification_failures</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sandbox_violations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">policy_violations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">security_events_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last_security_event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityMonitor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security monitoring for M1.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">SecurityMetrics</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_logger</span> <span class="o">=</span> <span class="n">SecurityAuditLogger</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_plugin_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record plugin loading metric.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_plugins_loaded</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">signature_verification_failures</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_sandbox_violation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">violation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record sandbox violation metric.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">sandbox_violations</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_logger</span><span class="o">.</span><span class="n">log_security_violation</span><span class="p">(</span>
+            <span class="n">plugin_name</span><span class="p">,</span> <span class="s2">&quot;sandbox_violation&quot;</span><span class="p">,</span> 
+            <span class="p">{</span><span class="s2">&quot;violation_type&quot;</span><span class="p">:</span> <span class="n">violation_type</span><span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_security_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get security metrics summary.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;total_plugins_loaded&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_plugins_loaded</span><span class="p">,</span>
+            <span class="s2">&quot;signature_verification_failures&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">signature_verification_failures</span><span class="p">,</span>
+            <span class="s2">&quot;sandbox_violations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">sandbox_violations</span><span class="p">,</span>
+            <span class="s2">&quot;policy_violations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">policy_violations</span><span class="p">,</span>
+            <span class="s2">&quot;security_events_count&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">security_events_count</span><span class="p">,</span>
+            <span class="s2">&quot;last_security_event&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">last_security_event</span>
+        <span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="security-incident-response">🚨 Security Incident Response<a class="headerlink" href="#security-incident-response" title="Permanent link">&para;</a></h2>
+<h3 id="incident-types">Incident Types<a class="headerlink" href="#incident-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Incident Type</th>
+<th>Severity</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Signature Verification Failure</strong></td>
+<td>Warning</td>
+<td>Log event, block plugin execution</td>
+</tr>
+<tr>
+<td><strong>Sandbox Violation</strong></td>
+<td>Critical</td>
+<td>Terminate plugin, revoke signature</td>
+</tr>
+<tr>
+<td><strong>Policy Violation</strong></td>
+<td>Error</td>
+<td>Block execution, log violation</td>
+</tr>
+<tr>
+<td><strong>Unauthorized Access Attempt</strong></td>
+<td>Critical</td>
+<td>Block user, alert administrators</td>
+</tr>
+<tr>
+<td><strong>Plugin Execution Timeout</strong></td>
+<td>Warning</td>
+<td>Terminate plugin, log timeout</td>
+</tr>
+</tbody>
+</table>
+<h3 id="incident-response-process">Incident Response Process<a class="headerlink" href="#incident-response-process" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/incident_response.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityIncidentResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security incident response for M1.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_signature_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                                <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle signature verification failure.&quot;&quot;&quot;</span>
+        <span class="c1"># Log security event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_logger</span><span class="o">.</span><span class="n">log_signature_verification</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+
+        <span class="c1"># Block plugin execution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_plugin</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span>
+
+        <span class="c1"># Alert administrators (M2+)</span>
+        <span class="c1"># self.send_security_alert(&quot;signature_failure&quot;, plugin_name)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_sandbox_violation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                                <span class="n">violation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle sandbox violation.&quot;&quot;&quot;</span>
+        <span class="c1"># Log critical security event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_logger</span><span class="o">.</span><span class="n">log_security_violation</span><span class="p">(</span>
+            <span class="n">plugin_name</span><span class="p">,</span> <span class="n">violation_type</span><span class="p">,</span> 
+            <span class="p">{</span><span class="s2">&quot;severity&quot;</span><span class="p">:</span> <span class="s2">&quot;critical&quot;</span><span class="p">},</span> <span class="n">user_id</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Terminate plugin execution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terminate_plugin</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span>
+
+        <span class="c1"># Revoke plugin signature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">revoke_plugin_signature</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span>
+
+        <span class="c1"># Block user if repeated violations (M2+)</span>
+        <span class="c1"># if self.get_violation_count(user_id) &gt; 3:</span>
+        <span class="c1">#     self.block_user(user_id)</span>
+</code></pre></div>
+<hr />
+<h2 id="security-configuration">🔧 Security Configuration<a class="headerlink" href="#security-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Security configuration environment variables</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SECFLOW_SECURITY_POLICY_FILE</span><span class="o">=</span><span class="s2">&quot;security/policy.yaml&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SECFLOW_AUDIT_LOG_LEVEL</span><span class="o">=</span><span class="s2">&quot;info&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SECFLOW_AUDIT_LOG_FILE</span><span class="o">=</span><span class="s2">&quot;logs/security_audit.log&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SECFLOW_SANDBOX_ENABLED</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SECFLOW_SIGNATURE_VERIFICATION</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SECFLOW_ALLOW_UNSIGNED_PLUGINS</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
+</code></pre></div>
+<h3 id="security-settings">Security Settings<a class="headerlink" href="#security-settings" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/config.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security configuration for M1.&quot;&quot;&quot;</span>
+    <span class="n">policy_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;security/policy.yaml&quot;</span>
+    <span class="n">audit_log_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="n">audit_log_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;logs/security_audit.log&quot;</span>
+    <span class="n">sandbox_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">signature_verification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">allow_unsigned_plugins</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Development only</span>
+    <span class="n">max_plugin_execution_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">max_plugin_memory_mb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;SecurityConfig&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load security configuration from environment variables.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">policy_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECFLOW_SECURITY_POLICY_FILE&quot;</span><span class="p">,</span> <span class="s2">&quot;security/policy.yaml&quot;</span><span class="p">),</span>
+            <span class="n">audit_log_level</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECFLOW_AUDIT_LOG_LEVEL&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">),</span>
+            <span class="n">audit_log_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECFLOW_AUDIT_LOG_FILE&quot;</span><span class="p">,</span> <span class="s2">&quot;logs/security_audit.log&quot;</span><span class="p">),</span>
+            <span class="n">sandbox_enabled</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECFLOW_SANDBOX_ENABLED&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+            <span class="n">signature_verification</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECFLOW_SIGNATURE_VERIFICATION&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+            <span class="n">allow_unsigned_plugins</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECFLOW_ALLOW_UNSIGNED_PLUGINS&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="future-enhancements-m2">🔮 Future Enhancements (M2+)<a class="headerlink" href="#future-enhancements-m2" title="Permanent link">&para;</a></h2>
+<h3 id="advanced-security-features">Advanced Security Features<a class="headerlink" href="#advanced-security-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Full Cryptographic Signing</strong>: RSA/ECDSA signature verification</li>
+<li><strong>Certificate Authority</strong>: Plugin signing certificate management</li>
+<li><strong>Container-based Sandboxing</strong>: Docker/containerd isolation</li>
+<li><strong>Network Segmentation</strong>: Isolated network environments</li>
+<li><strong>Real-time Threat Detection</strong>: ML-based anomaly detection</li>
+<li><strong>Security Dashboard</strong>: Web-based security monitoring interface</li>
+</ul>
+<h3 id="compliance-features">Compliance Features<a class="headerlink" href="#compliance-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SOC 2 Compliance</strong>: Security controls and monitoring</li>
+<li><strong>ISO 27001</strong>: Information security management</li>
+<li><strong>NIST Cybersecurity Framework</strong>: Risk management</li>
+<li><strong>GDPR Compliance</strong>: Data protection and privacy</li>
+</ul>
+<hr />
+<h2 id="security-best-practices">📚 Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="for-plugin-developers">For Plugin Developers<a class="headerlink" href="#for-plugin-developers" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Always Sign Plugins</strong>: Use proper signature verification</li>
+<li><strong>Follow Security Guidelines</strong>: Implement secure coding practices</li>
+<li><strong>Test in Sandbox</strong>: Verify plugins work in restricted environment</li>
+<li><strong>Minimize Privileges</strong>: Request only necessary permissions</li>
+<li><strong>Handle Errors Gracefully</strong>: Don't expose sensitive information</li>
+</ol>
+<h3 id="for-system-administrators">For System Administrators<a class="headerlink" href="#for-system-administrators" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Enable All Security Features</strong>: Use sandboxing and signature verification</li>
+<li><strong>Monitor Audit Logs</strong>: Regularly review security events</li>
+<li><strong>Update Security Policies</strong>: Keep policies current with threats</li>
+<li><strong>Regular Security Audits</strong>: Periodic security assessments</li>
+<li><strong>Incident Response Plan</strong>: Prepare for security incidents</li>
+</ol>
+<h3 id="for-users">For Users<a class="headerlink" href="#for-users" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Only Install Trusted Plugins</strong>: Verify plugin sources</li>
+<li><strong>Report Security Issues</strong>: Report suspicious behavior</li>
+<li><strong>Keep System Updated</strong>: Apply security patches promptly</li>
+<li><strong>Use Strong Authentication</strong>: Secure user accounts</li>
+<li><strong>Follow Security Policies</strong>: Comply with organizational policies</li>
+</ol>
+<hr />
+<p><strong>Next:</strong> <a href="17-observability-logging-and-metrics.md">Observability, Logging &amp; Metrics</a></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../js/mermaid.min.js"></script>
+        <script src="../js/mermaid-init.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

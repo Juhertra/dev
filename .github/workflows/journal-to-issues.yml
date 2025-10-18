@@ -1,0 +1,92 @@
+name: Journal → Issues
+on:
+  push:
+    paths:
+      - "control/journal/**/*.ndjson"
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  projects: write
+jobs:
+  journal_to_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Convert new handoff events to Issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const crypto = require('crypto');
+
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+
+            // Gather changed NDJSON files in this push
+            const changed = new Set();
+            for (const c of (context.payload.commits || [])) {
+              for (const f of [...(c.added||[]), ...(c.modified||[])]) {
+                if (/^control\/journal\/.*\.ndjson$/.test(f)) changed.add(f);
+              }
+            }
+            if (!changed.size) { core.info('No NDJSON changes.'); return; }
+
+            // Load baseline
+            const baselinePath = path.join(process.cwd(), 'control', 'config', 'journals_baseline.json');
+            let baselineTs = '1970-01-01T00:00:00Z';
+            if (fs.existsSync(baselinePath)) {
+              try { baselineTs = JSON.parse(fs.readFileSync(baselinePath,'utf8')).baseline_ts || baselineTs; } catch {}
+            }
+            const baseline = new Date(baselineTs);
+
+            function jid(rec) {
+              const raw = JSON.stringify({ts:rec.ts, role:rec.role, event:rec.event, title:rec.title, period:rec.period, items:rec.items, links:rec.links});
+              return crypto.createHash('sha1').update(raw).digest('hex').slice(0,12);
+            }
+
+            const records = [];
+            for (const rel of changed) {
+              const full = path.join(process.cwd(), rel);
+              if (!fs.existsSync(full)) continue;
+              const lines = fs.readFileSync(full, 'utf8').split(/\r?\n/).filter(Boolean);
+              for (const line of lines) {
+                try {
+                  const rec = JSON.parse(line);
+                  if (rec.event === 'handoff' && rec.ts && new Date(rec.ts) >= baseline) {
+                    records.push(rec);
+                  }
+                } catch {}
+              }
+            }
+            if (!records.length) { core.info('No actionable handoff records.'); return; }
+
+            for (const rec of records) {
+              const fid = jid(rec);
+              const title = `[handoff] ${rec.role}: ${rec.title} (${rec.period}) [JID:${fid}]`;
+
+              // idempotency by JID in title
+              const q = `repo:${owner}/${repo} is:issue in:title "${fid}"`;
+              const found = await github.rest.search.issuesAndPullRequests({ q });
+              if ((found.data.items || []).length) { core.info(`Issue exists for ${fid}`); continue; }
+
+              const items = (rec.items || []).map(s => `- ${s}`).join('\n') || '- —';
+              const links = (rec.links || []).map(s => `- ${s}`).join('\n') || '- —';
+              const body = [
+                `**Role:** ${rec.role}`,
+                `**Event:** ${rec.event}`,
+                `**Period:** ${rec.period}`,
+                `**Session:** ${rec.session || '—'}`,
+                ``,
+                `### Items`, items, ``,
+                `### Links`, links, ``,
+                `---`,
+                `JID:${fid}`, `TS:${rec.ts}`
+              ].join('\n');
+
+              const labels = ['from:journal','handoff', `role:${rec.role}`, 'status:Todo'];
+              await github.rest.issues.create({ owner, repo, title, body, labels });
+              core.info(`Created issue for JID ${fid}`);
+            }

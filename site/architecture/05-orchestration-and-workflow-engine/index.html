@@ -59,6 +59,9 @@
 </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a href="../../security/" class="nav-link">Security</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
                                 <ul class="dropdown-menu">
@@ -252,55 +255,55 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#workflow-specification-schema" class="nav-link">⚙️ Workflow Specification Schema</a>
+            <li class="nav-item" data-bs-level="2"><a href="#workflow-specification-schema-m1" class="nav-link">⚙️ Workflow Specification Schema (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#workflow-engine-architecture" class="nav-link">🧩 Workflow Engine Architecture</a>
+            <li class="nav-item" data-bs-level="2"><a href="#workflow-engine-architecture-m1" class="nav-link">🧩 Workflow Engine Architecture (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#python-model-dag-representation" class="nav-link">⚙️ Python Model — DAG Representation</a>
+            <li class="nav-item" data-bs-level="2"><a href="#python-model-dag-representation-m1" class="nav-link">⚙️ Python Model — DAG Representation (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#execution-flow" class="nav-link">🧠 Execution Flow</a>
+            <li class="nav-item" data-bs-level="2"><a href="#execution-flow-m1-implementation" class="nav-link">🧠 Execution Flow (M1 Implementation)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#node-executor-simplified" class="nav-link">⚙️ Node Executor (Simplified)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#node-executor-m1-implementation" class="nav-link">⚙️ Node Executor (M1 Implementation)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#concurrency-model" class="nav-link">🔄 Concurrency Model</a>
+            <li class="nav-item" data-bs-level="2"><a href="#concurrency-model-m1-vs-m3" class="nav-link">🔄 Concurrency Model (M1 vs M3)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#error-handling" class="nav-link">🧩 Error Handling</a>
+            <li class="nav-item" data-bs-level="2"><a href="#error-handling-m1" class="nav-link">🧩 Error Handling (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#event-system" class="nav-link">🧠 Event System</a>
+            <li class="nav-item" data-bs-level="2"><a href="#event-system-m1" class="nav-link">🧠 Event System (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#caching-reuse" class="nav-link">🧩 Caching &amp; Reuse</a>
+            <li class="nav-item" data-bs-level="2"><a href="#caching-reuse-m1" class="nav-link">🧩 Caching &amp; Reuse (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#example-dag-execution-trace" class="nav-link">🧱 Example DAG Execution Trace</a>
+            <li class="nav-item" data-bs-level="2"><a href="#example-dag-execution-trace-m1" class="nav-link">🧱 Example DAG Execution Trace (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#integration-with-other-components" class="nav-link">🔌 Integration with Other Components</a>
+            <li class="nav-item" data-bs-level="2"><a href="#integration-with-other-components-m1" class="nav-link">🔌 Integration with Other Components (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#monitoring-metrics" class="nav-link">🧩 Monitoring &amp; Metrics</a>
+            <li class="nav-item" data-bs-level="2"><a href="#monitoring-metrics-m1" class="nav-link">🧩 Monitoring &amp; Metrics (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🧠 Future Enhancements</a>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements-m3" class="nav-link">🧠 Future Enhancements (M3+)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -317,6 +320,8 @@
 It executes <em>multi-tool workflows</em> composed of <strong>discovery</strong>, <strong>scanning</strong>, <strong>filtering</strong>, <strong>enrichment</strong>, and <strong>analysis</strong> stages.</p>
 <p>Workflows are defined declaratively using <strong>YAML recipes</strong> and executed as <strong>Directed Acyclic Graphs (DAGs)</strong>.<br />
 Each node represents a <em>tool invocation</em>, and edges define <em>data flow</em> between outputs and inputs.</p>
+<p><strong>M1 Implementation Status</strong>: ✅ <strong>Complete</strong> - Sequential execution, validation, retry logic, and plugin integration delivered.</p>
+<p><strong>Note</strong>: SecFlow executes workflow steps sequentially in M1 (parallel execution to be introduced in future versions).</p>
 <hr />
 <h2 id="conceptual-model">🧱 Conceptual Model<a class="headerlink" href="#conceptual-model" title="Permanent link">&para;</a></h2>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
@@ -326,7 +331,7 @@ flowchart LR
     C["Node C&lt;br/&gt;(CVE Enr)"]
     D["Inputs/Outputs"]
     E["Config/Env"]
-    F["Artifact Storage"]
+    F["StoragePort"]
 
     A --&gt; B
     B --&gt; C
@@ -336,169 +341,246 @@ flowchart LR
 <p>Each node produces one or more datasets that can be consumed by downstream nodes.<br />
 The workflow engine guarantees:
 - Topological order of execution<br />
-- Concurrent execution where possible<br />
-- Automatic retries, timeouts, and logging per node  </p>
+- Sequential execution (M1) with parallel execution planned for M3
+- Automatic retries, timeouts, and logging per node<br />
+- StoragePort integration for findings persistence</p>
 <hr />
-<h2 id="workflow-specification-schema">⚙️ Workflow Specification Schema<a class="headerlink" href="#workflow-specification-schema" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>version: &quot;1.0&quot;
-name: &quot;OWASP Top 10 Scan&quot;
-description: &quot;End-to-end test: discovery → scan → enrichment&quot;
+<h2 id="workflow-specification-schema-m1">⚙️ Workflow Specification Schema (M1)<a class="headerlink" href="#workflow-specification-schema-m1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Linear</span><span class="nv"> </span><span class="s">Security</span><span class="nv"> </span><span class="s">Scan&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Simple</span><span class="nv"> </span><span class="s">linear</span><span class="nv"> </span><span class="s">workflow:</span><span class="nv"> </span><span class="s">discovery</span><span class="nv"> </span><span class="s">→</span><span class="nv"> </span><span class="s">scan</span><span class="nv"> </span><span class="s">→</span><span class="nv"> </span><span class="s">enrichment&quot;</span>
 
-nodes:
-  - id: &quot;discovery&quot;
-    type: &quot;discovery.ferox&quot;
-    config:
-      wordlist: &quot;res://wordlists/dirb:latest&quot;
-      threads: 50
-    outputs: [&quot;urls&quot;]
+<span class="nt">nodes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;discovery&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;discovery.ferox&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wordlist</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;res://wordlists/dirb:latest&quot;</span>
+<span class="w">      </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
 
-  - id: &quot;scan&quot;
-    type: &quot;scan.nuclei&quot;
-    inputs: [&quot;urls&quot;]
-    config:
-      templates: &quot;res://templates/owasp-top10:latest&quot;
-      rate_limit: 150
-    outputs: [&quot;findings&quot;]
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;scan&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;scan.nuclei&quot;</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;urls&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">templates</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;res://templates/owasp-top10:latest&quot;</span>
+<span class="w">      </span><span class="nt">rate_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">]</span>
 
-  - id: &quot;enrich&quot;
-    type: &quot;enrich.cve&quot;
-    inputs: [&quot;findings&quot;]
-    config:
-      sources: [&quot;nvd&quot;, &quot;osv&quot;, &quot;exploitdb&quot;]
-    outputs: [&quot;enriched_findings&quot;]
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enrich&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enrich.cve&quot;</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;findings&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">sources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;nvd&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;osv&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;exploitdb&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;enriched_findings&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="c1"># Retry configuration</span>
+<span class="nt">retry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_attempts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">backoff_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">base_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+
+<span class="c1"># State management</span>
+<span class="nt">state</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">checkpoint_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">resume_on_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">cache_intermediate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-<h2 id="workflow-engine-architecture">🧩 Workflow Engine Architecture<a class="headerlink" href="#workflow-engine-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>+-------------------------------------------------------------+
-|                         Worker Engine                       |
-|-------------------------------------------------------------|
-| - WorkflowScheduler                                          |
-| - NodeExecutor                                               |
-| - ResultCache                                                |
-| - EventBus                                                   |
-|-------------------------------------------------------------|
-| Uses: Celery (Redis), asyncio, Pydantic validation           |
-+-------------------------------------------------------------+
-</code></pre></div>
-<h3 id="key-components">Key Components<a class="headerlink" href="#key-components" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>WorkflowScheduler</strong></td>
-<td>Parses YAML recipes, builds DAG, submits jobs to queue.</td>
-</tr>
-<tr>
-<td><strong>NodeExecutor</strong></td>
-<td>Executes nodes, manages subprocess wrappers.</td>
-</tr>
-<tr>
-<td><strong>ResultCache</strong></td>
-<td>Stores intermediate results between nodes.</td>
-</tr>
-<tr>
-<td><strong>EventBus</strong></td>
-<td>Publishes events (node_started, node_completed, workflow_failed).</td>
-</tr>
-<tr>
-<td><strong>WorkflowStore</strong></td>
-<td>Persists workflow metadata in DB.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="python-model-dag-representation">⚙️ Python Model — DAG Representation<a class="headerlink" href="#python-model-dag-representation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code># findings-engine/workflow_dag.py
-from typing import List, Dict, Any
-from pydantic import BaseModel
-
-class Node(BaseModel):
-    id: str
-    type: str
-    config: Dict[str, Any] = {}
-    inputs: List[str] = []
-    outputs: List[str] = []
-
-class Workflow(BaseModel):
-    id: str
-    name: str
-    description: str
-    nodes: List[Node]
-</code></pre></div>
-<h3 id="dag-validation-example">DAG Validation Example<a class="headerlink" href="#dag-validation-example" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>def validate_dag(workflow: Workflow):
-    ids = [n.id for n in workflow.nodes]
-    for node in workflow.nodes:
-        for inp in node.inputs:
-            if inp not in [out for n in workflow.nodes for out in n.outputs]:
-                raise ValueError(f&quot;Unresolved input &#39;{inp}&#39; in node {node.id}&quot;)
-</code></pre></div>
-<h2 id="execution-flow">🧠 Execution Flow<a class="headerlink" href="#execution-flow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Parse &amp; Validate YAML workflow using Pydantic schema.</li>
-<li>Register DAG in database (<code>WorkflowStore</code>).</li>
-<li>Submit nodes to Celery/RQ queue respecting topological order.</li>
-<li>Execute wrappers through <code>ToolPort</code> interface.</li>
-<li>Normalize findings via <code>FindingsEngine</code>.</li>
-<li>Publish events to <code>EventBus</code>.</li>
-<li>Update metrics and trigger downstream listeners (e.g., triage UI).</li>
-</ol>
-<h2 id="node-executor-simplified">⚙️ Node Executor (Simplified)<a class="headerlink" href="#node-executor-simplified" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code># worker/executor.py
-from core_lib.ports.tool_port import ToolPort
-
-class NodeExecutor:
-    def __init__(self, node, context):
-        self.node = node
-        self.context = context
-
-    def run(self):
-        tool: ToolPort = self.context.resolve_tool(self.node.type)
-        tool.prepare(self.node.config)
-        results = tool.execute()
-        self.context.store_results(self.node.outputs, results)
-        return results
-</code></pre></div>
-<h2 id="concurrency-model">🔄 Concurrency Model<a class="headerlink" href="#concurrency-model" title="Permanent link">&para;</a></h2>
-<p>The orchestration engine is designed for asynchronous, multi-tool execution.</p>
-<table>
-<thead>
-<tr>
-<th>Execution Mode</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Sequential</strong></td>
-<td>Enforced by DAG dependencies.</td>
-</tr>
-<tr>
-<td><strong>Parallel</strong></td>
-<td>Independent nodes run concurrently (async or Celery workers).</td>
-</tr>
-<tr>
-<td><strong>Chained</strong></td>
-<td>Output from one node auto-feeds into next via <code>ResultCache</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="workflow-engine-architecture-m1">🧩 Workflow Engine Architecture (M1)<a class="headerlink" href="#workflow-engine-architecture-m1" title="Permanent link">&para;</a></h2>
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
-flowchart LR
-    A["ferox"]
-    B["katana"]
-    C["nuclei"]
-    D["httpx"]
+flowchart TD
+    A["WorkflowExecutor"]
+    B["RecipeValidator"]
+    C["NodeExecutor"]
+    D["PluginLoader"]
+    E["StoragePort"]
+    F["Findings Schema"]
+
+    A --&gt; B
+    A --&gt; C
+    C --&gt; D
+    C --&gt; E
+    E --&gt; F
+
+    G["YAML Recipe"]
+    H["DAG Validation"]
+    I["Sequential Execution"]
+
+    G --&gt; A
+    H --&gt; B
+    I --&gt; C</div>
+<p><strong>M1 Components Delivered</strong>:
+- ✅ <strong>WorkflowExecutor</strong>: Parses YAML recipes, builds DAG, executes nodes sequentially
+- ✅ <strong>RecipeValidator</strong>: Comprehensive validation with Pydantic schemas
+- ✅ <strong>NodeExecutor</strong>: Executes individual nodes with retry logic and timeouts
+- ✅ <strong>PluginLoader</strong>: Integrates with plugin system for tool execution
+- ✅ <strong>StoragePort Integration</strong>: Uses StoragePort for findings persistence</p>
+<hr />
+<h2 id="python-model-dag-representation-m1">⚙️ Python Model — DAG Representation (M1)<a class="headerlink" href="#python-model-dag-representation-m1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># packages/workflow_engine/executor.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NodeSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Node specification for workflow execution.&quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">requires</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">timeout_s</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">retry_backoff_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Workflow specification.&quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NodeSpec</span><span class="p">]</span>
+    <span class="n">retry_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">state_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowExecutor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;M1 Workflow Executor with sequential execution.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">:</span> <span class="n">StoragePort</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">storage</span> <span class="ow">or</span> <span class="n">InMemoryStorageAdapter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_loader</span> <span class="o">=</span> <span class="n">PluginLoader</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow</span><span class="p">:</span> <span class="n">WorkflowSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute workflow with sequential node processing.&quot;&quot;&quot;</span>
+        <span class="c1"># M1: Sequential execution</span>
+        <span class="c1"># M3: Parallel execution where dependencies allow</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<h3 id="dag-validation-example-m1">DAG Validation Example (M1)<a class="headerlink" href="#dag-validation-example-m1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_dag</span><span class="p">(</span><span class="n">workflow</span><span class="p">:</span> <span class="n">WorkflowSpec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate workflow DAG structure.&quot;&quot;&quot;</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
+
+    <span class="c1"># Check for cycles</span>
+    <span class="k">if</span> <span class="n">has_cycles</span><span class="p">(</span><span class="n">workflow</span><span class="o">.</span><span class="n">nodes</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Workflow contains cycles&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validate input/output references</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">requires</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">out</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">nodes</span> <span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">outputs</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unresolved input &#39;</span><span class="si">{</span><span class="n">inp</span><span class="si">}</span><span class="s2">&#39; in node </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validate node types</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_node_type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown node type: </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="execution-flow-m1-implementation">🧠 Execution Flow (M1 Implementation)<a class="headerlink" href="#execution-flow-m1-implementation" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Parse &amp; Validate</strong> YAML workflow using Pydantic schema</li>
+<li><strong>Build DAG</strong> with topological ordering and dependency resolution</li>
+<li><strong>Register Workflow</strong> in execution context</li>
+<li><strong>Execute Nodes Sequentially</strong> respecting topological order</li>
+<li><strong>Plugin Integration</strong> via PluginLoader for tool execution</li>
+<li><strong>Normalize Findings</strong> via StoragePort with schema validation</li>
+<li><strong>Update Metrics</strong> and trigger downstream listeners</li>
+</ol>
+<p><strong>M1 Execution Model</strong>:
+- <strong>Sequential</strong>: Nodes execute one after another in topological order
+- <strong>Retry Logic</strong>: Configurable retry with exponential backoff
+- <strong>Timeout Handling</strong>: Per-node timeout enforcement
+- <strong>Error Recovery</strong>: Graceful failure handling with partial execution support</p>
+<hr />
+<h2 id="node-executor-m1-implementation">⚙️ Node Executor (M1 Implementation)<a class="headerlink" href="#node-executor-m1-implementation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># packages/workflow_engine/executor.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NodeExecutor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;M1 Node Executor with retry logic and timeout handling.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeSpec</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ExecutionContext</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">storage</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute node with retry logic and timeout handling.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">retries</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Load plugin for node type</span>
+                <span class="n">plugin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">plugin_loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+                <span class="c1"># Execute plugin with timeout</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_with_timeout</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
+
+                <span class="c1"># Persist findings via StoragePort</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_persist_findings</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">result</span>
+
+            <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">retries</span><span class="p">:</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">retry_backoff_s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">retries</span><span class="p">:</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">retry_backoff_s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_execute_with_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin</span><span class="p">:</span> <span class="n">PluginInterface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute plugin with timeout enforcement.&quot;&quot;&quot;</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">timeout_s</span> <span class="ow">or</span> <span class="mi">300</span>  <span class="c1"># Default 5 minutes</span>
+
+        <span class="k">with</span> <span class="n">timeout_context</span><span class="p">(</span><span class="n">timeout</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">plugin</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_node_inputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">),</span>
+                <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_persist_findings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Persist findings via StoragePort.&quot;&quot;&quot;</span>
+        <span class="n">findings</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;findings&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">for</span> <span class="n">finding</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">:</span>
+            <span class="c1"># Ensure schema compliance</span>
+            <span class="n">finding</span><span class="p">[</span><span class="s2">&quot;finding_schema_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">save_finding</span><span class="p">(</span><span class="n">finding</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="concurrency-model-m1-vs-m3">🔄 Concurrency Model (M1 vs M3)<a class="headerlink" href="#concurrency-model-m1-vs-m3" title="Permanent link">&para;</a></h2>
+<p><strong>M1 Implementation</strong>: Sequential execution only
+- Nodes execute one after another in topological order
+- Dependencies are resolved before execution
+- Simple error handling and retry logic
+- Suitable for linear workflows and testing</p>
+<p><strong>M3 Planned</strong>: Parallel execution where dependencies allow
+- Independent nodes run concurrently
+- Dependency resolution with parallel execution
+- Advanced error handling and recovery
+- Event-driven architecture for real-time monitoring</p>
+<h3 id="example-sequential-execution-m1">Example Sequential Execution (M1)<a class="headerlink" href="#example-sequential-execution-m1" title="Permanent link">&para;</a></h3>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["ferox&lt;br/&gt;(discovery)"]
+    B["katana&lt;br/&gt;(subdomain)"]
+    C["nuclei&lt;br/&gt;(scan)"]
+    D["cve-enrich&lt;br/&gt;(enrichment)"]
 
     A --&gt; B
     B --&gt; C
-    A --&gt; D
-    D --&gt; C</div>
-<h2 id="error-handling">🧩 Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+    A --&gt; C
+    C --&gt; D</div>
+<p><strong>Execution Order</strong>: ferox → katana → nuclei → cve-enrich</p>
+<hr />
+<h2 id="error-handling-m1">🧩 Error Handling (M1)<a class="headerlink" href="#error-handling-m1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -509,54 +591,69 @@ flowchart LR
 <tbody>
 <tr>
 <td>Tool crash / non-zero exit</td>
-<td>Retry (max=3) then mark node failed.</td>
+<td>Retry (max=3) then mark node failed</td>
 </tr>
 <tr>
 <td>Timeout</td>
-<td>Kill process, log event, continue DAG.</td>
+<td>Kill process, log event, continue DAG</td>
 </tr>
 <tr>
 <td>Missing input dataset</td>
-<td>Block downstream nodes, mark dependency unresolved.</td>
+<td>Block downstream nodes, mark dependency unresolved</td>
 </tr>
 <tr>
 <td>Parser error</td>
-<td>Log raw output, fallback to generic findings schema.</td>
+<td>Log raw output, fallback to generic findings schema</td>
+</tr>
+<tr>
+<td>Plugin load failure</td>
+<td>Skip node, log warning, continue execution</td>
 </tr>
 </tbody>
 </table>
-<p>Each failure is logged in the <code>workflow_runs</code> table and visible in the UI.</p>
-<h2 id="event-system">🧠 Event System<a class="headerlink" href="#event-system" title="Permanent link">&para;</a></h2>
-<p>The orchestration layer publishes real-time events to facilitate reactive behavior.</p>
+<p>Each failure is logged with context and stored via StoragePort for analysis.</p>
+<hr />
+<h2 id="event-system-m1">🧠 Event System (M1)<a class="headerlink" href="#event-system-m1" title="Permanent link">&para;</a></h2>
+<p>The orchestration layer publishes events for monitoring and debugging:</p>
 <h3 id="example-event-contract">Example Event Contract<a class="headerlink" href="#example-event-contract" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>{
-  &quot;event&quot;: &quot;node_completed&quot;,
-  &quot;workflow_id&quot;: &quot;abc123&quot;,
-  &quot;node_id&quot;: &quot;scan&quot;,
-  &quot;duration&quot;: 12.3,
-  &quot;findings&quot;: 124
-}
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node_completed&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;workflow_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;node_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;scan&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;node_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;scan.nuclei&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;duration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">12.3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;findings_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:30:00Z&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>Events can be consumed by:
-- WebSocket clients in UI (live progress)
-- Audit log processors
-- Metrics collectors</p>
-<h2 id="caching-reuse">🧩 Caching &amp; Reuse<a class="headerlink" href="#caching-reuse" title="Permanent link">&para;</a></h2>
+- Logging systems for audit trails
+- Metrics collectors for performance monitoring
+- UI components for real-time progress (M3)</p>
+<hr />
+<h2 id="caching-reuse-m1">🧩 Caching &amp; Reuse (M1)<a class="headerlink" href="#caching-reuse-m1" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Intermediate Data:</strong> Stored under <code>/cache/{workflow_id}/{node_id}.json</code></li>
-<li><strong>ResultHashing:</strong> SHA256 of config + inputs for cache hits</li>
-<li><strong>Warm Runs:</strong> Workflows can resume from cached intermediate outputs</li>
+<li><strong>Intermediate Data</strong>: Stored via StoragePort with schema validation</li>
+<li><strong>Result Hashing</strong>: SHA256 of config + inputs for cache hits</li>
+<li><strong>Warm Runs</strong>: Workflows can resume from cached intermediate outputs</li>
 </ul>
-<div class="highlight"><pre><span></span><code>cache_key = hashlib.sha256(json.dumps(node.config).encode()).hexdigest()
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_cache_key</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">NodeSpec</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate cache key for node execution.&quot;&quot;&quot;</span>
+    <span class="n">config_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">input_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">input_hash</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
-<h2 id="example-dag-execution-trace">🧱 Example DAG Execution Trace<a class="headerlink" href="#example-dag-execution-trace" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>[2025-10-06 12:01:02] Workflow &quot;OWASP Top 10 Scan&quot; started
-[2025-10-06 12:01:05] Node discovery.ferox completed (urls=356)
-[2025-10-06 12:01:07] Node scan.nuclei completed (findings=112)
-[2025-10-06 12:01:10] Node enrich.cve completed (enriched_findings=112)
-[2025-10-06 12:01:10] Workflow completed successfully
+<hr />
+<h2 id="example-dag-execution-trace-m1">🧱 Example DAG Execution Trace (M1)<a class="headerlink" href="#example-dag-execution-trace-m1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>[2025-10-14 12:01:02] Workflow &quot;Linear Security Scan&quot; started
+[2025-10-14 12:01:05] Node discovery.ferox completed (urls=356)
+[2025-10-14 12:01:07] Node scan.nuclei completed (findings=112)
+[2025-10-14 12:01:10] Node enrich.cve completed (enriched_findings=112)
+[2025-10-14 12:01:10] Workflow completed successfully
 </code></pre></div>
-<h2 id="integration-with-other-components">🔌 Integration with Other Components<a class="headerlink" href="#integration-with-other-components" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="integration-with-other-components-m1">🔌 Integration with Other Components (M1)<a class="headerlink" href="#integration-with-other-components-m1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -567,41 +664,46 @@ flowchart LR
 <tbody>
 <tr>
 <td><strong>Findings Engine</strong></td>
-<td>Receives raw output for normalization.</td>
+<td>Receives raw output for normalization via StoragePort</td>
 </tr>
 <tr>
-<td><strong>Wrappers</strong></td>
-<td>Execute the underlying binaries/tools.</td>
+<td><strong>Plugin System</strong></td>
+<td>Executes plugins through PluginLoader interface</td>
 </tr>
 <tr>
 <td><strong>Storage</strong></td>
-<td>Persists workflow runs, logs, results.</td>
+<td>Persists workflow runs, logs, results via StoragePort</td>
 </tr>
 <tr>
-<td><strong>Plugins</strong></td>
-<td>Hooks into <code>on_node_complete</code> and <code>on_workflow_complete</code>.</td>
+<td><strong>Security</strong></td>
+<td>Validates plugin signatures and enforces sandboxing</td>
 </tr>
 <tr>
-<td><strong>UI / API</strong></td>
-<td>Subscribes to event bus for progress updates.</td>
+<td><strong>Observability</strong></td>
+<td>Publishes events and metrics for monitoring</td>
 </tr>
 </tbody>
 </table>
-<h2 id="monitoring-metrics">🧩 Monitoring &amp; Metrics<a class="headerlink" href="#monitoring-metrics" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="monitoring-metrics-m1">🧩 Monitoring &amp; Metrics (M1)<a class="headerlink" href="#monitoring-metrics-m1" title="Permanent link">&para;</a></h2>
 <p>Every node execution reports:
 - Duration (seconds)
 - Findings count
 - Exit status
-- CPU/memory usage
-- Cache hits</p>
-<p>These metrics feed Prometheus exporters and the analytics dashboards.</p>
-<h2 id="future-enhancements">🧠 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+- Memory usage
+- Cache hits
+- Plugin execution details</p>
+<p>These metrics are stored via StoragePort and available for analysis.</p>
+<hr />
+<h2 id="future-enhancements-m3">🧠 Future Enhancements (M3+)<a class="headerlink" href="#future-enhancements-m3" title="Permanent link">&para;</a></h2>
 <ul>
-<li>GraphQL-based workflow builder UI.</li>
-<li>Dynamic scheduling policies (priority, resource weighting).</li>
-<li>Conditional branching (if, switch nodes).</li>
-<li>AI-assisted workflow suggestions based on context and prior runs.</li>
-<li>Distributed orchestration using Celery groups/chords.</li>
+<li><strong>Parallel Execution</strong>: Concurrent node execution where dependencies allow</li>
+<li><strong>Event System</strong>: Real-time event publishing and monitoring</li>
+<li><strong>Advanced Caching</strong>: Intermediate result caching with persistence</li>
+<li><strong>GraphQL API</strong>: Workflow builder UI integration</li>
+<li><strong>Dynamic Scheduling</strong>: Priority and resource weighting</li>
+<li><strong>Conditional Branching</strong>: if, switch nodes for complex workflows</li>
+<li><strong>AI-assisted Suggestions</strong>: Workflow recommendations based on context</li>
 </ul>
 <hr />
 <p><strong>Next:</strong> <a href="../06-plugin-system/">Plugin System</a>

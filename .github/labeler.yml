@@ -1,0 +1,16 @@
+area:runtime:        [ 'packages/core-lib/**' ]
+area:workflow:       [ 'packages/workflow/**' ]
+area:tools:          [ 'packages/wrappers/**' ]
+area:findings:       [ 'packages/findings/**' ]
+area:observability:  [ 'packages/observability/**' ]
+area:security:       [ 'packages/security/**' ]
+area:resources:      [ 'packages/resources/**' ]
+area:docs:           [ 'docs/**' ]
+role:coordinator:    [ 'control/**', 'reports/**' ]
+role:integration:    [ 'control/**', 'tools/**' ]
+
+# Status labels for project management
+status:Todo:         [ 'control/journal/**/*.ndjson' ]
+status:In Progress:  [ 'packages/**', 'tools/**', 'scripts/**' ]
+status:Blocked:      [ 'docs/**', 'tests/**' ]
+status:Done:         [ 'reports/**', 'archive/**' ]

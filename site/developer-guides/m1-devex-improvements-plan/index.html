@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>M1 Developer Experience Improvements Plan - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../security/" class="nav-link">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#m1-developer-experience-improvements-plan" class="nav-link">M1 Developer Experience Improvements Plan</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#m1-devex-strategy" class="nav-link">🎯 M1 DevEx Strategy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-1-dev-environment-parity" class="nav-link">🚀 Priority 1: Dev Environment Parity</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-2-plugin-development-tooling" class="nav-link">🛠️ Priority 2: Plugin Development Tooling</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-3-internal-documentation" class="nav-link">📚 Priority 3: Internal Documentation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-4-extended-testing-infrastructure" class="nav-link">🧪 Priority 4: Extended Testing Infrastructure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-5-observability-integration" class="nav-link">📊 Priority 5: Observability Integration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-6-development-tools" class="nav-link">🔧 Priority 6: Development Tools</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#implementation-timeline" class="nav-link">📋 Implementation Timeline</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#success-metrics" class="nav-link">🎯 Success Metrics</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#m1-devex-deliverables" class="nav-link">🚀 M1 DevEx Deliverables</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#coordination-points" class="nav-link">📞 Coordination Points</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="m1-developer-experience-improvements-plan">M1 Developer Experience Improvements Plan<a class="headerlink" href="#m1-developer-experience-improvements-plan" title="Permanent link">&para;</a></h1>
+<h2 id="m1-devex-strategy">🎯 <strong>M1 DevEx Strategy</strong><a class="headerlink" href="#m1-devex-strategy" title="Permanent link">&para;</a></h2>
+<p>With M0-D6 foundation complete, M1 focuses on <strong>scaling developer productivity</strong> as the system grows with plugins, workflows, and advanced features.</p>
+<h2 id="priority-1-dev-environment-parity">🚀 <strong>Priority 1: Dev Environment Parity</strong><a class="headerlink" href="#priority-1-dev-environment-parity" title="Permanent link">&para;</a></h2>
+<h3 id="goal-maintain-local-ci-parity-as-system-complexity-grows"><strong>Goal</strong>: Maintain "local = CI" parity as system complexity grows<a class="headerlink" href="#goal-maintain-local-ci-parity-as-system-complexity-grows" title="Permanent link">&para;</a></h3>
+<h4 id="plugin-system-environment"><strong>Plugin System Environment</strong><a class="headerlink" href="#plugin-system-environment" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure plugin development doesn&#39;t break parity</span>
+make<span class="w"> </span>setup-plugin-env
+<span class="c1"># - Sets up plugin development environment</span>
+<span class="c1"># - Installs plugin dependencies</span>
+<span class="c1"># - Configures plugin paths</span>
+<span class="c1"># - Validates plugin manifest schema</span>
+</code></pre></div>
+<h4 id="workflow-engine-environment"><strong>Workflow Engine Environment</strong><a class="headerlink" href="#workflow-engine-environment" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure workflow development maintains parity</span>
+make<span class="w"> </span>setup-workflow-env
+<span class="c1"># - Sets up workflow development environment</span>
+<span class="c1"># - Installs workflow dependencies</span>
+<span class="c1"># - Configures workflow paths</span>
+<span class="c1"># - Validates workflow schema</span>
+</code></pre></div>
+<h4 id="environment-variables-management"><strong>Environment Variables Management</strong><a class="headerlink" href="#environment-variables-management" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Standardized environment setup</span>
+.env.example<span class="w">          </span><span class="c1"># Template for required variables</span>
+.env.local<span class="w">           </span><span class="c1"># Local development overrides</span>
+.env.test<span class="w">            </span><span class="c1"># Test environment configuration</span>
+</code></pre></div>
+<p><strong>Implementation</strong>:
+- Create environment setup scripts
+- Document all required environment variables
+- Ensure CI uses same environment configuration
+- Add environment validation to pre-commit hooks</p>
+<h2 id="priority-2-plugin-development-tooling">🛠️ <strong>Priority 2: Plugin Development Tooling</strong><a class="headerlink" href="#priority-2-plugin-development-tooling" title="Permanent link">&para;</a></h2>
+<h3 id="goal-streamline-plugin-creation-and-development"><strong>Goal</strong>: Streamline plugin creation and development<a class="headerlink" href="#goal-streamline-plugin-creation-and-development" title="Permanent link">&para;</a></h3>
+<h4 id="plugin-scaffolding"><strong>Plugin Scaffolding</strong><a class="headerlink" href="#plugin-scaffolding" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create new plugin from template</span>
+make<span class="w"> </span>scaffold-plugin<span class="w"> </span><span class="nv">PLUGIN_NAME</span><span class="o">=</span>my-plugin<span class="w"> </span><span class="nv">PLUGIN_TYPE</span><span class="o">=</span>scanner
+
+<span class="c1"># Generates:</span>
+<span class="c1"># plugins/my-plugin/</span>
+<span class="c1"># ├── __init__.py</span>
+<span class="c1"># ├── manifest.yaml</span>
+<span class="c1"># ├── scanner.py</span>
+<span class="c1"># ├── tests/</span>
+<span class="c1"># │   └── test_scanner.py</span>
+<span class="c1"># └── README.md</span>
+</code></pre></div>
+<h4 id="plugin-development-tools"><strong>Plugin Development Tools</strong><a class="headerlink" href="#plugin-development-tools" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Plugin-specific commands</span>
+make<span class="w"> </span>plugin-test<span class="w"> </span><span class="nv">PLUGIN_NAME</span><span class="o">=</span>my-plugin<span class="w">    </span><span class="c1"># Test specific plugin</span>
+make<span class="w"> </span>plugin-lint<span class="w"> </span><span class="nv">PLUGIN_NAME</span><span class="o">=</span>my-plugin<span class="w">     </span><span class="c1"># Lint specific plugin</span>
+make<span class="w"> </span>plugin-validate<span class="w"> </span><span class="nv">PLUGIN_NAME</span><span class="o">=</span>my-plugin<span class="w"> </span><span class="c1"># Validate plugin manifest</span>
+</code></pre></div>
+<h4 id="plugin-template-system"><strong>Plugin Template System</strong><a class="headerlink" href="#plugin-template-system" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># templates/plugin-scanner.yaml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{PLUGIN_NAME}}&quot;</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;scanner&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{PLUGIN_DESCRIPTION}}&quot;</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{AUTHOR_NAME}}&quot;</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;requests&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;pyyaml&quot;</span>
+</code></pre></div>
+<p><strong>Implementation</strong>:
+- Create cookiecutter templates for different plugin types
+- Add plugin-specific Makefile targets
+- Implement plugin validation tools
+- Create plugin development documentation</p>
+<h2 id="priority-3-internal-documentation">📚 <strong>Priority 3: Internal Documentation</strong><a class="headerlink" href="#priority-3-internal-documentation" title="Permanent link">&para;</a></h2>
+<h3 id="goal-comprehensive-developer-guides-for-m1-features"><strong>Goal</strong>: Comprehensive developer guides for M1 features<a class="headerlink" href="#goal-comprehensive-developer-guides-for-m1-features" title="Permanent link">&para;</a></h3>
+<h4 id="plugin-developer-guide"><strong>Plugin Developer Guide</strong><a class="headerlink" href="#plugin-developer-guide" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="gh"># docs/developer-guides/plugin-development.md</span>
+<span class="gu">## Plugin Architecture</span>
+<span class="gu">## Security Policy</span>
+<span class="gu">## Testing Guidelines</span>
+<span class="gu">## Deployment Process</span>
+</code></pre></div>
+<h4 id="workflow-developer-guide"><strong>Workflow Developer Guide</strong><a class="headerlink" href="#workflow-developer-guide" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="gh"># docs/developer-guides/workflow-development.md</span>
+<span class="gu">## Workflow Engine Design</span>
+<span class="gu">## Linear v1 Implementation</span>
+<span class="gu">## Integration Patterns</span>
+<span class="gu">## Testing Strategies</span>
+</code></pre></div>
+<h4 id="integration-developer-guide"><strong>Integration Developer Guide</strong><a class="headerlink" href="#integration-developer-guide" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="gh"># docs/developer-guides/integration-development.md</span>
+<span class="gu">## Tool Integration Patterns</span>
+<span class="gu">## Parser Development</span>
+<span class="gu">## Contract Testing</span>
+<span class="gu">## Performance Considerations</span>
+</code></pre></div>
+<p><strong>Implementation</strong>:
+- Collaborate with Security Lead on plugin security docs
+- Work with Tools Lead on integration patterns
+- Create comprehensive developer guides
+- Establish documentation review process</p>
+<h2 id="priority-4-extended-testing-infrastructure">🧪 <strong>Priority 4: Extended Testing Infrastructure</strong><a class="headerlink" href="#priority-4-extended-testing-infrastructure" title="Permanent link">&para;</a></h2>
+<h3 id="goal-higher-level-testing-for-m1-architecture"><strong>Goal</strong>: Higher-level testing for M1 architecture<a class="headerlink" href="#goal-higher-level-testing-for-m1-architecture" title="Permanent link">&para;</a></h3>
+<h4 id="contract-tests-directory"><strong>Contract Tests Directory</strong><a class="headerlink" href="#contract-tests-directory" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create missing contract tests structure</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>tests/contracts/
+touch<span class="w"> </span>tests/contracts/__init__.py
+touch<span class="w"> </span>tests/contracts/test_plugin_contracts.py
+touch<span class="w"> </span>tests/contracts/test_workflow_contracts.py
+</code></pre></div>
+<h4 id="integration-test-framework"><strong>Integration Test Framework</strong><a class="headerlink" href="#integration-test-framework" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/integration/test_plugin_workflow_integration.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_workflow_end_to_end</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test plugin execution within workflow engine.&quot;&quot;&quot;</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">WorkflowEngine</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;test-workflow.yaml&quot;</span><span class="p">)</span>
+    <span class="n">plugin</span> <span class="o">=</span> <span class="n">PluginLoader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;test-plugin&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">findings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</code></pre></div>
+<h4 id="sample-integration-test"><strong>Sample Integration Test</strong><a class="headerlink" href="#sample-integration-test" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/integration/test_basic_workflow.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_basic_workflow_execution</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test basic workflow execution with dummy plugin.&quot;&quot;&quot;</span>
+    <span class="c1"># Create dummy plugin</span>
+    <span class="n">plugin</span> <span class="o">=</span> <span class="n">DummyPlugin</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test-scanner&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create simple workflow</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">LinearWorkflow</span><span class="p">()</span>
+    <span class="n">workflow</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
+
+    <span class="c1"># Execute workflow</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;http://example.com&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Verify results</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">completed</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">findings_count</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</code></pre></div>
+<p><strong>Implementation</strong>:
+- Create contract tests directory structure
+- Write sample integration tests
+- Establish integration test patterns
+- Coordinate with QA Lead on test strategies</p>
+<h2 id="priority-5-observability-integration">📊 <strong>Priority 5: Observability Integration</strong><a class="headerlink" href="#priority-5-observability-integration" title="Permanent link">&para;</a></h2>
+<h3 id="goal-seamless-logging-and-metrics-in-development"><strong>Goal</strong>: Seamless logging and metrics in development<a class="headerlink" href="#goal-seamless-logging-and-metrics-in-development" title="Permanent link">&para;</a></h3>
+<h4 id="test-logging-configuration"><strong>Test Logging Configuration</strong><a class="headerlink" href="#test-logging-configuration" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/conftest.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_test_logging</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure logging for tests.&quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>  <span class="c1"># Reduce noise in tests</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+</code></pre></div>
+<h4 id="development-metrics"><strong>Development Metrics</strong><a class="headerlink" href="#development-metrics" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/dev-metrics.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_dev_metrics</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect development metrics.&quot;&quot;&quot;</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;test_coverage&#39;</span><span class="p">:</span> <span class="n">get_coverage_percentage</span><span class="p">(),</span>
+        <span class="s1">&#39;lint_errors&#39;</span><span class="p">:</span> <span class="n">get_lint_error_count</span><span class="p">(),</span>
+        <span class="s1">&#39;type_errors&#39;</span><span class="p">:</span> <span class="n">get_type_error_count</span><span class="p">(),</span>
+        <span class="s1">&#39;plugin_count&#39;</span><span class="p">:</span> <span class="n">get_plugin_count</span><span class="p">(),</span>
+        <span class="s1">&#39;workflow_count&#39;</span><span class="p">:</span> <span class="n">get_workflow_count</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">metrics</span>
+</code></pre></div>
+<p><strong>Implementation</strong>:
+- Work with Observability Lead on logging standards
+- Implement test logging configuration
+- Create development metrics collection
+- Establish observability patterns for M1</p>
+<h2 id="priority-6-development-tools">🔧 <strong>Priority 6: Development Tools</strong><a class="headerlink" href="#priority-6-development-tools" title="Permanent link">&para;</a></h2>
+<h3 id="goal-enhanced-developer-productivity-tools"><strong>Goal</strong>: Enhanced developer productivity tools<a class="headerlink" href="#goal-enhanced-developer-productivity-tools" title="Permanent link">&para;</a></h3>
+<h4 id="development-dashboard"><strong>Development Dashboard</strong><a class="headerlink" href="#development-dashboard" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Local development status</span>
+make<span class="w"> </span>dev-status
+<span class="c1"># Shows:</span>
+<span class="c1"># - Test coverage</span>
+<span class="c1"># - Lint status</span>
+<span class="c1"># - Type check status</span>
+<span class="c1"># - Plugin status</span>
+<span class="c1"># - Workflow status</span>
+</code></pre></div>
+<h4 id="quick-development-commands"><strong>Quick Development Commands</strong><a class="headerlink" href="#quick-development-commands" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Plugin development shortcuts</span>
+make<span class="w"> </span>plugin-dev<span class="w"> </span><span class="nv">PLUGIN_NAME</span><span class="o">=</span>my-plugin<span class="w">    </span><span class="c1"># Start plugin development mode</span>
+make<span class="w"> </span>plugin-watch<span class="w"> </span><span class="nv">PLUGIN_NAME</span><span class="o">=</span>my-plugin<span class="w">  </span><span class="c1"># Watch plugin for changes</span>
+
+<span class="c1"># Workflow development shortcuts</span>
+make<span class="w"> </span>workflow-dev<span class="w"> </span><span class="nv">WORKFLOW_NAME</span><span class="o">=</span>my-workflow<span class="w">    </span><span class="c1"># Start workflow development mode</span>
+make<span class="w"> </span>workflow-test<span class="w"> </span><span class="nv">WORKFLOW_NAME</span><span class="o">=</span>my-workflow<span class="w">   </span><span class="c1"># Test workflow execution</span>
+</code></pre></div>
+<h4 id="development-utilities"><strong>Development Utilities</strong><a class="headerlink" href="#development-utilities" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/dev-utils.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_plugin_manifest</span><span class="p">(</span><span class="n">manifest_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate plugin manifest against schema.&quot;&quot;&quot;</span>
+    <span class="c1"># Implementation</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_plugin_tests</span><span class="p">(</span><span class="n">plugin_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate test skeleton for plugin.&quot;&quot;&quot;</span>
+    <span class="c1"># Implementation</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_workflow_syntax</span><span class="p">(</span><span class="n">workflow_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check workflow syntax and dependencies.&quot;&quot;&quot;</span>
+    <span class="c1"># Implementation</span>
+</code></pre></div>
+<p><strong>Implementation</strong>:
+- Create development dashboard
+- Implement plugin/workflow development shortcuts
+- Build development utilities
+- Establish development tool patterns</p>
+<h2 id="implementation-timeline">📋 <strong>Implementation Timeline</strong><a class="headerlink" href="#implementation-timeline" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-2-foundation"><strong>Week 1-2: Foundation</strong><a class="headerlink" href="#week-1-2-foundation" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create plugin scaffolding system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement environment parity tools</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up contract tests directory</li>
+</ul>
+<h3 id="week-3-4-documentation"><strong>Week 3-4: Documentation</strong><a class="headerlink" href="#week-3-4-documentation" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Write plugin developer guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create workflow developer guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Establish documentation review process</li>
+</ul>
+<h3 id="week-5-6-testing"><strong>Week 5-6: Testing</strong><a class="headerlink" href="#week-5-6-testing" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement integration test framework</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write sample integration tests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Establish testing patterns</li>
+</ul>
+<h3 id="week-7-8-tooling"><strong>Week 7-8: Tooling</strong><a class="headerlink" href="#week-7-8-tooling" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create development dashboard</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement development utilities</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Establish observability patterns</li>
+</ul>
+<h2 id="success-metrics">🎯 <strong>Success Metrics</strong><a class="headerlink" href="#success-metrics" title="Permanent link">&para;</a></h2>
+<h3 id="m1-devex-kpis"><strong>M1 DevEx KPIs</strong><a class="headerlink" href="#m1-devex-kpis" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Development Time</strong>: &lt; 2 hours from idea to working plugin</li>
+<li><strong>Environment Parity</strong>: 100% local-CI parity maintained</li>
+<li><strong>Documentation Coverage</strong>: 100% of M1 features documented</li>
+<li><strong>Test Coverage</strong>: Maintain or improve from M0 baseline</li>
+<li><strong>Developer Satisfaction</strong>: Positive feedback on M1 tooling</li>
+</ul>
+<h3 id="quality-gates"><strong>Quality Gates</strong><a class="headerlink" href="#quality-gates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Plugin Validation</strong>: All plugins pass validation</li>
+<li><strong>Workflow Testing</strong>: All workflows have integration tests</li>
+<li><strong>Documentation</strong>: All new features documented</li>
+<li><strong>Performance</strong>: No regression in development speed</li>
+</ul>
+<h2 id="m1-devex-deliverables">🚀 <strong>M1 DevEx Deliverables</strong><a class="headerlink" href="#m1-devex-deliverables" title="Permanent link">&para;</a></h2>
+<h3 id="tools"><strong>Tools</strong><a class="headerlink" href="#tools" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Plugin scaffolding system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Development dashboard</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Environment parity tools</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Development utilities</li>
+</ul>
+<h3 id="documentation"><strong>Documentation</strong><a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Plugin developer guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Workflow developer guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration developer guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> M1 onboarding updates</li>
+</ul>
+<h3 id="testing"><strong>Testing</strong><a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Contract tests framework</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration test patterns</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Sample integration tests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Testing guidelines</li>
+</ul>
+<h3 id="infrastructure"><strong>Infrastructure</strong><a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Environment management</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Observability integration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Development tooling</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Quality gates</li>
+</ul>
+<h2 id="coordination-points">📞 <strong>Coordination Points</strong><a class="headerlink" href="#coordination-points" title="Permanent link">&para;</a></h2>
+<h3 id="security-lead"><strong>Security Lead</strong><a class="headerlink" href="#security-lead" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Plugin security policy documentation</li>
+<li>Security testing guidelines</li>
+<li>Plugin validation requirements</li>
+</ul>
+<h3 id="tools-lead"><strong>Tools Lead</strong><a class="headerlink" href="#tools-lead" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Tool integration patterns</li>
+<li>Parser development guidelines</li>
+<li>Integration testing strategies</li>
+</ul>
+<h3 id="qa-lead"><strong>QA Lead</strong><a class="headerlink" href="#qa-lead" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Testing framework design</li>
+<li>Test automation patterns</li>
+<li>Quality assurance processes</li>
+</ul>
+<h3 id="observability-lead"><strong>Observability Lead</strong><a class="headerlink" href="#observability-lead" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Logging standards</li>
+<li>Metrics collection</li>
+<li>Monitoring integration</li>
+</ul>
+<hr />
+<p><strong>M1 DevEx Mission</strong>: Scale developer productivity while maintaining quality and governance standards established in M0-D6.</p>
+<p><em>Plan created by DevEx Lead - 2025-10-15</em></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

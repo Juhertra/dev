@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Python 3.14 Integration Strategy - M1 DevEx - SecFlow Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">SecFlow Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../developer-start-here/" class="nav-link">Developer Start Here</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Governance</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../governance/engineering-standards/" class="dropdown-item">Engineering Standards</a>
+</li>
+                                    
+<li>
+    <a href="../../governance/development-conventions/" class="dropdown-item">Development Conventions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">API Documentation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../api/" class="dropdown-item">Overview</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../security/" class="nav-link">Security</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/00-index/" class="dropdown-item">Home</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/01-title-and-executive-summary/" class="dropdown-item">Executive Summary</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Architecture</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../architecture/02-architecture-philosophy/" class="dropdown-item">Philosophy</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/03-repository-layout/" class="dropdown-item">Repository Layout</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/04-core-packages-and-responsibilities/" class="dropdown-item">Core Packages</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/05-orchestration-and-workflow-engine/" class="dropdown-item">Orchestration Engine</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/06-plugin-system/" class="dropdown-item">Plugin System</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/07-tools-integration-model/" class="dropdown-item">Tools Integration</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/08-tool-manager-and-ux-design/" class="dropdown-item">Tool Manager & UX</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/09-resource-registry/" class="dropdown-item">Resource Registry</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/10-wordlist-and-output-sharing/" class="dropdown-item">Wordlists & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/11-project-isolation-and-data-sharing/" class="dropdown-item">Project Isolation & Sharing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/12-findings-model-and-schema/" class="dropdown-item">Findings Schema</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/13-cve-cwe-poc-enrichment-layer/" class="dropdown-item">Enrichment Layer</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/14-poc-sources-and-legal-guidelines/" class="dropdown-item">PoC Sources & Legal</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/15-garbage-collection-and-retention/" class="dropdown-item">Garbage Collection</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/16-security-model/" class="dropdown-item">Security Model</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/17-observability-logging-and-metrics/" class="dropdown-item">Observability</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/18-error-handling-and-recovery/" class="dropdown-item">Error Handling</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/19-risk-assessment-framework/" class="dropdown-item">Risk Assessment</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/20-migration-and-implementation-phases/" class="dropdown-item">Migration Plan</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/21-ci-cd-and-testing-strategy/" class="dropdown-item">CI/CD & Testing</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/22-developer-experience-and-docs/" class="dropdown-item">Dev Experience & Docs</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/23-future-roadmap/" class="dropdown-item">Future Roadmap</a>
+</li>
+                                    
+<li>
+    <a href="../../architecture/24-final-consensus-summary/" class="dropdown-item">Final Consensus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Review & Validation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../review/REVIEW_GUIDELINES/" class="dropdown-item">Guidelines</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_workflow/" class="dropdown-item">Workflow</a>
+</li>
+                                    
+<li>
+    <a href="../../review/review_assignments/" class="dropdown-item">Assignments</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_checklist/" class="dropdown-item">Checklist</a>
+</li>
+                                    
+<li>
+    <a href="../../review/REVIEW_STATUS/" class="dropdown-item">Status</a>
+</li>
+                                    
+<li>
+    <a href="../../review/validation_report/" class="dropdown-item">Report</a>
+</li>
+                                    
+<li>
+    <a href="../../review/VALIDATION_SUMMARY/" class="dropdown-item">AI Summary</a>
+</li>
+                                    
+<li>
+    <a href="../../review/mermaid-smoketest/" class="dropdown-item">Mermaid Smoketest</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#python-314-integration-strategy-m1-devex" class="nav-link">Python 3.14 Integration Strategy - M1 DevEx</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#python-314-integration-overview" class="nav-link">🐍 Python 3.14 Integration Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#python-314-key-features" class="nav-link">🎯 Python 3.14 Key Features</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#m1-assessment-strategy" class="nav-link">📋 M1 Assessment Strategy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#development-tools-for-python-314" class="nav-link">🛠️ Development Tools for Python 3.14</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ci-integration-for-python-314" class="nav-link">📊 CI Integration for Python 3.14</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#m1-deliverables" class="nav-link">🎯 M1 Deliverables</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#migration-timeline" class="nav-link">🚀 Migration Timeline</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#risks-and-mitigation" class="nav-link">⚠️ Risks and Mitigation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="python-314-integration-strategy-m1-devex">Python 3.14 Integration Strategy - M1 DevEx<a class="headerlink" href="#python-314-integration-strategy-m1-devex" title="Permanent link">&para;</a></h1>
+<h2 id="python-314-integration-overview">🐍 <strong>Python 3.14 Integration Overview</strong><a class="headerlink" href="#python-314-integration-overview" title="Permanent link">&para;</a></h2>
+<p><strong>Current State</strong>: Python 3.11.9 (locked for M0-D6)<br />
+<strong>Target</strong>: Python 3.14 compatibility assessment and gradual migration<br />
+<strong>Timeline</strong>: M1 assessment, M2+ migration planning</p>
+<h2 id="python-314-key-features">🎯 <strong>Python 3.14 Key Features</strong><a class="headerlink" href="#python-314-key-features" title="Permanent link">&para;</a></h2>
+<h3 id="free-threading-mode-pep-703"><strong>Free-Threading Mode (PEP 703)</strong><a class="headerlink" href="#free-threading-mode-pep-703" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>No-GIL Build</strong>: Optional free-threading mode</li>
+<li><strong>Performance</strong>: Improved concurrency for I/O-bound workloads</li>
+<li><strong>Compatibility</strong>: Existing code works without changes</li>
+<li><strong>Migration</strong>: Gradual adoption possible</li>
+</ul>
+<h3 id="enhanced-debugger-interface-pep-768"><strong>Enhanced Debugger Interface (PEP 768)</strong><a class="headerlink" href="#enhanced-debugger-interface-pep-768" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Improved Debugging</strong>: Better debugging capabilities</li>
+<li><strong>Workflow Integration</strong>: Enhanced workflow debugging</li>
+<li><strong>Development Experience</strong>: Better developer tools</li>
+</ul>
+<h3 id="other-improvements"><strong>Other Improvements</strong><a class="headerlink" href="#other-improvements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Performance</strong>: General performance improvements</li>
+<li><strong>Type System</strong>: Enhanced type checking</li>
+<li><strong>Standard Library</strong>: New features and improvements</li>
+</ul>
+<h2 id="m1-assessment-strategy">📋 <strong>M1 Assessment Strategy</strong><a class="headerlink" href="#m1-assessment-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-compatibility-testing-m1"><strong>Phase 1: Compatibility Testing (M1)</strong><a class="headerlink" href="#phase-1-compatibility-testing-m1" title="Permanent link">&para;</a></h3>
+<h4 id="11-dependency-compatibility-check"><strong>1.1 Dependency Compatibility Check</strong><a class="headerlink" href="#11-dependency-compatibility-check" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check dependency compatibility with Python 3.14</span>
+pip<span class="w"> </span>install<span class="w"> </span>--dry-run<span class="w"> </span>--python-version<span class="w"> </span><span class="m">3</span>.14<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+<p><strong>Key Dependencies to Test</strong>:
+- <code>pytest</code> and <code>pytest-cov</code>
+- <code>ruff</code> and <code>pyright</code>
+- <code>flask</code> and <code>requests</code>
+- <code>pydantic</code> and <code>jsonschema</code>
+- <code>coverage</code> and <code>import-linter</code></p>
+<h4 id="12-ci-matrix-testing"><strong>1.2 CI Matrix Testing</strong><a class="headerlink" href="#12-ci-matrix-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/python-compatibility.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python Compatibility</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pull_request</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">push</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">compatibility</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;3.11&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.14&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">python -m pip install --upgrade pip</span>
+<span class="w">          </span><span class="no">pip install -e &quot;.[dev]&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest -q</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run coverage</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest --cov=. --cov-report=xml -q</span>
+</code></pre></div>
+<h4 id="13-tox-environment-setup"><strong>1.3 Tox Environment Setup</strong><a class="headerlink" href="#13-tox-environment-setup" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tox.ini</span>
+<span class="k">[tox]</span>
+<span class="na">envlist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">py311, py314</span>
+
+<span class="k">[testenv]</span>
+<span class="na">deps</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">pytest</span>
+<span class="w">    </span><span class="na">pytest-cov</span>
+<span class="w">    </span><span class="na">ruff</span>
+<span class="w">    </span><span class="na">pyright</span>
+<span class="w">    </span><span class="na">import-linter</span>
+<span class="na">commands</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">ruff check .</span>
+<span class="w">    </span><span class="na">pyright</span>
+<span class="w">    </span><span class="na">lint-imports</span>
+<span class="w">    </span><span class="na">pytest --cov</span><span class="o">=</span><span class="s">. --cov-report=xml -q</span>
+</code></pre></div>
+<h3 id="phase-2-performance-testing-m1"><strong>Phase 2: Performance Testing (M1)</strong><a class="headerlink" href="#phase-2-performance-testing-m1" title="Permanent link">&para;</a></h3>
+<h4 id="21-concurrency-testing"><strong>2.1 Concurrency Testing</strong><a class="headerlink" href="#21-concurrency-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/performance/test_concurrency.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">performance</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_plugin_concurrent_execution</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test plugin execution with multiple threads.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_plugin</span><span class="p">():</span>
+        <span class="c1"># Simulate plugin execution</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;success&quot;</span>
+
+    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">execute_plugin</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">performance</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_workflow_concurrent_execution</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test workflow execution with multiple threads.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_workflow</span><span class="p">():</span>
+        <span class="c1"># Simulate workflow execution</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;workflow_success&quot;</span>
+
+    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">execute_workflow</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;workflow_success&quot;</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="22-performance-benchmarking"><strong>2.2 Performance Benchmarking</strong><a class="headerlink" href="#22-performance-benchmarking" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/python_version_benchmark.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">benchmark_concurrency</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Benchmark concurrency performance.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">worker</span><span class="p">():</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">threading</span><span class="o">.</span><span class="n">get_ident</span><span class="p">()</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">worker</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+
+    <span class="n">execution_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;python_version&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+        <span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">execution_time</span><span class="p">,</span>
+        <span class="s2">&quot;thread_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">results</span><span class="p">)),</span>
+        <span class="s2">&quot;throughput&quot;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">execution_time</span>
+    <span class="p">}</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">benchmark_concurrency</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;python_version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Execution time: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Thread count: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;thread_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Throughput: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;throughput&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ops/sec&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="phase-3-migration-planning-m2"><strong>Phase 3: Migration Planning (M2+)</strong><a class="headerlink" href="#phase-3-migration-planning-m2" title="Permanent link">&para;</a></h3>
+<h4 id="31-gradual-migration-strategy"><strong>3.1 Gradual Migration Strategy</strong><a class="headerlink" href="#31-gradual-migration-strategy" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/migration_assessment.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Python314MigrationAssessment</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assess Python 3.14 migration readiness.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_version</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_version</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_dependency_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check dependency compatibility with Python 3.14.&quot;&quot;&quot;</span>
+        <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;pytest&quot;</span><span class="p">,</span> <span class="s2">&quot;pytest-cov&quot;</span><span class="p">,</span> <span class="s2">&quot;ruff&quot;</span><span class="p">,</span> <span class="s2">&quot;pyright&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;import-linter&quot;</span><span class="p">,</span> <span class="s2">&quot;flask&quot;</span><span class="p">,</span> <span class="s2">&quot;requests&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;pydantic&quot;</span><span class="p">,</span> <span class="s2">&quot;jsonschema&quot;</span><span class="p">,</span> <span class="s2">&quot;coverage&quot;</span>
+        <span class="p">]</span>
+
+        <span class="n">compatibility_report</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Check if dependency supports Python 3.14</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span>
+                    <span class="s2">&quot;pip&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="s2">&quot;--dry-run&quot;</span><span class="p">,</span> 
+                    <span class="sa">f</span><span class="s2">&quot;--python-version=3.14&quot;</span><span class="p">,</span> <span class="n">dep</span>
+                <span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">compatibility_report</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;compatible&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">}</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">compatibility_report</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;compatible&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">compatibility_report</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">assess_code_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assess code compatibility with Python 3.14.&quot;&quot;&quot;</span>
+        <span class="c1"># Check for deprecated features</span>
+        <span class="c1"># Check for syntax compatibility</span>
+        <span class="c1"># Check for standard library changes</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;syntax_compatible&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;deprecated_features&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;standard_library_changes&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_migration_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate migration plan.&quot;&quot;&quot;</span>
+        <span class="n">dependency_report</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_dependency_compatibility</span><span class="p">()</span>
+        <span class="n">code_report</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assess_code_compatibility</span><span class="p">()</span>
+
+        <span class="n">migration_plan</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;current_version&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_version</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_version</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_version</span><span class="o">.</span><span class="n">micro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;target_version&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dependency_compatibility&quot;</span><span class="p">:</span> <span class="n">dependency_report</span><span class="p">,</span>
+            <span class="s2">&quot;code_compatibility&quot;</span><span class="p">:</span> <span class="n">code_report</span><span class="p">,</span>
+            <span class="s2">&quot;migration_steps&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;1. Update CI matrix to include Python 3.14&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;2. Fix any dependency compatibility issues&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;3. Update code for Python 3.14 compatibility&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;4. Run comprehensive tests on Python 3.14&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;5. Update documentation and deployment scripts&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;6. Gradual rollout to development environments&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;risks&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;Dependency compatibility issues&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Performance regressions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Development environment fragmentation&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Deployment complexity&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">migration_plan</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">assessment</span> <span class="o">=</span> <span class="n">Python314MigrationAssessment</span><span class="p">()</span>
+    <span class="n">plan</span> <span class="o">=</span> <span class="n">assessment</span><span class="o">.</span><span class="n">generate_migration_plan</span><span class="p">()</span>
+
+    <span class="c1"># Save migration plan</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;python_314_migration_plan.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Python 3.14 Migration Assessment Complete&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migration plan saved to: python_314_migration_plan.json&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="development-tools-for-python-314">🛠️ <strong>Development Tools for Python 3.14</strong><a class="headerlink" href="#development-tools-for-python-314" title="Permanent link">&para;</a></h2>
+<h3 id="enhanced-debugging-tools"><strong>Enhanced Debugging Tools</strong><a class="headerlink" href="#enhanced-debugging-tools" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/enhanced_debugger.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowDebugger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enhanced debugger for workflow execution.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">watch_variables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_breakpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">step_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set breakpoint in workflow execution.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">workflow_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">watch_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Watch variable changes.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">watch_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_thread_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get thread information for debugging.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
+            <span class="c1"># Use enhanced debugging features</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;thread_count&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">active_count</span><span class="p">(),</span>
+                <span class="s2">&quot;main_thread&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">main_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;current_thread&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;thread_ident&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">get_ident</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;thread_count&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">active_count</span><span class="p">(),</span>
+                <span class="s2">&quot;current_thread&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">debug_workflow_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">step_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Debug workflow execution step.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🐛 Debugging </span><span class="si">{</span><span class="n">workflow_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🧵 Thread info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_thread_info</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check for breakpoints</span>
+        <span class="n">breakpoint_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">workflow_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">breakpoint_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⏸️  Breakpoint hit: </span><span class="si">{</span><span class="n">breakpoint_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># In Python 3.14, we could use enhanced debugging features here</span>
+
+        <span class="c1"># Check watched variables</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">expected_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">watch_variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
+                <span class="n">actual_value</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">actual_value</span> <span class="o">!=</span> <span class="n">expected_value</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;👀 Variable changed: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">actual_value</span><span class="si">}</span><span class="s2"> (expected: </span><span class="si">{</span><span class="n">expected_value</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="concurrency-testing-tools"><strong>Concurrency Testing Tools</strong><a class="headerlink" href="#concurrency-testing-tools" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># scripts/concurrency_testing.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConcurrencyTester</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test concurrency behavior across Python versions.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_thread_safety</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">],</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test thread safety of a function.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="k">for</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">args_list</span><span class="p">]</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+
+        <span class="n">execution_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">execution_time</span><span class="p">,</span>
+            <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span>
+            <span class="s2">&quot;success_count&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="s2">&quot;thread_count&quot;</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">active_count</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_race_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test for race conditions.&quot;&quot;&quot;</span>
+        <span class="n">shared_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;counter&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">increment_counter</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+                <span class="n">shared_data</span><span class="p">[</span><span class="s2">&quot;counter&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Run with multiple threads</span>
+        <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">increment_counter</span><span class="p">)</span>
+            <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+        <span class="n">expected_value</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">iterations</span>
+        <span class="n">actual_value</span> <span class="o">=</span> <span class="n">shared_data</span><span class="p">[</span><span class="s2">&quot;counter&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;expected&quot;</span><span class="p">:</span> <span class="n">expected_value</span><span class="p">,</span>
+            <span class="s2">&quot;actual&quot;</span><span class="p">:</span> <span class="n">actual_value</span><span class="p">,</span>
+            <span class="s2">&quot;race_condition_detected&quot;</span><span class="p">:</span> <span class="n">actual_value</span> <span class="o">!=</span> <span class="n">expected_value</span><span class="p">,</span>
+            <span class="s2">&quot;python_version&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">}</span>
+</code></pre></div>
+<h2 id="ci-integration-for-python-314">📊 <strong>CI Integration for Python 3.14</strong><a class="headerlink" href="#ci-integration-for-python-314" title="Permanent link">&para;</a></h2>
+<h3 id="matrix-testing-workflow"><strong>Matrix Testing Workflow</strong><a class="headerlink" href="#matrix-testing-workflow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/python-matrix.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python Version Matrix</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pull_request</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">push</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">python-matrix</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;3.11&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.14&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+<span class="w">            </span><span class="nt">python-name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Python</span><span class="nv"> </span><span class="s">3.11</span><span class="nv"> </span><span class="s">(Current)&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.14&quot;</span>
+<span class="w">            </span><span class="nt">python-name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Python</span><span class="nv"> </span><span class="s">3.14</span><span class="nv"> </span><span class="s">(Future)&quot;</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">python -m pip install --upgrade pip</span>
+<span class="w">          </span><span class="no">pip install -e &quot;.[dev]&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest -q</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run coverage</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest --cov=. --cov-report=xml -q</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run concurrency tests</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python scripts/concurrency_testing.py</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload results</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python-${{ matrix.python-version }}-results</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">coverage.xml</span>
+<span class="w">            </span><span class="no">concurrency_results.json</span>
+</code></pre></div>
+<h3 id="performance-comparison"><strong>Performance Comparison</strong><a class="headerlink" href="#performance-comparison" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/performance-comparison.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Performance Comparison</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">schedule</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">performance-comparison</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test Python 3.11 Performance</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Python 3.11 benchmarks</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">pip install -e &quot;.[dev]&quot;</span>
+<span class="w">          </span><span class="no">python scripts/python_version_benchmark.py &gt; py311_results.json</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test Python 3.14 Performance</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.14&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Python 3.14 benchmarks</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">pip install -e &quot;.[dev]&quot;</span>
+<span class="w">          </span><span class="no">python scripts/python_version_benchmark.py &gt; py314_results.json</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Compare results</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python scripts/compare_performance.py py311_results.json py314_results.json</span>
+</code></pre></div>
+<h2 id="m1-deliverables">🎯 <strong>M1 Deliverables</strong><a class="headerlink" href="#m1-deliverables" title="Permanent link">&para;</a></h2>
+<h3 id="assessment-tools"><strong>Assessment Tools</strong><a class="headerlink" href="#assessment-tools" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Python 3.14 compatibility checker</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Dependency compatibility validator</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance benchmarking tools</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Concurrency testing framework</li>
+</ul>
+<h3 id="ci-integration"><strong>CI Integration</strong><a class="headerlink" href="#ci-integration" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Matrix testing workflow</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance comparison workflow</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Compatibility reporting</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Migration readiness dashboard</li>
+</ul>
+<h3 id="documentation"><strong>Documentation</strong><a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Python 3.14 migration guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Compatibility assessment report</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance comparison results</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Migration timeline and risks</li>
+</ul>
+<h2 id="migration-timeline">🚀 <strong>Migration Timeline</strong><a class="headerlink" href="#migration-timeline" title="Permanent link">&para;</a></h2>
+<h3 id="m1-assessment-phase"><strong>M1: Assessment Phase</strong><a class="headerlink" href="#m1-assessment-phase" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Week 1-2</strong>: Set up Python 3.14 testing environment</li>
+<li><strong>Week 3-4</strong>: Run compatibility tests and benchmarks</li>
+<li><strong>Week 5-6</strong>: Analyze results and identify issues</li>
+<li><strong>Week 7-8</strong>: Create migration plan and documentation</li>
+</ul>
+<h3 id="m2-migration-phase"><strong>M2+: Migration Phase</strong><a class="headerlink" href="#m2-migration-phase" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>M2</strong>: Fix compatibility issues</li>
+<li><strong>M3</strong>: Gradual rollout to development environments</li>
+<li><strong>M4</strong>: Full migration to Python 3.14</li>
+<li><strong>M5</strong>: Optimize for Python 3.14 features</li>
+</ul>
+<h2 id="risks-and-mitigation">⚠️ <strong>Risks and Mitigation</strong><a class="headerlink" href="#risks-and-mitigation" title="Permanent link">&para;</a></h2>
+<h3 id="risks"><strong>Risks</strong><a class="headerlink" href="#risks" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Dependency Compatibility</strong>: Some dependencies may not support Python 3.14</li>
+<li><strong>Performance Regression</strong>: New features may impact performance</li>
+<li><strong>Development Fragmentation</strong>: Team members on different Python versions</li>
+<li><strong>Deployment Complexity</strong>: Multiple Python versions in production</li>
+</ul>
+<h3 id="mitigation-strategies"><strong>Mitigation Strategies</strong><a class="headerlink" href="#mitigation-strategies" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Gradual Migration</strong>: Phased approach to minimize risk</li>
+<li><strong>Comprehensive Testing</strong>: Extensive testing across Python versions</li>
+<li><strong>Documentation</strong>: Clear migration guides and troubleshooting</li>
+<li><strong>Rollback Plan</strong>: Ability to revert to Python 3.11 if needed</li>
+</ul>
+<hr />
+<p><strong>Python 3.14 Integration Strategy</strong>: Comprehensive plan for assessing and migrating to Python 3.14 while maintaining development velocity and system stability.</p>
+<p><em>Strategy created by DevEx Lead - 2025-10-15</em></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/mermaid.min.js"></script>
+        <script src="../../js/mermaid-init.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

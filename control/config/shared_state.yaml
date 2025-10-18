@@ -1,0 +1,21 @@
+version: 1
+events: [sod, mid, eod, note, handoff, decision]
+fields:
+  required: [ts, session, role, event, period, title]
+  optional: [items, links]
+conventions:
+  period: "Logical day (YYYY-MM-DD) the entry describes"
+  journals: "Append-only NDJSON; never edited/rewritten"
+handoff:
+  rule: "items[] must @tag the receiving role and include actionable links"
+report:
+  compiler: "tools/compile_daily_report.py"
+example:
+  - ts: "2025-10-18T07:52:10Z"
+    session: "coordinator-20251018T075210Z"
+    role: "coordinator"
+    event: "sod"
+    period: "2025-10-18"
+    title: "M1 push: CI gate + policy sync"
+    items: ["@devex-lead enforce required checks", "@docs-lead fix Mermaid parity (6 off)"]
+    links: ["PR#70","FEAT-020"]

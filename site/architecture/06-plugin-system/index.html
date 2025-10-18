@@ -59,6 +59,9 @@
 </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a href="../../security/" class="nav-link">Security</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Overview</a>
                                 <ul class="dropdown-menu">
@@ -256,35 +259,35 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#base-interfaces" class="nav-link">⚙️ Base Interfaces</a>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-interface-m1-implementation" class="nav-link">⚙️ Plugin Interface (M1 Implementation)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#example-plugin-registry" class="nav-link">🧩 Example Plugin Registry</a>
+            <li class="nav-item" data-bs-level="2"><a href="#security-model-m1-implementation" class="nav-link">🔐 Security Model (M1 Implementation)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#plugin-lifecycle" class="nav-link">🧠 Plugin Lifecycle</a>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-discovery-loading-m1" class="nav-link">🧩 Plugin Discovery &amp; Loading (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#plugin-manifest-specification" class="nav-link">🧩 Plugin Manifest Specification</a>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-lifecycle-m1-implementation" class="nav-link">🧠 Plugin Lifecycle (M1 Implementation)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#example-cve-enricher-plugin" class="nav-link">⚙️ Example — CVE Enricher Plugin</a>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-manifest-specification-m1" class="nav-link">🧩 Plugin Manifest Specification (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#sandbox-model" class="nav-link">🔐 Sandbox Model</a>
+            <li class="nav-item" data-bs-level="2"><a href="#example-cve-mapper-plugin-m1-stub" class="nav-link">⚙️ Example — CVE Mapper Plugin (M1 Stub)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#plugin-discovery" class="nav-link">🧩 Plugin Discovery</a>
+            <li class="nav-item" data-bs-level="2"><a href="#storageport-integration" class="nav-link">🔌 StoragePort Integration</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#plugin-telemetry" class="nav-link">🧠 Plugin Telemetry</a>
+            <li class="nav-item" data-bs-level="2"><a href="#plugin-telemetry-monitoring" class="nav-link">🧠 Plugin Telemetry &amp; Monitoring</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -292,11 +295,11 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#example-end-to-end-plugin-flow" class="nav-link">🧠 Example End-to-End Plugin Flow</a>
+            <li class="nav-item" data-bs-level="2"><a href="#example-end-to-end-plugin-flow-m1" class="nav-link">🧠 Example End-to-End Plugin Flow (M1)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements" class="nav-link">🔮 Future Enhancements</a>
+            <li class="nav-item" data-bs-level="2"><a href="#future-enhancements-m2" class="nav-link">🔮 Future Enhancements (M2+)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -315,6 +318,7 @@ Plugins operate under a <strong>controlled lifecycle</strong> and interact throu
 1. <strong>Detectors</strong> — Introduce new scanning logic or post-processing steps.<br />
 2. <strong>Enrichers</strong> — Add vulnerability metadata (CVE, CWE, CVSS, etc.).<br />
 3. <strong>Analytics</strong> — Compute metrics, patterns, or visual insights over findings.</p>
+<p><strong>M1 Implementation Status</strong>: ✅ <strong>Complete</strong> - Plugin loader, security framework, and stub implementations delivered.</p>
 <hr />
 <h2 id="design-principles">🧩 Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h2>
 <table>
@@ -335,136 +339,132 @@ Plugins operate under a <strong>controlled lifecycle</strong> and interact throu
 </tr>
 <tr>
 <td><strong>Contract Enforcement</strong></td>
-<td>Plugins implement strict base interfaces (<code>PluginBase</code>, <code>DetectorPlugin</code>, etc.).</td>
+<td>Plugins implement strict base interfaces (<code>PluginInterface</code>, <code>PluginMetadata</code>, etc.).</td>
 </tr>
 <tr>
 <td><strong>Hot Reloading</strong></td>
 <td>Plugin discovery occurs dynamically at startup.</td>
 </tr>
 <tr>
-<td><strong>Safety</strong></td>
-<td>Each plugin is validated, hashed, and versioned.</td>
+<td><strong>Security</strong></td>
+<td>Each plugin is validated, signed, and sandboxed for safe execution.</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="plugin-architecture-overview">🧱 Plugin Architecture Overview<a class="headerlink" href="#plugin-architecture-overview" title="Permanent link">&para;</a></h2>
-<p>+-------------------------------------------------------------+
-|                    Plugin Manager                           |
-| - Registry                                                  |
-| - Loader                                                    |
-| - Validator                                                 |
-| - Sandbox                                                   |
-+-------------------------------------------------------------+
 <div class="mermaid">%%{init: {"theme":"neutral"}}%%
 flowchart TD
-    A["Plugin Registry"]
-    B["Detector Plugins"]
-    C["Enricher Plugins"]
-    D["Analytics Plugins"]
+    A["Workflow Executor"]
+    B["Plugin Loader"]
+    C["Security Framework"]
+    D["Plugin Registry"]
+    E["StoragePort"]
+    F["Findings Schema"]
 
     A --&gt; B
-    A --&gt; C
-    A --&gt; D</div></p>
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E
+    E --&gt; F
+
+    G["Plugin Implementation"]
+    H["Plugin Manifest"]
+    I["Signature Verification"]
+
+    G --&gt; B
+    H --&gt; C
+    I --&gt; C</div>
+<p><strong>M1 Components Delivered</strong>:
+- ✅ <strong>PluginLoader</strong>: Dynamic plugin discovery and loading
+- ✅ <strong>Security Framework</strong>: Signature verification and sandboxing
+- ✅ <strong>PluginInterface</strong>: Standard contract for all plugins
+- ✅ <strong>StoragePort Integration</strong>: Findings persistence via StoragePort
+- ✅ <strong>Stub Implementations</strong>: CVEMapper, FeroxStub, NucleiStub plugins</p>
 <hr />
-<h2 id="base-interfaces">⚙️ Base Interfaces<a class="headerlink" href="#base-interfaces" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code># core-lib/ports/plugin_port.py
-from typing import Protocol, Any, Dict
+<h2 id="plugin-interface-m1-implementation">⚙️ Plugin Interface (M1 Implementation)<a class="headerlink" href="#plugin-interface-m1-implementation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># packages/plugins/loader.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-class PluginPort(Protocol):
-    name: str
-    version: str
-    category: str  # &quot;detector&quot; | &quot;enricher&quot; | &quot;analytics&quot;
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginMetadata</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin metadata information.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># &quot;detector&quot; | &quot;enricher&quot; | &quot;analytics&quot;</span>
+    <span class="n">entrypoint</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">dependencies</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">config_schema</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    def initialize(self, context: Dict[str, Any]) -&gt; None:
-        &quot;&quot;&quot;Initialize plugin with execution context.&quot;&quot;&quot;
-        pass
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class that all plugins must implement.&quot;&quot;&quot;</span>
 
-    def execute(self, data: Any) -&gt; Any:
-        &quot;&quot;&quot;Execute plugin logic on input data.&quot;&quot;&quot;
-        pass
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get plugin name.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 
-    def teardown(self) -&gt; None:
-        &quot;&quot;&quot;Clean up plugin resources.&quot;&quot;&quot;
-        pass
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get plugin version.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PluginMetadata</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get plugin metadata.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
+            <span class="n">context</span><span class="p">:</span> <span class="n">ExecutionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute plugin logic on input data.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify plugin signature if present.&quot;&quot;&quot;</span>
+        <span class="c1"># M1: Basic signature verification</span>
+        <span class="c1"># M2+: Full cryptographic verification</span>
+        <span class="k">pass</span>
 </code></pre></div>
-<p>All plugins must subclass or conform to <code>PluginPort</code>.</p>
-<h2 id="example-plugin-registry">🧩 Example Plugin Registry<a class="headerlink" href="#example-plugin-registry" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code># plugins/registry.py
-from typing import Dict, Type
-from core_lib.ports.plugin_port import PluginPort
+<p>All plugins must implement <code>PluginInterface</code> and provide proper metadata.</p>
+<hr />
+<h2 id="security-model-m1-implementation">🔐 Security Model (M1 Implementation)<a class="headerlink" href="#security-model-m1-implementation" title="Permanent link">&para;</a></h2>
+<h3 id="plugin-signing-verification">Plugin Signing &amp; Verification<a class="headerlink" href="#plugin-signing-verification" title="Permanent link">&para;</a></h3>
+<p><strong>M1 Security Features</strong>:
+- ✅ <strong>Hash-based Verification</strong>: SHA256 checksums for plugin integrity
+- ✅ <strong>Manifest Validation</strong>: JSON schema validation for plugin manifests
+- ✅ <strong>Sandbox Execution</strong>: Controlled execution environment
+- ✅ <strong>Audit Logging</strong>: Comprehensive security event logging</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/signing.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginManifest</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin manifest with signature information.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">entrypoint</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">code_hash</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">signature_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sha256&quot;</span>  <span class="c1"># M1: hash-based, M2+: RSA/ECDSA</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">expires_at</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-class PluginRegistry:
-    _registry: Dict[str, Type[PluginPort]] = {}
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginSignatureVerifier</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin signature verification for M1.&quot;&quot;&quot;</span>
 
-    @classmethod
-    def register(cls, name: str, plugin: Type[PluginPort]):
-        cls._registry[name] = plugin
-        print(f&quot;[+] Registered plugin: {name}&quot;)
-
-    @classmethod
-    def get(cls, name: str) -&gt; PluginPort:
-        return cls._registry[name]
-
-    @classmethod
-    def list_plugins(cls):
-        return list(cls._registry.keys())
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_plugin_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="n">PluginManifest</span><span class="p">,</span> 
+                               <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify plugin signature using hash-based verification.&quot;&quot;&quot;</span>
+        <span class="c1"># M1: SHA256 hash verification</span>
+        <span class="c1"># M2+: Full cryptographic signature verification</span>
+        <span class="k">pass</span>
 </code></pre></div>
-<h3 id="registration-via-decorator">Registration via Decorator<a class="headerlink" href="#registration-via-decorator" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>def register_plugin(name: str):
-    def decorator(cls):
-        PluginRegistry.register(name, cls)
-        return cls
-    return decorator
-</code></pre></div>
-<h2 id="plugin-lifecycle">🧠 Plugin Lifecycle<a class="headerlink" href="#plugin-lifecycle" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Registration:</strong> Discovered from manifests or decorators.</li>
-<li><strong>Validation:</strong> Signature &amp; schema verification.</li>
-<li><strong>Initialization:</strong> Context injected (paths, project ID, config).</li>
-<li><strong>Execution:</strong> Process data via <code>execute()</code>.</li>
-<li><strong>Teardown:</strong> Release resources, log metrics.</li>
-</ol>
-<h2 id="plugin-manifest-specification">🧩 Plugin Manifest Specification<a class="headerlink" href="#plugin-manifest-specification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>name: nuclei-enricher
-version: &quot;1.0.0&quot;
-category: &quot;enricher&quot;
-entrypoint: &quot;plugins.nuclei_enricher:Enricher&quot;
-dependencies:
-  - requests
-  - cpe
-config_schema: &quot;schemas/nuclei_enricher.json&quot;
-sandbox: true
-</code></pre></div>
-<p>Each manifest is stored under <code>/plugins/manifests/</code> and validated on startup.</p>
-<h2 id="example-cve-enricher-plugin">⚙️ Example — CVE Enricher Plugin<a class="headerlink" href="#example-cve-enricher-plugin" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code># plugins/nuclei_enricher.py
-import requests
-from core_lib.models.finding import Finding
-from core_lib.ports.plugin_port import PluginPort
-
-@register_plugin(&quot;cve_enricher&quot;)
-class CVEEnricher(PluginPort):
-    name = &quot;cve_enricher&quot;
-    version = &quot;1.0.0&quot;
-    category = &quot;enricher&quot;
-
-    def initialize(self, context):
-        self.sources = context.get(&quot;sources&quot;, [&quot;nvd&quot;])
-
-    def execute(self, finding: Finding) -&gt; Finding:
-        for cve_id in finding.cve_ids:
-            data = self._fetch_cve_data(cve_id)
-            finding.enrichment[&quot;cve&quot;][cve_id] = data
-        return finding
-
-    def _fetch_cve_data(self, cve_id):
-        return requests.get(f&quot;https://services.nvd.nist.gov/rest/json/cve/1.0/{cve_id}&quot;).json()
-
-    def teardown(self):
-        pass
-</code></pre></div>
-<h2 id="sandbox-model">🔐 Sandbox Model<a class="headerlink" href="#sandbox-model" title="Permanent link">&para;</a></h2>
+<h3 id="sandbox-model">Sandbox Model<a class="headerlink" href="#sandbox-model" title="Permanent link">&para;</a></h3>
 <p>Each plugin executes inside a restricted environment:</p>
 <table>
 <thead>
@@ -496,46 +496,172 @@ class CVEEnricher(PluginPort):
 </tr>
 </tbody>
 </table>
-<h2 id="plugin-discovery">🧩 Plugin Discovery<a class="headerlink" href="#plugin-discovery" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="plugin-discovery-loading-m1">🧩 Plugin Discovery &amp; Loading (M1)<a class="headerlink" href="#plugin-discovery-loading-m1" title="Permanent link">&para;</a></h2>
 <h3 id="directory-layout">Directory Layout<a class="headerlink" href="#directory-layout" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>plugins/
+<div class="highlight"><pre><span></span><code>packages/plugins/
+├── loader.py              # PluginLoader implementation
+├── registry.py            # Plugin registry
+├── security/              # Security framework
+│   ├── signing.py         # Signature verification
+│   ├── sandbox.py         # Sandbox execution
+│   └── audit_logging.py   # Security audit logs
+└── stubs/                 # M1 stub implementations
+    ├── cve_mapper.py      # CVE enrichment plugin
+    ├── ferox_stub.py      # Feroxbuster discovery
+    └── nuclei_stub.py     # Nuclei scanning
 </code></pre></div>
-<div class="mermaid">%%{init: {"theme":"neutral"}}%%
-flowchart TD
-    A["plugins/"]
-    B["registry.py"]
-    C["manifests/"]
-    D["cve_enricher.yaml"]
-    E["nuclei_detector.yaml"]
-    F["detectors/"]
-    G["nuclei_detector.py"]
-    H["zap_detector.py"]
-
-    A --&gt; B
-    A --&gt; C
-    A --&gt; F
-    C --&gt; D
-    C --&gt; E
-    F --&gt; G
-    F --&gt; H</div>
 <h3 id="discovery-algorithm">Discovery Algorithm<a class="headerlink" href="#discovery-algorithm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>def discover_plugins():
-    for manifest in Path(&quot;plugins/manifests&quot;).glob(&quot;*.yaml&quot;):
-        data = yaml.safe_load(manifest.read_text())
-        entrypoint = import_string(data[&quot;entrypoint&quot;])
-        PluginRegistry.register(data[&quot;name&quot;], entrypoint)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">discover_plugins</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Discover and load plugins dynamically.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">manifest_file</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;packages/plugins/manifests&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.json&quot;</span><span class="p">):</span>
+        <span class="n">manifest_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">manifest_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="n">PluginManifest</span><span class="p">(</span><span class="o">**</span><span class="n">manifest_data</span><span class="p">)</span>
+
+        <span class="c1"># Verify signature</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">verify_plugin_signature</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plugin </span><span class="si">{</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> signature verification failed&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Load plugin</span>
+        <span class="n">plugin</span> <span class="o">=</span> <span class="n">load_plugin_class</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">entrypoint</span><span class="p">)</span>
+        <span class="n">PluginRegistry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">plugin</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="plugin-telemetry">🧠 Plugin Telemetry<a class="headerlink" href="#plugin-telemetry" title="Permanent link">&para;</a></h2>
-<p>Each plugin emits lifecycle events:</p>
-<div class="highlight"><pre><span></span><code>{
-  &quot;event&quot;: &quot;plugin_executed&quot;,
-  &quot;plugin&quot;: &quot;cve_enricher&quot;,
-  &quot;duration_ms&quot;: 342,
-  &quot;memory_mb&quot;: 42,
-  &quot;success&quot;: true
-}
+<hr />
+<h2 id="plugin-lifecycle-m1-implementation">🧠 Plugin Lifecycle (M1 Implementation)<a class="headerlink" href="#plugin-lifecycle-m1-implementation" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Discovery</strong>: Scan manifests directory for plugin definitions</li>
+<li><strong>Validation</strong>: Verify signatures and validate manifests</li>
+<li><strong>Registration</strong>: Register plugins in PluginRegistry</li>
+<li><strong>Initialization</strong>: Create plugin instances with execution context</li>
+<li><strong>Execution</strong>: Process data via <code>run()</code> method with StoragePort integration</li>
+<li><strong>Teardown</strong>: Release resources, log metrics</li>
+</ol>
+<hr />
+<h2 id="plugin-manifest-specification-m1">🧩 Plugin Manifest Specification (M1)<a class="headerlink" href="#plugin-manifest-specification-m1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cve-mapper&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CVE enrichment plugin for vulnerability findings&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SecFlow Team&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;enricher&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;entrypoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;packages.plugins.stubs.cve_mapper:CVEMapperPlugin&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;requests&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cpe&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;config_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;nvd&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;osv&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;code_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:abc123...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:def456...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-10-14T10:00:00Z&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Telemetry is captured by the Observability subsystem (see <a href="../17-observability-logging-and-metrics/">Observability, Logging &amp; Metrics</a>).</p>
+<p>Each manifest is stored under <code>/packages/plugins/manifests/</code> and validated on startup.</p>
+<hr />
+<h2 id="example-cve-mapper-plugin-m1-stub">⚙️ Example — CVE Mapper Plugin (M1 Stub)<a class="headerlink" href="#example-cve-mapper-plugin-m1-stub" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># packages/plugins/stubs/cve_mapper.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.plugins.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginInterface</span><span class="p">,</span> <span class="n">PluginMetadata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packages.runtime_core.storage.storage_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoragePort</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CVEMapperPlugin</span><span class="p">(</span><span class="n">PluginInterface</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CVE enrichment plugin - M1 stub implementation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;cve-mapper&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;1.0.0&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PluginMetadata</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">PluginMetadata</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cve-mapper&quot;</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;CVE enrichment plugin for vulnerability findings&quot;</span><span class="p">,</span>
+            <span class="n">author</span><span class="o">=</span><span class="s2">&quot;SecFlow Team&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;enricher&quot;</span><span class="p">,</span>
+            <span class="n">entrypoint</span><span class="o">=</span><span class="s2">&quot;packages.plugins.stubs.cve_mapper:CVEMapperPlugin&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
+            <span class="n">context</span><span class="p">:</span> <span class="n">ExecutionContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enrich findings with CVE data.&quot;&quot;&quot;</span>
+        <span class="n">findings</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;findings&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sources&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;nvd&quot;</span><span class="p">,</span> <span class="s2">&quot;osv&quot;</span><span class="p">])</span>
+
+        <span class="n">enriched_findings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">finding</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">:</span>
+            <span class="c1"># M1: Use golden sample data</span>
+            <span class="c1"># M2+: Real CVE API calls</span>
+            <span class="n">enriched_finding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enrich_with_cve_data</span><span class="p">(</span><span class="n">finding</span><span class="p">,</span> <span class="n">sources</span><span class="p">)</span>
+            <span class="n">enriched_findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">enriched_finding</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;enriched_findings&quot;</span><span class="p">:</span> <span class="n">enriched_findings</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enrich_with_cve_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finding</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
+                              <span class="n">sources</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enrich finding with CVE data from golden samples.&quot;&quot;&quot;</span>
+        <span class="c1"># M1: Return golden sample data</span>
+        <span class="c1"># M2+: Make real API calls to CVE databases</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">finding</span><span class="p">,</span>
+            <span class="s2">&quot;cve_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;cve_id&quot;</span><span class="p">:</span> <span class="s2">&quot;CVE-2023-1234&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;cvss_score&quot;</span><span class="p">:</span> <span class="mf">7.5</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Sample CVE description&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="n">sources</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="storageport-integration">🔌 StoragePort Integration<a class="headerlink" href="#storageport-integration" title="Permanent link">&para;</a></h2>
+<p>Plugins integrate with the StoragePort interface for findings persistence:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Plugin execution with StoragePort</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_plugin_with_storage</span><span class="p">(</span><span class="n">plugin</span><span class="p">:</span> <span class="n">PluginInterface</span><span class="p">,</span> 
+                                <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+                                <span class="n">storage</span><span class="p">:</span> <span class="n">StoragePort</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute plugin and persist findings via StoragePort.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Execute plugin</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="c1"># Persist findings via StoragePort</span>
+    <span class="n">findings</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;findings&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="k">for</span> <span class="n">finding</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">:</span>
+        <span class="c1"># Ensure finding has schema version</span>
+        <span class="n">finding</span><span class="p">[</span><span class="s2">&quot;finding_schema_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+        <span class="n">storage</span><span class="o">.</span><span class="n">save_finding</span><span class="p">(</span><span class="n">finding</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+<p><strong>Finding Schema Integration</strong>:
+- All findings must include <code>finding_schema_version: "1.0.0"</code>
+- Findings are validated against <code>schemas/finding.json</code>
+- StoragePort enforces schema compliance</p>
+<hr />
+<h2 id="plugin-telemetry-monitoring">🧠 Plugin Telemetry &amp; Monitoring<a class="headerlink" href="#plugin-telemetry-monitoring" title="Permanent link">&para;</a></h2>
+<p>Each plugin emits lifecycle events for observability:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;plugin_executed&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;plugin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cve-mapper&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;duration_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">342</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;memory_mb&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;findings_processed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-14T10:30:00Z&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Telemetry is captured by the Observability subsystem and stored via StoragePort.</p>
+<hr />
 <h2 id="error-handling">🧩 Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -547,33 +673,66 @@ flowchart TD
 <tbody>
 <tr>
 <td>Invalid Manifest</td>
-<td>Skip plugin, log warning.</td>
+<td>Skip plugin, log warning, continue execution</td>
 </tr>
 <tr>
 <td>Dependency ImportError</td>
-<td>Attempt isolated install if allowed.</td>
+<td>Attempt isolated install if allowed</td>
 </tr>
 <tr>
 <td>Execution Timeout</td>
-<td>Abort plugin, mark node partial-success.</td>
+<td>Abort plugin, mark node partial-success</td>
 </tr>
 <tr>
 <td>Sandbox Violation</td>
-<td>Terminate process, revoke plugin signature.</td>
+<td>Terminate process, revoke plugin signature</td>
+</tr>
+<tr>
+<td>Signature Verification Failure</td>
+<td>Block plugin execution, log security event</td>
 </tr>
 </tbody>
 </table>
-<h2 id="example-end-to-end-plugin-flow">🧠 Example End-to-End Plugin Flow<a class="headerlink" href="#example-end-to-end-plugin-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>[Plugin Manifest] → [Registry Register] → [Initialize] 
-      ↓                       ↓                   ↓
- [Execute via Port] → [Telemetry + Logging] → [Teardown]
-</code></pre></div>
-<h2 id="future-enhancements">🔮 Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="example-end-to-end-plugin-flow-m1">🧠 Example End-to-End Plugin Flow (M1)<a class="headerlink" href="#example-end-to-end-plugin-flow-m1" title="Permanent link">&para;</a></h2>
+<div class="mermaid">%%{init: {"theme":"neutral"}}%%
+flowchart TD
+    A["Workflow Executor"]
+    B["Plugin Loader"]
+    C["Security Verification"]
+    D["Plugin Execution"]
+    E["StoragePort"]
+    F["Findings Storage"]
+
+    A --&gt; B
+    B --&gt; C
+    C --&gt; D
+    D --&gt; E
+    E --&gt; F
+
+    G["Plugin Manifest"]
+    H["Signature Check"]
+    I["Sandbox Execution"]
+
+    G --&gt; C
+    H --&gt; C
+    I --&gt; D</div>
+<p><strong>Execution Steps</strong>:
+1. <strong>Workflow Executor</strong> requests plugin execution
+2. <strong>Plugin Loader</strong> discovers and loads plugin
+3. <strong>Security Verification</strong> validates signature and manifest
+4. <strong>Plugin Execution</strong> runs in sandboxed environment
+5. <strong>StoragePort</strong> persists findings with schema validation
+6. <strong>Findings Storage</strong> stores enriched data</p>
+<hr />
+<h2 id="future-enhancements-m2">🔮 Future Enhancements (M2+)<a class="headerlink" href="#future-enhancements-m2" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Plugin signing (PGP signatures).</li>
-<li>Remote plugin repository (index + version resolution).</li>
-<li>In-UI plugin store with validation and ratings.</li>
-<li>Plugin telemetry aggregation dashboards.</li>
+<li><strong>Full Cryptographic Signing</strong>: RSA/ECDSA signature verification</li>
+<li><strong>Remote Plugin Repository</strong>: Index + version resolution</li>
+<li><strong>In-UI Plugin Store</strong>: Validation and ratings</li>
+<li><strong>Plugin Telemetry Dashboards</strong>: Aggregated metrics and insights</li>
+<li><strong>Advanced Sandboxing</strong>: Container-based isolation</li>
+<li><strong>Plugin Dependencies</strong>: Automatic dependency resolution</li>
 </ul>
 <hr />
 <p><strong>Next:</strong> <a href="../07-tools-integration-model/">Tools Integration Model</a>

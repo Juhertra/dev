@@ -53,6 +53,7 @@ nav:
       - Development Conventions: governance/development-conventions.md
   - API Documentation:
       - Overview: api/README.md
+  - Security: security.md
   - Overview:
       - Home: architecture/00-index.md
       - Executive Summary: architecture/01-title-and-executive-summary.md

@@ -1,0 +1,4 @@
+{
+  "baseline_ts": "2025-10-18T18:00:00Z",
+  "notes": "Events with ts < baseline_ts are validated for JSON shape but NOT for new strict rules (@tags for handoff, link patterns, item length). All events >= baseline_ts are fully enforced."
+}

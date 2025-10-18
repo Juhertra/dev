@@ -1,0 +1,16 @@
+name: Feature
+description: Request or implement a feature
+labels: ["type:feature"]
+body:
+  - type: input
+    id: feat
+    attributes: { label: FEAT ID (e.g., FEAT-020) }
+    validations: { required: true }
+  - type: textarea
+    id: desc
+    attributes: { label: Description, placeholder: What and why? }
+    validations: { required: true }
+  - type: textarea
+    id: dod
+    attributes: { label: Definition of Done, placeholder: measurable checks }
+    validations: { required: true }
