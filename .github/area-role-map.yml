@@ -1,0 +1,45 @@
+# .github/area-role-map.yml
+area_to_role:
+  security: security-lead
+  plugin: security-lead
+  signature: security-lead
+  auth: security-lead
+
+  observability: observability-lead
+  metrics: observability-lead
+  monitoring: observability-lead
+
+  runtime: runtime-lead
+  engine: runtime-lead
+  scheduler: runtime-lead
+  "execution engine": runtime-lead
+  state: runtime-lead
+  dataflow: runtime-lead
+
+  workflow: workflow-lead
+  orchestration: workflow-lead
+  dag: workflow-lead
+
+  tools: tools-lead
+  parsers: tools-lead
+  wrappers: tools-lead
+  nuclei: tools-lead
+  modsecurity: tools-lead
+
+  docs: docs-lead
+  documentation: docs-lead
+  mkdocs: docs-lead
+
+  qa: qa-lead
+  test: qa-lead
+  testing: qa-lead
+  coverage: qa-lead
+  contract: qa-lead
+
+  coordinator: coordinator
+  handoff: coordinator
+
+  devops: devops-lead
+  "github actions": devops-lead
+  pipeline: devops-lead
+  ci: devops-lead

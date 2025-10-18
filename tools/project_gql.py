@@ -38,8 +38,14 @@ def get_status_field(project_id):
         ... on ProjectV2{
           fields(first:100){
             nodes{
-              __typename id name dataType
-              ... on ProjectV2SingleSelectField { options { id name } }
+              __typename
+              ... on ProjectV2Field {
+                id name dataType
+              }
+              ... on ProjectV2SingleSelectField { 
+                id name dataType
+                options { id name } 
+              }
             }
           }
         }
@@ -58,20 +64,29 @@ def get_or_create_text_field(project_id, name):
       node(id:$id){
         ... on ProjectV2{
           fields(first:100){
-            nodes{ id name dataType __typename }
+            nodes{
+              __typename
+              ... on ProjectV2Field {
+                id name dataType
+              }
+            }
           }
         }
       }
     }"""
     d = gql(q, {"id": project_id})
     for f in d["node"]["fields"]["nodes"]:
-        if f["dataType"] == "TEXT" and f["name"] == name:
+        if f.get("dataType") == "TEXT" and f.get("name") == name:
             return f["id"]
     # create text field
     m = """
     mutation($pid:ID!,$name:String!){
       createProjectV2Field(input:{projectId:$pid, dataType:TEXT, name:$name}){
-        projectV2Field{ id name dataType }
+        projectV2Field{
+          ... on ProjectV2Field {
+            id name dataType
+          }
+        }
       }
     }"""
     r = gql(m, {"pid": project_id, "name": name})
@@ -94,7 +109,9 @@ def iter_items(project_id):
                     name
                   }
                   ... on ProjectV2ItemFieldTextValue {
-                    field { id name }
+                    field { 
+                      ... on ProjectV2Field { id name }
+                    }
                     text
                   }
                 }
@@ -102,12 +119,12 @@ def iter_items(project_id):
               content{
                 __typename
                 ... on Issue{
-                  id number state
+                  id number state title body
                   repository{ owner{login} name }
                   labels(first:100){ nodes{ name } }
                 }
                 ... on PullRequest{
-                  id number state isDraft merged
+                  id number state isDraft merged title body
                   repository{ owner{login} name }
                   labels(first:100){ nodes{ name } }
                 }
