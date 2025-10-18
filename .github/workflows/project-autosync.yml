@@ -1,25 +1,22 @@
-name: Project AutoSync
+name: project-autosync
 on:
   issues:   [opened, edited, labeled, unlabeled, reopened, closed, assigned, unassigned]
-  pull_request: [opened, edited, labeled, unlabeled, reopened, ready_for_review, converted_to_draft, closed]
-
+  pull_request: [opened, edited, labeled, unlabeled, reopened, closed, ready_for_review, converted_to_draft]
 permissions:
   contents: read
   issues: write
   pull-requests: write
   projects: write
-
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - run: pip install requests
-      - name: Reconcile Status/Assignees
+        with: { python-version: "3.11" }
+      - run: python -m pip install requests
+      - name: Fix board contract
         env:
           PROJECTS_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
-          PROJECTS_V2_ID: ${{ secrets.PROJECTS_V2_ID }}
         run: |
-          python tools/project_reconcile.py
+          python tools/board_contract.py fix /tmp/autosync.json || { cat /tmp/autosync.json || true; exit 1; }
