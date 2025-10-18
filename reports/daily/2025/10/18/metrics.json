@@ -1,29 +1,29 @@
 {
   "period": "2025-10-18",
   "summary": {
-    "total_entries": 38,
-    "processed_files": 6,
+    "total_entries": 40,
+    "processed_files": 7,
     "event_types": 3,
     "roles": 4
   },
   "events": {
-    "sod": 6,
-    "note": 2,
-    "decision": 2
+    "decision": 2,
+    "sod": 7,
+    "note": 2
   },
   "by_role": {
+    "integration-lead": {
+      "decision": 2
+    },
     "coordinator": {
-      "sod": 6
+      "sod": 7
     },
     "devex-lead": {
       "note": 1
     },
-    "observability": {
+    "observability-lead": {
       "note": 1
-    },
-    "integration-lead": {
-      "decision": 2
     }
   },
-  "generated_at": "2025-10-18T14:20:13.606648Z"
+  "generated_at": "2025-10-18T15:52:26.144827Z"
 }
