@@ -2,13 +2,14 @@
   "coordinator": "Juhertra",
   "integration-lead": "Juhertra",
   "devex-lead": "Juhertra",
-  "devops-lead": "Juhertra",
   "qa-lead": "Juhertra",
-  "docs-lead": "Juhertra",
+  "security-lead": "Juhertra",
+  "observability-lead": "Juhertra",
   "runtime-lead": "Juhertra",
   "workflow-lead": "Juhertra",
-  "tools-lead": "Juhertra",
   "findings-lead": "Juhertra",
-  "security-lead": "Juhertra",
-  "observability-lead": "Juhertra"
+  "resources-lead": "Juhertra",
+  "docs-lead": "Juhertra",
+  "ci-lead": "Juhertra",
+  "ops-lead": "Juhertra"
 }
