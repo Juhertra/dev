@@ -1,81 +1,134 @@
 #!/usr/bin/env python3
-import os, sys, json, time, requests, re
-from project_gql import get_project_fields, iter_items, update_single_select
+import os, sys, json
+from project_gql import gql, get_project_fields, iter_items, update_single_select
 
-PROJECT = os.getenv("PROJECTS_V2_ID")
-TOKEN = os.getenv("PROJECTS_TOKEN") or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
-REPO  = os.getenv("GITHUB_REPOSITORY") or os.getenv("REPO")
-if not (PROJECT and TOKEN): 
-    print("Missing PROJECTS_V2_ID or token", file=sys.stderr); sys.exit(1)
+def get_status_labels(labels):
+    """Extract status:* labels from a list of label names."""
+    return [label["name"] for label in labels if label["name"].startswith("status:")]
 
-REST = "https://api.github.com"
-HDR  = {"Authorization": f"token {TOKEN}", "Accept":"application/vnd.github+json"}
-
-STATUS_LABELS = {"Todo":"status:Todo","In Progress":"status:In Progress","Blocked":"status:Blocked","Done":"status:Done"}
-
-def ensure_label(owner, repo, name):
-    # create if missing; ignore if exists
-    requests.post(f"{REST}/repos/{owner}/{repo}/labels", headers=HDR, json={"name":name, "color":"ededed"})
-
-def add_labels(owner, repo, num, labels):
-    requests.post(f"{REST}/repos/{owner}/{repo}/issues/{num}/labels", headers=HDR, json={"labels":labels})
-
-def compute_desired_status(content):
-    labels = [l["name"] for l in content["labels"]["nodes"]]
-    # label wins if present
-    for k in STATUS_LABELS.values():
-        if k in labels:
-            return k.split(":",1)[1]
-    if content["__typename"]=="PullRequest":
-        if content.get("isDraft"): return "In Progress"
-        if content.get("state") in ("MERGED","CLOSED"): return "Done"
+def compute_desired_status(content, labels):
+    """Compute the desired status based on content state and labels."""
+    status_labels = get_status_labels(labels)
+    
+    # Priority order: explicit status labels > content state
+    if "status:Done" in status_labels:
+        return "Done"
+    elif "status:In Progress" in status_labels:
+        return "In Progress"
+    elif "status:Blocked" in status_labels:
+        return "Blocked"
+    elif "status:Todo" in status_labels:
         return "Todo"
-    if content["__typename"]=="Issue":
-        return "Done" if content.get("state")=="CLOSED" else "Todo"
+    
+    # Fallback to content state
+    if content["__typename"] == "PullRequest":
+        if content["merged"]:
+            return "Done"
+        elif content["isDraft"]:
+            return "Todo"
+        elif content["state"] == "OPEN":
+            return "In Progress"
+        else:
+            return "Done"
+    elif content["__typename"] == "Issue":
+        if content["state"] == "CLOSED":
+            return "Done"
+        else:
+            return "Todo"
+    
     return "Todo"
 
-def main():
-    fields = get_project_fields(PROJECT)
-    # find Status field case-insensitively, tolerate "In progress" vs "In Progress"
-    status_f = None
-    for k,v in fields.items():
-        if v["dataType"]=="SINGLE_SELECT" and k.strip().lower()=="status":
-            status_f = v; break
-    if not status_f:
-        print("Project Status field not found on this project view.", file=sys.stderr); sys.exit(2)
-    opt_by_name = {o["name"].lower(): o["id"] for o in status_f["options"]}
-
-    fixed_field=0; fixed_label=0; scanned=0
-    after=None
+def sync_project_status(project_id):
+    """Sync status field and labels for all items in the project."""
+    print(f"Syncing project {project_id}...")
+    
+    # Get project fields
+    fields = get_project_fields(project_id)
+    status_field = fields.get("status")
+    if not status_field:
+        print("No 'Status' field found in project")
+        return {"error": "No Status field found"}
+    
+    # Get status field options
+    status_options = {opt["name"]: opt["id"] for opt in status_field["options"]}
+    print(f"Status options: {list(status_options.keys())}")
+    
+    stats = {
+        "total_items": 0,
+        "updated_status": 0,
+        "updated_labels": 0,
+        "errors": 0,
+        "status_counts": {},
+        "label_counts": {}
+    }
+    
+    # Iterate through all items
+    after = None
     while True:
-        nodes, more, after = iter_items(PROJECT, after=after, first=50)
-        for it in nodes:
-            scanned+=1
-            content = it.get("content")
-            if not content: continue
-            owner = content["repository"]["owner"]["login"]; repo = content["repository"]["name"]; num = content["number"]
+        items, has_next, after = iter_items(project_id, after=after)
+        
+        for item in items:
+            stats["total_items"] += 1
+            content = item["content"]
+            
+            if not content:
+                continue
+                
+            labels = content["labels"]["nodes"]
+            desired_status = compute_desired_status(content, labels)
+            
+            # Update status counts
+            stats["status_counts"][desired_status] = stats["status_counts"].get(desired_status, 0) + 1
+            
+            # Update label counts
+            for label in labels:
+                label_name = label["name"]
+                stats["label_counts"][label_name] = stats["label_counts"].get(label_name, 0) + 1
+            
+            # Check current status field value
+            current_status = None
+            for field_value in item["fieldValues"]["nodes"]:
+                if field_value.get("field", {}).get("name", "").lower() == "status":
+                    current_status = field_value.get("name")
+                    break
+            
+            # Update status field if needed
+            if current_status != desired_status:
+                if desired_status in status_options:
+                    try:
+                        update_single_select(
+                            project_id, 
+                            item["id"], 
+                            status_field["id"], 
+                            status_options[desired_status]
+                        )
+                        stats["updated_status"] += 1
+                        print(f"Updated {content['__typename']} #{content['number']}: {current_status} -> {desired_status}")
+                    except Exception as e:
+                        print(f"Error updating status for {content['__typename']} #{content['number']}: {e}")
+                        stats["errors"] += 1
+                else:
+                    print(f"Warning: Status '{desired_status}' not found in project options")
+                    stats["errors"] += 1
+        
+        if not has_next:
+            break
+    
+    return stats
 
-            want = compute_desired_status(content)              # "Todo" / "In Progress" / "Blocked" / "Done"
-            # 1) ensure label
-            want_label = STATUS_LABELS[want]
-            existing = [l["name"] for l in content["labels"]["nodes"]]
-            if want_label not in existing:
-                ensure_label(owner, repo, want_label)
-                add_labels(owner, repo, num, [want_label])
-                fixed_label+=1
+def main():
+    project_id = os.getenv("PROJECTS_V2_ID")
+    if not project_id:
+        print("Error: PROJECTS_V2_ID environment variable not set")
+        sys.exit(1)
+    
+    print(f"Starting status parity sync for project {project_id}")
+    stats = sync_project_status(project_id)
+    
+    print("\n=== SYNC RESULTS ===")
+    print(json.dumps(stats, indent=2))
+    
+    return stats
 
-            # 2) ensure project field
-            want_opt = opt_by_name.get(want.lower()) or opt_by_name.get(want)  # tolerate case
-            if want_opt:
-                update_single_select(PROJECT, it["id"], status_f["id"], want_opt)
-                fixed_field+=1
-
-        if not more: break
-
-    print(json.dumps({
-        "scanned": scanned,
-        "project_status_field_updates": fixed_field,
-        "status_labels_added": fixed_label
-    }))
-if __name__=="__main__":
+if __name__ == "__main__":
     main()

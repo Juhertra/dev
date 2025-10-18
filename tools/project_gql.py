@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-import os, requests, json
+import os, requests
 
 GQL_URL = "https://api.github.com/graphql"
 TOKEN = os.getenv("PROJECTS_TOKEN") or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
+if not TOKEN:
+    raise SystemExit("Missing token in PROJECTS_TOKEN / GH_TOKEN / GITHUB_TOKEN")
+
 HDR = {"Authorization": f"bearer {TOKEN}"}
 
 def gql(query, variables):
@@ -21,10 +24,13 @@ def get_project_fields(project_id):
           id
           fields(first:100){
             nodes{
-              id
-              name
-              dataType
-              ... on ProjectV2SingleSelectField { options { id name } }
+              ... on ProjectV2Field {
+                id name dataType
+              }
+              ... on ProjectV2SingleSelectField { 
+                id name dataType
+                options { id name } 
+              }
             }
           }
         }
@@ -58,13 +64,11 @@ def iter_items(project_id, after=None, first=50):
                   id number state
                   repository { owner{login} name }
                   labels(first:50){ nodes{ name } }
-                  assignees(first:10){ nodes{ login id } }
                 }
                 ... on PullRequest{
                   id number state isDraft merged
                   repository { owner{login} name }
                   labels(first:50){ nodes{ name } }
-                  assignees(first:10){ nodes{ login id } }
                 }
               }
             }
