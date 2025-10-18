@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, json, requests, sys, re, yaml
+import os, json, requests, sys, re, yaml, argparse
 from project_gql import (
   get_project_id_by_title, get_or_create_text_field,
   iter_items, set_text_field
@@ -44,14 +44,14 @@ def create_label(name, description="", color="ededed"):
         print(f"Failed to create label {name}: {e}")
         return False
 
-def compute_role_from_evidence(content, area_role_map):
+def compute_role_from_evidence(content, area_role_map, use_area=True):
     """
     Compute role from evidence using deterministic rules.
     Evidence order (strongest → weakest):
     1. Owner section → first @<role> mention
     2. Handoff titles → recipient role
     3. Explicit role:* labels → first one
-    4. Area→Role map (fallback only)
+    4. Area→Role map (fallback only, if use_area=True)
     
     Returns (role, reason) or (None, "no_evidence")
     """
@@ -101,11 +101,12 @@ def compute_role_from_evidence(content, area_role_map):
         role = role_labels[0].split(":", 1)[1]
         return role, f"ambiguous role labels ({', '.join(role_labels)})"
     
-    # Evidence 5: Area→Role map (FALLBACK ONLY)
-    title_body = (title + " " + body).lower()
-    for area, role in area_role_map.items():
-        if area.lower() in title_body:
-            return role, f"area mapping ({area})"
+    # Evidence 5: Area→Role map (FALLBACK ONLY, if enabled)
+    if use_area and area_role_map:
+        title_body = (title + " " + body).lower()
+        for area, role in area_role_map.items():
+            if area.lower() in title_body:
+                return role, f"area mapping ({area})"
     
     return None, "no evidence"
 
@@ -150,43 +151,59 @@ def normalize_role(role):
     
     return role_map.get(role, role)
 
+def has_owner_or_handoff_conflict(content, existing_role):
+    """
+    Check if there's positive contradictory evidence (Owner or Handoff) 
+    that conflicts with the existing role.
+    """
+    title = content.get("title", "")
+    body = content.get("body", "")
+    
+    # Check Owner section
+    owner_match = re.search(r'Owner.*?@([a-z-]+)', body, re.IGNORECASE | re.MULTILINE | re.DOTALL)
+    if owner_match:
+        role = owner_match.group(1)
+        if role.endswith('-lead') or role == 'coordinator':
+            normalized_role = normalize_role(role)
+            if normalized_role and normalized_role != existing_role:
+                return True
+    
+    # Check Handoff title
+    handoff_match = re.search(r'^\[handoff\]\s*([a-z-]+):', title, re.IGNORECASE)
+    if handoff_match:
+        role = handoff_match.group(1)
+        normalized_role = normalize_role(role)
+        if normalized_role and normalized_role != existing_role:
+            return True
+    
+    return False
+
 def main():
-    dry_run = "--dry-run" in sys.argv
-    apply_mode = "--apply" in sys.argv
-    report_path = None
-    area_map_path = None
-    project_id = None
+    parser = argparse.ArgumentParser(description='Agent Role Repair Tool')
+    parser.add_argument("--dry-run", action="store_true", help="Dry run mode - don't make changes")
+    parser.add_argument("--apply", action="store_true", help="Apply changes")
+    parser.add_argument("--report", help="Report file path")
+    parser.add_argument("--area-map", help="Area-role mapping file path")
+    parser.add_argument("--project", help="Project ID")
+    parser.add_argument("--set-only", action="store_true", help="Only set Agent Role; never clear")
+    parser.add_argument("--disable-area-fallback", action="store_true", help="Do not use area→role mapping")
     
-    # Parse command line arguments
-    i = 1
-    while i < len(sys.argv):
-        arg = sys.argv[i]
-        if arg == "--report" and i + 1 < len(sys.argv):
-            report_path = sys.argv[i + 1]
-            i += 2
-        elif arg == "--area-map" and i + 1 < len(sys.argv):
-            area_map_path = sys.argv[i + 1]
-            i += 2
-        elif arg == "--project" and i + 1 < len(sys.argv):
-            project_id = sys.argv[i + 1]
-            i += 2
-        else:
-            i += 1
+    args = parser.parse_args()
     
-    if not dry_run and not apply_mode:
-        print("Usage: python tools/agent_role_repair.py [--dry-run|--apply] [--report <path>] [--area-map <path>] [--project <id>]")
+    if not args.dry_run and not args.apply:
+        parser.print_help()
         sys.exit(1)
     
     # Load area-role mapping
     area_role_map = {}
-    if area_map_path:
-        area_role_map = load_area_role_map(area_map_path)
+    if args.area_map:
+        area_role_map = load_area_role_map(args.area_map)
     
     # Get project ID
-    if not project_id:
-        project_id = get_project_id_by_title(TITLE)
+    if not args.project:
+        args.project = get_project_id_by_title(TITLE)
     
-    agent_field_id = get_or_create_text_field(project_id, AGENT_FIELD_NAME)
+    agent_field_id = get_or_create_text_field(args.project, AGENT_FIELD_NAME)
     
     stats = {
         "scanned": 0,
@@ -200,7 +217,7 @@ def main():
         "conflicts": []
     }
     
-    for it in iter_items(project_id):
+    for it in iter_items(args.project):
         c = it.get("content")
         if not c: continue
         
@@ -217,7 +234,7 @@ def main():
                 current_agent_text = n.get("text")
         
         # Compute role from evidence
-        computed_role, reason = compute_role_from_evidence(c, area_role_map)
+        computed_role, reason = compute_role_from_evidence(c, area_role_map, use_area=not args.disable_area_fallback)
         normalized_role = normalize_role(computed_role)
         
         # Get current role labels
@@ -256,27 +273,31 @@ def main():
                 # No existing role labels - add the correct one
                 label_changes.append(f"add:{expected_label}")
         
-        elif current_agent_text:
-            # No evidence but currently has a role - clear it
-            new_agent_role = None
-            action_taken = "cleared"
-            stats["no_evidence"].append(f"#{num}")
+        elif current_agent_text and not args.set_only:
+            # No evidence but currently has a role - check for conflicts
+            if has_owner_or_handoff_conflict(c, current_agent_text):
+                new_agent_role = None
+                action_taken = "cleared"
+                stats["agent_role_cleared"] += 1
+            else:
+                # No positive contradictory evidence - keep existing role
+                pass
         
         # Track ambiguous cases
         if "ambiguous" in reason:
             stats["ambiguous"].append(f"#{num}")
         
         # Apply changes if not dry run
-        if apply_mode and not dry_run:
+        if args.apply and not args.dry_run:
             if new_agent_role != current_agent_text:
                 if new_agent_role:
-                    set_text_field(project_id, it["id"], agent_field_id, new_agent_role)
+                    set_text_field(args.project, it["id"], agent_field_id, new_agent_role)
                     if action_taken == "set":
                         stats["agent_role_set"] += 1
                     elif action_taken == "replaced":
                         stats["agent_role_set"] += 1
                 else:
-                    set_text_field(project_id, it["id"], agent_field_id, "")
+                    set_text_field(args.project, it["id"], agent_field_id, "")
                     stats["agent_role_cleared"] += 1
             
             # Apply label changes (only if no conflict)
@@ -304,8 +325,8 @@ def main():
     stats["samples"] = stats["samples"][:20]
     
     # Write report
-    if report_path:
-        with open(report_path, "w") as f:
+    if args.report:
+        with open(args.report, "w") as f:
             json.dump(stats, f, indent=2)
     
     # Write conflicts report
@@ -315,7 +336,7 @@ def main():
             json.dump(stats["conflicts"], f, indent=2)
     
     # Print summary
-    mode = "DRY RUN" if dry_run else "APPLIED"
+    mode = "DRY RUN" if args.dry_run else "APPLIED"
     print(f"\n=== Agent Role Repair {mode} ===")
     print(f"Scanned: {stats['scanned']} items")
     print(f"Agent Role set: {stats['agent_role_set']}")
@@ -324,6 +345,11 @@ def main():
     print(f"Conflicts found: {stats['conflicts_found']}")
     print(f"Ambiguous: {len(stats['ambiguous'])} items")
     print(f"No evidence: {len(stats['no_evidence'])} items")
+    
+    if args.set_only:
+        print("Mode: SET-ONLY (no clears unless positive contradictory evidence)")
+    if args.disable_area_fallback:
+        print("Mode: AREA-FALLBACK DISABLED")
     
     if stats['ambiguous']:
         print(f"\nAmbiguous items: {', '.join(stats['ambiguous'])}")
