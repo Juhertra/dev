@@ -11,4 +11,4 @@ jobs:
       - run: pip install -e .
       - run: pip install pytest pytest-cov requests flask pyyaml jsonschema import-linter
       - run: make imports
-      - run: pytest -q tests/contracts
+      - run: pytest -q -c pyproject.toml tests/contracts

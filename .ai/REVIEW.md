@@ -4,6 +4,41 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Implementation Summary - P050
+
+Date: 2026-03-07
+Patch: `.ai/PATCHES/P050-ci-and-branch-protection-alignment.md`
+Branch: `feat/P050-ci-and-branch-protection-alignment`
+
+### Files changed
+- `.github/workflows/imports.yml`
+  - Added explicit `pip install import-linter` step before `lint-imports`.
+- `.github/workflows/contracts.yml`
+  - Changed contracts test invocation to `pytest -q -c pyproject.toml tests/contracts`.
+- `packages/plugins/python314_integration.py`
+  - Added module-level `import json`.
+  - Removed function-local `import json` to avoid local-name shadowing that kept `json` unbound in the f-string path.
+
+### Behavior changed
+- CI `imports` workflow now explicitly installs the `lint-imports` provider package.
+- CI `contracts` workflow now bypasses malformed `pytest.ini` and uses `pyproject.toml` config.
+- `SubinterpreterExecutor.execute_plugin_isolated()` no longer hits unbound `json` on the `json.dumps(config)` / `json.loads(result)` path.
+
+### Validation performed
+- `py -3.9 -m pytest -q -c pyproject.toml tests/contracts` -> pass (`....Xsssssssss......X...........`).
+- `py -3.9 -m pip install pyright` -> installed.
+- `py -3.9 -m pyright packages/plugins/python314_integration.py` -> pass (`0 errors`).
+- `make imports` unavailable in this shell (`make` not installed), so equivalent check was run:
+  - `py -3.9 -m pip install import-linter`
+  - `C:\Users\juher\AppData\Local\Programs\Python\Python39\Scripts\lint-imports.exe` -> pass (`1 kept, 0 broken`).
+
+### Remaining risks
+- Operator-only GitHub settings work remains required per P050 scope:
+  - remove stale required checks `Compile Reports` and `Journals Lint`,
+  - ensure required check context names match actual workflow/job outputs.
+- Broader `security-monitoring` and `security-scan` workflow failures remain out of P050 code scope.
+
+---
 ## Post-Implementation Review — P010
 
 **Reviewer role:** Claude (patch/diff reviewer)
@@ -369,4 +404,5 @@ Phase 5 added listing P010-P040 with pre-conditions and ordering.
 - Remaining uncertainty is explicitly marked in `MEMORY.md` and `REPO_MAP.json`.
 - No production files were modified.
 - Note: this section was authored by the implementation agent (process gap; noted in Round 2).
+
 

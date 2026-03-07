@@ -6,6 +6,7 @@ features to improve plugin system performance, safety, and isolation.
 """
 
 import sys
+import json
 import concurrent.futures
 import threading
 import time
@@ -109,7 +110,6 @@ except Exception as e:
                 
                 # Parse result
                 if result:
-                    import json
                     return json.loads(result)
                 else:
                     return {"success": False, "error": "No output from subinterpreter"}
