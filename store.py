@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -392,114 +393,12 @@ def get_endpoint_runs(pid: str, base: str, method: str, path: str, limit: int = 
         doc = json.load(f)
     return doc.get("runs", [])[:limit]
 
-# === By-key helpers (canonical key: base|METHOD|/path) ===
-import hashlib
-
-
-def _pj(pid, *parts):
-    return os.path.join(STORE_DIR, pid, *parts)
-
-def _endpoint_dossier_path_by_key(pid: str, key: str) -> str:
-    # Use safe canonical filename (not hash) so proof paths match expectations
-    from utils.endpoints import (
-        endpoint_safe_key as _esk,  # local import to avoid cycles
-    )
-    return _pj(pid, "endpoints", f"{_esk(key)}.json")
-
-def update_endpoint_dossier_by_key(pid: str, key: str, run_summary: Dict[str, Any]):
-    ensure_dirs(pid)
-    path = _endpoint_dossier_path_by_key(pid, key)
-    if os.path.exists(path):
-        with open(path) as f:
-            doc = json.load(f)
-    else:
-        try:
-            base, method, path_only = key.split("|", 2)
-        except Exception:
-            base, method, path_only = "", "GET", "/"
-        doc = {
-            "endpoint_id": key,
-            "base": base,
-            "method": method,
-            "path": path_only,
-            "first_seen": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            "runs": [],
-            "totals": {"findings": 0, "by_severity": {}},
-        }
-    doc["last_seen"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    doc["runs"].insert(0, run_summary)
-    doc["totals"]["findings"] += run_summary.get("findings", 0)
-    sevmap = doc["totals"].setdefault("by_severity", {})
-    for k, v in (run_summary.get("by_severity", {}) or {}).items():
-        sevmap[k] = sevmap.get(k, 0) + int(v or 0)
-    doc["last_run"] = {
-        "run_id": run_summary.get("run_id"),
-        "at": run_summary.get("finished_at"),
-        "summary": {"findings": run_summary.get("findings", 0), "worst": run_summary.get("worst")},
-    }
-    with open(path, "w") as f:
-        json.dump(doc, f, indent=2)
-
-def get_endpoint_runs_by_key(pid: str, key: str, limit: int = 15) -> List[Dict[str, Any]]:
-    path = _endpoint_dossier_path_by_key(pid, key)
-    if not os.path.exists(path):
-        return []
-    with open(path) as f:
-        doc = json.load(f)
-    return (doc.get("runs") or [])[:limit]
-
-# --- Canonical key helpers (preserve existing API; add by-key variants) ---
-def update_endpoint_dossier_by_key(pid: str, key: str, run_summary: Dict[str, Any]):
-    try:
-        # key format: "METHOD base/path"
-        sp = key.split(" ", 1)
-        if len(sp) != 2:
-            return update_endpoint_dossier(pid, "", "GET", "/", run_summary)
-        method = sp[0]
-        rest = sp[1]
-        # Split base and path by first slash after scheme://host
-        # We assume rest already normalized like https://host/path
-        import re
-        m = re.match(r"^(https?://[^/]+)(/.*)?$", rest)
-        if m:
-            base = m.group(1)
-            path = m.group(2) or "/"
-        else:
-            base, path = rest, "/"
-        return update_endpoint_dossier(pid, base, method, path, run_summary)
-    except Exception:
-        return update_endpoint_dossier(pid, "", "GET", "/", run_summary)
-
-def get_endpoint_runs_by_key(pid: str, key: str, limit: int = 10) -> List[Dict[str, Any]]:
-    try:
-        sp = key.split(" ", 1)
-        if len(sp) != 2:
-            return []
-        method = sp[0]
-        rest = sp[1]
-        import re
-        m = re.match(r"^(https?://[^/]+)(/.*)?$", rest)
-        if m:
-            base = m.group(1)
-            path = m.group(2) or "/"
-        else:
-            base, path = rest, "/"
-        return get_endpoint_runs(pid, base, method, path, limit=limit)
-    except Exception:
-        return []
-
 def ensure_dirs(pid: str):
     """Ensure project directories exist."""
     os.makedirs(os.path.join(get_project_dir(pid), "runs"), exist_ok=True)
     os.makedirs(os.path.join(get_project_dir(pid), "endpoints"), exist_ok=True)
 
 # === By-key dossier helpers (canonical key) ===
-import re as _re
-
-
-def _safe_filename(s: str) -> str:
-    return _re.sub(r"[^A-Za-z0-9._-]+", "_", s)
-
 def _endpoint_dossier_path_by_key(pid: str, key: str) -> str:
     ensure_dirs(pid)
     # Use safe canonical filename (not hash) so proof paths match expectations
