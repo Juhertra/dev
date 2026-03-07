@@ -13,8 +13,14 @@ def create_app():
     app.register_blueprint(web_bp)
     app.register_blueprint(api_bp)
     
-    # Configure API keys (in production, use proper secret management)
-    app.config['API_KEYS'] = os.environ.get('API_KEYS', 'test-key-123').split(',')
+    # Configure API keys from environment only; no hardcoded fallback.
+    raw_api_keys = os.environ.get("API_KEYS", "")
+    api_keys = [k.strip() for k in raw_api_keys.split(",") if k.strip()]
+    if not api_keys:
+        app.logger.warning(
+            "API_KEYS is not set; API key-protected endpoints will reject all keys."
+        )
+    app.config["API_KEYS"] = api_keys
     
     return app
 

@@ -1,0 +1,6 @@
+{
+  "nuclei_templates_dir": "/absolute/path/to/nuclei-templates",
+  "nuclei_extra_sources": [
+    "/absolute/path/to/extra-templates"
+  ]
+}

@@ -29,7 +29,9 @@ def get_settings() -> Dict[str, Any]:
     # Environment overrides
     cfg["ENV"] = os.environ.get("ENV", "development")
     cfg["DEBUG"] = os.environ.get("DEBUG", "0") in ("1", "true", "True")
-    cfg["API_KEYS"] = [k.strip() for k in os.environ.get("API_KEYS", "test-key-123").split(",") if k.strip()]
+    cfg["API_KEYS"] = [
+        k.strip() for k in os.environ.get("API_KEYS", "").split(",") if k.strip()
+    ]
     # Merge app_config.json (does not override env-derived values)
     file_cfg = _load_app_config_json()
     for k, v in file_cfg.items():
