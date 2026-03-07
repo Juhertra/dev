@@ -11,6 +11,30 @@ A comprehensive security testing platform with automated vulnerability detection
 - **Metrics & Reporting**: Analytics dashboard with trend visualization and export capabilities
 - **API Explorer**: Interactive API testing interface
 
+## Configuration
+
+### API Keys
+
+API keys must be provided explicitly via `API_KEYS`:
+
+```bash
+export API_KEYS="dev-key-1,dev-key-2"
+```
+
+If `API_KEYS` is unset, API key-protected endpoints reject all keys.
+
+### Local App Config
+
+`app_config.json` is now local-only and ignored by git.
+
+To bootstrap local config:
+
+```bash
+cp app_config.example.json app_config.json
+```
+
+Then edit `app_config.json` with machine-specific paths (for example, Nuclei template paths).
+
 ## Findings Contract
 
 The findings system uses a strict data contract to ensure consistency and reliability across all vulnerability detection sources.
