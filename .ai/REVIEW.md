@@ -4,6 +4,137 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Post-Implementation Review - P061 (PR #105, attempt 2)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+PR: `#105`
+Reviewer: coordinator
+
+### Scope Check
+- Reviewed latest branch state after commits:
+  - `fix(ci): remove matrix from ruff/unit/coverage [P061]` (`870a783e`)
+  - `fix(ci): stabilize unit and coverage execution [P061]` (`41437577`)
+- Files changed are in patch scope (`.github/workflows/ruff.yml`, `unit.yml`, `coverage.yml`, `.ai/REVIEW.md`).
+
+### CI Evidence (confirmed)
+- Scheduling failure is resolved:
+  - `ruff`, `unit`, and `coverage` now produce real jobs/check runs (no longer `jobs: []`).
+- `ruff` now passes.
+- `unit` fails on repository test failures (fixture gaps and assertion failures), not workflow scheduling/config.
+- `coverage` fails on repository test failures (security/plugin/observability test failures), not workflow scheduling/config.
+- Required checks for `main` (`pyright`, `imports`, `contracts`, `docs-health`) pass.
+- PR merge state remains `BLOCKED` with `reviewDecision: REVIEW_REQUIRED`.
+
+### Verdict
+**Blocked for objective-complete merge under current P061 acceptance criteria.**
+
+Reason:
+- P061 acceptance expects passing `unit` and `coverage` check runs.
+- Current failures are real suite defects that require production/test changes outside pure workflow wiring.
+
+Required next decision:
+1. Either expand scope (new patch) to fix failing tests so `unit`/`coverage` can pass.
+2. Or explicitly relax P061 acceptance to "check runs are produced" and merge as partial remediation.
+
+---
+
+## Implementation Update - P061 (Attempt 2 follow-up)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+
+Reason for follow-up:
+- After attempt-2 push, workflows produced real jobs (scheduling fixed), but `unit` failed on malformed `pytest.ini` and `coverage` failed on missing `psutil` during test collection.
+
+Changes made:
+- `unit.yml`
+  - Added `psutil` to pip install step.
+  - Added `-c pyproject.toml` to pytest command.
+- `coverage.yml`
+  - Added `psutil` to pip install step.
+
+Evidence:
+- Unit failure log: `pytest.ini:32: unexpected line: ']'`.
+- Coverage failure log: `ModuleNotFoundError: No module named 'psutil'` from `tests/test_plugin_security.py`.
+
+---
+
+## Implementation Summary - P061 (Attempt 2)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+
+Files changed:
+- `.github/workflows/ruff.yml`
+- `.github/workflows/unit.yml`
+- `.github/workflows/coverage.yml`
+
+Behavior changed:
+- Removed `strategy.matrix` from `ruff`, `unit`, and `coverage`; pinned `actions/setup-python` to `3.11.9`.
+- Removed `actions/cache@v4` from all three workflows to match known-working workflow structure.
+- Kept explicit tool installs (`ruff`, `pytest` stack, `pytest-cov`/`coverage`) and `-c pyproject.toml` for coverage pytest.
+- Converted coverage dashboard/ratchet steps to `continue-on-error: true` per patch attempt 2 scope.
+
+Validation performed:
+- Verified no `matrix`, `is_primary`, or matrix-based `continue-on-error` expressions remain in the three files.
+- Diff scope check: workflow files only.
+
+Remaining risks:
+- Root cause is still partially inferred; confirmation depends on PR #105 check-run behavior after push.
+
+---
+
+## Post-Implementation Review - P061 (diff verified, PR readiness)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+Reviewer: coordinator
+
+### Scope Check
+- Files changed: `.github/workflows/ruff.yml`, `.github/workflows/unit.yml`, `.github/workflows/coverage.yml`, `.ai/REVIEW.md`.
+- No out-of-scope production files were modified.
+
+### Change Verification
+- Removed `matrix.include` from all three workflows.
+- Replaced all `continue-on-error: ${{ matrix.is_primary != 'true' }}` expressions with `${{ matrix.python-version != '3.11.9' }}`.
+- Added explicit tool installs per workflow (`ruff`; `pytest` stack; `pytest-cov`/`coverage`).
+- Updated coverage pytest command to use `-c pyproject.toml`.
+- Verified no `is_primary` references remain.
+
+### Verdict
+**Approved for PR.**
+
+Remaining confirmation required in PR CI:
+- Check runs must appear for `ruff (3.11.9)`, `unit (3.11.9)`, `coverage (3.11.9)` with non-zero runtime.
+
+---
+
+## Implementation Summary - P061
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+
+Files changed:
+- `.github/workflows/ruff.yml`
+- `.github/workflows/unit.yml`
+- `.github/workflows/coverage.yml`
+- `.ai/REVIEW.md`
+
+Behavior changed:
+- Repaired matrix/`continue-on-error` wiring in `ruff`, `unit`, and `coverage` workflows so primary `3.11.9` remains blocking and `3.12` remains non-blocking.
+- Added explicit tool installs required by each workflow (`ruff`, `pytest`/`pytest-xdist`/`pytest-mock`/`pytest-timeout`, `pytest`/`pytest-cov`/`coverage`).
+- Updated coverage pytest invocation to `-c pyproject.toml` to bypass malformed `pytest.ini`.
+
+Validation performed:
+- Verified no `is_primary` references remain across the three workflow files.
+- Reviewed unified diff to confirm all 11 planned changes from P061 were applied and scope stayed within approved files.
+
+Remaining risks:
+- Root-cause hypothesis for prior 0-second scheduling failure was partially inferred; PR CI results are required for full confirmation.
+
+---
+
 ## Implementation Summary - P060
 
 Date: 2026-03-08
