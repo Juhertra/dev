@@ -4,6 +4,27 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Implementation Update - P061 (Attempt 2 follow-up)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+
+Reason for follow-up:
+- After attempt-2 push, workflows produced real jobs (scheduling fixed), but `unit` failed on malformed `pytest.ini` and `coverage` failed on missing `psutil` during test collection.
+
+Changes made:
+- `unit.yml`
+  - Added `psutil` to pip install step.
+  - Added `-c pyproject.toml` to pytest command.
+- `coverage.yml`
+  - Added `psutil` to pip install step.
+
+Evidence:
+- Unit failure log: `pytest.ini:32: unexpected line: ']'`.
+- Coverage failure log: `ModuleNotFoundError: No module named 'psutil'` from `tests/test_plugin_security.py`.
+
+---
+
 ## Implementation Summary - P061 (Attempt 2)
 
 Date: 2026-03-08
