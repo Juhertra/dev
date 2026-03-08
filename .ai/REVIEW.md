@@ -4,6 +4,31 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Implementation Summary - P061 (Attempt 2)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+
+Files changed:
+- `.github/workflows/ruff.yml`
+- `.github/workflows/unit.yml`
+- `.github/workflows/coverage.yml`
+
+Behavior changed:
+- Removed `strategy.matrix` from `ruff`, `unit`, and `coverage`; pinned `actions/setup-python` to `3.11.9`.
+- Removed `actions/cache@v4` from all three workflows to match known-working workflow structure.
+- Kept explicit tool installs (`ruff`, `pytest` stack, `pytest-cov`/`coverage`) and `-c pyproject.toml` for coverage pytest.
+- Converted coverage dashboard/ratchet steps to `continue-on-error: true` per patch attempt 2 scope.
+
+Validation performed:
+- Verified no `matrix`, `is_primary`, or matrix-based `continue-on-error` expressions remain in the three files.
+- Diff scope check: workflow files only.
+
+Remaining risks:
+- Root cause is still partially inferred; confirmation depends on PR #105 check-run behavior after push.
+
+---
+
 ## Post-Implementation Review - P061 (diff verified, PR readiness)
 
 Date: 2026-03-08
