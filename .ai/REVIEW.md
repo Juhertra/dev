@@ -4,6 +4,32 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Implementation Summary - P060
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P060-coordination-pack-refresh.md`
+
+Files changed:
+- `.ai/REPO_MAP.json`
+- `.ai/REPO_BRAIN.md`
+- `.ai/REVIEW.md`
+
+Facts corrected:
+- Removed stale `not_implemented` and scaffold-only claims for orchestrator executor/validator in `REPO_MAP.json`.
+- Updated `execution_flows.orchestrator` executor role and notes to M1 implemented behavior.
+- Replaced `R004` description from scaffold-readiness to known executor defects tracked as P063, while noting M1 implementation status.
+- Updated `REPO_BRAIN.md` orchestrator heading and module/flow bullets to reflect M1 partial implementation and full CLI behavior.
+
+Validation performed:
+- `Get-Content .ai/PATCHES/P060-coordination-pack-refresh.md` to verify required edits.
+- `Get-Content .ai/REPO_MAP.json` and `Get-Content .ai/REPO_BRAIN.md` before/after to confirm stale strings were removed.
+- `Get-Content .ai/REPO_MAP.json -Raw | ConvertFrom-Json` to confirm valid JSON.
+- Scope verification: no production code files changed.
+
+Remaining risks:
+- Historical stale statements remain in older review sections as audit history; this patch does not rewrite historical entries.
+
+---
 ## Implementation Summary - P050
 
 Date: 2026-03-07
