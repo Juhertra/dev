@@ -6,11 +6,6 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.11.9', '3.12']
-        include:
-          - python-version: '3.11.9'
-            is_primary: true
-          - python-version: '3.12'
-            is_primary: false
     
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +25,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          pip install ruff
       
       - name: Run ruff linting
         run: ruff check .
-        continue-on-error: ${{ matrix.is_primary != 'true' }}
+        continue-on-error: ${{ matrix.python-version != '3.11.9' }}

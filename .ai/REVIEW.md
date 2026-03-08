@@ -4,6 +4,56 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Post-Implementation Review - P061 (diff verified, PR readiness)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+Reviewer: coordinator
+
+### Scope Check
+- Files changed: `.github/workflows/ruff.yml`, `.github/workflows/unit.yml`, `.github/workflows/coverage.yml`, `.ai/REVIEW.md`.
+- No out-of-scope production files were modified.
+
+### Change Verification
+- Removed `matrix.include` from all three workflows.
+- Replaced all `continue-on-error: ${{ matrix.is_primary != 'true' }}` expressions with `${{ matrix.python-version != '3.11.9' }}`.
+- Added explicit tool installs per workflow (`ruff`; `pytest` stack; `pytest-cov`/`coverage`).
+- Updated coverage pytest command to use `-c pyproject.toml`.
+- Verified no `is_primary` references remain.
+
+### Verdict
+**Approved for PR.**
+
+Remaining confirmation required in PR CI:
+- Check runs must appear for `ruff (3.11.9)`, `unit (3.11.9)`, `coverage (3.11.9)` with non-zero runtime.
+
+---
+
+## Implementation Summary - P061
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+
+Files changed:
+- `.github/workflows/ruff.yml`
+- `.github/workflows/unit.yml`
+- `.github/workflows/coverage.yml`
+- `.ai/REVIEW.md`
+
+Behavior changed:
+- Repaired matrix/`continue-on-error` wiring in `ruff`, `unit`, and `coverage` workflows so primary `3.11.9` remains blocking and `3.12` remains non-blocking.
+- Added explicit tool installs required by each workflow (`ruff`, `pytest`/`pytest-xdist`/`pytest-mock`/`pytest-timeout`, `pytest`/`pytest-cov`/`coverage`).
+- Updated coverage pytest invocation to `-c pyproject.toml` to bypass malformed `pytest.ini`.
+
+Validation performed:
+- Verified no `is_primary` references remain across the three workflow files.
+- Reviewed unified diff to confirm all 11 planned changes from P061 were applied and scope stayed within approved files.
+
+Remaining risks:
+- Root-cause hypothesis for prior 0-second scheduling failure was partially inferred; PR CI results are required for full confirmation.
+
+---
+
 ## Implementation Summary - P060
 
 Date: 2026-03-08
