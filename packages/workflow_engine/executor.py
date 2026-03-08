@@ -32,7 +32,6 @@ import os
 
 # Import StoragePort for data passing
 import sys
-import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from packages.runtime_core.storage.storage_port import StoragePort
 from packages.storage.adapters.memory import InMemoryStorageAdapter
@@ -284,12 +283,6 @@ class EchoStubPlugin(PluginInterface):
             "findings": [],
             "status": "success"
         }
-
-
-class WorkflowValidationError(Exception):
-    """Workflow validation error."""
-    pass
-
 
 def validate_workflow(spec: WorkflowSpec) -> List[str]:
     """Validate workflow and return topological execution order."""
