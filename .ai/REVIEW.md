@@ -4,6 +4,41 @@ Review log is append-only. Newest round is first.
 
 ---
 
+## Post-Implementation Review - P061 (PR #105, attempt 2)
+
+Date: 2026-03-08
+Patch: `.ai/PATCHES/P061-ci-workflow-repair.md`
+PR: `#105`
+Reviewer: coordinator
+
+### Scope Check
+- Reviewed latest branch state after commits:
+  - `fix(ci): remove matrix from ruff/unit/coverage [P061]` (`870a783e`)
+  - `fix(ci): stabilize unit and coverage execution [P061]` (`41437577`)
+- Files changed are in patch scope (`.github/workflows/ruff.yml`, `unit.yml`, `coverage.yml`, `.ai/REVIEW.md`).
+
+### CI Evidence (confirmed)
+- Scheduling failure is resolved:
+  - `ruff`, `unit`, and `coverage` now produce real jobs/check runs (no longer `jobs: []`).
+- `ruff` now passes.
+- `unit` fails on repository test failures (fixture gaps and assertion failures), not workflow scheduling/config.
+- `coverage` fails on repository test failures (security/plugin/observability test failures), not workflow scheduling/config.
+- Required checks for `main` (`pyright`, `imports`, `contracts`, `docs-health`) pass.
+- PR merge state remains `BLOCKED` with `reviewDecision: REVIEW_REQUIRED`.
+
+### Verdict
+**Blocked for objective-complete merge under current P061 acceptance criteria.**
+
+Reason:
+- P061 acceptance expects passing `unit` and `coverage` check runs.
+- Current failures are real suite defects that require production/test changes outside pure workflow wiring.
+
+Required next decision:
+1. Either expand scope (new patch) to fix failing tests so `unit`/`coverage` can pass.
+2. Or explicitly relax P061 acceptance to "check runs are produced" and merge as partial remediation.
+
+---
+
 ## Implementation Update - P061 (Attempt 2 follow-up)
 
 Date: 2026-03-08
