@@ -1,0 +1,407 @@
+﻿{
+  "generated_at": "2026-03-07",
+  "evidence_policy": {
+    "confirmed": "Directly supported by repository files.",
+    "inferred": "Derived from structure or naming; not explicitly declared.",
+    "uncertain": "Insufficient or conflicting evidence."
+  },
+  "repo_identity": {
+    "name": "secflow",
+    "version": "0.0.1",
+    "remote": "https://github.com/Juhertra/dev.git",
+    "evidence": [
+      "pyproject.toml",
+      "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+    ]
+  },
+  "repo_purpose": {
+    "summary": "Security testing toolkit with a functional Legacy App and an early-stage Orchestrator Track scaffold.",
+    "confidence": "confirmed",
+    "evidence": [
+      "README.md",
+      "app.py",
+      "packages/workflow_engine/executor.py"
+    ]
+  },
+  "entrypoints_source": ".ai/ENTRYPOINTS.md",
+  "runtime": {
+    "languages": [
+      {
+        "name": "Python",
+        "confidence": "confirmed",
+        "evidence": [
+          "pyproject.toml",
+          ".python-version"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "Flask",
+        "confidence": "confirmed",
+        "evidence": [
+          "app.py",
+          "api_endpoints.py",
+          "pyproject.toml"
+        ]
+      },
+      {
+        "name": "Pydantic",
+        "confidence": "confirmed",
+        "evidence": [
+          "pyproject.toml",
+          "packages/workflow_engine/executor.py"
+        ]
+      }
+    ],
+    "package_managers": [
+      {
+        "name": "Poetry",
+        "confidence": "confirmed",
+        "evidence": [
+          "pyproject.toml"
+        ]
+      },
+      {
+        "name": "pip/requirements.txt",
+        "confidence": "confirmed",
+        "evidence": [
+          "Makefile",
+          "requirements.txt"
+        ],
+        "notes": "requirements.txt is primarily docs-oriented in this repository."
+      }
+    ],
+    "build_and_quality": [
+      {
+        "name": "Makefile tasks",
+        "confidence": "confirmed",
+        "evidence": [
+          "Makefile"
+        ]
+      },
+      {
+        "name": "GitHub Actions workflows",
+        "confidence": "confirmed",
+        "evidence": [
+          ".github/workflows/"
+        ]
+      },
+      {
+        "name": "import-linter",
+        "confidence": "confirmed",
+        "evidence": [
+          ".importlinter"
+        ]
+      }
+    ],
+    "containerization": {
+      "status": "none_detected",
+      "confidence": "confirmed",
+      "evidence": [
+        "filtered git-tracked file scan for Docker/Compose filenames"
+      ]
+    }
+  },
+  "projects": [
+    {
+      "name": "legacy_app",
+      "status": "active",
+      "confidence": "confirmed",
+      "purpose": "Flask web/API runtime for security testing workflows.",
+      "confirmed_paths": [
+        "app.py",
+        "wsgi.py",
+        "web_routes.py",
+        "api_endpoints.py",
+        "routes/",
+        "findings.py",
+        "store.py",
+        "nuclei_integration.py",
+        "nuclei_wrapper.py"
+      ]
+    },
+    {
+      "name": "orchestrator_track",
+      "status": "scaffold",
+      "confidence": "confirmed",
+      "purpose": "Workflow orchestration package scaffold using ports/adapters style modules.",
+      "confirmed_paths": [
+        "packages/runtime_core/",
+        "packages/workflow_engine/",
+        "packages/wrappers/",
+        "packages/storage/",
+        "workflows/sample-linear.yaml",
+        "tools/run_workflow.py",
+        "tools/validate_recipe.py"
+      ],
+      "current_limitations": [
+        "packages/workflow_engine/executor.py has duplicate WorkflowValidationError class (lines 88-90 and 289-291) and duplicate import os (lines 31 and 35) - tracked as P063",
+        "sys.path manipulation present in executor.py, tools/run_workflow.py, tools/validate_recipe.py, packages/storage/adapters/memory.py - tracked as R006/R007"
+      ]
+    }
+  ],
+  "confirmed_entrypoints": [
+    {
+      "path": "app.py",
+      "kind": "flask_dev_server",
+      "start_hint": "python app.py",
+      "confidence": "confirmed"
+    },
+    {
+      "path": "wsgi.py",
+      "kind": "wsgi_entrypoint",
+      "start_hint": "WSGI server imports app from wsgi.py",
+      "confidence": "confirmed"
+    },
+    {
+      "path": "pattern_cli.py",
+      "kind": "cli",
+      "start_hint": "python pattern_cli.py",
+      "confidence": "confirmed"
+    },
+    {
+      "path": "tools/run_workflow.py",
+      "kind": "cli",
+      "start_hint": "python tools/run_workflow.py <recipe.yaml> [--dry-run]",
+      "confidence": "confirmed"
+    },
+    {
+      "path": "tools/validate_recipe.py",
+      "kind": "cli",
+      "start_hint": "python tools/validate_recipe.py <recipe.yaml>",
+      "confidence": "confirmed"
+    },
+    {
+      "path": "tools/workflow_to_mermaid.py",
+      "kind": "cli",
+      "start_hint": "python tools/workflow_to_mermaid.py <recipe.yaml>",
+      "confidence": "confirmed",
+      "notes": "Has confirmed __main__ guard; role (YAML to Mermaid) inferred from name and CI gate usage."
+    },
+    {
+      "path": "init_asvs.py",
+      "kind": "setup_script",
+      "start_hint": "python init_asvs.py",
+      "confidence": "confirmed"
+    }
+  ],
+  "execution_flows": {
+    "legacy_app": {
+      "confidence": "confirmed",
+      "ordered_components": [
+        {
+          "module": "app.py",
+          "role": "create_app entry"
+        },
+        {
+          "module": "web_routes.py",
+          "role": "web blueprint"
+        },
+        {
+          "module": "routes/__init__.py",
+          "role": "register route modules"
+        },
+        {
+          "module": "api_endpoints.py",
+          "role": "API blueprint (/api/v1)"
+        },
+        {
+          "module": "store.py",
+          "role": "runtime and project state"
+        },
+        {
+          "module": "findings.py",
+          "role": "findings validation and storage"
+        },
+        {
+          "module": "nuclei_wrapper.py",
+          "role": "Nuclei execution wrapper"
+        },
+        {
+          "module": "nuclei_integration.py",
+          "role": "Nuclei result conversion to findings"
+        }
+      ]
+    },
+    "orchestrator": {
+      "confidence": "confirmed_plus_inferred",
+      "ordered_components": [
+        {
+          "module": "tools/validate_recipe.py",
+          "role": "validation CLI entry"
+        },
+        {
+          "module": "tools/run_workflow.py",
+          "role": "execution CLI entry"
+        },
+        {
+          "module": "workflows/sample-linear.yaml",
+          "role": "workflow recipe input"
+        },
+        {
+          "module": "packages/workflow_engine/executor.py",
+          "role": "workflow executor M1 implementation"
+        },
+        {
+          "module": "packages/wrappers/base.py",
+          "role": "tool wrapper protocol/ABC"
+        },
+        {
+          "module": "packages/runtime_core/storage/storage_port.py",
+          "role": "storage port protocol"
+        },
+        {
+          "module": "packages/storage/adapters/memory.py",
+          "role": "in-memory storage adapter"
+        }
+      ],
+      "notes": "Validation and execution are CLI-driven. Per .ai/ENTRYPOINTS.md, tools/validate_recipe.py is the main validation path. Both tools and package modules are M1 implementations (confirmed, read 2026-03-07). Package executor returns {\"status\": \"completed\"} with full node execution and StoragePort integration."
+    }
+  },
+  "module_relationships": [
+    {
+      "from": "app.py",
+      "to": "web_routes.py",
+      "type": "imports_blueprint",
+      "confidence": "confirmed"
+    },
+    {
+      "from": "app.py",
+      "to": "api_endpoints.py",
+      "type": "imports_blueprint",
+      "confidence": "confirmed"
+    },
+    {
+      "from": "routes/__init__.py",
+      "to": "routes/*.py",
+      "type": "registers_route_modules",
+      "confidence": "confirmed"
+    },
+    {
+      "from": "findings.py",
+      "to": "store.py",
+      "type": "uses_store_dir_and_cache_bust",
+      "confidence": "confirmed"
+    },
+    {
+      "from": "nuclei_integration.py",
+      "to": "nuclei_wrapper.py",
+      "type": "converts_wrapper_results_to_findings",
+      "confidence": "confirmed"
+    },
+    {
+      "from": "tools/run_workflow.py",
+      "to": "packages/workflow_engine/executor.py",
+      "type": "loads_and_executes_workflow_models",
+      "confidence": "confirmed"
+    }
+  ],
+  "risk_areas": [
+    {
+      "id": "R001",
+      "area": "legacy_storage_module",
+      "description": "Duplicate helper definitions in store.py can hide behavior and increase regression risk.",
+      "confidence": "confirmed",
+      "evidence": [
+        "store.py"
+      ]
+    },
+    {
+      "id": "R002",
+      "area": "auth_defaults",
+      "description": "Fallback API key behavior in app.py is risky outside local development.",
+      "confidence": "confirmed",
+      "evidence": [
+        "app.py"
+      ]
+    },
+    {
+      "id": "R003",
+      "area": "config_hygiene",
+      "description": "Committed local paths in app_config.json reduce portability and may leak environment details.",
+      "confidence": "confirmed",
+      "evidence": [
+        "app_config.json"
+      ]
+    },
+    {
+      "id": "R004",
+      "area": "orchestrator_readiness",
+      "description": "packages/workflow_engine/executor.py has known code defects: duplicate WorkflowValidationError class and duplicate import os. Tracked as P063. Execution and validation are functionally implemented (M1, confirmed 2026-03-07).",
+      "confidence": "confirmed",
+      "evidence": [
+        "packages/workflow_engine/executor.py",
+        "packages/workflow_engine/validate_recipe.py"
+      ]
+    },
+    {
+      "id": "R005",
+      "area": "dependency_declaration_drift",
+      "description": "Some runtime imports appear absent from declared pyproject dependencies.",
+      "confidence": "confirmed",
+      "evidence": [
+        "specs.py",
+        "pyproject.toml"
+      ]
+    },
+    {
+      "id": "R006",
+      "area": "path_hacks",
+      "description": "sys.path manipulation is present in orchestrator-related modules/scripts.",
+      "confidence": "confirmed",
+      "evidence": [
+        "packages/storage/adapters/memory.py",
+        "tools/run_workflow.py",
+        "tools/validate_recipe.py"
+      ]
+    },
+    {
+      "id": "R007",
+      "area": "split_portability",
+      "description": "These sys.path-based imports are likely to complicate repository split portability.",
+      "confidence": "inferred",
+      "evidence": [
+        "packages/storage/adapters/memory.py",
+        "tools/run_workflow.py",
+        "tools/validate_recipe.py",
+        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+      ]
+    }
+  ],
+  "unknowns_to_resolve": [
+    {
+      "id": "U001",
+      "question": "Final ownership of packages/storage after split?",
+      "status": "uncertain",
+      "evidence": [
+        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+      ]
+    },
+    {
+      "id": "U002",
+      "question": "Final ownership of packages/findings after split?",
+      "status": "uncertain",
+      "evidence": [
+        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+      ]
+    },
+    {
+      "id": "U003",
+      "question": "Will current dev repo be renamed during split?",
+      "status": "uncertain",
+      "evidence": [
+        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+      ]
+    },
+    {
+      "id": "U004",
+      "question": "Should app_config.json and runtime data move to a local-only/ignored model?",
+      "status": "uncertain",
+      "evidence": [
+        "app_config.json",
+        "store.py"
+      ]
+    }
+  ]
+}
