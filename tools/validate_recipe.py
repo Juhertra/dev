@@ -19,11 +19,6 @@ Usage:
 import sys
 import argparse
 import json
-from pathlib import Path
-
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from packages.workflow_engine.validate_recipe import RecipeValidator, RecipeValidationError
 
 

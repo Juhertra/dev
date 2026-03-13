@@ -13,10 +13,6 @@ from typing import Dict, Any, List
 from datetime import datetime
 import uuid
 
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-
 from packages.runtime_core.storage.storage_port import StoragePort, StorageValidationError, SchemaVersionError
 
 

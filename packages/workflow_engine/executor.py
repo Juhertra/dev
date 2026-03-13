@@ -28,11 +28,9 @@ from pydantic import BaseModel, ValidationError
 from datetime import datetime
 from dataclasses import dataclass, field
 from concurrent.futures import ThreadPoolExecutor, Future
-import os
 
 # Import StoragePort for data passing
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from packages.runtime_core.storage.storage_port import StoragePort
 from packages.storage.adapters.memory import InMemoryStorageAdapter
 
