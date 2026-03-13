@@ -21,9 +21,6 @@ import json
 import time
 from pathlib import Path
 
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from packages.workflow_engine.executor import WorkflowExecutor, WorkflowManager
 from packages.workflow_engine.validate_recipe import RecipeValidator
 
