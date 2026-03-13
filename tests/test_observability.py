@@ -9,19 +9,26 @@ import pytest
 import time
 import threading
 import json
+from contextlib import contextmanager
 from unittest.mock import patch, MagicMock
 from io import StringIO
-import sys
-import os
-
-# Add the packages directory to the path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from packages.runtime_core.observability.metrics import MetricsCollector, ExecutionMetrics
 from packages.runtime_core.observability.logging import (
-    StructuredLogger, WorkflowLogger, JsonFormatter, LogContext
+    StructuredLogger, WorkflowLogger, JsonFormatter, LogContext, get_logger
 )
 from packages.runtime_core.observability.integration import ObservabilityHooks
+
+
+@contextmanager
+def capture_secflow_stdout():
+    """Capture secflow logger output by rebinding handlers to patched stdout."""
+    output = StringIO()
+    logger = get_logger()
+    with patch('sys.stdout', output):
+        logger._setup_formatter()
+        yield output
+    logger._setup_formatter()
 
 
 class TestMetricsCollector:
@@ -253,14 +260,14 @@ class TestObservabilityHooks:
     def test_workflow_execution_context(self):
         """Test workflow execution context manager."""
         hooks = ObservabilityHooks()
-        output = StringIO()
-        
-        with patch('sys.stdout', output):
+        hooks.metrics.reset_metrics()
+        with capture_secflow_stdout() as output:
             with hooks.workflow_execution_context(
                 "workflow_1", "Test Workflow", "project_1", "run_1"
             ):
                 # Simulate workflow execution
                 time.sleep(0.01)
+                hooks.record_workflow_success("workflow_1", 0.01, 0)
             
             # Get output
             log_output = output.getvalue()
@@ -280,14 +287,14 @@ class TestObservabilityHooks:
     def test_node_execution_context(self):
         """Test node execution context manager."""
         hooks = ObservabilityHooks()
-        output = StringIO()
-        
-        with patch('sys.stdout', output):
+        hooks.metrics.reset_metrics()
+        with capture_secflow_stdout() as output:
             with hooks.node_execution_context(
                 "node_1", "plugin_1", "workflow_1", 1
             ):
                 # Simulate node execution
                 time.sleep(0.01)
+                hooks.record_node_success("node_1", "plugin_1", 0.01, 0)
             
             # Get output
             log_output = output.getvalue()
@@ -307,9 +314,7 @@ class TestObservabilityHooks:
     def test_error_handling(self):
         """Test error handling in context managers."""
         hooks = ObservabilityHooks()
-        output = StringIO()
-        
-        with patch('sys.stdout', output):
+        with capture_secflow_stdout() as output:
             try:
                 with hooks.workflow_execution_context(
                     "workflow_1", "Test Workflow", "project_1", "run_1"
@@ -340,9 +345,7 @@ class TestPerformanceMonitoring:
     def test_performance_thresholds(self):
         """Test performance threshold checking."""
         hooks = ObservabilityHooks()
-        output = StringIO()
-        
-        with patch('sys.stdout', output):
+        with capture_secflow_stdout() as output:
             # Test plugin performance warning
             hooks.check_performance_thresholds("plugin", 15.0)
             
@@ -372,9 +375,8 @@ class TestPerformanceMonitoring:
 def test_integration_workflow():
     """Integration test for complete workflow observability."""
     hooks = ObservabilityHooks()
-    output = StringIO()
-    
-    with patch('sys.stdout', output):
+    hooks.metrics.reset_metrics()
+    with capture_secflow_stdout() as output:
         # Simulate complete workflow execution
         with hooks.workflow_execution_context(
             "integration_workflow", "Integration Test", "test_project", "test_run"
@@ -388,7 +390,7 @@ def test_integration_workflow():
                 
                 hooks.record_node_success(f"node_{i}", f"plugin_{i}", 0.01, 1)
             
-            hooks.record_workflow_success("integration_workflow", 0.03, 3)
+            hooks.record_workflow_success("integration_workflow", 0.03, 0)
         
         # Get output
         log_output = output.getvalue()
