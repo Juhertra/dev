@@ -62,12 +62,15 @@ Authoritative files:
   - One patch = one branch = one PR.
   - Naming follows `.ai/GITHUB_WORKFLOW.md`.
   - PR scope must match patch scope only.
+- Required writeback:
+  - Update `TASK.md` Active Patch entry: record PR number, branch name, and mark Phase 5 complete.
 
 6. Post-Implementation Review (Merge Readiness)
 - Owner: reviewer role.
 - Actions:
   - Review PR diff, checks, and merge state.
   - Prepend `## Post-Implementation Review - P0xx (PR #xxx, CI confirmed)` to `REVIEW.md`.
+  - Update `TASK.md` Active Patch entry to reflect Phase 6 status and verdict.
   - Verdict must be explicit: `approved for merge` or blocked with exact blocker.
 
 7. Approval and Merge
@@ -75,12 +78,16 @@ Authoritative files:
 - Notes:
   - Approval may be impossible for PR author (self-approval restriction).
   - If standard merge is blocked by branch policy, report exact blocker and required manual action.
+- Required writeback:
+  - Prepend merge confirmation to `REVIEW.md` recording approval result and merge commit SHA.
+  - Update `TASK.md` Active Patch entry to reflect merge complete and Phase 7 done.
 
 8. Post-Merge State Sync
 - Owner: reviewer role.
 - Actions:
   - Confirm merged state via GitHub.
-  - Update `TASK.md` patch status.
+  - Clear Active Patch in `TASK.md`; move patch to Status history with PR number and merge date.
+  - Prepend `## Post-Merge State Sync - P0xx` to `REVIEW.md`.
   - Keep next candidate list accurate.
 
 ## Mandatory Gates
@@ -90,6 +97,10 @@ Authoritative files:
   - If the instruction does not name a phase (for example, "continue the active patch"), determine the next owned RUNBOOK phase from the Phase Ownership table, `TASK.md`, and `REVIEW.md`.
   - Do not self-chain into a later phase even if the same agent also owns that later phase.
   - Multi-phase execution requires a separate explicit operator instruction per phase.
+- Writeback gate:
+  - After completing a phase, the owning agent must update `TASK.md` and/or `REVIEW.md` before stopping.
+  - The next phase must be inferable from coordination state alone, without requiring context from the completing agent.
+  - Applies equally to reviewer, implementer, and operator-assisted phases.
 - Pre-review gate:
   - Implementation must not start before `Pre-Implementation Review - P0xx` exists.
 - Scope gate:

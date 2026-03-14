@@ -55,6 +55,7 @@ This rule exists to prevent scope drift, unreviewed risk, and silent behavior ch
 - Keep `confirmed`, `inferred`, and `uncertain` clearly separated.
 - Never execute split gates A-E without explicit user authorization.
 - Execute exactly one RUNBOOK phase per operator instruction. Stop and report after the phase is complete; do not self-chain into the next phase.
+- After completing a phase, update coordination state (`TASK.md` and/or `REVIEW.md`) before stopping. The next phase must be inferable from coordination state alone.
 - Respect current task scope in `.ai/TASK.md`.
 
 ## Working Order
