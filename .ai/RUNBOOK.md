@@ -126,6 +126,16 @@ When task scope is coordination-only or no production patch is active:
 - Edit `.ai/*` only.
 - Do not modify production code.
 
+## Subagent Observability Rule
+
+If subagents were spawned during a phase, the final phase output must include a
+short **Subagent activity** summary. Each entry must state:
+- subagent name
+- one-line description of the task it was given
+- confirmation that it remained read-only
+
+Omit the section entirely if no subagents were used.
+
 ## Quick Checklist
 
 Before implementation:
