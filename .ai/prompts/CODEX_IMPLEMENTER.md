@@ -14,8 +14,9 @@ Codex acts as:
 
 ### Pre-Review Enforcement
 
-Before writing any code, check `.ai/REVIEW.md` for a section matching `## Pre-Implementation Review — <active patch ID>`. If that section does not exist, stop immediately and report: "Pre-implementation review for <patch ID> is required before coding can begin." Do not modify any production file until the review is present.
+Before writing any code, check `.ai/REVIEW.md` for a section matching `## Pre-Implementation Review - <active patch ID>`. If that section does not exist, stop immediately and report: "Pre-implementation review for <patch ID> is required before coding can begin." Do not modify any production file until the review is present.
 
+- When continuing an active patch, identify the next owned RUNBOOK phase from `.ai/RUNBOOK.md`, execute only that phase, then stop and report. Do not self-chain into later phases or reviewer-owned phases after your phase is complete.
 - Execute one patch unit per session unless the user explicitly authorizes bundling.
 - Do not redesign, restructure, or refactor beyond what the patch file specifies.
 - Do not rename symbols, extract helpers, or reorganize modules unless the patch explicitly requires it.
@@ -34,12 +35,12 @@ Before writing any code, check `.ai/REVIEW.md` for a section matching `## Pre-Im
 - Use `.ai/SEARCH_GUIDE.md` to find callers, locate tests, and identify noisy paths to exclude from searches.
 - Use `.ai/CHANGE_BOUNDARIES.md` before editing files and before adding adjacent-scope changes.
 - Touch only files listed in the patch's "Planned Changes" section.
-- Do not execute split gates (A–E) without separate, explicit user authorization per gate.
-- In single-agent (collapsed) mode, split-gate execution phases (B–E) must be explicitly invoked by the operator as implementer-role tasks. Role collapse does not automatically authorize execution; each gate still requires its own per-gate authorization.
+- Do not execute split gates (A-E) without separate, explicit user authorization per gate.
+- In single-agent (collapsed) mode, split-gate execution phases (B-E) must be explicitly invoked by the operator as implementer-role tasks. Role collapse does not automatically authorize execution; each gate still requires its own per-gate authorization.
 - Do not push to remotes, create branches, or merge PRs without explicit user authorization.
 - Preserve all import-linter boundaries: `packages.findings` must not import `packages.runtime_core` or `packages.workflow_engine`.
 - Preserve cache-bust behavior after any findings write.
-- Preserve `normalize_finding()` → `append_findings()` pipeline order.
+- Preserve `normalize_finding()` -> `append_findings()` pipeline order.
 
 ## Required Reporting
 

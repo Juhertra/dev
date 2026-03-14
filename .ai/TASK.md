@@ -21,8 +21,10 @@ The coordination pack is complete. All `.ai/` files are consistent, evidence-lab
 
 **P062 — sys.path elimination: completed and merged (PR #108, confirmed 2026-03-14).**
 
+**P065 — Agent Role Boundary Hardening: completed and merged (PR #110, confirmed 2026-03-14).**
+
 ## Active Patch
-**P065 — Agent Role Boundary Hardening** — implemented 2026-03-14, approved for PR. Awaiting PR creation.
+**P066 — Phase Ownership and Single-Step Execution** — implemented 2026-03-14, approved for PR, awaiting PR creation. Phases 2–4 complete. No PR opened yet.
 
 **P040 — Split Gate A Preflight: completed and merged (PR #109, confirmed 2026-03-14).** Artifact preserved in repository.
 

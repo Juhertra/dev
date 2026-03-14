@@ -1,5 +1,275 @@
 # Review Log
 
+## State Repair Note — P065 / P066
+
+Date: 2026-03-14
+
+Defect: P065 completion line was placed inside the Active Patch section of TASK.md instead of the Status history section when P066 was activated. Both patch file statuses were stale ("pending"). REVIEW.md was accurate and required no change.
+
+Repairs applied:
+- TASK.md: P065 line moved to Status history (after P062); P066 Active Patch entry updated to reflect phases 2–4 complete, approved for PR, awaiting PR creation.
+- P065 patch file: status updated to "merged (PR #110, 2026-03-14)".
+- P066 patch file: status updated to "implemented 2026-03-14, approved for PR, awaiting PR creation".
+
+---
+
+## Post-Implementation Review — P066
+
+Date: 2026-03-14
+Reviewer: coordinator
+
+### Scope Read
+- `.ai/AGENTS.md`
+- `.ai/RUNBOOK.md`
+- `.ai/prompts/CLAUDE_REVIEWER.md`
+- `.ai/prompts/CODEX_IMPLEMENTER.md`
+- `.ai/MULTI_AGENT_GUIDE.md` (untracked; verified via grep)
+- `git diff HEAD` for the four tracked files
+
+### Diff Assessment (confirmed)
+
+All modified files are `.ai/` only. No production files, tests, CI, or GitHub governance files touched.
+
+Tracked changes (6 files, `git diff HEAD`):
+- `.ai/AGENTS.md`: +1 line — one-phase rule added to Hard Constraints.
+- `.ai/RUNBOOK.md`: +18 lines — Phase Ownership table and one-phase gate in Mandatory Gates; trailing newline added.
+- `.ai/prompts/CLAUDE_REVIEWER.md`: +1 meaningful line — "next owned RUNBOOK phase" posture item; remaining delta is em-dash-to-hyphen encoding normalizations (cosmetic, no meaning change).
+- `.ai/prompts/CODEX_IMPLEMENTER.md`: +1 meaningful line — "next owned RUNBOOK phase" execution discipline item; same encoding normalizations.
+- `.ai/TASK.md`: active patch state update (workflow-managed, not implementation content).
+- `.ai/REVIEW.md`: log entries (workflow-managed).
+
+Untracked change (confirmed via grep):
+- `.ai/MULTI_AGENT_GUIDE.md`: one-phase gate note present at line 128.
+
+### Acceptance Criteria Check (confirmed)
+- [x] `RUNBOOK.md`: Phase Ownership table present; one-phase gate in Mandatory Gates; generic (all phases); resolves "continue the active patch" via ownership table lookup. No phase-specific stop signals (Refinement 1 applied).
+- [x] `AGENTS.md`: one-phase execution in Hard Constraints.
+- [x] `CLAUDE_REVIEWER.md`: "next owned RUNBOOK phase" language (Refinement 2 applied).
+- [x] `CODEX_IMPLEMENTER.md`: "next owned RUNBOOK phase" language (Refinement 2 applied).
+- [x] `MULTI_AGENT_GUIDE.md`: one-phase gate confirmed in RUNBOOK Alignment.
+- [x] No production files modified.
+
+### Findings
+1. `style concern` — em-dash-to-hyphen normalizations in `CLAUDE_REVIEWER.md` and `CODEX_IMPLEMENTER.md`. Cosmetic encoding change; no meaning change. `accept as-is`.
+2. No bugs. No scope creep. No production risk.
+
+### Verdict
+**Approved for PR.**
+
+---
+
+## Implementation Summary - P066
+
+Date: 2026-03-14
+Implementer: coordinator
+
+### Files Changed
+- `.ai/RUNBOOK.md`: added a consolidated Phase Ownership table and a generic one-phase gate in Mandatory Gates.
+- `.ai/AGENTS.md`: added a hard constraint requiring exactly one RUNBOOK phase per operator instruction.
+- `.ai/prompts/CLAUDE_REVIEWER.md`: added reviewer default-posture language to execute only the next owned RUNBOOK phase and then stop.
+- `.ai/prompts/CODEX_IMPLEMENTER.md`: added implementer execution-discipline language to execute only the next owned RUNBOOK phase and then stop.
+- `.ai/MULTI_AGENT_GUIDE.md`: added RUNBOOK-alignment language confirming the one-phase gate still applies in multi-agent mode.
+
+### Behavior Changed
+No runtime behavior change. Coordination-only patch.
+
+### Validation Performed
+- Spot-checked all five scoped files after editing to confirm the new ownership and one-phase language is present.
+- Verified the implementation follows the binding pre-review refinements: generic one-phase gate in `RUNBOOK.md`; prompts use "next owned RUNBOOK phase"; no phase-specific stop text was added.
+
+### Remaining Risks
+- `inferred`: enforcement remains documentation- and prompt-based. A future role or workflow addition will need the same one-phase ownership model added explicitly.
+
+### Context Accounting
+- `.ai/TASK.md`: confirmed P066 is the active patch.
+- `.ai/REVIEW.md`: supplied the binding pre-implementation refinements that overrode the patch file's phase-specific stop wording.
+- `.ai/PATCHES/P066-phase-ownership-single-step.md`: defined the approved file scope and intended ownership/single-phase behavior.
+- `.ai/RUNBOOK.md`: source of phase ownership and mandatory-gate changes.
+- `.ai/AGENTS.md`: source of repo-wide hard constraints.
+- `.ai/prompts/CLAUDE_REVIEWER.md`: source of reviewer default-posture constraints.
+- `.ai/prompts/CODEX_IMPLEMENTER.md`: source of implementer execution-discipline constraints.
+- `.ai/MULTI_AGENT_GUIDE.md`: source of the multi-agent RUNBOOK alignment statement.
+
+## Pre-Implementation Review — P066
+
+Date: 2026-03-14
+Reviewer: coordinator
+
+### Authorization (confirmed)
+Explicit operator instruction: activate P066 (phase ownership and single-step execution hardening).
+
+### Scope Read
+Files to be edited per patch spec:
+- `.ai/RUNBOOK.md`
+- `.ai/AGENTS.md`
+- `.ai/prompts/CLAUDE_REVIEWER.md`
+- `.ai/prompts/CODEX_IMPLEMENTER.md`
+- `.ai/MULTI_AGENT_GUIDE.md`
+
+No production files, tests, CI workflows, or GitHub governance files in scope.
+
+### Patch Spec Assessment
+The patch spec is sound. All five changes are additive and internally consistent with P065. No existing content is removed. The ownership table, one-phase gate, and stop signals address distinct gaps without overlapping.
+
+### Operator Refinements (binding for implementation)
+
+The following two refinements supersede the corresponding patch spec language and must be applied during implementation:
+
+**Refinement 1 — One-phase rule scope**
+
+The patch spec adds stop signals only to Phase 2 and Phase 7. This is a symptom fix. The one-phase rule must be expressed generically and apply to every phase, not just those two. Implementation must:
+- State the one-phase gate in the Mandatory Gates section as a universal rule (all phases).
+- Remove or not add any phase-specific stop-signal text that would imply only those two phases are gated.
+- The ownership table and the one-phase gate together are sufficient; phase-specific inline annotations are redundant and potentially misleading.
+
+**Refinement 2 — Prompt language for "next owned phase"**
+
+The patch spec drafts prompt additions using "explicitly instructed phase." This phrasing breaks when the operator says "Continue the active patch" — a valid instruction that does not name a phase. Implementation must:
+- In `CLAUDE_REVIEWER.md` and `CODEX_IMPLEMENTER.md`, use "next owned RUNBOOK phase" rather than "single explicitly instructed phase."
+- The operative constraint is: identify your next owned phase from the ownership table, execute it, then stop.
+- The rule still enforces single-phase execution; it just derives the phase from ownership rather than requiring it to be named.
+
+### Findings
+
+1. `inferred risk` — Phase-specific stop signals (as drafted in spec §1c) could be read as an exhaustive list, implying chaining is permitted at all other phase boundaries. Resolved by Refinement 1: express the rule generically in Mandatory Gates only.
+
+2. `style concern` — MULTI_AGENT_GUIDE.md addition is one sentence. The spec drafts three sentences. Three is fine; just ensure they don't contradict the generic one-phase gate in RUNBOOK.md.
+
+3. No scope creep, no production risk.
+
+### Verdict
+**Proceed with P066 implementation.** Apply both refinements above. Implement all five `.ai/` file changes. Stop after implementation is complete; do not open a PR.
+
+---
+
+## Post-Merge State Sync - P065
+
+Date: 2026-03-14
+Reviewer: coordinator
+
+### Merge Confirmation (confirmed)
+- PR `#110` `chore/P065-agent-role-boundary-hardening` -> `main` is `MERGED`.
+- Merged at `2026-03-14T09:15:48Z`.
+- Merge commit: `5ba2a6d3351ca480924d978b31df372b368e77a9`.
+
+### Task State Update (confirmed)
+- P065 is completed and merged.
+- No active production patch remains.
+- No candidate patches remain.
+- Next authorized action remains Gate C, which still requires explicit operator authorization and written ownership decisions.
+
+### Verdict
+**P065 complete and merged.**
+
+## Post-Implementation Review — P065 (PR #110, CI confirmed, re-check 2026-03-14)
+
+Date: 2026-03-14
+Reviewer: coordinator
+
+### PR State (confirmed)
+- `mergeable: MERGEABLE` (no conflicts).
+- `mergeStateStatus: BLOCKED` — was `BEHIND` in prior review; branch has been updated. `BLOCKED` now reflects solely `REVIEW_REQUIRED`.
+- `reviewDecision: REVIEW_REQUIRED`.
+
+### Required Check Summary (confirmed)
+
+| Check | Latest result | Required |
+|---|---|---|
+| `pyright` | `pass` | yes |
+| `imports` | `pass` | yes |
+| `contracts` | `pass` | yes |
+| `docs-health` | `pass` | yes |
+| `ruff` | `pass` | no |
+| `unit` | `fail` | no |
+| `coverage` | `fail` | no |
+| `dependency-audit` | `fail` | no |
+| `plugin-security-audit` | `fail` | no |
+| `sast-scan` | `fail` | no |
+| `secrets-scan` | `fail` | no |
+| `check` | `pass` | no |
+| `security-gate` | `skipping` | no |
+
+All four required checks passing on the updated branch. Non-required failures are pre-existing.
+
+### Prior Blocker Resolution
+- `BEHIND` — **resolved**. Branch updated onto current `main`; required checks re-confirmed passing.
+
+### Remaining Blocker (confirmed)
+- `REVIEW_REQUIRED` — one approving review required by branch protection. This is the sole remaining blocker.
+
+### Verdict
+**Approved for merge once one approving review is present.**
+
+No code changes required. Sole blocker is repository review policy.
+
+---
+
+## Post-Implementation Review — P065 (PR #110, CI confirmed)
+
+Date: 2026-03-14
+Reviewer: coordinator
+
+### PR State (confirmed)
+- PR `#110` is `OPEN`, not draft.
+- Title: `[P065] chore(ai): harden agent role boundaries`
+- Base: `main`. Head: `chore/P065-agent-role-boundary-hardening`.
+- GitHub reports `mergeable: MERGEABLE` (no conflicts).
+- GitHub reports `mergeStateStatus: BEHIND` (head branch is behind `main`).
+- GitHub review state: `REVIEW_REQUIRED`.
+
+### Files in Diff (confirmed)
+8 files, all `.ai/`:
+- `.ai/AGENTS.md`
+- `.ai/CHANGE_BOUNDARIES.md`
+- `.ai/PATCHES/P065-agent-role-boundary-hardening.md`
+- `.ai/REVIEW.md`
+- `.ai/RUNBOOK.md`
+- `.ai/TASK.md`
+- `.ai/prompts/CLAUDE_REVIEWER.md`
+- `.ai/prompts/CODEX_IMPLEMENTER.md`
+
+Scope assessment: matches P065 `Planned Changes` exactly. No production files.
+
+### Required Check Summary (confirmed)
+
+| Check | Latest result | Required |
+|---|---|---|
+| `pyright` | `pass` | yes |
+| `imports` | `pass` | yes |
+| `contracts` | `pass` | yes |
+| `docs-health` | `pass` | yes |
+| `ruff` | `pass` | no |
+| `unit` | `fail` | no |
+| `coverage` | `fail` | no |
+| `dependency-audit` | `fail` | no |
+| `plugin-security-audit` | `fail` | no |
+| `sast-scan` | `fail` | no |
+| `secrets-scan` | `fail` | no |
+| `check` | `pass` | no |
+| `security-gate` | `skipping` | no |
+
+- `confirmed`: all four required checks (`pyright`, `imports`, `contracts`, `docs-health`) are passing.
+- `confirmed`: all failing checks are non-required (pre-existing failures consistent with prior merged PRs).
+
+### Merge Gate Assessment
+
+**Blocker 1 — Branch behind base (confirmed)**
+`mergeStateStatus: BEHIND`. The head branch `chore/P065-agent-role-boundary-hardening` is behind `main`. CI_SURFACE.md records `strict: true` for required status checks, which requires branches to be up to date with the base before merge. GitHub will prevent merge until the branch is updated.
+- Required action: rebase or update branch onto current `main`, then confirm required checks re-pass.
+
+**Blocker 2 — Review required (confirmed)**
+`reviewDecision: REVIEW_REQUIRED`. Branch protection requires one approving review.
+- Required action: one approving review from an eligible reviewer.
+
+### Verdict
+**Blocked. Two exact blockers:**
+1. `mergeStateStatus: BEHIND` — branch must be updated onto current `main` (`strict: true`).
+2. `reviewDecision: REVIEW_REQUIRED` — one approving review is required.
+
+No code changes are required for P065. Both blockers are process/policy, not patch correctness.
+
+---
+
 ## State Repair Note — P065
 
 Date: 2026-03-14
@@ -4070,8 +4340,6 @@ Remaining confirmation required in PR CI:
 - Remaining uncertainty is explicitly marked in `MEMORY.md` and `REPO_MAP.json`.
 - No production files were modified.
 - Note: this section was authored by the implementation agent (process gap; noted in Round 2).
-
-
 
 
 
