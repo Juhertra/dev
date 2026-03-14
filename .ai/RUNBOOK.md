@@ -11,6 +11,19 @@ Authoritative files:
 - `.ai/SEARCH_GUIDE.md`
 - `.ai/GITHUB_WORKFLOW.md`
 
+## Phase Ownership
+
+| Phase | Name | Owner |
+|---|---|---|
+| 1 | State Sync | reviewer |
+| 2 | Patch Activation | reviewer |
+| 3 | Implementation | implementer |
+| 4 | Post-Implementation Review (PR Readiness) | reviewer |
+| 5 | PR Open | operator or explicitly authorized implementer |
+| 6 | Post-Implementation Review (Merge Readiness) | reviewer |
+| 7 | Approval and Merge | operator or explicitly authorized implementer |
+| 8 | Post-Merge State Sync | reviewer |
+
 ## Phase Order
 
 1. State Sync
@@ -72,6 +85,11 @@ Authoritative files:
 
 ## Mandatory Gates
 
+- One-phase gate:
+  - Each operator instruction executes exactly one RUNBOOK phase, then stops and reports.
+  - If the instruction does not name a phase (for example, "continue the active patch"), determine the next owned RUNBOOK phase from the Phase Ownership table, `TASK.md`, and `REVIEW.md`.
+  - Do not self-chain into a later phase even if the same agent also owns that later phase.
+  - Multi-phase execution requires a separate explicit operator instruction per phase.
 - Pre-review gate:
   - Implementation must not start before `Pre-Implementation Review - P0xx` exists.
 - Scope gate:
