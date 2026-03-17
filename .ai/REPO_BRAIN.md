@@ -11,13 +11,10 @@
 - `findings.py` validates and stores findings with schema checks and rolling cap behavior.
 - `nuclei_wrapper.py` and `nuclei_integration.py` provide Nuclei scan execution and result conversion.
 
-### Orchestrator Track (confirmed M1 partial)
-- `packages/runtime_core/storage/storage_port.py` defines `StoragePort` protocol.
-- `packages/storage/adapters/memory.py` provides in-memory adapter implementation.
-- `packages/wrappers/base.py` provides tool wrapper protocol/ABC.
-- `packages/workflow_engine/executor.py` is an M1 implementation (825 lines): `execute_workflow()` returns `{"status": "completed"}` with full node execution, retry logic, and StoragePort integration (confirmed, read 2026-03-07).
-- `packages/workflow_engine/validate_recipe.py` is an M1 implementation (445 lines): `RecipeValidator` runs a 6-step pipeline - schema, pydantic, DAG cycle detection, references, node types, configurations (confirmed, read 2026-03-07).
-- `tools/run_workflow.py` and `tools/validate_recipe.py` are full CLIs. `run_workflow.py` supports `--dry-run`, `--execute`, `--parallel`, and `--test-sample` modes. `validate_recipe.py` performs real DAG dependency checking (confirmed, read 2026-03-07).
+### Orchestrator Track (extracted)
+- Orchestrator packages were extracted to `Juhertha/secflow-orchestrator` during Gate D.
+- `packages/runtime_core/`, `packages/storage/`, `packages/wrappers/`, and `packages/workflow_engine/` are absent from `Juhertha/dev` main.
+- `tools/run_workflow.py`, `tools/validate_recipe.py`, and `tools/workflow_to_mermaid.py` remain as legacy file references, but their package dependencies now live in `Juhertha/secflow-orchestrator`.
 
 ## Execution Flow (Current)
 
@@ -28,10 +25,10 @@
 4. Cache invalidation and metrics rebuild hooks execute.
 5. UI/API responds from persisted state.
 
-### Orchestrator Track Flow (confirmed + inferred)
-1. CLI loads workflow YAML.
-2. Recipe checks run via tool and package validation paths.
-3. Package executor is an M1 implementation; `execute_workflow()` returns `{"status": "completed"}` with `completed_nodes`, `total_findings`, and `execution_time` (confirmed, read 2026-03-07).
+### Orchestrator Track Flow (post-split status)
+1. Historical CLI files still exist in `Juhertha/dev`.
+2. The orchestrator package implementations they depended on were extracted to `Juhertha/secflow-orchestrator`.
+3. `Juhertha/dev` should be treated as legacy-only; active orchestrator work belongs in the orchestrator repo.
 
 ## Boundaries and Risks
 - Confirmed boundary: `packages.findings` must not import from `packages.runtime_core` or `packages.workflow_engine`.
@@ -39,4 +36,3 @@
   - duplicate helper definitions in `store.py`
   - fallback API key behavior in `app.py`
   - committed developer-local config paths
-  - `sys.path` manipulation in orchestrator-related modules/scripts
