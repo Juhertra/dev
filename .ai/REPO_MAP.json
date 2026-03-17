@@ -1,5 +1,5 @@
 ﻿{
-  "generated_at": "2026-03-07",
+  "generated_at": "2026-03-17",
   "evidence_policy": {
     "confirmed": "Directly supported by repository files.",
     "inferred": "Derived from structure or naming; not explicitly declared.",
@@ -15,7 +15,7 @@
     ]
   },
   "repo_purpose": {
-    "summary": "Security testing toolkit with a functional Legacy App and an early-stage Orchestrator Track scaffold.",
+    "summary": "Legacy-only security testing toolkit; orchestrator code was extracted to Juhertha/secflow-orchestrator during the completed split lifecycle.",
     "confidence": "confirmed",
     "evidence": [
       "README.md",
@@ -123,21 +123,16 @@
     },
     {
       "name": "orchestrator_track",
-      "status": "scaffold",
+      "status": "extracted",
       "confidence": "confirmed",
-      "purpose": "Workflow orchestration package scaffold using ports/adapters style modules.",
+      "purpose": "Historical orchestrator track extracted to Juhertha/secflow-orchestrator during Gate D on 2026-03-15.",
       "confirmed_paths": [
-        "packages/runtime_core/",
-        "packages/workflow_engine/",
-        "packages/wrappers/",
-        "packages/storage/",
-        "workflows/sample-linear.yaml",
         "tools/run_workflow.py",
         "tools/validate_recipe.py"
       ],
       "current_limitations": [
-        "packages/workflow_engine/executor.py has duplicate WorkflowValidationError class (lines 88-90 and 289-291) and duplicate import os (lines 31 and 35) - tracked as P063",
-        "sys.path manipulation present in executor.py, tools/run_workflow.py, tools/validate_recipe.py, packages/storage/adapters/memory.py - tracked as R006/R007"
+        "Active orchestrator package code no longer lives in Juhertha/dev; use Juhertha/secflow-orchestrator for active orchestrator work.",
+        "Historical CLI files remain in Juhertha/dev, but their package dependencies were extracted during Gate D."
       ]
     }
   ],
@@ -348,7 +343,7 @@
     {
       "id": "R006",
       "area": "path_hacks",
-      "description": "sys.path manipulation is present in orchestrator-related modules/scripts.",
+      "description": "Historical sys.path manipulation risk was resolved by P062 before Gate D; no active orchestrator package path hacks remain on Juhertha/dev main.",
       "confidence": "confirmed",
       "evidence": [
         "packages/storage/adapters/memory.py",
@@ -359,7 +354,7 @@
     {
       "id": "R007",
       "area": "split_portability",
-      "description": "These sys.path-based imports are likely to complicate repository split portability.",
+      "description": "Historical split-portability concern resolved: orchestrator package code was extracted and the main pre-split sys.path hacks were removed by P062.",
       "confidence": "inferred",
       "evidence": [
         "packages/storage/adapters/memory.py",
@@ -373,34 +368,37 @@
     {
       "id": "U001",
       "question": "Final ownership of packages/storage after split?",
-      "status": "uncertain",
+      "status": "resolved",
       "evidence": [
-        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+        "Gate D execution",
+        "Juhertha/secflow-orchestrator"
       ]
     },
     {
       "id": "U002",
       "question": "Final ownership of packages/findings after split?",
-      "status": "uncertain",
+      "status": "resolved",
       "evidence": [
-        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+        "Gate D execution",
+        "Juhertha/secflow-orchestrator"
       ]
     },
     {
       "id": "U003",
       "question": "Will current dev repo be renamed during split?",
-      "status": "uncertain",
+      "status": "resolved",
       "evidence": [
-        "SPLIT_LEGACY_ORCHESTRATOR_ACTION_PLAN.md"
+        "Juhertha/dev remote state",
+        "Gate D / Gate E execution"
       ]
     },
     {
       "id": "U004",
-      "question": "Should app_config.json and runtime data move to a local-only/ignored model?",
-      "status": "uncertain",
+      "question": "Will the new orchestrator repo be private or public?",
+      "status": "resolved",
       "evidence": [
-        "app_config.json",
-        "store.py"
+        "Juhertha/secflow-orchestrator remote state",
+        "Gate D execution"
       ]
     }
   ]
