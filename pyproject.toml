@@ -10,7 +10,6 @@ packages = [{ include = "secflow" }]
 python = "^3.11"
 pydantic = "^2.7"
 # M1 Dependencies
-cryptography = "^43.0"  # For security signing
 requests = "^2.32"      # For HTTP operations
 pyyaml = "^6.0"         # For YAML processing
 flask = "^3.0"          # For web framework
